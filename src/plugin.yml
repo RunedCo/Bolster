@@ -1,0 +1,6 @@
+name: Bolster
+version: "001"
+main: co.runed.bolster.Bolster
+api-version: "1.15"
+
+depend: [ CommandAPI, ProtocolLib ]
