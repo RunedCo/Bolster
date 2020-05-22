@@ -4,6 +4,8 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.PassiveAbility;
 import co.runed.bolster.abilities.conditions.HoldingItemCondition;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +14,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Item {
     public static final NamespacedKey ITEM_ID_KEY = new NamespacedKey(Bolster.getInstance(), "item-id");
@@ -24,13 +28,13 @@ public abstract class Item {
     private List<String> lore = new ArrayList<>();
 
     private ItemSkin skin;
-    private ItemStack itemStack;
+    private ItemStack itemStack = new ItemStack(Material.STICK);
     private Player owner;
 
     private ItemAbilitySlot primaryAbility = ItemAbilitySlot.RIGHT;
-    private Ability leftClickAbility;
-    private Ability rightClickAbility;
-    private List<PassiveAbility> passives = new ArrayList<>();
+
+    private final Map<ItemAbilitySlot, Ability> abilities = new HashMap<>();
+    private final List<PassiveAbility> passives = new ArrayList<>();
 
     public void setId(String id) {
         this.id = id;
@@ -47,11 +51,15 @@ public abstract class Item {
             extra = " (" + this.getSkin().getName() + ")";
         }
 
-        return this.name + extra;
+        return this.name + extra + ChatColor.RESET;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public ItemStack getItemStack() {
+        return this.itemStack.clone();
     }
 
     protected void setItemStack(ItemStack stack) {
@@ -81,22 +89,17 @@ public abstract class Item {
     }
 
     public void setAbility(Ability ability, ItemAbilitySlot slot) {
-        ability.setCooldownSource(this.getId() + "." + ability.getId());
+        ability.setCooldownSource(this.getId() + "." + ability.getCooldownSource());
 
-        if(slot == ItemAbilitySlot.LEFT) {
-            this.leftClickAbility = ability;
-            return;
-        }
-
-        this.rightClickAbility = ability;
+        this.abilities.put(slot, ability);
     }
 
     public Ability getAbility(ItemAbilitySlot slot) {
-        if(slot == ItemAbilitySlot.LEFT) {
-            return this.leftClickAbility;
+        if(this.abilities.containsKey(slot)) {
+            return this.abilities.get(slot);
         }
 
-        return this.rightClickAbility;
+        return null;
     }
 
     public void castAbility(ItemAbilitySlot slot) {
@@ -111,7 +114,7 @@ public abstract class Item {
         if (!success) return;
 
         if(this.primaryAbility == slot) {
-            this.getOwner().setCooldown(this.itemStack.getType(), (int) ability.getCooldown() * 20);
+            this.getOwner().setCooldown(this.getItemStack().getType(), (int) ability.getCooldown() * 20);
         }
     }
 
@@ -128,7 +131,7 @@ public abstract class Item {
     }
 
     public ItemStack toItemStack() {
-        ItemStack stack = this.itemStack.clone();
+        ItemStack stack = this.getItemStack();
         ItemMeta meta = stack.getItemMeta();
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
 
@@ -153,20 +156,15 @@ public abstract class Item {
     }
 
     public void destroy() {
-        if(this.leftClickAbility != null) {
-            this.leftClickAbility.destroy();
-            this.leftClickAbility = null;
-        }
-
-        if(this.rightClickAbility != null) {
-            this.rightClickAbility.destroy();
-            this.rightClickAbility = null;
+        for (Ability ability : this.abilities.values()) {
+            ability.destroy();
         }
 
         for (PassiveAbility passive : this.passives) {
             passive.destroy();
         }
 
+        this.abilities.clear();
         this.passives.clear();
     }
 }

@@ -7,13 +7,7 @@ import org.bukkit.scheduler.BukkitTask;
 public abstract class PassiveAbility extends Ability {
     protected BukkitTask scheduledTask;
 
-    public PassiveAbility(String id) {
-        this(id, -1);
-    }
-
-    public PassiveAbility(String id, long interval) {
-        super(id);
-
+    public PassiveAbility(long interval) {
         this.setCooldown(interval);
 
         Plugin plugin = Bolster.getInstance();

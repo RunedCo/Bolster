@@ -13,23 +13,16 @@ import java.util.UUID;
 public abstract class Ability implements Listener {
     private String cooldownSource = UUID.randomUUID().toString();
 
-    private final String id;
     private long cooldown = 0;
     private double manaCost = 0;
     private Player caster;
 
     private final HashSet<ConditionData> conditions = new HashSet<>();
 
-    public Ability(String id) {
-        this.id = id;
-
+    public Ability() {
         Bolster.getInstance().getServer().getPluginManager().registerEvents(this, Bolster.getInstance());
 
         this.addCondition(new AbilityOffCooldownCondition());
-    }
-
-    public String getId() {
-        return this.id;
     }
 
     public void loadConfig(ConfigurationSection config) {
@@ -53,6 +46,8 @@ public abstract class Ability implements Listener {
             this.onActivate();
 
             Bolster.getCooldownManager().setCooldown(this.getCaster(), this.cooldownSource, this.getCooldown());
+
+            this.onPostActivate();
             return true;
         }
 
@@ -60,6 +55,14 @@ public abstract class Ability implements Listener {
     }
 
     public abstract void onActivate();
+
+    public void onPostActivate() {
+
+    }
+
+    public String getCooldownSource() {
+        return this.cooldownSource;
+    }
 
     public void setCooldownSource(String source) {
         this.cooldownSource = source;

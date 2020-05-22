@@ -1,10 +1,10 @@
 package co.runed.bolster;
 
+import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.abilities.BowProjectileAbility;
 import co.runed.bolster.items.BowItem;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemAbilitySlot;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +18,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,10 +97,6 @@ public class ItemManager implements Listener {
         return itemId.equals(item.getId());
     }
 
-    public Item fromFile() {
-        return null;
-    }
-
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
@@ -120,8 +115,6 @@ public class ItemManager implements Listener {
         }
 
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if(item instanceof BowItem) return;
-
             item.castAbility(ItemAbilitySlot.RIGHT);
         }
     }
@@ -142,14 +135,22 @@ public class ItemManager implements Listener {
         if(item.getOwner() == null || player != item.getOwner()) return;
         if(!(item instanceof BowItem)) return;
 
-        Entity proj = e.getProjectile();
-        Location loc = proj.getLocation();
-        Vector vel = proj.getVelocity();
+        BowItem bowItem = (BowItem) item;
+        Ability ability = bowItem.getAbility(ItemAbilitySlot.SHOOT);
 
-        Entity arrow1 = player.getWorld().spawnEntity(loc, EntityType.ARROW);
-        arrow1.setVelocity(vel.clone().add(new Vector(0, 0.15, 0)));
+        // TODO: MAKE LESS HACKY
+        // TODO: MAYBE ADD PARAMETERS TO CAST ABILITY
+        if(ability instanceof BowProjectileAbility) {
+            BowProjectileAbility projAbility = (BowProjectileAbility)ability;
 
-        Entity arrow2 = player.getWorld().spawnEntity(loc, EntityType.ARROW);
-        arrow2.setVelocity(vel.clone().add(new Vector(0, -0.15, 0)));
+            projAbility.setForce(e.getForce());
+            projAbility.setVelocity(e.getProjectile().getVelocity());
+
+            bowItem.setAbility(projAbility, ItemAbilitySlot.SHOOT);
+        }
+
+        bowItem.castAbility(ItemAbilitySlot.SHOOT);
+
+        e.setCancelled(true);
     }
 }
