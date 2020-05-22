@@ -2,7 +2,8 @@ package co.runed.bolster.items;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
-
+import co.runed.bolster.abilities.PassiveAbility;
+import co.runed.bolster.abilities.conditions.HoldingItemCondition;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +17,7 @@ import java.util.List;
 public abstract class Item {
     public static final NamespacedKey ITEM_ID_KEY = new NamespacedKey(Bolster.getInstance(), "item-id");
     public static final NamespacedKey ITEM_SKIN_KEY = new NamespacedKey(Bolster.getInstance(), "item-skin");
+    public static final NamespacedKey ITEM_OWNER_KEY = new NamespacedKey(Bolster.getInstance(), "item-owner");
 
     private String id;
     public String name;
@@ -28,6 +30,7 @@ public abstract class Item {
     private ItemAbilitySlot primaryAbility = ItemAbilitySlot.RIGHT;
     private Ability leftClickAbility;
     private Ability rightClickAbility;
+    private List<PassiveAbility> passives = new ArrayList<>();
 
     public void setId(String id) {
         this.id = id;
@@ -71,8 +74,14 @@ public abstract class Item {
         this.primaryAbility = primaryAbility;
     }
 
+    public void addPassive(PassiveAbility ability) {
+        ability.addCondition(new HoldingItemCondition(this));
+
+        this.passives.add(ability);
+    }
+
     public void setAbility(Ability ability, ItemAbilitySlot slot) {
-        //ability.addCondition(new ItemOffCooldownCondition(this, slot));
+        ability.setCooldownSource(this.getId() + "." + ability.getId());
 
         if(slot == ItemAbilitySlot.LEFT) {
             this.leftClickAbility = ability;
@@ -112,6 +121,10 @@ public abstract class Item {
 
     public void setOwner(Player owner) {
         this.owner = owner;
+
+        for (PassiveAbility passive : this.passives) {
+            passive.setCaster(this.getOwner());
+        }
     }
 
     public ItemStack toItemStack() {
@@ -130,8 +143,30 @@ public abstract class Item {
             pdc.set(Item.ITEM_SKIN_KEY, PersistentDataType.STRING, this.getSkin().getId());
         }
 
+        if(this.getOwner() != null) {
+            pdc.set(Item.ITEM_OWNER_KEY, PersistentDataType.STRING, this.getOwner().getUniqueId().toString());
+        }
+
         stack.setItemMeta(meta);
 
         return stack;
+    }
+
+    public void destroy() {
+        if(this.leftClickAbility != null) {
+            this.leftClickAbility.destroy();
+            this.leftClickAbility = null;
+        }
+
+        if(this.rightClickAbility != null) {
+            this.rightClickAbility.destroy();
+            this.rightClickAbility = null;
+        }
+
+        for (PassiveAbility passive : this.passives) {
+            passive.destroy();
+        }
+
+        this.passives.clear();
     }
 }

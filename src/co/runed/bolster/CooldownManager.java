@@ -25,6 +25,10 @@ public class CooldownManager {
         }
     }
 
+    public void clearAllFrom(Player player) {
+        this.cooldowns.removeIf(cd -> cd.caster.equals(player));
+    }
+
     public void clearCooldown(Player player, String source) {
         this.cooldowns.removeIf(cd -> cd.source.equals(source) && cd.caster.equals(player));
     }
@@ -43,7 +47,7 @@ public class CooldownManager {
         private final Player caster;
         private final String source;
         private final Instant castTime;
-        private long cooldown;
+        private final long cooldown;
 
         private CooldownData(Player player, String source, Instant castTime, long cooldown) {
             this.caster = player;

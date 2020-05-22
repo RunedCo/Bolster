@@ -24,8 +24,8 @@ public abstract class PassiveAbility extends Ability {
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void destroy() {
+        super.destroy();
 
         if (this.scheduledTask != null) {
             this.scheduledTask.cancel();

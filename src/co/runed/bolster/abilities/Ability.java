@@ -1,7 +1,8 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.abilities.conditions.OffCooldownCondition;
+import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -10,7 +11,7 @@ import java.util.HashSet;
 import java.util.UUID;
 
 public abstract class Ability implements Listener {
-    private final UUID uuid = UUID.randomUUID();
+    private String cooldownSource = UUID.randomUUID().toString();
 
     private final String id;
     private long cooldown = 0;
@@ -24,47 +25,15 @@ public abstract class Ability implements Listener {
 
         Bolster.getInstance().getServer().getPluginManager().registerEvents(this, Bolster.getInstance());
 
-        this.addCondition(new OffCooldownCondition());
+        this.addCondition(new AbilityOffCooldownCondition());
     }
 
     public String getId() {
         return this.id;
     }
 
-    public long getCooldown() {
-        return this.cooldown;
-    }
-
-    public void setCooldown(long cooldown) {
-        this.cooldown = cooldown;
-    }
-
-    public long getRemainingCooldown() {
-        return Bolster.getCooldownManager().getRemainingTime(this.getCaster(), this.uuid.toString());
-    }
-
-    public boolean isOnCooldown() {
-        return this.getRemainingCooldown() > 0;
-    }
-
-    public void clearCooldown() {
-        Bolster.getCooldownManager().clearCooldown(this.getCaster(), this.uuid.toString());
-    }
-
-    public Player getCaster() {
-        return this.caster;
-    }
-
-    public void setCaster(Player caster) {
-        this.caster = caster;
-    }
-
-    public void addCondition(Condition condition) {
-        this.addCondition(condition, true);
-    }
-
-    public void addCondition(Condition condition, boolean result) {
-        this.conditions.add(new ConditionData(condition, result));
+    public void loadConfig(ConfigurationSection config) {
+        this.setCooldown(config.getLong("cooldown", 0));
     }
 
     public boolean canActivate() {
@@ -83,7 +52,7 @@ public abstract class Ability implements Listener {
         if(this.canActivate()) {
             this.onActivate();
 
-            Bolster.getCooldownManager().setCooldown(this.getCaster(), this.uuid.toString(), this.getCooldown());
+            Bolster.getCooldownManager().setCooldown(this.getCaster(), this.cooldownSource, this.getCooldown());
             return true;
         }
 
@@ -92,13 +61,53 @@ public abstract class Ability implements Listener {
 
     public abstract void onActivate();
 
-    public void remove() {
+    public void setCooldownSource(String source) {
+        this.cooldownSource = source;
+    }
+
+    public long getCooldown() {
+        return this.cooldown;
+    }
+
+    public void setCooldown(long cooldown) {
+        this.cooldown = cooldown;
+    }
+
+    public long getRemainingCooldown() {
+        return Bolster.getCooldownManager().getRemainingTime(this.getCaster(), this.cooldownSource);
+    }
+
+    public boolean isOnCooldown() {
+        return this.getRemainingCooldown() > 0;
+    }
+
+    public void clearCooldown() {
+        Bolster.getCooldownManager().clearCooldown(this.getCaster(), this.cooldownSource);
+    }
+
+    public Player getCaster() {
+        return this.caster;
+    }
+
+    public void setCaster(Player caster) {
+        this.caster = caster;
+    }
+
+    public void addCondition(Condition condition) {
+        this.addCondition(condition, true);
+    }
+
+    public void addCondition(Condition condition, boolean result) {
+        this.conditions.add(new ConditionData(condition, result));
+    }
+
+    public void destroy() {
         HandlerList.unregisterAll(this);
     }
 
     private static class ConditionData {
         Condition condition;
-        boolean result = true;
+        boolean result;
 
         public ConditionData(Condition condition, boolean result) {
             this.condition = condition;
