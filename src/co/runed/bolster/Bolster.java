@@ -1,13 +1,25 @@
 package co.runed.bolster;
 
+import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.abilities.Condition;
+import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
+import co.runed.bolster.abilities.conditions.HasPermissionCondition;
+import co.runed.bolster.abilities.conditions.HoldingItemCondition;
+import co.runed.bolster.abilities.conditions.ItemOffCooldownCondition;
+import co.runed.bolster.items.Item;
+import co.runed.bolster.registries.ItemRegistry;
+import co.runed.bolster.registries.Registry;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Bolster extends JavaPlugin {
     // SINGLETON INSTANCE
     private static Bolster instance;
 
-    // GLOBAL ITEM REGISTRY FOR CUSTOM ITEMS
-    private ItemRegistry itemRegistry;
+    // GLOBAL REGISTRIES FOR SERIALIZATION
+    private Registry<Item> itemRegistry;
+    private Registry<Ability> abilityRegistry;
+    private Registry<Condition> conditionRegistry;
+
     private CooldownManager cooldownManager;
     private ItemManager itemManager;
 
@@ -19,8 +31,16 @@ public class Bolster extends JavaPlugin {
     @Override
     public void onEnable() {
         this.itemRegistry = new ItemRegistry(this);
+        this.abilityRegistry = new Registry<>(this);
+        this.conditionRegistry = new Registry<>(this);
+
         this.cooldownManager = new CooldownManager(this);
         this.itemManager = new ItemManager(this);
+
+        this.conditionRegistry.register("has_permission", HasPermissionCondition.class);
+        this.conditionRegistry.register("holding_item", HoldingItemCondition.class);
+        this.conditionRegistry.register("item_off_cooldown", ItemOffCooldownCondition.class);
+        this.conditionRegistry.register("ability_off_cooldown", AbilityOffCooldownCondition.class);
 
         super.onEnable();
     }
@@ -34,8 +54,16 @@ public class Bolster extends JavaPlugin {
         return instance;
     }
 
-    public static ItemRegistry getItemRegistry() {
+    public static Registry<Item> getItemRegistry() {
         return Bolster.getInstance().itemRegistry;
+    }
+
+    public static Registry<Ability> getAbilityRegistry() {
+        return Bolster.getInstance().abilityRegistry;
+    }
+
+    public static Registry<Condition> getConditionRegistry() {
+        return Bolster.getInstance().conditionRegistry;
     }
 
     public static CooldownManager getCooldownManager() {
