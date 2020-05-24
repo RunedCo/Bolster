@@ -6,6 +6,7 @@ import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
 import co.runed.bolster.abilities.conditions.HasPermissionCondition;
 import co.runed.bolster.abilities.conditions.HoldingItemCondition;
 import co.runed.bolster.abilities.conditions.ItemOffCooldownCondition;
+import co.runed.bolster.commands.CommandItems;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
 import co.runed.bolster.registries.ItemRegistry;
@@ -40,6 +41,8 @@ public class Bolster extends JavaPlugin {
         this.commandManager = new CommandManager();
         this.cooldownManager = new CooldownManager(this);
         this.itemManager = new ItemManager(this);
+
+        this.commandManager.add(new CommandItems());
 
         this.conditionRegistry.register("has_permission", HasPermissionCondition.class);
         this.conditionRegistry.register("holding_item", HoldingItemCondition.class);
