@@ -50,6 +50,7 @@ public class ItemManager implements Listener {
         return this.getItem(player, id) != null;
     }
 
+    // TODO: LOAD DATA FROM ITEMS
     public Item getOrCreateItem(Player player, String id) {
         this.playerItems.putIfAbsent(player, new ArrayList<>());
 

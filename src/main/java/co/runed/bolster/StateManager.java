@@ -5,12 +5,12 @@ import co.runed.bolster.state.State;
 import co.runed.bolster.state.StateSeries;
 import org.bukkit.plugin.Plugin;
 
-public class GameManager {
+public class StateManager {
     public StateSeries mainState;
 
     public boolean hasStarted = false;
 
-    public GameManager(Plugin plugin) {
+    public StateManager(Plugin plugin) {
         this.mainState = new ScheduledStateSeries(plugin);
     }
 

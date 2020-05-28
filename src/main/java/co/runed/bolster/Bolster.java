@@ -11,7 +11,9 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
 import co.runed.bolster.registries.ItemRegistry;
 import co.runed.bolster.registries.Registry;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.ipvp.canvas.MenuFunctionListener;
 
 public class Bolster extends JavaPlugin {
     // SINGLETON INSTANCE
@@ -43,6 +45,8 @@ public class Bolster extends JavaPlugin {
         this.itemManager = new ItemManager(this);
 
         this.commandManager.add(new CommandItems());
+
+        Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
 
         this.conditionRegistry.register("has_permission", HasPermissionCondition.class);
         this.conditionRegistry.register("holding_item", HoldingItemCondition.class);
