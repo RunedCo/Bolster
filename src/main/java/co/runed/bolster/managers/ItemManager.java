@@ -6,7 +6,6 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemAbilitySlot;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -121,11 +120,11 @@ public class ItemManager implements Listener {
         properties.set(AbilityProperties.BLOCK_FACE, e.getBlockFace());
 
         if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-            item.castAbility(ItemAbilitySlot.LEFT, properties);
+            item.castAbility(ItemAbilitySlot.LEFT_CLICK, properties);
         }
 
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            item.castAbility(ItemAbilitySlot.RIGHT, properties);
+            item.castAbility(ItemAbilitySlot.RIGHT_CLICK, properties);
         }
     }
 
@@ -142,12 +141,12 @@ public class ItemManager implements Listener {
         if(item == null) return;
         if(item.getOwner() == null || player != item.getOwner()) return;
 
-        if(item.getAbility(ItemAbilitySlot.SWAP) != null) {
+        if(item.getAbility(ItemAbilitySlot.SWAP_ITEM) != null) {
             AbilityProperties properties = new AbilityProperties();
             properties.set(AbilityProperties.CASTER, player);
             properties.set(AbilityProperties.ITEM_STACK, stack);
 
-            item.castAbility(ItemAbilitySlot.SWAP, properties);
+            item.castAbility(ItemAbilitySlot.SWAP_ITEM, properties);
 
             e.setCancelled(true);
         }
@@ -167,7 +166,7 @@ public class ItemManager implements Listener {
 
         if(item == null) return;
         if(item.getOwner() == null || entity != item.getOwner()) return;
-        if(item.getAbility(ItemAbilitySlot.SHOOT) == null) return;
+        if(item.getAbility(ItemAbilitySlot.ON_SHOOT) == null) return;
 
         AbilityProperties properties = new AbilityProperties();
         properties.set(AbilityProperties.CASTER, entity);
@@ -175,7 +174,7 @@ public class ItemManager implements Listener {
         properties.set(AbilityProperties.FORCE, e.getForce());
         properties.set(AbilityProperties.VELOCITY, e.getProjectile().getVelocity());
 
-        item.castAbility(ItemAbilitySlot.SHOOT, properties);
+        item.castAbility(ItemAbilitySlot.ON_SHOOT, properties);
 
         e.setCancelled(true);
     }

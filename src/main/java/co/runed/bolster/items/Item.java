@@ -34,7 +34,7 @@ public abstract class Item {
     private ItemStack itemStack = new ItemStack(Material.STICK);
     private LivingEntity owner;
 
-    private ItemAbilitySlot primaryAbility = ItemAbilitySlot.RIGHT;
+    private ItemAbilitySlot primaryAbility = ItemAbilitySlot.RIGHT_CLICK;
 
     private final Map<ItemAbilitySlot, Ability> abilities = new HashMap<>();
     private final List<PassiveAbility> passives = new ArrayList<>();

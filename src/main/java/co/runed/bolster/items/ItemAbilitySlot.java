@@ -2,9 +2,8 @@ package co.runed.bolster.items;
 
 public enum ItemAbilitySlot {
     NONE,
-    LEFT,
-    RIGHT,
-    SHOOT,
-    SWAP,
-    PASSIVE
+    LEFT_CLICK,
+    RIGHT_CLICK,
+    ON_SHOOT,
+    SWAP_ITEM
 }
