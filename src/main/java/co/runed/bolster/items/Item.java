@@ -2,11 +2,14 @@ package co.runed.bolster.items;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.abilities.PassiveAbility;
 import co.runed.bolster.abilities.conditions.HoldingItemCondition;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -29,7 +32,7 @@ public abstract class Item {
 
     private ItemSkin skin;
     private ItemStack itemStack = new ItemStack(Material.STICK);
-    private Player owner;
+    private LivingEntity owner;
 
     private ItemAbilitySlot primaryAbility = ItemAbilitySlot.RIGHT;
 
@@ -45,20 +48,27 @@ public abstract class Item {
     }
 
     public String getName() {
-        String extra = "";
 
-        if(this.hasSkin()) {
-            extra = " (" + this.getSkin().getName() + ")";
-        }
-
-        return this.name + extra + ChatColor.RESET;
+        return this.name + ChatColor.RESET;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public ItemStack getItemStack() {
+    public void setLore(List<String> lore) {
+        this.lore = lore;
+    }
+
+    public void addLore(String lore) {
+        this.lore.add(lore);
+    }
+
+    public List<String> getLore() {
+        return lore;
+    }
+
+    protected ItemStack getItemStack() {
         return this.itemStack.clone();
     }
 
@@ -102,27 +112,27 @@ public abstract class Item {
         return null;
     }
 
-    public void castAbility(ItemAbilitySlot slot) {
+    public void castAbility(ItemAbilitySlot slot, AbilityProperties properties) {
         Ability ability = this.getAbility(slot);
 
         if(ability == null) return;
 
         ability.setCaster(this.getOwner());
 
-        boolean success = ability.activate();
+        boolean success = ability.activate(properties);
 
         if (!success) return;
 
-        if(this.primaryAbility == slot) {
-            this.getOwner().setCooldown(this.getItemStack().getType(), (int) ability.getCooldown() * 20);
+        if(this.primaryAbility == slot && this.getOwner().getType() == EntityType.PLAYER) {
+            ((Player)this.getOwner()).setCooldown(this.getItemStack().getType(), (int) ability.getTotalCooldown() * 20);
         }
     }
 
-    public Player getOwner() {
+    public LivingEntity getOwner() {
         return this.owner;
     }
 
-    public void setOwner(Player owner) {
+    public void setOwner(LivingEntity owner) {
         this.owner = owner;
 
         for (PassiveAbility passive : this.passives) {

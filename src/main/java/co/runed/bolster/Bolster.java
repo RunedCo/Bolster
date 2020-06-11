@@ -1,14 +1,13 @@
 package co.runed.bolster;
 
-import co.runed.bolster.abilities.Ability;
-import co.runed.bolster.abilities.Condition;
-import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
-import co.runed.bolster.abilities.conditions.HasPermissionCondition;
-import co.runed.bolster.abilities.conditions.HoldingItemCondition;
-import co.runed.bolster.abilities.conditions.ItemOffCooldownCondition;
 import co.runed.bolster.commands.CommandItems;
+import co.runed.bolster.commands.CommandMana;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
+import co.runed.bolster.managers.CommandManager;
+import co.runed.bolster.managers.CooldownManager;
+import co.runed.bolster.managers.ItemManager;
+import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.registries.ItemRegistry;
 import co.runed.bolster.registries.Registry;
 import org.bukkit.Bukkit;
@@ -22,12 +21,11 @@ public class Bolster extends JavaPlugin {
     // GLOBAL REGISTRIES FOR SERIALIZATION
     private Registry<Item> itemRegistry;
     private Registry<ItemSkin> itemSkinRegistry;
-    private Registry<Ability> abilityRegistry;
-    private Registry<Condition> conditionRegistry;
 
-    public CommandManager commandManager;
+    private CommandManager commandManager;
     private CooldownManager cooldownManager;
     private ItemManager itemManager;
+    private ManaManager manaManager;
 
     @Override
     public void onLoad() {
@@ -37,21 +35,16 @@ public class Bolster extends JavaPlugin {
     @Override
     public void onEnable() {
         this.itemRegistry = new ItemRegistry(this);
-        this.abilityRegistry = new Registry<>(this);
-        this.conditionRegistry = new Registry<>(this);
 
         this.commandManager = new CommandManager();
         this.cooldownManager = new CooldownManager(this);
         this.itemManager = new ItemManager(this);
+        this.manaManager = new ManaManager(this);
 
         this.commandManager.add(new CommandItems());
+        this.commandManager.add(new CommandMana());
 
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
-
-        this.conditionRegistry.register("has_permission", HasPermissionCondition.class);
-        this.conditionRegistry.register("holding_item", HoldingItemCondition.class);
-        this.conditionRegistry.register("item_off_cooldown", ItemOffCooldownCondition.class);
-        this.conditionRegistry.register("ability_off_cooldown", AbilityOffCooldownCondition.class);
 
         super.onEnable();
     }
@@ -73,20 +66,16 @@ public class Bolster extends JavaPlugin {
         return Bolster.getInstance().itemSkinRegistry;
     }
 
-    public static Registry<Ability> getAbilityRegistry() {
-        return Bolster.getInstance().abilityRegistry;
-    }
-
-    public static Registry<Condition> getConditionRegistry() {
-        return Bolster.getInstance().conditionRegistry;
-    }
-
     public static CooldownManager getCooldownManager() {
         return Bolster.getInstance().cooldownManager;
     }
 
     public static ItemManager getItemManager() {
         return Bolster.getInstance().itemManager;
+    }
+
+    public static ManaManager getManaManager() {
+        return Bolster.getInstance().manaManager;
     }
 
     public static CommandManager getCommandManager() {

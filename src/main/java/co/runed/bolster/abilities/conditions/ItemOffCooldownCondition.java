@@ -1,10 +1,9 @@
 package co.runed.bolster.abilities.conditions;
 
 import co.runed.bolster.abilities.Ability;
-import co.runed.bolster.abilities.Condition;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemAbilitySlot;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.LivingEntity;
 
 public class ItemOffCooldownCondition extends Condition {
     Item item;
@@ -16,7 +15,7 @@ public class ItemOffCooldownCondition extends Condition {
     }
 
     @Override
-    public boolean evaluate(Ability ability, Player player) {
+    public boolean evaluate(Ability ability, LivingEntity caster) {
         return false;
     }
 }

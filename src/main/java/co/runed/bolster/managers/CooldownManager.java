@@ -1,6 +1,6 @@
-package co.runed.bolster;
+package co.runed.bolster.managers;
 
-import org.bukkit.entity.Player;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
 import java.time.Duration;
@@ -16,26 +16,26 @@ public class CooldownManager {
         this.plugin = plugin;
     }
 
-    public void setCooldown(Player player, String source, long cooldown) {
+    public void setCooldown(LivingEntity entity, String source, long cooldown) {
         if(cooldown <= 0) return;
 
-        if(this.getRemainingTime(player, source) <= 0) {
-            this.clearCooldown(player, source);
-            this.cooldowns.add(new CooldownData(player, source, Instant.now(), cooldown));
+        if(this.getRemainingTime(entity, source) <= 0) {
+            this.clearCooldown(entity, source);
+            this.cooldowns.add(new CooldownData(entity, source, Instant.now(), cooldown));
         }
     }
 
-    public void clearAllFrom(Player player) {
-        this.cooldowns.removeIf(cd -> cd.caster.equals(player));
+    public void clearAllFrom(LivingEntity entity) {
+        this.cooldowns.removeIf(cd -> cd.caster.equals(entity));
     }
 
-    public void clearCooldown(Player player, String source) {
-        this.cooldowns.removeIf(cd -> cd.source.equals(source) && cd.caster.equals(player));
+    public void clearCooldown(LivingEntity entity, String source) {
+        this.cooldowns.removeIf(cd -> cd.source.equals(source) && cd.caster.equals(entity));
     }
 
-    public long getRemainingTime(Player player, String source) {
+    public long getRemainingTime(LivingEntity entity, String source) {
         for (CooldownData cd : this.cooldowns) {
-            if (cd.caster.equals(player) && cd.source.equals(source)) {
+            if (cd.caster.equals(entity) && cd.source.equals(source)) {
                 return cd.getRemainingTime();
             }
         }
@@ -44,13 +44,13 @@ public class CooldownManager {
     }
 
     private static class CooldownData {
-        private final Player caster;
+        private final LivingEntity caster;
         private final String source;
         private final Instant castTime;
         private final long cooldown;
 
-        private CooldownData(Player player, String source, Instant castTime, long cooldown) {
-            this.caster = player;
+        private CooldownData(LivingEntity entity, String source, Instant castTime, long cooldown) {
+            this.caster = entity;
             this.source = source;
             this.castTime = castTime;
             this.cooldown = cooldown;

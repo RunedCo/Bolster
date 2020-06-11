@@ -4,6 +4,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Registry<T> {
     public Plugin plugin;
@@ -19,6 +20,10 @@ public class Registry<T> {
 
     public boolean contains(String id) {
         return this.entries.containsKey(id);
+    }
+
+    public Map<String, Class<? extends T>> getEntries() {
+        return this.entries;
     }
 
     public T createInstance(String id) {

@@ -5,5 +5,6 @@ public enum ItemAbilitySlot {
     LEFT,
     RIGHT,
     SHOOT,
+    SWAP,
     PASSIVE
 }

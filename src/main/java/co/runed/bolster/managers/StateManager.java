@@ -1,4 +1,4 @@
-package co.runed.bolster;
+package co.runed.bolster.managers;
 
 import co.runed.bolster.state.ScheduledStateSeries;
 import co.runed.bolster.state.State;

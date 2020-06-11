@@ -5,6 +5,7 @@ import net.minecraft.server.v1_15_R1.ChatMessageType;
 import net.minecraft.server.v1_15_R1.IChatBaseComponent;
 import net.minecraft.server.v1_15_R1.PacketPlayOutAnimation;
 import net.minecraft.server.v1_15_R1.PacketPlayOutChat;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
@@ -30,6 +31,16 @@ public class PlayerUtil {
         player.sendPluginMessage(Bolster.getInstance(), "BungeeCord", b.toByteArray());
     }
 
+    public static void sendAllToServer(String server) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            try {
+                PlayerUtil.sendPlayerToServer(player, server);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static void sendActionBar(Player player, String message)
     {
         message = message.replaceAll("%player%", player.getDisplayName());
@@ -38,7 +49,7 @@ public class PlayerUtil {
 
         CraftPlayer craftPlayer = (CraftPlayer) player;
 
-        PacketPlayOutChat packet = new PacketPlayOutChat(chatComponent, ChatMessageType.CHAT);
+        PacketPlayOutChat packet = new PacketPlayOutChat(chatComponent, ChatMessageType.GAME_INFO);
         craftPlayer.getHandle().playerConnection.sendPacket(packet);
     }
 
