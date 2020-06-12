@@ -4,15 +4,15 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemAbilitySlot;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -23,11 +23,12 @@ import org.bukkit.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class ItemManager implements Listener {
     Plugin plugin;
 
-    private final HashMap<LivingEntity, List<Item>> entityItems = new HashMap<>();
+    private final HashMap<UUID, List<Item>> entityItems = new HashMap<>();
 
     public ItemManager(Plugin plugin) {
         this.plugin = plugin;
@@ -36,9 +37,9 @@ public class ItemManager implements Listener {
     }
 
     public Item getItem(LivingEntity entity, String id) {
-        this.entityItems.putIfAbsent(entity, new ArrayList<>());
+        this.entityItems.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
 
-        List<Item> items = this.entityItems.get(entity);
+        List<Item> items = this.entityItems.get(entity.getUniqueId());
 
         for (Item item : items) {
             if(item.getId().equals(id)) return item;
@@ -47,21 +48,44 @@ public class ItemManager implements Listener {
         return null;
     }
 
+    public void removeItem(LivingEntity entity, Item item) {
+        if(!this.entityItems.containsKey(entity.getUniqueId())) return;
+
+        item.destroy();
+
+        this.entityItems.get(entity.getUniqueId()).remove(item);
+    }
+
+    public void clearItems(LivingEntity entity) {
+        for (Item item : this.getItems(entity)) {
+            this.removeItem(entity, item);
+        }
+    }
+
     public boolean hasItem(LivingEntity entity, String id) {
         return this.getItem(entity, id) != null;
     }
 
-    // TODO: LOAD DATA FROM ITEMS
-    public Item getOrCreateItem(LivingEntity entity, String id) {
-        this.entityItems.putIfAbsent(entity, new ArrayList<>());
+    public List<Item> getItems(LivingEntity entity) {
+        if(!this.entityItems.containsKey(entity.getUniqueId())) return new ArrayList<>();
 
-        List<Item> items = this.entityItems.get(entity);
+        return this.entityItems.get(entity.getUniqueId());
+    }
+
+    // TODO: LOAD DATA FROM ITEMS
+    public Item createItem(LivingEntity entity, String id) {
+        this.entityItems.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
+
+        List<Item> items = this.entityItems.get(entity.getUniqueId());
 
         // CHECK IF ITEM INSTANCE ALREADY EXISTS FOR PLAYER
 
         Item item = this.getItem(entity, id);
 
-        if (item != null) return item;
+        if (item != null) {
+            item.setOwner(entity);
+            return item;
+        }
 
         // IF NOT CREATE NEW ONE
         item = Bolster.getItemRegistry().createInstance(id);
@@ -73,10 +97,6 @@ public class ItemManager implements Listener {
         items.add(item);
 
         return item;
-    }
-
-    public void reset() {
-        this.entityItems.clear();
     }
 
     public String getItemIdFromStack(ItemStack stack) {
@@ -95,19 +115,81 @@ public class ItemManager implements Listener {
         String itemId = this.getItemIdFromStack(stack);
 
         if (item.getOwner() == null || entity != item.getOwner()) return false;
+        if (itemId == null) return false;
+        if(item.getId() == null) return false;
 
         return itemId.equals(item.getId());
     }
 
+    public void reset() {
+        this.entityItems.clear();
+    }
+
     @EventHandler
-    public void onLivingEntityInteract(PlayerInteractEvent e) {
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+
+        for (ItemStack stack : player.getInventory()) {
+            String itemId = this.getItemIdFromStack(stack);
+
+            if(itemId == null) return;
+
+            this.createItem(player, itemId);
+        }
+    }
+
+    // TODO: WOULD BE GOOD FOR OPTIMIZATION TO REMOVE ALL ITEM INSTANCES BUT MAY CAUSE ISSUES WITH PLAYERS DCING MID GAME
+    /*@EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+
+        this.clearItems(player);
+    }*/
+
+    @EventHandler
+    public void onPlayerDie(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+
+        this.clearItems(player);
+
+        this.entityItems.remove(player.getUniqueId());
+    }
+
+    @EventHandler
+    public void onDropItem(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+        String itemId = this.getItemIdFromStack(event.getItemDrop().getItemStack());
+
+        if(itemId == null) return;
+
+        if(this.hasItem(player, itemId)) {
+            Item item = this.getItem(player, itemId);
+
+            this.removeItem(player, item);
+        }
+    }
+
+    @EventHandler
+    public void onPickupItem(EntityPickupItemEvent event) {
+        LivingEntity entity = event.getEntity();
+        ItemStack stack = event.getItem().getItemStack();
+
+        String itemId = this.getItemIdFromStack(stack);
+
+        if(itemId == null) return;
+
+        this.createItem(entity, itemId);
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         ItemStack stack = e.getItem();
         String itemId = this.getItemIdFromStack(stack);
 
         if(itemId == null) return;
 
-        Item item = this.getOrCreateItem(player, itemId);
+        Item item = this.createItem(player, itemId);
 
         if(item == null) return;
         if(item.getOwner() == null || player != item.getOwner()) return;
@@ -129,14 +211,14 @@ public class ItemManager implements Listener {
     }
 
     @EventHandler
-    public void onLivingEntityOffhand(PlayerSwapHandItemsEvent e) {
+    public void onPlayerOffhand(PlayerSwapHandItemsEvent e) {
         Player player = e.getPlayer();
         ItemStack stack = e.getOffHandItem();
         String itemId = this.getItemIdFromStack(stack);
 
         if(itemId == null) return;
 
-        Item item = this.getOrCreateItem(player, itemId);
+        Item item = this.createItem(player, itemId);
 
         if(item == null) return;
         if(item.getOwner() == null || player != item.getOwner()) return;
@@ -154,15 +236,13 @@ public class ItemManager implements Listener {
 
     @EventHandler
     public void onLivingEntityShootBow(EntityShootBowEvent e) {
-        if(e.getEntityType() != EntityType.PLAYER) return;
-
-        LivingEntity entity = (LivingEntity)e.getEntity();
+        LivingEntity entity = e.getEntity();
         ItemStack stack = e.getBow();
         String itemId = this.getItemIdFromStack(stack);
 
         if(itemId == null) return;
 
-        Item item = this.getOrCreateItem(entity, itemId);
+        Item item = this.createItem(entity, itemId);
 
         if(item == null) return;
         if(item.getOwner() == null || entity != item.getOwner()) return;

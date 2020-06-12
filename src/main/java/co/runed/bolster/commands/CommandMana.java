@@ -49,7 +49,7 @@ public class CommandMana extends CommandBase
             if(type.equals("max")) {
                 player.sendMessage("Your maximum mana is " + Bolster.getManaManager().getMaximumMana(player));
             } else {
-                player.sendMessage("Your have " + Bolster.getManaManager().getCurrentMana(player) + " mana");
+                player.sendMessage("You have " + Bolster.getManaManager().getCurrentMana(player) + " mana");
             }
 
             return;

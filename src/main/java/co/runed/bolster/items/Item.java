@@ -29,15 +29,20 @@ public abstract class Item {
     private String id;
     public String name;
     private List<String> lore = new ArrayList<>();
+    private ItemStack itemStack = new ItemStack(Material.STICK);
 
     private ItemSkin skin;
-    private ItemStack itemStack = new ItemStack(Material.STICK);
+    private final List<ItemCategory> categories = new ArrayList<>();
+
     private LivingEntity owner;
 
     private ItemAbilitySlot primaryAbility = ItemAbilitySlot.RIGHT_CLICK;
-
     private final Map<ItemAbilitySlot, Ability> abilities = new HashMap<>();
     private final List<PassiveAbility> passives = new ArrayList<>();
+
+    public Item() {
+        this.addCategory(ItemCategory.ALL);
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -76,6 +81,18 @@ public abstract class Item {
         this.itemStack = stack;
     }
 
+    public LivingEntity getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(LivingEntity owner) {
+        this.owner = owner;
+
+        for (PassiveAbility passive : this.passives) {
+            passive.setCaster(this.getOwner());
+        }
+    }
+
     public boolean hasSkin() {
         return this.getSkin() != null;
     }
@@ -86,6 +103,16 @@ public abstract class Item {
 
     public void setSkin(ItemSkin skin) {
         this.skin = skin;
+    }
+
+    public List<ItemCategory> getCategories() {
+        return this.categories;
+    }
+
+    public void addCategory(ItemCategory category) {
+        if(this.categories.contains(category)) return;
+
+        this.categories.add(category);
     }
 
     public void setPrimaryAbility(ItemAbilitySlot primaryAbility) {
@@ -125,18 +152,6 @@ public abstract class Item {
 
         if(this.primaryAbility == slot && this.getOwner().getType() == EntityType.PLAYER) {
             ((Player)this.getOwner()).setCooldown(this.getItemStack().getType(), (int) ability.getTotalCooldown() * 20);
-        }
-    }
-
-    public LivingEntity getOwner() {
-        return this.owner;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.owner = owner;
-
-        for (PassiveAbility passive : this.passives) {
-            passive.setCaster(this.getOwner());
         }
     }
 

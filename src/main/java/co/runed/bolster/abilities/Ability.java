@@ -3,6 +3,7 @@ package co.runed.bolster.abilities;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
 import co.runed.bolster.abilities.conditions.Condition;
+import co.runed.bolster.abilities.conditions.HasManaCondition;
 import co.runed.bolster.abilities.properties.AbilityProperties;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
@@ -26,6 +27,7 @@ public abstract class Ability implements Listener {
         Bolster.getInstance().getServer().getPluginManager().registerEvents(this, Bolster.getInstance());
 
         this.addCondition(new AbilityOffCooldownCondition());
+        this.addCondition(new HasManaCondition());
     }
 
     public void loadConfig(ConfigurationSection config) {
@@ -33,6 +35,8 @@ public abstract class Ability implements Listener {
     }
 
     public boolean canActivate() {
+        if(this.getCaster() == null) return false;
+
         for (ConditionData data : this.conditions) {
             Condition condition = data.condition;
 

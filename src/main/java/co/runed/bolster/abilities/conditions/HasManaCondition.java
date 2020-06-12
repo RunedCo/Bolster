@@ -4,7 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.PassiveAbility;
 import co.runed.bolster.util.PlayerUtil;
-import org.bukkit.Color;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -20,7 +20,7 @@ public class HasManaCondition extends Condition {
         if(ability instanceof PassiveAbility) return;
 
         if(entity.getType() == EntityType.PLAYER) {
-            PlayerUtil.sendActionBar((Player)entity, Color.PURPLE + "Not enough mana!");
+            PlayerUtil.sendActionBar((Player)entity, ChatColor.LIGHT_PURPLE + "Not enough mana!");
         }
     }
 }

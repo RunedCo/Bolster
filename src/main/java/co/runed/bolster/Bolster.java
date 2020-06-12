@@ -35,6 +35,7 @@ public class Bolster extends JavaPlugin {
     @Override
     public void onEnable() {
         this.itemRegistry = new ItemRegistry(this);
+        this.itemSkinRegistry = new Registry<>(this);
 
         this.commandManager = new CommandManager();
         this.cooldownManager = new CooldownManager(this);
@@ -43,6 +44,8 @@ public class Bolster extends JavaPlugin {
 
         this.commandManager.add(new CommandItems());
         this.commandManager.add(new CommandMana());
+
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
 
