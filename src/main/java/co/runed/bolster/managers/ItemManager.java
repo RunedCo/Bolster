@@ -3,12 +3,13 @@ package co.runed.bolster.managers;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.items.Item;
-import co.runed.bolster.items.ItemAbilitySlot;
+import co.runed.bolster.items.ItemAction;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -134,11 +135,19 @@ public class ItemManager implements Listener {
 
             if(itemId == null) return;
 
-            this.createItem(player, itemId);
+            Item item = this.createItem(player, itemId);
+
+            int slot = player.getInventory().first(stack);
+            ItemStack updatedStack = item.toItemStack();
+            updatedStack.setAmount(stack.getAmount());
+
+            player.getInventory().setItem(slot, updatedStack);
+
         }
     }
 
     // TODO: WOULD BE GOOD FOR OPTIMIZATION TO REMOVE ALL ITEM INSTANCES BUT MAY CAUSE ISSUES WITH PLAYERS DCING MID GAME
+    // TODO: MAYBE ADD TO 5 MIN TIMER/DELAY?
     /*@EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
@@ -158,15 +167,29 @@ public class ItemManager implements Listener {
     @EventHandler
     public void onDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        String itemId = this.getItemIdFromStack(event.getItemDrop().getItemStack());
+        ItemStack stack = event.getItemDrop().getItemStack();
+        String itemId = this.getItemIdFromStack(stack);
 
         if(itemId == null) return;
 
-        if(this.hasItem(player, itemId)) {
-            Item item = this.getItem(player, itemId);
+        Item item = this.createItem(player, itemId);
 
-            this.removeItem(player, item);
+        if(item == null) return;
+        if(item.getOwner() == null || player != item.getOwner()) return;
+
+        if(item.getAbility(ItemAction.ON_DROP_ITEM) != null) {
+            AbilityProperties properties = new AbilityProperties();
+            properties.set(AbilityProperties.CASTER, player);
+            properties.set(AbilityProperties.ITEM_STACK, stack);
+            properties.set(AbilityProperties.EVENT, event);
+
+            item.castAbility(ItemAction.ON_DROP_ITEM, properties);
+
+            event.setCancelled(true);
+            return;
         }
+
+        this.removeItem(player, item);
     }
 
     @EventHandler
@@ -182,9 +205,9 @@ public class ItemManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        ItemStack stack = e.getItem();
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        ItemStack stack = event.getItem();
         String itemId = this.getItemIdFromStack(stack);
 
         if(itemId == null) return;
@@ -197,23 +220,25 @@ public class ItemManager implements Listener {
         AbilityProperties properties = new AbilityProperties();
         properties.set(AbilityProperties.CASTER, player);
         properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.BLOCK_ACTION, e.getAction());
-        properties.set(AbilityProperties.BLOCK, e.getClickedBlock());
-        properties.set(AbilityProperties.BLOCK_FACE, e.getBlockFace());
+        properties.set(AbilityProperties.BLOCK_ACTION, event.getAction());
+        properties.set(AbilityProperties.BLOCK, event.getClickedBlock());
+        properties.set(AbilityProperties.BLOCK_FACE, event.getBlockFace());
+        properties.set(AbilityProperties.EVENT, event);
 
-        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-            item.castAbility(ItemAbilitySlot.LEFT_CLICK, properties);
+        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            item.castAbility(ItemAction.LEFT_CLICK, properties);
         }
 
-        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            item.castAbility(ItemAbilitySlot.RIGHT_CLICK, properties);
+        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            item.castAbility(ItemAction.RIGHT_CLICK, properties);
         }
     }
 
     @EventHandler
-    public void onPlayerOffhand(PlayerSwapHandItemsEvent e) {
-        Player player = e.getPlayer();
-        ItemStack stack = e.getOffHandItem();
+    public void onPlayerBreakBlock(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        ItemStack stack = player.getInventory().getItemInMainHand();
+
         String itemId = this.getItemIdFromStack(stack);
 
         if(itemId == null) return;
@@ -223,21 +248,73 @@ public class ItemManager implements Listener {
         if(item == null) return;
         if(item.getOwner() == null || player != item.getOwner()) return;
 
-        if(item.getAbility(ItemAbilitySlot.SWAP_ITEM) != null) {
+        AbilityProperties properties = new AbilityProperties();
+        properties.set(AbilityProperties.CASTER, player);
+        properties.set(AbilityProperties.ITEM_STACK, stack);
+        properties.set(AbilityProperties.BLOCK, event.getBlock());
+        properties.set(AbilityProperties.EVENT, event);
+
+        item.castAbility(ItemAction.ON_BREAK_BLOCK, properties);
+    }
+
+    @EventHandler
+    public void onPlayerEat(PlayerItemConsumeEvent event) {
+        Player player = event.getPlayer();
+        ItemStack stack = player.getInventory().getItemInMainHand();
+
+        String itemId = this.getItemIdFromStack(stack);
+
+        if(itemId == null) return;
+
+        Item item = this.createItem(player, itemId);
+
+        if(item == null) return;
+        if(item.getOwner() == null || player != item.getOwner()) return;
+
+        AbilityProperties properties = new AbilityProperties();
+        properties.set(AbilityProperties.CASTER, player);
+        properties.set(AbilityProperties.ITEM_STACK, stack);
+        properties.set(AbilityProperties.EVENT, event);
+
+        item.castAbility(ItemAction.ON_CONSUME, properties);
+    }
+
+    @EventHandler
+    public void onPlayerFish(PlayerFishEvent event) {
+        // TODO
+        AbilityProperties properties = new AbilityProperties();
+        properties.set(AbilityProperties.EVENT, event);
+    }
+
+    @EventHandler
+    public void onPlayerOffhand(PlayerSwapHandItemsEvent event) {
+        Player player = event.getPlayer();
+        ItemStack stack = event.getOffHandItem();
+        String itemId = this.getItemIdFromStack(stack);
+
+        if(itemId == null) return;
+
+        Item item = this.createItem(player, itemId);
+
+        if(item == null) return;
+        if(item.getOwner() == null || player != item.getOwner()) return;
+
+        if(item.getAbility(ItemAction.ON_SWAP_OFFHAND) != null) {
             AbilityProperties properties = new AbilityProperties();
             properties.set(AbilityProperties.CASTER, player);
             properties.set(AbilityProperties.ITEM_STACK, stack);
+            properties.set(AbilityProperties.EVENT, event);
 
-            item.castAbility(ItemAbilitySlot.SWAP_ITEM, properties);
+            item.castAbility(ItemAction.ON_SWAP_OFFHAND, properties);
 
-            e.setCancelled(true);
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onLivingEntityShootBow(EntityShootBowEvent e) {
-        LivingEntity entity = e.getEntity();
-        ItemStack stack = e.getBow();
+    public void onLivingEntityShootBow(EntityShootBowEvent event) {
+        LivingEntity entity = event.getEntity();
+        ItemStack stack = event.getBow();
         String itemId = this.getItemIdFromStack(stack);
 
         if(itemId == null) return;
@@ -246,16 +323,43 @@ public class ItemManager implements Listener {
 
         if(item == null) return;
         if(item.getOwner() == null || entity != item.getOwner()) return;
-        if(item.getAbility(ItemAbilitySlot.ON_SHOOT) == null) return;
+        if(item.getAbility(ItemAction.ON_SHOOT) == null) return;
 
         AbilityProperties properties = new AbilityProperties();
         properties.set(AbilityProperties.CASTER, entity);
         properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.FORCE, e.getForce());
-        properties.set(AbilityProperties.VELOCITY, e.getProjectile().getVelocity());
+        properties.set(AbilityProperties.FORCE, event.getForce());
+        properties.set(AbilityProperties.VELOCITY, event.getProjectile().getVelocity());
+        properties.set(AbilityProperties.EVENT, event);
 
-        item.castAbility(ItemAbilitySlot.ON_SHOOT, properties);
+        item.castAbility(ItemAction.ON_SHOOT, properties);
 
-        e.setCancelled(true);
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerThrowEgg(PlayerEggThrowEvent event) {
+        LivingEntity entity = event.getPlayer();
+        ItemStack stack = event.getEgg().getItem();
+        String itemId = this.getItemIdFromStack(stack);
+
+        if(itemId == null) return;
+
+        Item item = this.createItem(entity, itemId);
+
+        if(item == null) return;
+        if(item.getOwner() == null || entity != item.getOwner()) return;
+        if(item.getAbility(ItemAction.ON_SHOOT) == null) return;
+
+        AbilityProperties properties = new AbilityProperties();
+        properties.set(AbilityProperties.CASTER, entity);
+        properties.set(AbilityProperties.ITEM_STACK, stack);
+        properties.set(AbilityProperties.FORCE, 1.0f);
+        properties.set(AbilityProperties.VELOCITY, event.getEgg().getVelocity());
+        properties.set(AbilityProperties.EVENT, event);
+
+        item.castAbility(ItemAction.ON_SHOOT, properties);
+
+        event.setHatching(false);
     }
 }

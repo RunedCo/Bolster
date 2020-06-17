@@ -1,5 +1,7 @@
 package co.runed.bolster.state;
 
+import co.runed.bolster.Bolster;
+
 import java.time.Duration;
 import java.util.List;
 
@@ -34,7 +36,11 @@ public class StateSeries extends StateHolder {
             return;
         }
 
-        this.states.get(current).start();
+        State currentState = this.states.get(current);
+
+        Bolster.getInstance().getLogger().info("STARTING STATE " + currentState.getClass().toString());
+
+        currentState.start();
     }
 
     @Override
@@ -68,7 +74,11 @@ public class StateSeries extends StateHolder {
     public void onEnd() {
         if(current < this.states.size())
         {
-            this.states.get(current).end();
+            State currentState = this.states.get(current);
+
+            Bolster.getInstance().getLogger().info("ENDING STATE " + currentState.getClass().toString());
+
+            currentState.end();
         }
     }
 

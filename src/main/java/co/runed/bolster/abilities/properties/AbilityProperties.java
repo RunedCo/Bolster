@@ -4,6 +4,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -17,6 +19,7 @@ public class AbilityProperties {
     public static final AbilityProperty<LivingEntity> CASTER = AbilityPropertyBuilder.key("caster").build();
     public static final AbilityProperty<List<LivingEntity>> TARGETS = AbilityPropertyBuilder.key("targets").initial(new ArrayList<LivingEntity>()).build();
     public static final AbilityProperty<World> WORLD = AbilityPropertyBuilder.key("world").build();
+    public static final AbilityProperty<Event> EVENT = AbilityPropertyBuilder.key("event").build();
     public static final AbilityProperty<ItemStack> ITEM_STACK = AbilityPropertyBuilder.key("item_stack").build();
     public static final AbilityProperty<Block> BLOCK = AbilityPropertyBuilder.key("block").build();
     public static final AbilityProperty<Action> BLOCK_ACTION = AbilityPropertyBuilder.key("block_action").build();

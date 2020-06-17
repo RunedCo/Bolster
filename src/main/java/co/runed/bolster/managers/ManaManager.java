@@ -1,8 +1,6 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
-import javafx.util.Builder;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

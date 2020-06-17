@@ -5,6 +5,8 @@ import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.abilities.PassiveAbility;
 import co.runed.bolster.abilities.conditions.HoldingItemCondition;
+import co.runed.bolster.util.ItemBuilder;
+import co.runed.bolster.util.StringUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -12,7 +14,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -28,7 +29,7 @@ public abstract class Item {
 
     private String id;
     public String name;
-    private List<String> lore = new ArrayList<>();
+    public String description;
     private ItemStack itemStack = new ItemStack(Material.STICK);
 
     private ItemSkin skin;
@@ -36,8 +37,8 @@ public abstract class Item {
 
     private LivingEntity owner;
 
-    private ItemAbilitySlot primaryAbility = ItemAbilitySlot.RIGHT_CLICK;
-    private final Map<ItemAbilitySlot, Ability> abilities = new HashMap<>();
+    private ItemAction primaryAbility = ItemAction.RIGHT_CLICK;
+    private final Map<ItemAction, Ability> abilities = new HashMap<>();
     private final List<PassiveAbility> passives = new ArrayList<>();
 
     public Item() {
@@ -53,7 +54,6 @@ public abstract class Item {
     }
 
     public String getName() {
-
         return this.name + ChatColor.RESET;
     }
 
@@ -61,16 +61,16 @@ public abstract class Item {
         this.name = name;
     }
 
-    public void setLore(List<String> lore) {
-        this.lore = lore;
+    public String getDescription() {
+        return description;
     }
 
-    public void addLore(String lore) {
-        this.lore.add(lore);
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<String> getLore() {
-        return lore;
+        return StringUtil.formatLore(this.getDescription());
     }
 
     protected ItemStack getItemStack() {
@@ -115,7 +115,7 @@ public abstract class Item {
         this.categories.add(category);
     }
 
-    public void setPrimaryAbility(ItemAbilitySlot primaryAbility) {
+    public void setPrimaryAbility(ItemAction primaryAbility) {
         this.primaryAbility = primaryAbility;
     }
 
@@ -125,13 +125,13 @@ public abstract class Item {
         this.passives.add(ability);
     }
 
-    public void setAbility(Ability ability, ItemAbilitySlot slot) {
+    public void setAbility(ItemAction slot, Ability ability) {
         ability.setCooldownSource(this.getId() + "." + ability.getCooldownSource());
 
         this.abilities.put(slot, ability);
     }
 
-    public Ability getAbility(ItemAbilitySlot slot) {
+    public Ability getAbility(ItemAction slot) {
         if(this.abilities.containsKey(slot)) {
             return this.abilities.get(slot);
         }
@@ -139,7 +139,7 @@ public abstract class Item {
         return null;
     }
 
-    public void castAbility(ItemAbilitySlot slot, AbilityProperties properties) {
+    public void castAbility(ItemAction slot, AbilityProperties properties) {
         Ability ability = this.getAbility(slot);
 
         if(ability == null) return;
@@ -156,28 +156,22 @@ public abstract class Item {
     }
 
     public ItemStack toItemStack() {
-        ItemStack stack = this.getItemStack();
-        ItemMeta meta = stack.getItemMeta();
-        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        ItemBuilder builder = new ItemBuilder(this.getItemStack())
+                .setDisplayName(this.getName())
+                .setLore(this.getLore())
+                .setPersistentData(Item.ITEM_ID_KEY, PersistentDataType.STRING, this.getId());
 
-        meta.setDisplayName(this.getName());
-        meta.setLore(this.lore);
-
-        pdc.set(Item.ITEM_ID_KEY, PersistentDataType.STRING, this.getId());
 
         if(this.hasSkin()) {
-            meta.setCustomModelData(this.getSkin().getCustomModelData());
-
-            pdc.set(Item.ITEM_SKIN_KEY, PersistentDataType.STRING, this.getSkin().getId());
+            builder.setCustomModelData(this.getSkin().getCustomModelData())
+                    .setPersistentData(Item.ITEM_SKIN_KEY, PersistentDataType.STRING, this.getSkin().getId());
         }
 
         if(this.getOwner() != null) {
-            pdc.set(Item.ITEM_OWNER_KEY, PersistentDataType.STRING, this.getOwner().getUniqueId().toString());
+            builder.setPersistentData(Item.ITEM_OWNER_KEY, PersistentDataType.STRING, this.getOwner().getUniqueId().toString());
         }
 
-        stack.setItemMeta(meta);
-
-        return stack;
+        return builder.build();
     }
 
     public void destroy() {
