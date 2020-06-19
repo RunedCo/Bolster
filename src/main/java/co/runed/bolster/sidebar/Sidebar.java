@@ -1,5 +1,6 @@
-package co.runed.bolster;
+package co.runed.bolster.sidebar;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -93,7 +94,17 @@ public abstract class Sidebar {
         return this.updateInterval;
     }
 
+    public Sidebar addAllPlayers() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            this.addPlayer(player);
+        }
+
+        return this;
+    }
+
     public Sidebar addPlayer(Player player) {
+        if(this.players.contains(player)) return this;
+
         this.players.add(player);
 
         player.setScoreboard(this.getPlayerScoreboard(player));
@@ -112,10 +123,6 @@ public abstract class Sidebar {
 
         Scoreboard scoreboard = this.getPlayerScoreboard(player);
 
-        if(player.getScoreboard().equals(scoreboard)) {
-            player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-        }
-
         Objective objective = this.getOrCreateObjective(scoreboard, this.getTitle());
         objective.unregister();
 
@@ -127,6 +134,8 @@ public abstract class Sidebar {
             }
         }
 
+        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+
         return this;
     }
 
@@ -135,7 +144,9 @@ public abstract class Sidebar {
             this.updateTask.cancel();
         }
 
-        for (Player player : this.players) {
+        List<Player> playerList = new ArrayList<>(this.players);
+
+        for (Player player : playerList) {
             this.removePlayer(player);
         }
     }
@@ -174,6 +185,7 @@ public abstract class Sidebar {
             // A little hacky but it might work well enough...
             this.lines.clear();
             this.bottomLines.clear();
+            this.blankLines = 0;
 
             Sidebar sidebar = this.draw(player);
 
