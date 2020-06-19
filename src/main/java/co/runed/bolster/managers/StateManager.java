@@ -11,7 +11,7 @@ public class StateManager {
     public boolean hasStarted = false;
 
     public StateManager(Plugin plugin) {
-        this.mainState = new ScheduledStateSeries(plugin);
+        this.mainState = new ScheduledStateSeries(plugin, 10L);
     }
 
     public StateSeries getMainState() {
