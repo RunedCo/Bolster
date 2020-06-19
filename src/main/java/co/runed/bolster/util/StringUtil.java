@@ -33,6 +33,10 @@ public class StringUtil {
         return lore;
     }
 
+    public static String repeat(String stringToRepeat, int numRepeats) {
+        return new String(new char[numRepeats]).replace("\0", stringToRepeat);
+    }
+
     public static int countMatches(String source, String find) {
         return StringUtils.countMatches(source, find);
     }

@@ -41,16 +41,10 @@ public class ObjectiveBuilder {
         return this;
     }
 
-    public ObjectiveBuilder setRenderType(RenderType render) {
-        this.objective.setRenderType(render);
-
-        return this;
-    }
-
     public ObjectiveBuilder addLine() {
         this.blankLines++;
 
-        return this.addLine(new String(new char[this.blankLines]).replace("\0", " "));
+        return this.addLine(StringUtil.repeat(" ", this.blankLines));
     }
 
     public ObjectiveBuilder addLines(List<String> lines) {
@@ -70,7 +64,7 @@ public class ObjectiveBuilder {
     public ObjectiveBuilder addLineBottom() {
         this.blankLines++;
 
-        return this.addLineBottom(new String(new char[this.blankLines]).replace("\0", " "));
+        return this.addLineBottom(StringUtil.repeat(" ", this.blankLines));
     }
 
     public ObjectiveBuilder addLineBottom(String line) {
@@ -88,28 +82,9 @@ public class ObjectiveBuilder {
         return scores;
     }
 
-    private List<String> getColors() {
-        List<String> colors = new ArrayList<>();
-
-        return colors;
-    }
-
     public Scoreboard build() {
         List<String> lines = this.getAllLines();
         int lineCount = lines.size();
-
-        /* for (String str : this.scoreboard.getEntries()) {
-            boolean reset = true;
-
-            for (String score : lines) {
-                if(score.equals(str)) {
-                    reset = false;
-                    break;
-                }
-            }
-
-            if(reset) this.scoreboard.resetScores(str);
-        } */
 
         for (Team team : this.scoreboard.getTeams()) {
             int count = StringUtil.countMatches(team.getName(), ChatColor.RED.toString());
@@ -121,7 +96,7 @@ public class ObjectiveBuilder {
             String line = lines.get(i);
             int value = lineCount - 1 - i;
 
-            String teamId = new String(new char[value + 1]).replace("\0", ChatColor.RED.toString());
+            String teamId = StringUtil.repeat(ChatColor.RED.toString(), value + 1);
 
             Team team = this.scoreboard.getTeam(teamId);
 
