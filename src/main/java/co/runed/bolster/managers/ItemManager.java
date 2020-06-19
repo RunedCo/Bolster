@@ -21,10 +21,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ItemManager implements Listener {
     Plugin plugin;
@@ -37,6 +34,13 @@ public class ItemManager implements Listener {
         Bolster.getInstance().getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    /**
+     *  Gets an {@link Item} from a {@link LivingEntity}
+     *
+     * @param entity the entity that has the item
+     * @param id     the {@link String} id of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
+     * @return       the existing {@link Item} instance or null
+     */
     public Item getItem(LivingEntity entity, String id) {
         this.entityItems.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
 
@@ -49,31 +53,13 @@ public class ItemManager implements Listener {
         return null;
     }
 
-    public void removeItem(LivingEntity entity, Item item) {
-        if(!this.entityItems.containsKey(entity.getUniqueId())) return;
-
-        item.destroy();
-
-        this.entityItems.get(entity.getUniqueId()).remove(item);
-    }
-
-    public void clearItems(LivingEntity entity) {
-        for (Item item : this.getItems(entity)) {
-            this.removeItem(entity, item);
-        }
-    }
-
-    public boolean hasItem(LivingEntity entity, String id) {
-        return this.getItem(entity, id) != null;
-    }
-
-    public List<Item> getItems(LivingEntity entity) {
-        if(!this.entityItems.containsKey(entity.getUniqueId())) return new ArrayList<>();
-
-        return this.entityItems.get(entity.getUniqueId());
-    }
-
-    // TODO: LOAD DATA FROM ITEMS
+    /**
+     *  Creates an {@link Item} instance unless entity already has one
+     *  in which case it gets the existing instance
+     *
+     * @param entity the entity that the item should be created for
+     * @param id the {@link String} id of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
+     */
     public Item createItem(LivingEntity entity, String id) {
         this.entityItems.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
 
@@ -98,6 +84,30 @@ public class ItemManager implements Listener {
         items.add(item);
 
         return item;
+    }
+
+    public void removeItem(LivingEntity entity, Item item) {
+        if(!this.entityItems.containsKey(entity.getUniqueId())) return;
+
+        item.destroy();
+
+        this.entityItems.get(entity.getUniqueId()).remove(item);
+    }
+
+    public void clearItems(LivingEntity entity) {
+        for (Item item : this.getItems(entity)) {
+            this.removeItem(entity, item);
+        }
+    }
+
+    public boolean hasItem(LivingEntity entity, String id) {
+        return this.getItem(entity, id) != null;
+    }
+
+    public List<Item> getItems(LivingEntity entity) {
+        if(!this.entityItems.containsKey(entity.getUniqueId())) return new ArrayList<>();
+
+        return this.entityItems.get(entity.getUniqueId());
     }
 
     public String getItemIdFromStack(ItemStack stack) {
@@ -281,9 +291,24 @@ public class ItemManager implements Listener {
 
     @EventHandler
     public void onPlayerFish(PlayerFishEvent event) {
-        // TODO
+        Player player = event.getPlayer();
+        ItemStack stack = player.getInventory().getItemInMainHand();
+        String itemId = this.getItemIdFromStack(stack);
+
+        if(itemId == null) return;
+
+        Item item = this.createItem(player, itemId);
+
+        if(item == null) return;
+        if(item.getOwner() == null || player != item.getOwner()) return;
+
         AbilityProperties properties = new AbilityProperties();
+        properties.set(AbilityProperties.CASTER, event.getPlayer());
         properties.set(AbilityProperties.EVENT, event);
+        properties.set(AbilityProperties.CAUGHT, event.getCaught());
+        properties.set(AbilityProperties.HOOK, event.getHook());
+
+        item.castAbility(ItemAction.ON_CATCH_FISH, properties);
     }
 
     @EventHandler
@@ -305,9 +330,9 @@ public class ItemManager implements Listener {
             properties.set(AbilityProperties.ITEM_STACK, stack);
             properties.set(AbilityProperties.EVENT, event);
 
-            item.castAbility(ItemAction.ON_SWAP_OFFHAND, properties);
-
             event.setCancelled(true);
+
+            item.castAbility(ItemAction.ON_SWAP_OFFHAND, properties);
         }
     }
 
@@ -332,9 +357,9 @@ public class ItemManager implements Listener {
         properties.set(AbilityProperties.VELOCITY, event.getProjectile().getVelocity());
         properties.set(AbilityProperties.EVENT, event);
 
-        item.castAbility(ItemAction.ON_SHOOT, properties);
-
         event.setCancelled(true);
+
+        item.castAbility(ItemAction.ON_SHOOT, properties);
     }
 
     @EventHandler
@@ -358,8 +383,8 @@ public class ItemManager implements Listener {
         properties.set(AbilityProperties.VELOCITY, event.getEgg().getVelocity());
         properties.set(AbilityProperties.EVENT, event);
 
-        item.castAbility(ItemAction.ON_SHOOT, properties);
-
         event.setHatching(false);
+
+        item.castAbility(ItemAction.ON_SHOOT, properties);
     }
 }
