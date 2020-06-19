@@ -36,11 +36,8 @@ public class StateSeries extends StateHolder {
             return;
         }
 
-        State currentState = this.states.get(current);
-
-        Bolster.getInstance().getLogger().info("STARTING STATE " + currentState.getClass().toString());
-
-        currentState.start();
+        this.states.get(current).start();
+        Bolster.getInstance().getLogger().info("STARTING STATE " + this.states.get(current).getClass().toString());
     }
 
     @Override
@@ -53,6 +50,7 @@ public class StateSeries extends StateHolder {
             }
 
             this.states.get(current).end();
+            Bolster.getInstance().getLogger().info("ENDING STATE " + this.states.get(current).getClass().toString());
 
             ++current;
 
@@ -62,6 +60,7 @@ public class StateSeries extends StateHolder {
             }
 
             this.states.get(current).start();
+            Bolster.getInstance().getLogger().info("STARTING STATE " + this.states.get(current).getClass().toString());
         }
     }
 
@@ -74,11 +73,7 @@ public class StateSeries extends StateHolder {
     public void onEnd() {
         if(current < this.states.size())
         {
-            State currentState = this.states.get(current);
-
-            Bolster.getInstance().getLogger().info("ENDING STATE " + currentState.getClass().toString());
-
-            currentState.end();
+            this.states.get(current).end();
         }
     }
 

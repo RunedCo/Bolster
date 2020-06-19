@@ -1,7 +1,10 @@
 package co.runed.bolster.state;
 
+import co.runed.bolster.Bolster;
 import org.bukkit.Bukkit;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -20,6 +23,8 @@ public abstract class State {
             return;
 
         started = true;
+
+        this.startInstant = Instant.now();
 
         try {
             this.onStart();
@@ -42,13 +47,15 @@ public abstract class State {
             return;
         }
 
-        this.startInstant = Instant.now();
-
         try {
             this.onUpdate();
         }
         catch(Exception e) {
-            // LOG ERROR
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            String stacktrace = sw.toString();
+
+            Bolster.getInstance().getLogger().severe(stacktrace);
         }
         updating = false;
     }
