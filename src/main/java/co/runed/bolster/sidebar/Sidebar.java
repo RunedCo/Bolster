@@ -14,17 +14,15 @@ import org.bukkit.scoreboard.Team;
 import java.util.*;
 
 public abstract class Sidebar {
-    private List<Player> players = new ArrayList<>();
     private Map<Player, Scoreboard> playerScoreboards = new HashMap<>();
 
+    // Update task variables
     private long updateInterval = 10;
+    private BukkitTask updateTask;
 
-    BukkitTask updateTask;
-
-    // Sidebar variables
-    List<String> lines = new ArrayList<>();
-    List<String> bottomLines = new ArrayList<>();
-    int blankLines = 0;
+    // Sidebar lines
+    private List<String> lines = new ArrayList<>();
+    private List<String> bottomLines = new ArrayList<>();
 
     /**
      * Gets the player's scoreboard instance for this sidebar
@@ -136,22 +134,11 @@ public abstract class Sidebar {
     }
 
     /**
-     * Adds all players to the sidebar causing it to display on their screen
-     */
-    public void addAllPlayers() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            this.addPlayer(player);
-        }
-    }
-
-    /**
      * Adds the player to the sidebar causing it to display on their screen
      * @param player The player
      */
     public void addPlayer(Player player) {
-        if(this.players.contains(player)) return;
-
-        this.players.add(player);
+        if (this.playerScoreboards.containsKey(player)) return;
 
         player.setScoreboard(this.getPlayerScoreboard(player));
 
@@ -167,8 +154,6 @@ public abstract class Sidebar {
      * @param player The player
      */
     public void removePlayer(Player player) {
-        this.players.remove(player);
-
         Scoreboard scoreboard = this.getPlayerScoreboard(player);
 
         Objective objective = this.getOrCreateObjective(scoreboard, this.getTitle());
@@ -176,13 +161,31 @@ public abstract class Sidebar {
 
         this.playerScoreboards.remove(player);
 
-        if(this.players.size() <= 0) {
+        if(this.getPlayers().size() <= 0) {
             if(this.updateTask != null) {
                 this.updateTask.cancel();
             }
         }
 
         player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+    }
+
+    /**
+     * Adds all players to the sidebar causing it to display on their screen
+     */
+    public void addAllPlayers() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            this.addPlayer(player);
+        }
+    }
+
+    /**
+     * Returns every player that has been added to the sidebar
+     *
+     * @return A list of players
+     */
+    public List<Player> getPlayers() {
+        return new ArrayList<>(this.playerScoreboards.keySet());
     }
 
     /**
@@ -193,9 +196,7 @@ public abstract class Sidebar {
             this.updateTask.cancel();
         }
 
-        List<Player> playerList = new ArrayList<>(this.players);
-
-        for (Player player : playerList) {
+        for (Player player : this.getPlayers()) {
             this.removePlayer(player);
         }
     }
@@ -252,7 +253,6 @@ public abstract class Sidebar {
     private void resetLines() {
         this.lines.clear();
         this.bottomLines.clear();
-        this.blankLines = 0;
     }
 
     /**
@@ -260,7 +260,7 @@ public abstract class Sidebar {
      * Updates at the tick speed returned from {@link #getUpdateInterval()}
      */
     public void update() {
-        for (Player player : this.players) {
+        for (Player player : this.getPlayers()) {
             Sidebar sidebar = this.draw(player);
 
             Scoreboard scoreboard = this.getPlayerScoreboard(player);
