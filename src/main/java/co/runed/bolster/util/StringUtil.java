@@ -1,5 +1,6 @@
 package co.runed.bolster.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 
@@ -22,11 +23,17 @@ public class StringUtil {
                 line = ChatColor.getLastColors(previousLine) + line;
             }
 
+            line = line.trim();
+
             lore.add(line);
 
             previousLine = line;
         }
 
         return lore;
+    }
+
+    public static int countMatches(String source, String find) {
+        return StringUtils.countMatches(source, find);
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.server.v1_15_R1.PacketPlayOutAnimation;
 import net.minecraft.server.v1_15_R1.PacketPlayOutChat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -14,8 +15,20 @@ import org.bukkit.entity.Player;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerUtil {
+
+    public static List<Player> getPlayersWithGamemode(GameMode mode) {
+        List<Player> players = new ArrayList<>();
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if(player.getGameMode() == mode) players.add(player);
+        }
+
+        return players;
+    }
 
     public static void setNickName(Player player, String nickname) {
         player.setDisplayName(nickname);
