@@ -3,6 +3,9 @@ package co.runed.bolster.abilities.properties;
 import co.runed.bolster.Bolster;
 import org.bukkit.NamespacedKey;
 
+/**
+ *  A builder class for an AbilityProperty
+ */
 public class AbilityPropertyBuilder<T> {
     T value = null;
     NamespacedKey id = null;
@@ -18,7 +21,7 @@ public class AbilityPropertyBuilder<T> {
         return key(new NamespacedKey(Bolster.getInstance(), key));
     }
 
-    public AbilityPropertyBuilder<T> initial(T value) {
+    public AbilityPropertyBuilder<T> setDefault(T value) {
         this.value = value;
 
         return this;

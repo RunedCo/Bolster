@@ -3,8 +3,9 @@ package co.runed.bolster.abilities.properties;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
@@ -15,17 +16,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *  Represents variables passed to an ability when cast
+ */
 public class AbilityProperties {
+    // GENERAL PROPERTIES
     public static final AbilityProperty<LivingEntity> CASTER = AbilityPropertyBuilder.key("caster").build();
-    public static final AbilityProperty<List<LivingEntity>> TARGETS = AbilityPropertyBuilder.key("targets").initial(new ArrayList<LivingEntity>()).build();
+    public static final AbilityProperty<List<LivingEntity>> TARGETS = AbilityPropertyBuilder.key("targets").setDefault(new ArrayList<LivingEntity>()).build();
     public static final AbilityProperty<World> WORLD = AbilityPropertyBuilder.key("world").build();
     public static final AbilityProperty<Event> EVENT = AbilityPropertyBuilder.key("event").build();
     public static final AbilityProperty<ItemStack> ITEM_STACK = AbilityPropertyBuilder.key("item_stack").build();
+
+    // BLOCK PROPERTIES
     public static final AbilityProperty<Block> BLOCK = AbilityPropertyBuilder.key("block").build();
     public static final AbilityProperty<Action> BLOCK_ACTION = AbilityPropertyBuilder.key("block_action").build();
     public static final AbilityProperty<BlockFace> BLOCK_FACE = AbilityPropertyBuilder.key("block_face").build();
-    public static final AbilityProperty<Float> FORCE = AbilityPropertyBuilder.key("force").initial(0.0f).build();
-    public static final AbilityProperty<Vector> VELOCITY = AbilityPropertyBuilder.key("velocity").initial(new Vector()).build();
+
+    // PROJECTILE PROPERTIES
+    public static final AbilityProperty<Float> FORCE = AbilityPropertyBuilder.key("force").setDefault(0.0f).build();
+    public static final AbilityProperty<Vector> VELOCITY = AbilityPropertyBuilder.key("velocity").setDefault(new Vector()).build();
+
+    // FISHING PROPERTIES
+    public static final AbilityProperty<Entity> CAUGHT = AbilityPropertyBuilder.key("caught").build();
+    public static final AbilityProperty<FishHook> HOOK = AbilityPropertyBuilder.key("hook").build();
 
     private final Map<AbilityProperty<?>, Object> values = new HashMap<>();
 

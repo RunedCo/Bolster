@@ -3,6 +3,9 @@ package co.runed.bolster.abilities.properties;
 import co.runed.bolster.Bolster;
 import org.bukkit.NamespacedKey;
 
+/**
+ *  A property passed to an ability when cast
+ */
 public class AbilityProperty<T> {
     private NamespacedKey key;
     private T defaultValue;
