@@ -5,6 +5,10 @@ import co.runed.bolster.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -13,11 +17,12 @@ import org.bukkit.scoreboard.Team;
 
 import java.util.*;
 
-public abstract class Sidebar {
+public abstract class Sidebar implements Listener {
     private Map<Player, Scoreboard> playerScoreboards = new HashMap<>();
 
     // Update task variables
     private long updateInterval = 10;
+    private boolean autoAddPlayers = false;
     private BukkitTask updateTask;
 
     // Sidebar lines
@@ -118,9 +123,34 @@ public abstract class Sidebar {
         this.updateInterval = interval;
 
         if(previousInterval != interval) {
-            if(this.updateTask != null || !this.updateTask.isCancelled()) this.updateTask.cancel();
+            if(this.updateTask != null && !this.updateTask.isCancelled()) this.updateTask.cancel();
 
             this.updateTask = this.createUpdateTask();
+        }
+    }
+
+    /**
+     * Sets whether a player should be automatically added to the sidebar when they join the game
+     *
+     * @param shouldAdd Whether players should be added to the sidebar automatically or not
+     */
+    public void setAutoAddPlayers(boolean shouldAdd) {
+        if (shouldAdd && !this.autoAddPlayers) {
+            Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
+        }
+
+        this.autoAddPlayers = shouldAdd;
+    }
+
+    /**
+     * Player join event that handles adding players to the sidebar
+     *
+     * @param event The event
+     */
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if(this.autoAddPlayers) {
+            this.addPlayer(event.getPlayer());
         }
     }
 
@@ -199,6 +229,8 @@ public abstract class Sidebar {
         for (Player player : this.getPlayers()) {
             this.removePlayer(player);
         }
+
+        HandlerList.unregisterAll(this);
     }
 
     /**
@@ -256,11 +288,26 @@ public abstract class Sidebar {
     }
 
     /**
+     * Generates a team name based on row number.
+     * Team names can be max 16 characters so it changes the {@link ChatColor} symbol used to allow for more than 8 rows
+     *
+     * @param value The length of the team name
+     * @return The team name
+     */
+    private String getTeamName(int value) {
+        ChatColor colorSymbol = ChatColor.values()[value % ChatColor.values().length];
+
+        return StringUtil.repeat(colorSymbol.toString(), (value % 8) + 1);
+    }
+
+    /**
      * Handles updating the scoreboard display with the layout defined in {@link #draw(Player)}.
      * Updates at the tick speed returned from {@link #getUpdateInterval()}
      */
     public void update() {
         for (Player player : this.getPlayers()) {
+            this.resetLines();
+
             Sidebar sidebar = this.draw(player);
 
             Scoreboard scoreboard = this.getPlayerScoreboard(player);
@@ -274,7 +321,7 @@ public abstract class Sidebar {
 
             // Loops through all teams and if the team name is longer than the number of lines remove it
             for (Team team : scoreboard.getTeams()) {
-                int count = StringUtil.countMatches(team.getName(), ChatColor.RED.toString());
+                int count = team.getName().length() / 2;
 
                 if(count > lineCount) team.unregister();
             }
@@ -286,7 +333,7 @@ public abstract class Sidebar {
                 String line = lines.get(i);
                 int value = lineCount - 1 - i;
 
-                String teamId = StringUtil.repeat(ChatColor.RED.toString(), value + 1);
+                String teamId = this.getTeamName(value);
 
                 // Tries to get team
                 Team team = scoreboard.getTeam(teamId);
@@ -300,8 +347,6 @@ public abstract class Sidebar {
 
                 if(!team.getPrefix().equals(line)) team.setPrefix(line);
             }
-
-            this.resetLines();
         }
     }
 
