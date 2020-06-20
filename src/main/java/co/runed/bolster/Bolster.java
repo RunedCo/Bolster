@@ -34,6 +34,8 @@ public class Bolster extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        super.onEnable();
+
         this.itemRegistry = new ItemRegistry(this);
         this.itemSkinRegistry = new Registry<>(this);
 
@@ -42,14 +44,15 @@ public class Bolster extends JavaPlugin {
         this.itemManager = new ItemManager(this);
         this.manaManager = new ManaManager(this);
 
+        this.manaManager.setDefaultMaximumMana(200);
+
         this.commandManager.add(new CommandItems());
         this.commandManager.add(new CommandMana());
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
-
-        super.onEnable();
+        Bukkit.getPluginManager().registerEvents(new TestListener(), this);
     }
 
     @Override

@@ -4,6 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemAction;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,7 +32,7 @@ public class ItemManager implements Listener {
     public ItemManager(Plugin plugin) {
         this.plugin = plugin;
 
-        Bolster.getInstance().getServer().getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     /**
