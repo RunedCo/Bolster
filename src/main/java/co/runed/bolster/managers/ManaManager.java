@@ -1,6 +1,7 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -16,17 +17,23 @@ import java.util.UUID;
 
 public class ManaManager implements Listener {
     private final Plugin plugin;
-    private float defaultMaxMana = 0.0f;
     private final Map<UUID, ManaData> manaData = new HashMap<>();
+
+    private float defaultMaxMana = 0.0f;
+    private boolean refillOnSpawn = true;
 
     public ManaManager(Plugin plugin) {
         this.plugin = plugin;
 
-        Bolster.getInstance().getServer().getPluginManager().registerEvents(this, this.plugin);
+        Bukkit.getPluginManager().registerEvents(this, this.plugin);
     }
 
     public void setDefaultMaximumMana(float value) {
         this.defaultMaxMana = value;
+    }
+
+    public void setRefillManaOnSpawn(boolean shouldRefill) {
+        this.refillOnSpawn = shouldRefill;
     }
 
     public void setMaximumMana(LivingEntity entity, float value) {
@@ -92,12 +99,22 @@ public class ManaManager implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
 
+        if (this.refillOnSpawn) {
+            this.setCurrentMana(player, this.getMaximumMana(player));
+        }
+
         this.updateManaDisplay(player);
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+
+        if(!this.manaData.containsKey(player.getUniqueId())) {
+            this.setMaximumMana(player, this.defaultMaxMana);
+
+            if(this.refillOnSpawn) this.setCurrentMana(player, this.getMaximumMana(player));
+        }
 
         this.updateManaDisplay(player);
     }
