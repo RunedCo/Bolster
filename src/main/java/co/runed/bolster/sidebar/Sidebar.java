@@ -314,7 +314,7 @@ public abstract class Sidebar implements Listener {
             Objective objective = this.getOrCreateObjective(scoreboard, this.getTitle());
 
             // Sets objective to display in sidebar
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+            if(objective.getDisplaySlot() != DisplaySlot.SIDEBAR) objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
             List<String> lines = sidebar.getAllLines();
             int lineCount = lines.size();
