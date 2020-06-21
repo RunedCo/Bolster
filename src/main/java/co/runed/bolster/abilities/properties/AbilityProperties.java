@@ -40,4 +40,10 @@ public class AbilityProperties {
     // FISHING PROPERTIES
     public static final Property<Entity> CAUGHT = new Property<>("caught");
     public static final Property<FishHook> HOOK = new Property<>("hook");
+
+    // DAMAGE PROPERTIES
+    public static final Property<Double> DAMAGE = new Property<>("double", 0.0d);
+
+    // KILL PROPERTIES
+    public static final Property<List<ItemStack>> DROPS = new Property<>("drops", new ArrayList<>());
 }

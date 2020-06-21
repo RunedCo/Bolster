@@ -2,12 +2,17 @@ package co.runed.bolster.properties;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerExpChangeEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.plugin.Plugin;
 
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -25,6 +30,9 @@ public class GameProperties extends Properties implements Listener {
     public static final Property<Boolean> DISABLE_ALL_DAMAGE = new Property<>("disable_all_damage", false);
 
     public static final Property<Boolean> ENABLE_HUNGER = new Property<>("enable_hunger", true);
+    public static final Property<Boolean> ENABLE_OFFHAND = new Property<>("enable_offhand", true);
+
+    public static final Property<Boolean> ENABLE_XP = new Property<>("enable_xp", true);
 
     public GameProperties(Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -71,9 +79,29 @@ public class GameProperties extends Properties implements Listener {
     }
 
     @EventHandler
+    private void onPlayerOffhand(PlayerSwapHandItemsEvent event) {
+        if (!this.get(GameProperties.ENABLE_OFFHAND)) event.setCancelled(true);
+    }
+
+    @EventHandler
     private void onPlayerHunger(FoodLevelChangeEvent event) {
         if (!this.get(GameProperties.ENABLE_HUNGER)) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        if (!this.get(GameProperties.ENABLE_XP)) e.setDroppedExp(0);
+    }
+
+    @EventHandler
+    public void onBreakBlock(BlockBreakEvent e) {
+        if (!this.get(GameProperties.ENABLE_XP)) e.setExpToDrop(0);
+    }
+
+    @EventHandler
+    public void onExpChange(PlayerExpChangeEvent event) {
+        if (!this.get(GameProperties.ENABLE_XP)) event.setAmount(0);
     }
 }

@@ -1,6 +1,7 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.properties.GameProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -21,6 +22,7 @@ public class ManaManager implements Listener {
 
     private float defaultMaxMana = 0.0f;
     private boolean refillOnSpawn = true;
+    private boolean enableXpBarDisplay = false;
 
     public ManaManager(Plugin plugin) {
         this.plugin = plugin;
@@ -34,6 +36,12 @@ public class ManaManager implements Listener {
 
     public void setRefillManaOnSpawn(boolean shouldRefill) {
         this.refillOnSpawn = shouldRefill;
+    }
+
+    public void setEnableXpManaBar(boolean enabled) {
+        this.enableXpBarDisplay = true;
+
+        Bolster.getGameProperties().set(GameProperties.ENABLE_XP, false);
     }
 
     public void setMaximumMana(LivingEntity entity, float value) {
@@ -85,6 +93,8 @@ public class ManaManager implements Listener {
     }
 
     public void updateManaDisplay(Player player) {
+        if(!this.enableXpBarDisplay) return;
+
         float currentMana = this.getCurrentMana(player);
         float maxMana = this.getMaximumMana(player);
 

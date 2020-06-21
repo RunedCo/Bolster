@@ -50,6 +50,7 @@ public class Bolster extends JavaPlugin {
         this.manaManager = new ManaManager(this);
 
         this.manaManager.setDefaultMaximumMana(200);
+        this.manaManager.setEnableXpManaBar(true);
 
         this.commandManager.add(new CommandItems());
         this.commandManager.add(new CommandMana());
