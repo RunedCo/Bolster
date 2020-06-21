@@ -1,5 +1,6 @@
 package co.runed.bolster.abilities.properties;
 
+import co.runed.bolster.properties.Property;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -17,54 +18,26 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  Represents variables passed to an ability when cast
+ *  List of variables passed to an ability when cast
  */
 public class AbilityProperties {
     // GENERAL PROPERTIES
-    public static final AbilityProperty<LivingEntity> CASTER = AbilityPropertyBuilder.key("caster").build();
-    public static final AbilityProperty<List<LivingEntity>> TARGETS = AbilityPropertyBuilder.key("targets").setDefault(new ArrayList<LivingEntity>()).build();
-    public static final AbilityProperty<World> WORLD = AbilityPropertyBuilder.key("world").build();
-    public static final AbilityProperty<Event> EVENT = AbilityPropertyBuilder.key("event").build();
-    public static final AbilityProperty<ItemStack> ITEM_STACK = AbilityPropertyBuilder.key("item_stack").build();
+    public static final Property<LivingEntity> CASTER = new Property<>("caster");
+    public static final Property<List<LivingEntity>> TARGETS = new Property<>("targets", new ArrayList<>());
+    public static final Property<World> WORLD = new Property<>("world");
+    public static final Property<Event> EVENT = new Property<>("event");
+    public static final Property<ItemStack> ITEM_STACK = new Property<>("item_stack");
 
     // BLOCK PROPERTIES
-    public static final AbilityProperty<Block> BLOCK = AbilityPropertyBuilder.key("block").build();
-    public static final AbilityProperty<Action> BLOCK_ACTION = AbilityPropertyBuilder.key("block_action").build();
-    public static final AbilityProperty<BlockFace> BLOCK_FACE = AbilityPropertyBuilder.key("block_face").build();
+    public static final Property<Block> BLOCK = new Property<>("block");
+    public static final Property<Action> BLOCK_ACTION = new Property<>("block_action");
+    public static final Property<BlockFace> BLOCK_FACE = new Property<>("block_face");
 
     // PROJECTILE PROPERTIES
-    public static final AbilityProperty<Float> FORCE = AbilityPropertyBuilder.key("force").setDefault(0.0f).build();
-    public static final AbilityProperty<Vector> VELOCITY = AbilityPropertyBuilder.key("velocity").setDefault(new Vector()).build();
+    public static final Property<Float> FORCE = new Property<>("force", 0.0f);
+    public static final Property<Vector> VELOCITY = new Property<>("velocity", new Vector());
 
     // FISHING PROPERTIES
-    public static final AbilityProperty<Entity> CAUGHT = AbilityPropertyBuilder.key("caught").build();
-    public static final AbilityProperty<FishHook> HOOK = AbilityPropertyBuilder.key("hook").build();
-
-    private final Map<AbilityProperty<?>, Object> values = new HashMap<>();
-
-    public int size() {
-        return this.values.size();
-    }
-
-    public boolean isEmpty() {
-        return this.values.isEmpty();
-    }
-
-    public void clean() {
-        this.values.clear();
-    }
-
-    public boolean containsKey(AbilityProperty<?> key) {
-        return this.values.containsKey(key);
-    }
-
-    public <T> T get(AbilityProperty<T> key) {
-        if(!this.values.containsKey(key)) return key.getDefault();
-
-        return (T)this.values.get(key);
-    }
-
-    public <T> void set(AbilityProperty<T> key, T value) {
-        this.values.put(key, value);
-    }
+    public static final Property<Entity> CAUGHT = new Property<>("caught");
+    public static final Property<FishHook> HOOK = new Property<>("hook");
 }

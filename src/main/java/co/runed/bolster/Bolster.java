@@ -8,8 +8,10 @@ import co.runed.bolster.managers.CommandManager;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.managers.ManaManager;
+import co.runed.bolster.properties.Properties;
 import co.runed.bolster.registries.ItemRegistry;
 import co.runed.bolster.registries.Registry;
+import co.runed.bolster.properties.GameProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
@@ -26,6 +28,7 @@ public class Bolster extends JavaPlugin {
     private CooldownManager cooldownManager;
     private ItemManager itemManager;
     private ManaManager manaManager;
+    private Properties gameProperties;
 
     @Override
     public void onLoad() {
@@ -42,6 +45,8 @@ public class Bolster extends JavaPlugin {
         this.commandManager = new CommandManager();
         this.cooldownManager = new CooldownManager(this);
         this.itemManager = new ItemManager(this);
+        this.gameProperties = new GameProperties(this);
+
         this.manaManager = new ManaManager(this);
 
         this.manaManager.setDefaultMaximumMana(200);
@@ -86,5 +91,9 @@ public class Bolster extends JavaPlugin {
 
     public static CommandManager getCommandManager() {
         return Bolster.getInstance().commandManager;
+    }
+
+    public static Properties getGameProperties() {
+        return Bolster.getInstance().gameProperties;
     }
 }

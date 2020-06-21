@@ -2,9 +2,9 @@ package co.runed.bolster.items;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
-import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.abilities.PassiveAbility;
 import co.runed.bolster.abilities.conditions.HoldingItemCondition;
+import co.runed.bolster.properties.Properties;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import org.bukkit.ChatColor;
@@ -14,7 +14,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
@@ -139,7 +138,7 @@ public abstract class Item {
         return null;
     }
 
-    public void castAbility(ItemAction slot, AbilityProperties properties) {
+    public void castAbility(ItemAction slot, Properties properties) {
         Ability ability = this.getAbility(slot);
 
         if(ability == null) return;

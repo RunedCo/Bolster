@@ -4,10 +4,9 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
 import co.runed.bolster.abilities.conditions.Condition;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
-import co.runed.bolster.abilities.properties.AbilityProperties;
+import co.runed.bolster.properties.Properties;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
@@ -52,7 +51,7 @@ public abstract class Ability implements Listener {
         return true;
     }
 
-    public boolean activate(AbilityProperties properties) {
+    public boolean activate(Properties properties) {
         if(this.canActivate()) {
             this.onActivate(properties);
 
@@ -68,9 +67,9 @@ public abstract class Ability implements Listener {
         return false;
     }
 
-    public abstract void onActivate(AbilityProperties properties);
+    public abstract void onActivate(Properties properties);
 
-    public void onPostActivate(AbilityProperties properties) {
+    public void onPostActivate(Properties properties) {
 
     }
 

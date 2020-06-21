@@ -4,6 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemAction;
+import co.runed.bolster.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -22,7 +23,10 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class ItemManager implements Listener {
     Plugin plugin;
@@ -96,7 +100,9 @@ public class ItemManager implements Listener {
     }
 
     public void clearItems(LivingEntity entity) {
-        for (Item item : this.getItems(entity)) {
+        List<Item> items = new ArrayList<>(this.getItems(entity));
+
+        for (Item item : items) {
             this.removeItem(entity, item);
         }
     }
@@ -189,7 +195,7 @@ public class ItemManager implements Listener {
         if(item.getOwner() == null || player != item.getOwner()) return;
 
         if(item.getAbility(ItemAction.ON_DROP_ITEM) != null) {
-            AbilityProperties properties = new AbilityProperties();
+            Properties properties = new Properties();
             properties.set(AbilityProperties.CASTER, player);
             properties.set(AbilityProperties.ITEM_STACK, stack);
             properties.set(AbilityProperties.EVENT, event);
@@ -228,7 +234,7 @@ public class ItemManager implements Listener {
         if(item == null) return;
         if(item.getOwner() == null || player != item.getOwner()) return;
 
-        AbilityProperties properties = new AbilityProperties();
+        Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, player);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.BLOCK_ACTION, event.getAction());
@@ -259,7 +265,7 @@ public class ItemManager implements Listener {
         if(item == null) return;
         if(item.getOwner() == null || player != item.getOwner()) return;
 
-        AbilityProperties properties = new AbilityProperties();
+        Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, player);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.BLOCK, event.getBlock());
@@ -282,7 +288,7 @@ public class ItemManager implements Listener {
         if(item == null) return;
         if(item.getOwner() == null || player != item.getOwner()) return;
 
-        AbilityProperties properties = new AbilityProperties();
+        Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, player);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
@@ -303,7 +309,7 @@ public class ItemManager implements Listener {
         if(item == null) return;
         if(item.getOwner() == null || player != item.getOwner()) return;
 
-        AbilityProperties properties = new AbilityProperties();
+        Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, event.getPlayer());
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.CAUGHT, event.getCaught());
@@ -326,7 +332,7 @@ public class ItemManager implements Listener {
         if(item.getOwner() == null || player != item.getOwner()) return;
 
         if(item.getAbility(ItemAction.ON_SWAP_OFFHAND) != null) {
-            AbilityProperties properties = new AbilityProperties();
+            Properties properties = new Properties();
             properties.set(AbilityProperties.CASTER, player);
             properties.set(AbilityProperties.ITEM_STACK, stack);
             properties.set(AbilityProperties.EVENT, event);
@@ -351,7 +357,7 @@ public class ItemManager implements Listener {
         if(item.getOwner() == null || entity != item.getOwner()) return;
         if(item.getAbility(ItemAction.ON_SHOOT) == null) return;
 
-        AbilityProperties properties = new AbilityProperties();
+        Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, entity);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.FORCE, event.getForce());
@@ -377,7 +383,7 @@ public class ItemManager implements Listener {
         if(item.getOwner() == null || entity != item.getOwner()) return;
         if(item.getAbility(ItemAction.ON_SHOOT) == null) return;
 
-        AbilityProperties properties = new AbilityProperties();
+        Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, entity);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.FORCE, 1.0f);
