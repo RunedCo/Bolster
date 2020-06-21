@@ -1,6 +1,8 @@
 package co.runed.bolster.abilities.conditions;
 
 import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.abilities.properties.AbilityProperties;
+import co.runed.bolster.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 
 public class HasPermissionCondition extends Condition {
@@ -11,7 +13,9 @@ public class HasPermissionCondition extends Condition {
     }
 
     @Override
-    public boolean evaluate(Ability ability, LivingEntity caster) {
-        return caster.hasPermission(this.permission);
+    public boolean evaluate(Ability ability, Properties properties) {
+        LivingEntity entity = properties.get(AbilityProperties.CASTER);
+
+        return entity.hasPermission(this.permission);
     }
 }

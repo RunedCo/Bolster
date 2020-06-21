@@ -124,13 +124,7 @@ public class CommandItems extends CommandBase
         ItemStack stack = info.getClickedSlot().getItem(player);
         String itemId = Bolster.getItemManager().getItemIdFromStack(stack);
 
-        if(itemId != null) {
-            Item item = Bolster.getItemManager().createItem(player, itemId);
-            ItemStack itemStack = item.toItemStack();
-            itemStack.setAmount(stackAmount);
-
-            player.getInventory().addItem(itemStack);
-        }
+        Bolster.getItemManager().giveItem(player, itemId, stackAmount);
 
         player.sendMessage("You clicked on an item " + info.getAction().toString());
     }

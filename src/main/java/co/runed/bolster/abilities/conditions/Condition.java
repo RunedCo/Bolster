@@ -1,12 +1,12 @@
 package co.runed.bolster.abilities.conditions;
 
 import co.runed.bolster.abilities.Ability;
-import org.bukkit.entity.LivingEntity;
+import co.runed.bolster.properties.Properties;
 
 public abstract class Condition {
-    public abstract boolean evaluate(Ability ability, LivingEntity caster);
+    public abstract boolean evaluate(Ability ability, Properties properties);
 
-    public void onFail(Ability ability, LivingEntity entity) {
+    public void onFail(Ability ability, Properties properties) {
 
     }
 }

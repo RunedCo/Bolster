@@ -7,7 +7,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemCategory {
     public static final ItemCategory WEAPONS = new ItemCategory("Weapons", null, new ItemStack(Material.DIAMOND_SWORD));
-    public static final ItemCategory ALL = new ItemCategory("All Items", ChatColor.LIGHT_PURPLE + "Every item", new ItemStack(Material.CHEST));
+    public static final ItemCategory TOOLS = new ItemCategory("Tools", null, new ItemStack(Material.IRON_AXE));
+    public static final ItemCategory ALL = new ItemCategory("All Items", null, new ItemStack(Material.CHEST));
 
     String name;
     String description;

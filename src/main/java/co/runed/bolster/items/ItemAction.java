@@ -7,6 +7,7 @@ public enum ItemAction {
     ON_SHOOT,
     ON_SWAP_OFFHAND,
     ON_DROP_ITEM,
+    ON_PICKUP_ITEM,
     ON_BREAK_BLOCK,
     ON_CONSUME_ITEM,
     ON_CATCH_FISH,

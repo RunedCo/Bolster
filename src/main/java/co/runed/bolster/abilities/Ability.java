@@ -5,6 +5,7 @@ import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
 import co.runed.bolster.abilities.conditions.Condition;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
 import co.runed.bolster.properties.Properties;
+import co.runed.bolster.properties.Property;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.HandlerList;
@@ -33,16 +34,16 @@ public abstract class Ability implements Listener {
         this.setTotalCooldown(config.getLong("cooldown", 0));
     }
 
-    public boolean canActivate() {
+    public boolean canActivate(Properties properties) {
         if(this.getCaster() == null) return false;
 
         for (ConditionData data : this.conditions) {
             Condition condition = data.condition;
 
-            boolean result = condition.evaluate(this, this.getCaster());
+            boolean result = condition.evaluate(this, properties);
 
             if(result != data.result) {
-                condition.onFail(this, this.getCaster());
+                condition.onFail(this, properties);
 
                 return false;
             }
@@ -52,7 +53,7 @@ public abstract class Ability implements Listener {
     }
 
     public boolean activate(Properties properties) {
-        if(this.canActivate()) {
+        if(this.canActivate(properties)) {
             this.onActivate(properties);
 
             Bolster.getCooldownManager().setCooldown(this.getCaster(), this.cooldownSource, this.getTotalCooldown());

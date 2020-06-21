@@ -35,6 +35,10 @@ public class ItemManager implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
+    public Item getItem(LivingEntity entity, Class<? extends Item> itemClass) {
+        return this.getItem(entity, Bolster.getItemRegistry().getId(itemClass));
+    }
+
     /**
      *  Gets an {@link Item} from a {@link LivingEntity}
      *
@@ -52,6 +56,10 @@ public class ItemManager implements Listener {
         }
 
         return null;
+    }
+
+    public Item createItem(LivingEntity entity, Class<? extends Item> itemClass) {
+        return this.createItem(entity, Bolster.getItemRegistry().getId(itemClass));
     }
 
     /**
@@ -83,6 +91,29 @@ public class ItemManager implements Listener {
         item.setOwner(entity);
 
         items.add(item);
+
+        return item;
+    }
+
+    public Item giveItem(Player player, Class<? extends Item> itemClass) {
+        return this.giveItem(player, itemClass, 1);
+    }
+
+    public Item giveItem(Player player, Class<? extends Item> itemClass, int amount) {
+        return this.giveItem(player, Bolster.getItemRegistry().getId(itemClass), amount);
+    }
+
+    public Item giveItem(Player player, String itemId) {
+        return this.giveItem(player, itemId, 1);
+    }
+
+    public Item giveItem(Player player, String itemId, int amount) {
+        Item item = this.createItem(player, itemId);
+
+        ItemStack stack = item.toItemStack();
+        stack.setAmount(amount);
+
+        player.getInventory().addItem(stack);
 
         return item;
     }

@@ -3,7 +3,7 @@ package co.runed.bolster.abilities.conditions;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemAction;
-import org.bukkit.entity.LivingEntity;
+import co.runed.bolster.properties.Properties;
 
 public class ItemOffCooldownCondition extends Condition {
     Item item;
@@ -15,7 +15,7 @@ public class ItemOffCooldownCondition extends Condition {
     }
 
     @Override
-    public boolean evaluate(Ability ability, LivingEntity caster) {
+    public boolean evaluate(Ability ability, Properties properties) {
         return false;
     }
 }

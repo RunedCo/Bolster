@@ -26,11 +26,20 @@ public class Registry<T> {
         return this.entries;
     }
 
-    public T createInstance(String id) {
-        if (!this.entries.containsKey(id)) return null;
+    public String getId(Class<? extends T> iClass) {
+        for (Map.Entry<String, Class<? extends T>> entry : this.entries.entrySet()) {
+            if(entry.getValue() == iClass) {
+                return entry.getKey();
+            }
+        }
+
+        return null;
+    }
+
+    public T createInstance(Class<? extends T> iClass) {
+        if (!this.entries.containsValue(iClass)) return null;
 
         try {
-            Class<? extends T> iClass = this.entries.get(id);
             Constructor<? extends T> constructor = iClass.getConstructor();
 
             return constructor.newInstance();
@@ -39,5 +48,11 @@ public class Registry<T> {
         }
 
         return null;
+    }
+
+    public T createInstance(String id) {
+        if (!this.entries.containsKey(id)) return null;
+
+        return this.createInstance(this.entries.get(id));
     }
 }
