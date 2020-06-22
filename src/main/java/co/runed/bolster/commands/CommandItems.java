@@ -19,6 +19,7 @@ import org.ipvp.canvas.template.StaticItemTemplate;
 import org.ipvp.canvas.type.ChestMenu;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 public class CommandItems extends CommandBase
 {
@@ -55,7 +56,7 @@ public class CommandItems extends CommandBase
                 .previousButton(new ItemStack(Material.ARROW))
                 .previousButtonSlot(47);
 
-        Map<String, Class<? extends Item>> items = Bolster.getItemRegistry().getEntries();
+        Map<String, Callable<? extends Item>> items = Bolster.getItemRegistry().getEntries();
 
         for (String id : items.keySet()){
             Item item = Bolster.getItemRegistry().createInstance(id);
