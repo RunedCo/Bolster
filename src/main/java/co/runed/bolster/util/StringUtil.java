@@ -10,11 +10,15 @@ import java.util.List;
 
 public class StringUtil {
     public static List<String> formatLore(String text) {
+        return formatLore(text, 45);
+    }
+
+    public static List<String> formatLore(String text, int lineLength) {
         List<String> lore = new ArrayList<>();
 
         if(text == null) return lore;
 
-        String wrapped = WordUtils.wrap(text, 45);
+        String wrapped = WordUtils.wrap(text, lineLength);
         String[] wrappedArray = wrapped.split("\r\n");
 
         String previousLine = null;
