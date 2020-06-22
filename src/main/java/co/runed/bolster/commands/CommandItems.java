@@ -3,6 +3,7 @@ package co.runed.bolster.commands;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemCategory;
+import co.runed.bolster.util.PlayerUtil;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,10 +18,7 @@ import org.ipvp.canvas.slot.SlotSettings;
 import org.ipvp.canvas.template.StaticItemTemplate;
 import org.ipvp.canvas.type.ChestMenu;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CommandItems extends CommandBase
 {
@@ -71,7 +69,12 @@ public class CommandItems extends CommandBase
             }
         }
 
-        for (ItemCategory category : itemCategories.keySet()) {
+        List<ItemCategory> sortedCategories = new ArrayList<>(itemCategories.keySet());
+        sortedCategories.sort(Comparator.comparing(ItemCategory::getName));
+
+        SlotSettings allItems = null;
+
+        for (ItemCategory category : sortedCategories) {
             List<Item> categoryItems = itemCategories.get(category);
 
             SlotSettings settings = SlotSettings.builder()
@@ -79,8 +82,16 @@ public class CommandItems extends CommandBase
                     .clickHandler((p, info) -> {this.openCategory(player, category, categoryItems);})
                     .build();
 
+            if(category == ItemCategory.ALL) {
+                allItems = settings;
+
+                continue;
+            }
+
             builder.addItem(settings);
         }
+
+        if (allItems != null) builder.addItem(allItems);
 
         List<Menu> pages = builder.build();
 
@@ -120,12 +131,20 @@ public class CommandItems extends CommandBase
     }
 
     private void givePlayerItem(Player player, ClickInformation info) {
-        int stackAmount = info.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY ? 64 : 1;
+        int stackAmount = info.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || info.getAction() == InventoryAction.DROP_ALL_SLOT ? 64 : 1;
         ItemStack stack = info.getClickedSlot().getItem(player);
         String itemId = Bolster.getItemManager().getItemIdFromStack(stack);
 
-        Bolster.getItemManager().giveItem(player, itemId, stackAmount);
+        if (info.getAction() == InventoryAction.DROP_ALL_SLOT || info.getAction() == InventoryAction.DROP_ONE_SLOT) {
+            Item item = Bolster.getItemManager().createItem(player, itemId);
 
-        player.sendMessage("You clicked on an item " + info.getAction().toString());
+            ItemStack itemStack = item.toItemStack();
+            itemStack.setAmount(stackAmount);
+
+            PlayerUtil.dropItem(player, itemStack);
+            return;
+        }
+
+        Bolster.getItemManager().giveItem(player, itemId, stackAmount);
     }
 }
