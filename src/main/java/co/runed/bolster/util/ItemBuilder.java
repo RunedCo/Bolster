@@ -54,6 +54,8 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setLore(String lore) {
+        if (lore == null) return new ItemBuilder(this.item);
+
         return this.setLore(StringUtil.formatLore(lore));
     }
 
