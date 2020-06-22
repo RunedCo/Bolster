@@ -23,7 +23,7 @@ public class AbilityOffCooldownCondition extends Condition {
         LivingEntity entity = properties.get(AbilityProperties.CASTER);
 
         if(entity.getType() == EntityType.PLAYER) {
-            PlayerUtil.sendActionBar((Player) entity, "Ability on cooldown (" + ability.getRemainingCooldown() +" seconds remaining)");
+            PlayerUtil.sendActionBar((Player) entity, "Ability on cooldown (" + (int) ability.getRemainingCooldown() +" seconds remaining)");
         }
         //player.sendMessage("Ability on cooldown (" + ability.getRemainingCooldown() +" seconds remaining)");
     }

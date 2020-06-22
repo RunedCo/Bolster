@@ -10,7 +10,7 @@ public abstract class PassiveAbility extends Ability {
     protected BukkitTask scheduledTask;
 
     public PassiveAbility(long tickInterval) {
-        this.setTotalCooldown(tickInterval / 20L);
+        this.setCooldownTicks(tickInterval);
 
         Plugin plugin = Bolster.getInstance();
 

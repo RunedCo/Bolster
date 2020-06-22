@@ -5,7 +5,6 @@ import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
 import co.runed.bolster.abilities.conditions.Condition;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
 import co.runed.bolster.properties.Properties;
-import co.runed.bolster.properties.Property;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.HandlerList;
@@ -17,7 +16,7 @@ import java.util.UUID;
 public abstract class Ability implements Listener {
     private String cooldownSource = UUID.randomUUID().toString();
 
-    private long cooldown = 0;
+    private double cooldown = 0;
     private float manaCost = 0;
     private LivingEntity caster;
 
@@ -31,7 +30,7 @@ public abstract class Ability implements Listener {
     }
 
     public void loadConfig(ConfigurationSection config) {
-        this.setTotalCooldown(config.getLong("cooldown", 0));
+        this.setCooldownTicks(config.getLong("cooldown", 0));
     }
 
     public boolean canActivate(Properties properties) {
@@ -82,15 +81,19 @@ public abstract class Ability implements Listener {
         this.cooldownSource = source;
     }
 
-    public long getTotalCooldown() {
+    public double getTotalCooldown() {
         return this.cooldown;
     }
 
-    public void setTotalCooldown(long cooldown) {
-        this.cooldown = cooldown;
+    public void setCooldownTicks(long cooldown) {
+        this.cooldown = cooldown * 20;
     }
 
-    public long getRemainingCooldown() {
+    public void setCooldown(double cooldownSeconds) {
+        this.cooldown = cooldownSeconds;
+    }
+
+    public double getRemainingCooldown() {
         return Bolster.getCooldownManager().getRemainingTime(this.getCaster(), this.cooldownSource);
     }
 

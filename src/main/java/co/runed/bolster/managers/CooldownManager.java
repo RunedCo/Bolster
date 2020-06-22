@@ -16,12 +16,12 @@ public class CooldownManager {
         this.plugin = plugin;
     }
 
-    public void setCooldown(LivingEntity entity, String source, long cooldown) {
-        if(cooldown <= 0) return;
+    public void setCooldown(LivingEntity entity, String source, double cooldownSeconds) {
+        if(cooldownSeconds <= 0) return;
 
         if(this.getRemainingTime(entity, source) <= 0) {
             this.clearCooldown(entity, source);
-            this.cooldowns.add(new CooldownData(entity, source, Instant.now(), cooldown));
+            this.cooldowns.add(new CooldownData(entity, source, Instant.now(), (long) (cooldownSeconds * 1000)));
         }
     }
 
@@ -33,10 +33,10 @@ public class CooldownManager {
         this.cooldowns.removeIf(cd -> cd.source.equals(source) && cd.caster.equals(entity));
     }
 
-    public long getRemainingTime(LivingEntity entity, String source) {
+    public double getRemainingTime(LivingEntity entity, String source) {
         for (CooldownData cd : this.cooldowns) {
             if (cd.caster.equals(entity) && cd.source.equals(source)) {
-                return cd.getRemainingTime();
+                return cd.getRemainingTime() / 1000d;
             }
         }
 
@@ -49,18 +49,18 @@ public class CooldownManager {
         private final Instant castTime;
         private final long cooldown;
 
-        private CooldownData(LivingEntity entity, String source, Instant castTime, long cooldown) {
+        private CooldownData(LivingEntity entity, String source, Instant castTime, long cooldownMs) {
             this.caster = entity;
             this.source = source;
             this.castTime = castTime;
-            this.cooldown = cooldown;
+            this.cooldown = cooldownMs;
         }
 
         public long getRemainingTime() {
             Duration sinceStart = Duration.between(this.castTime, Instant.now());
-            Duration remaining = Duration.ofSeconds(this.cooldown).minus(sinceStart);
+            Duration remaining = Duration.ofMillis(this.cooldown).minus(sinceStart);
 
-            return remaining.getSeconds();
+            return remaining.toMillis();
         }
     }
 }
