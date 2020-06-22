@@ -171,7 +171,7 @@ public class ItemManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    private void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
         for (ItemStack stack : player.getInventory()) {
@@ -192,14 +192,14 @@ public class ItemManager implements Listener {
     // TODO: WOULD BE GOOD FOR OPTIMIZATION TO REMOVE ALL ITEM INSTANCES BUT MAY CAUSE ISSUES WITH PLAYERS DCING MID GAME
     // TODO: MAYBE ADD TO 5 MIN TIMER/DELAY?
     /*@EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event) {
+    private void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
         this.clearItems(player);
     }*/
 
     @EventHandler
-    public void onPlayerDie(PlayerDeathEvent event) {
+    private void onPlayerDie(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
         this.clearItems(player);
@@ -208,7 +208,7 @@ public class ItemManager implements Listener {
     }
 
     @EventHandler
-    public void onDropItem(PlayerDropItemEvent event) {
+    private void onDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         ItemStack stack = event.getItemDrop().getItemStack();
         String itemId = this.getItemIdFromStack(stack);
@@ -236,7 +236,7 @@ public class ItemManager implements Listener {
     }
 
     @EventHandler
-    public void onPickupItem(EntityPickupItemEvent event) {
+    private void onPickupItem(EntityPickupItemEvent event) {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getItem().getItemStack();
 
@@ -251,7 +251,7 @@ public class ItemManager implements Listener {
      *  Event that triggers casting an items ability on left or right click
      */
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    private void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack stack = event.getItem();
         String itemId = this.getItemIdFromStack(stack);
@@ -284,7 +284,7 @@ public class ItemManager implements Listener {
      *  Event that triggers casting an items ability when an entity is damaged
      */
     @EventHandler
-    public void onDamageEntity(EntityDamageByEntityEvent event) {
+    private void onDamageEntity(EntityDamageByEntityEvent event) {
         if(!(event.getDamager() instanceof LivingEntity)) return;
 
         LivingEntity entity = (LivingEntity) event.getDamager();
@@ -314,7 +314,7 @@ public class ItemManager implements Listener {
      *  Event that triggers casting an items ability when an entity is killed
      */
     @EventHandler
-    public void onKillEntity(EntityDeathEvent event) {
+    private void onKillEntity(EntityDeathEvent event) {
         Player player = event.getEntity().getKiller();
 
         ItemStack stack = player.getInventory().getItemInMainHand();
@@ -342,7 +342,7 @@ public class ItemManager implements Listener {
      *  Event that triggers casting an items ability when a block is broken
      */
     @EventHandler
-    public void onPlayerBreakBlock(BlockBreakEvent event) {
+    private void onPlayerBreakBlock(BlockBreakEvent event) {
         Player player = event.getPlayer();
         ItemStack stack = player.getInventory().getItemInMainHand();
 
@@ -368,7 +368,7 @@ public class ItemManager implements Listener {
      *  Event that triggers casting an items ability when the item is consumed (food, potions)
      */
     @EventHandler
-    public void onPlayerEat(PlayerItemConsumeEvent event) {
+    private void onPlayerEat(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
         ItemStack stack = player.getInventory().getItemInMainHand();
 
@@ -393,7 +393,7 @@ public class ItemManager implements Listener {
      *  Event that triggers casting an items ability when a fish is caught
      */
     @EventHandler
-    public void onPlayerFish(PlayerFishEvent event) {
+    private void onPlayerFish(PlayerFishEvent event) {
         if(event.getState() != PlayerFishEvent.State.CAUGHT_ENTITY && event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
 
         Player player = event.getPlayer();
@@ -420,7 +420,7 @@ public class ItemManager implements Listener {
      *  Event that triggers casting an items ability on swapping offhand (pushing F)
      */
     @EventHandler
-    public void onPlayerOffhand(PlayerSwapHandItemsEvent event) {
+    private void onPlayerOffhand(PlayerSwapHandItemsEvent event) {
         Player player = event.getPlayer();
         ItemStack stack = event.getOffHandItem();
         String itemId = this.getItemIdFromStack(stack);
@@ -448,7 +448,7 @@ public class ItemManager implements Listener {
      *  Event that triggers casting an items ability on shooting a bow
      */
     @EventHandler
-    public void onLivingEntityShootBow(EntityShootBowEvent event) {
+    private void onLivingEntityShootBow(EntityShootBowEvent event) {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getBow();
         String itemId = this.getItemIdFromStack(stack);
@@ -477,7 +477,7 @@ public class ItemManager implements Listener {
      *  Event that triggers casting an items ability on throwing an egg
      */
     @EventHandler
-    public void onPlayerThrowEgg(PlayerEggThrowEvent event) {
+    private void onPlayerThrowEgg(PlayerEggThrowEvent event) {
         LivingEntity entity = event.getPlayer();
         ItemStack stack = event.getEgg().getItem();
         String itemId = this.getItemIdFromStack(stack);
@@ -506,7 +506,7 @@ public class ItemManager implements Listener {
      *  Event that triggers casting an items ability on sneak
      */
     @EventHandler
-    public void onPlayerSneak(PlayerToggleSneakEvent event) {
+    private void onPlayerSneak(PlayerToggleSneakEvent event) {
         if(!event.isSneaking()) return;
 
         Player player = event.getPlayer();
