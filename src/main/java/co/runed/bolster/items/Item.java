@@ -27,8 +27,8 @@ public abstract class Item {
     public static final NamespacedKey ITEM_OWNER_KEY = new NamespacedKey(Bolster.getInstance(), "item-owner");
 
     private String id;
-    public String name;
-    public String description;
+    private String name;
+    private List<String> lore = new ArrayList<>();
     private ItemStack itemStack = new ItemStack(Material.STICK);
 
     private ItemSkin skin;
@@ -37,7 +37,7 @@ public abstract class Item {
     private LivingEntity owner;
 
     private ItemAction primaryAbility = ItemAction.RIGHT_CLICK;
-    private final Map<ItemAction, Ability> abilities = new HashMap<>();
+    private final Map<ItemAction, List<Ability>> abilities = new HashMap<>();
     private final List<PassiveAbility> passives = new ArrayList<>();
 
     public Item() {
@@ -53,23 +53,19 @@ public abstract class Item {
     }
 
     public String getName() {
-        return this.name + ChatColor.RESET;
+        return this.name + ChatColor.WHITE;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void addLore(String description) {
+        this.lore.addAll(StringUtil.formatLore(description));
     }
 
     public List<String> getLore() {
-        return StringUtil.formatLore(this.getDescription());
+        return this.lore;
     }
 
     protected ItemStack getItemStack() {
@@ -124,33 +120,41 @@ public abstract class Item {
         this.passives.add(ability);
     }
 
-    public void setAbility(ItemAction slot, Ability ability) {
+    public void addAbility(ItemAction slot, Ability ability) {
         ability.setCooldownSource(this.getId() + "." + ability.getCooldownSource());
 
-        this.abilities.put(slot, ability);
+        this.abilities.putIfAbsent(slot, new ArrayList<>());
+
+        this.abilities.get(slot).add(ability);
     }
 
-    public Ability getAbility(ItemAction slot) {
+    public Boolean hasAbility(ItemAction slot) {
+        return this.abilities.containsKey(slot);
+    }
+
+    public List<Ability> getAbilities(ItemAction slot) {
         if(this.abilities.containsKey(slot)) {
             return this.abilities.get(slot);
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
     public void castAbility(ItemAction slot, Properties properties) {
-        Ability ability = this.getAbility(slot);
+        List<Ability> abilities = this.getAbilities(slot);
 
-        if(ability == null) return;
+        for (Ability ability : abilities) {
+            if(ability == null) return;
 
-        ability.setCaster(this.getOwner());
+            ability.setCaster(this.getOwner());
 
-        boolean success = ability.activate(properties);
+            boolean success = ability.activate(properties);
 
-        if (!success) return;
+            if (!success) return;
 
-        if(this.primaryAbility == slot && this.getOwner().getType() == EntityType.PLAYER) {
-            ((Player)this.getOwner()).setCooldown(this.getItemStack().getType(), (int) ability.getTotalCooldown() * 20);
+            if(this.primaryAbility == slot && this.getOwner().getType() == EntityType.PLAYER) {
+                ((Player)this.getOwner()).setCooldown(this.getItemStack().getType(), (int) (ability.getTotalCooldown() * 20));
+            }
         }
     }
 
@@ -174,8 +178,10 @@ public abstract class Item {
     }
 
     public void destroy() {
-        for (Ability ability : this.abilities.values()) {
-            ability.destroy();
+        for (List<Ability> abilities : this.abilities.values()) {
+            for (Ability ability : abilities) {
+                ability.destroy();
+            }
         }
 
         for (PassiveAbility passive : this.passives) {

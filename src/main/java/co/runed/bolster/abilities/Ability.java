@@ -86,7 +86,7 @@ public abstract class Ability implements Listener {
     }
 
     public void setCooldownTicks(long cooldown) {
-        this.cooldown = cooldown * 20;
+        this.cooldown = cooldown / 20d;
     }
 
     public void setCooldown(double cooldownSeconds) {

@@ -19,7 +19,7 @@ public class ItemCategory {
         this.name = name;
         this.description = description;
         this.icon = new ItemBuilder(icon)
-                .setDisplayName(ChatColor.RESET + name)
+                .setDisplayName(ChatColor.WHITE + name)
                 .setLore(this.getDescription())
                 .addAllItemFlags()
                 .build();

@@ -6,6 +6,7 @@ import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,6 +19,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -117,6 +119,9 @@ public class GameProperties extends Properties implements Listener {
     public void onInteractStrip(PlayerInteractEvent e) {
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block block = e.getClickedBlock();
+            ItemStack item = e.getItem();
+
+            if(item == null || item.getType().isBlock()) return;
 
             if(!this.get(GameProperties.ENABLE_LOG_STRIP)) {
                 if (Tag.LOGS.isTagged(block.getType())) {

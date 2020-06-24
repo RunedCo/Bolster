@@ -18,7 +18,9 @@ public class StringUtil {
 
         if(text == null) return lore;
 
-        String wrapped = WordUtils.wrap(text, lineLength);
+        int length = lineLength + (text.length() - ChatColor.stripColor(text).length());
+
+        String wrapped = WordUtils.wrap(text, length);
         String[] wrappedArray = wrapped.split("\r\n");
 
         String previousLine = null;

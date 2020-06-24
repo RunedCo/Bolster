@@ -6,7 +6,6 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemAction;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,11 +39,11 @@ public class ItemManager implements Listener {
     }
 
     /**
-     *  Gets an {@link Item} from a {@link LivingEntity}
+     * Gets an {@link Item} from a {@link LivingEntity}
      *
      * @param entity the entity that has the item
      * @param id     the {@link String} id of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
-     * @return       the existing {@link Item} instance or null
+     * @return the existing {@link Item} instance or null
      */
     public Item getItem(LivingEntity entity, String id) {
         this.entityItems.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
@@ -52,7 +51,7 @@ public class ItemManager implements Listener {
         List<Item> items = this.entityItems.get(entity.getUniqueId());
 
         for (Item item : items) {
-            if(item.getId().equals(id)) return item;
+            if (item.getId().equals(id)) return item;
         }
 
         return null;
@@ -63,11 +62,11 @@ public class ItemManager implements Listener {
     }
 
     /**
-     *  Creates an {@link Item} instance unless entity already has one
-     *  in which case it gets the existing instance
+     * Creates an {@link Item} instance unless entity already has one
+     * in which case it gets the existing instance
      *
      * @param entity the entity that the item should be created for
-     * @param id the {@link String} id of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
+     * @param id     the {@link String} id of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
      */
     public Item createItem(LivingEntity entity, String id) {
         this.entityItems.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
@@ -118,8 +117,35 @@ public class ItemManager implements Listener {
         return item;
     }
 
-    public void removeItem(LivingEntity entity, Item item) {
-        if(!this.entityItems.containsKey(entity.getUniqueId())) return;
+    public void removeItem(Player player, Item item) {
+        this.removeItem(player, item, 1);
+    }
+
+    public void removeItem(Player player, Item item, int count) {
+        for (ItemStack stack : player.getInventory()) {
+            String itemId = this.getItemIdFromStack(stack);
+
+            if (itemId != null && itemId.equals(item.getId())) {
+                ItemStack toRemove = stack.clone();
+                toRemove.setAmount(count);
+
+                player.getInventory().removeItem(toRemove);
+
+                break;
+            }
+        }
+
+        for (ItemStack stack : player.getInventory()) {
+            String itemId = this.getItemIdFromStack(stack);
+
+            if (itemId != null && itemId.equals(item.getId())) return;
+        }
+
+        this.clearItem(player, item);
+    }
+
+    public void clearItem(LivingEntity entity, Item item) {
+        if (!this.entityItems.containsKey(entity.getUniqueId())) return;
 
         item.destroy();
 
@@ -130,7 +156,7 @@ public class ItemManager implements Listener {
         List<Item> items = new ArrayList<>(this.getItems(entity));
 
         for (Item item : items) {
-            this.removeItem(entity, item);
+            this.clearItem(entity, item);
         }
     }
 
@@ -139,14 +165,14 @@ public class ItemManager implements Listener {
     }
 
     public List<Item> getItems(LivingEntity entity) {
-        if(!this.entityItems.containsKey(entity.getUniqueId())) return new ArrayList<>();
+        if (!this.entityItems.containsKey(entity.getUniqueId())) return new ArrayList<>();
 
         return this.entityItems.get(entity.getUniqueId());
     }
 
     public String getItemIdFromStack(ItemStack stack) {
-        if(stack == null) return null;
-        if(!stack.hasItemMeta()) return null;
+        if (stack == null) return null;
+        if (!stack.hasItemMeta()) return null;
 
         ItemMeta meta = stack.getItemMeta();
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
@@ -161,7 +187,7 @@ public class ItemManager implements Listener {
 
         if (item.getOwner() == null || entity != item.getOwner()) return false;
         if (itemId == null) return false;
-        if(item.getId() == null) return false;
+        if (item.getId() == null) return false;
 
         return itemId.equals(item.getId());
     }
@@ -177,7 +203,7 @@ public class ItemManager implements Listener {
         for (ItemStack stack : player.getInventory()) {
             String itemId = this.getItemIdFromStack(stack);
 
-            if(itemId == null) return;
+            if (itemId == null) return;
 
             Item item = this.createItem(player, itemId);
 
@@ -213,16 +239,17 @@ public class ItemManager implements Listener {
         ItemStack stack = event.getItemDrop().getItemStack();
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         Item item = this.createItem(player, itemId);
 
-        if(item == null) return;
-        if(item.getOwner() == null || player != item.getOwner()) return;
+        if (item == null) return;
+        if (item.getOwner() == null || player != item.getOwner()) return;
 
-        if(item.getAbility(ItemAction.ON_DROP_ITEM) != null) {
+        if (item.hasAbility(ItemAction.ON_DROP_ITEM)) {
             Properties properties = new Properties();
             properties.set(AbilityProperties.CASTER, player);
+            properties.set(AbilityProperties.ITEM, item);
             properties.set(AbilityProperties.ITEM_STACK, stack);
             properties.set(AbilityProperties.EVENT, event);
 
@@ -242,13 +269,13 @@ public class ItemManager implements Listener {
 
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         this.createItem(entity, itemId);
     }
 
     /**
-     *  Event that triggers casting an items ability on left or right click
+     * Event that triggers casting an items ability on left or right click
      */
     @EventHandler
     private void onPlayerInteract(PlayerInteractEvent event) {
@@ -256,15 +283,16 @@ public class ItemManager implements Listener {
         ItemStack stack = event.getItem();
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         Item item = this.createItem(player, itemId);
 
-        if(item == null) return;
-        if(item.getOwner() == null || player != item.getOwner()) return;
+        if (item == null) return;
+        if (item.getOwner() == null || player != item.getOwner()) return;
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, player);
+        properties.set(AbilityProperties.ITEM, item);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.BLOCK_ACTION, event.getAction());
         properties.set(AbilityProperties.BLOCK, event.getClickedBlock());
@@ -281,11 +309,11 @@ public class ItemManager implements Listener {
     }
 
     /**
-     *  Event that triggers casting an items ability when an entity is damaged
+     * Event that triggers casting an items ability when an entity is damaged
      */
     @EventHandler
     private void onDamageEntity(EntityDamageByEntityEvent event) {
-        if(!(event.getDamager() instanceof LivingEntity)) return;
+        if (!(event.getDamager() instanceof LivingEntity)) return;
 
         LivingEntity entity = (LivingEntity) event.getDamager();
         EntityEquipment inv = entity.getEquipment();
@@ -293,12 +321,12 @@ public class ItemManager implements Listener {
 
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         Item item = this.createItem(entity, itemId);
 
-        if(item == null) return;
-        if(item.getOwner() == null || entity != item.getOwner()) return;
+        if (item == null) return;
+        if (item.getOwner() == null || entity != item.getOwner()) return;
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, entity);
@@ -311,7 +339,7 @@ public class ItemManager implements Listener {
     }
 
     /**
-     *  Event that triggers casting an items ability when an entity is killed
+     * Event that triggers casting an items ability when an entity is killed
      */
     @EventHandler
     private void onKillEntity(EntityDeathEvent event) {
@@ -321,15 +349,16 @@ public class ItemManager implements Listener {
 
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         Item item = this.createItem(player, itemId);
 
-        if(item == null) return;
-        if(item.getOwner() == null || player != item.getOwner()) return;
+        if (item == null) return;
+        if (item.getOwner() == null || player != item.getOwner()) return;
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, player);
+        properties.set(AbilityProperties.ITEM, item);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.TARGETS, new ArrayList<>(Arrays.asList(event.getEntity())));
@@ -339,7 +368,7 @@ public class ItemManager implements Listener {
     }
 
     /**
-     *  Event that triggers casting an items ability when a block is broken
+     * Event that triggers casting an items ability when a block is broken
      */
     @EventHandler
     private void onPlayerBreakBlock(BlockBreakEvent event) {
@@ -348,15 +377,16 @@ public class ItemManager implements Listener {
 
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         Item item = this.createItem(player, itemId);
 
-        if(item == null) return;
-        if(item.getOwner() == null || player != item.getOwner()) return;
+        if (item == null) return;
+        if (item.getOwner() == null || player != item.getOwner()) return;
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, player);
+        properties.set(AbilityProperties.ITEM, item);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.BLOCK, event.getBlock());
         properties.set(AbilityProperties.EVENT, event);
@@ -365,7 +395,7 @@ public class ItemManager implements Listener {
     }
 
     /**
-     *  Event that triggers casting an items ability when the item is consumed (food, potions)
+     * Event that triggers casting an items ability when the item is consumed (food, potions)
      */
     @EventHandler
     private void onPlayerEat(PlayerItemConsumeEvent event) {
@@ -374,15 +404,16 @@ public class ItemManager implements Listener {
 
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         Item item = this.createItem(player, itemId);
 
-        if(item == null) return;
-        if(item.getOwner() == null || player != item.getOwner()) return;
+        if (item == null) return;
+        if (item.getOwner() == null || player != item.getOwner()) return;
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, player);
+        properties.set(AbilityProperties.ITEM, item);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
 
@@ -390,22 +421,23 @@ public class ItemManager implements Listener {
     }
 
     /**
-     *  Event that triggers casting an items ability when a fish is caught
+     * Event that triggers casting an items ability when a fish is caught
      */
     @EventHandler
     private void onPlayerFish(PlayerFishEvent event) {
-        if(event.getState() != PlayerFishEvent.State.CAUGHT_ENTITY && event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
+        if (event.getState() != PlayerFishEvent.State.CAUGHT_ENTITY && event.getState() != PlayerFishEvent.State.CAUGHT_FISH)
+            return;
 
         Player player = event.getPlayer();
         ItemStack stack = player.getInventory().getItemInMainHand();
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         Item item = this.createItem(player, itemId);
 
-        if(item == null) return;
-        if(item.getOwner() == null || player != item.getOwner()) return;
+        if (item == null) return;
+        if (item.getOwner() == null || player != item.getOwner()) return;
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, event.getPlayer());
@@ -417,7 +449,7 @@ public class ItemManager implements Listener {
     }
 
     /**
-     *  Event that triggers casting an items ability on swapping offhand (pushing F)
+     * Event that triggers casting an items ability on swapping offhand (pushing F)
      */
     @EventHandler
     private void onPlayerOffhand(PlayerSwapHandItemsEvent event) {
@@ -425,16 +457,17 @@ public class ItemManager implements Listener {
         ItemStack stack = event.getOffHandItem();
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         Item item = this.createItem(player, itemId);
 
-        if(item == null) return;
-        if(item.getOwner() == null || player != item.getOwner()) return;
+        if (item == null) return;
+        if (item.getOwner() == null || player != item.getOwner()) return;
 
-        if(item.getAbility(ItemAction.ON_SWAP_OFFHAND) != null) {
+        if (item.hasAbility(ItemAction.ON_SWAP_OFFHAND)) {
             Properties properties = new Properties();
             properties.set(AbilityProperties.CASTER, player);
+            properties.set(AbilityProperties.ITEM, item);
             properties.set(AbilityProperties.ITEM_STACK, stack);
             properties.set(AbilityProperties.EVENT, event);
 
@@ -445,7 +478,7 @@ public class ItemManager implements Listener {
     }
 
     /**
-     *  Event that triggers casting an items ability on shooting a bow
+     * Event that triggers casting an items ability on shooting a bow
      */
     @EventHandler
     private void onLivingEntityShootBow(EntityShootBowEvent event) {
@@ -453,13 +486,13 @@ public class ItemManager implements Listener {
         ItemStack stack = event.getBow();
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         Item item = this.createItem(entity, itemId);
 
-        if(item == null) return;
-        if(item.getOwner() == null || entity != item.getOwner()) return;
-        if(item.getAbility(ItemAction.ON_SHOOT) == null) return;
+        if (item == null) return;
+        if (item.getOwner() == null || entity != item.getOwner()) return;
+        if (item.hasAbility(ItemAction.ON_SHOOT)) return;
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, entity);
@@ -474,7 +507,7 @@ public class ItemManager implements Listener {
     }
 
     /**
-     *  Event that triggers casting an items ability on throwing an egg
+     * Event that triggers casting an items ability on throwing an egg
      */
     @EventHandler
     private void onPlayerThrowEgg(PlayerEggThrowEvent event) {
@@ -482,13 +515,13 @@ public class ItemManager implements Listener {
         ItemStack stack = event.getEgg().getItem();
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         Item item = this.createItem(entity, itemId);
 
-        if(item == null) return;
-        if(item.getOwner() == null || entity != item.getOwner()) return;
-        if(item.getAbility(ItemAction.ON_SHOOT) == null) return;
+        if (item == null) return;
+        if (item.getOwner() == null || entity != item.getOwner()) return;
+        if (item.hasAbility(ItemAction.ON_SHOOT)) return;
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, entity);
@@ -503,25 +536,26 @@ public class ItemManager implements Listener {
     }
 
     /**
-     *  Event that triggers casting an items ability on sneak
+     * Event that triggers casting an items ability on sneak
      */
     @EventHandler
     private void onPlayerSneak(PlayerToggleSneakEvent event) {
-        if(!event.isSneaking()) return;
+        if (!event.isSneaking()) return;
 
         Player player = event.getPlayer();
         ItemStack stack = player.getInventory().getItemInMainHand();
         String itemId = this.getItemIdFromStack(stack);
 
-        if(itemId == null) return;
+        if (itemId == null) return;
 
         Item item = this.createItem(player, itemId);
 
-        if(item == null) return;
-        if(item.getOwner() == null || player != item.getOwner()) return;
+        if (item == null) return;
+        if (item.getOwner() == null || player != item.getOwner()) return;
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, player);
+        properties.set(AbilityProperties.ITEM, item);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
 

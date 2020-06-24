@@ -8,6 +8,6 @@ public class Glyphs {
     public static final String GEM = glyph('\uE002');
 
     public static String glyph(char glyph) {
-        return ChatColor.RESET.toString() + glyph;
+        return ChatColor.WHITE.toString() + glyph;
     }
 }

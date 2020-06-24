@@ -1,5 +1,6 @@
 package co.runed.bolster.abilities.properties;
 
+import co.runed.bolster.items.Item;
 import co.runed.bolster.properties.Property;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -27,6 +28,7 @@ public class AbilityProperties {
     public static final Property<World> WORLD = new Property<>("world");
     public static final Property<Event> EVENT = new Property<>("event");
     public static final Property<ItemStack> ITEM_STACK = new Property<>("item_stack");
+    public static final Property<Item> ITEM = new Property<>("item");
 
     // BLOCK PROPERTIES
     public static final Property<Block> BLOCK = new Property<>("block");
