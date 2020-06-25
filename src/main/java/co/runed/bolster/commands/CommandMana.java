@@ -1,10 +1,10 @@
 package co.runed.bolster.commands;
 
 import co.runed.bolster.Bolster;
-import io.github.jorelali.commandapi.api.arguments.Argument;
-import io.github.jorelali.commandapi.api.arguments.FloatArgument;
-import io.github.jorelali.commandapi.api.arguments.PlayerArgument;
-import io.github.jorelali.commandapi.api.arguments.StringArgument;
+import dev.jorel.commandapi.arguments.Argument;
+import dev.jorel.commandapi.arguments.FloatArgument;
+import dev.jorel.commandapi.arguments.PlayerArgument;
+import dev.jorel.commandapi.arguments.StringArgument;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

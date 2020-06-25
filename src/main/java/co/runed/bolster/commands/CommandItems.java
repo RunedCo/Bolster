@@ -37,7 +37,7 @@ public class CommandItems extends CommandBase
     }
 
     private void openMenu(Player player) {
-        HashMap<ItemCategory, List<Item>> itemCategories = new HashMap<>();
+        HashMap<ItemCategory, List<ItemStack>> itemCategories = new HashMap<>();
 
         ChestMenu.Builder pageTemplate = ChestMenu.builder(6).title("Items").redraw(true);
         Mask itemSlots = BinaryMask.builder(pageTemplate.getDimensions())
@@ -61,13 +61,13 @@ public class CommandItems extends CommandBase
         for (String id : items.keySet()){
             Item item = Bolster.getItemRegistry().createInstance(id);
 
-            item.destroy();
-
             for (ItemCategory category : item.getCategories()) {
                 itemCategories.putIfAbsent(category, new ArrayList<>());
 
-                itemCategories.get(category).add(item);
+                itemCategories.get(category).add(item.toItemStack());
             }
+
+            item.destroy();
         }
 
         List<ItemCategory> sortedCategories = new ArrayList<>(itemCategories.keySet());
@@ -76,7 +76,7 @@ public class CommandItems extends CommandBase
         SlotSettings allItems = null;
 
         for (ItemCategory category : sortedCategories) {
-            List<Item> categoryItems = itemCategories.get(category);
+            List<ItemStack> categoryItems = itemCategories.get(category);
 
             SlotSettings settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(category.getIcon()))
@@ -99,7 +99,7 @@ public class CommandItems extends CommandBase
         pages.get(0).open(player);
     }
 
-    private void openCategory(Player player, ItemCategory category, List<Item> items) {
+    private void openCategory(Player player, ItemCategory category, List<ItemStack> items) {
         ChestMenu.Builder pageTemplate = ChestMenu.builder(6).title("Items - " + category.getName()).redraw(true);
         Mask itemSlots = BinaryMask.builder(pageTemplate.getDimensions())
                 .pattern("111111111")
@@ -117,9 +117,9 @@ public class CommandItems extends CommandBase
                 .previousButton(new ItemStack(Material.ARROW))
                 .previousButtonSlot(47);
 
-        for (Item item : items){
+        for (ItemStack item : items){
             SlotSettings settings = SlotSettings.builder()
-                    .itemTemplate(new StaticItemTemplate(item.toItemStack()))
+                    .itemTemplate(new StaticItemTemplate(item))
                     .clickHandler(this::givePlayerItem)
                     .build();
 

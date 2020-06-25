@@ -1,10 +1,10 @@
 package co.runed.bolster.util;
 
 import co.runed.bolster.Bolster;
-import net.minecraft.server.v1_15_R1.*;
+import net.minecraft.server.v1_16_R1.*;
 import org.bukkit.*;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -61,7 +61,7 @@ public class PlayerUtil {
 
         CraftPlayer craftPlayer = (CraftPlayer) player;
 
-        PacketPlayOutChat packet = new PacketPlayOutChat(chatComponent, ChatMessageType.GAME_INFO);
+        PacketPlayOutChat packet = new PacketPlayOutChat(chatComponent, ChatMessageType.GAME_INFO, player.getUniqueId());
         craftPlayer.getHandle().playerConnection.sendPacket(packet);
     }
 

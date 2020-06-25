@@ -1,9 +1,10 @@
 package co.runed.bolster.commands;
 
-import io.github.jorelali.commandapi.api.CommandAPI;
-import io.github.jorelali.commandapi.api.CommandPermission;
-import io.github.jorelali.commandapi.api.arguments.Argument;
-import io.github.jorelali.commandapi.api.exceptions.WrapperCommandSyntaxException;
+import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.CommandPermission;
+import dev.jorel.commandapi.arguments.Argument;
+import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
 import org.bukkit.command.CommandSender;
 
 import java.util.LinkedHashMap;
@@ -14,7 +15,8 @@ public class CommandBase
     public String[] aliases = new String[0];
     public CommandPermission permission = CommandPermission.NONE;
     public LinkedHashMap<String, Argument> arguments = new LinkedHashMap<>();
-    private String commandNamespace = "minecraft";
+
+    private CommandAPICommand commandAPICommand;
 
     public CommandBase(String command, String permission, String[] aliases, LinkedHashMap<String, Argument> arguments)
     {
@@ -24,16 +26,17 @@ public class CommandBase
         if (arguments != null) this.arguments = arguments;
     }
 
-    public void run(CommandSender sender, Object[] args) throws WrapperCommandSyntaxException
-    {
+    public void run(CommandSender sender, Object[] args) throws WrapperCommandSyntaxException {
     }
 
     public void register()
     {
-        CommandAPI.getInstance().register(this.command, this.permission, this.aliases, this.arguments, this::run);
-    }
+        this.commandAPICommand = new CommandAPICommand(this.command)
+                .withArguments(arguments)                     // The arguments
+                .withAliases(this.aliases) // Command aliases
+                .withPermission(this.permission)         // Required permissions
+                .executes(this::run);
 
-    public void setCommandNamespace(String namespace) {
-        this.commandNamespace = namespace;
+        this.commandAPICommand.register();
     }
 }
