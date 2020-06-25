@@ -8,10 +8,11 @@ import org.bukkit.Tag;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class BlockIsMaterialCondition extends Condition {
-    List<Material> materials = new ArrayList<>();
+    Collection<Material> materials = new ArrayList<>();
 
     public BlockIsMaterialCondition(Material material) {
         materials.add(material);
@@ -21,7 +22,7 @@ public class BlockIsMaterialCondition extends Condition {
         this.materials.addAll(tag.getValues());
     }
 
-    public BlockIsMaterialCondition(List<Material> materials) {
+    public BlockIsMaterialCondition(Collection<Material> materials) {
         this.materials.addAll(materials);
     }
 

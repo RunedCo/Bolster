@@ -1,9 +1,12 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.abilities.IAbilitySource;
+import co.runed.bolster.abilities.events.EntityCastAbilityEvent;
+import co.runed.bolster.abilities.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.items.Item;
-import co.runed.bolster.items.ItemAction;
+import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
@@ -197,6 +200,28 @@ public class ItemManager implements Listener {
     }
 
     @EventHandler
+    private void onPreCastAbility(EntityPreCastAbilityEvent event) {
+        LivingEntity entity = event.getEntity();
+        EntityEquipment inv = entity.getEquipment();
+        ItemStack stack = inv.getItemInMainHand();
+
+        String itemId = this.getItemIdFromStack(stack);
+
+        if (itemId == null) return;
+
+        Item item = this.createItem(entity, itemId);
+    }
+
+    @EventHandler
+    private void onCastAbility(EntityCastAbilityEvent event) {
+        IAbilitySource abilitySource = event.getAbility().getAbilitySource();
+
+        if(abilitySource instanceof Item) {
+            event.getProperties().set(AbilityProperties.ITEM, (Item) abilitySource);
+        }
+    }
+
+    @EventHandler
     private void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
@@ -246,19 +271,6 @@ public class ItemManager implements Listener {
         if (item == null) return;
         if (item.getOwner() == null || player != item.getOwner()) return;
 
-        if (item.hasAbility(ItemAction.ON_DROP_ITEM)) {
-            Properties properties = new Properties();
-            properties.set(AbilityProperties.CASTER, player);
-            properties.set(AbilityProperties.ITEM, item);
-            properties.set(AbilityProperties.ITEM_STACK, stack);
-            properties.set(AbilityProperties.EVENT, event);
-
-            item.castAbility(ItemAction.ON_DROP_ITEM, properties);
-
-            event.setCancelled(true);
-            return;
-        }
-
         this.removeItem(player, item);
     }
 
@@ -272,293 +284,5 @@ public class ItemManager implements Listener {
         if (itemId == null) return;
 
         this.createItem(entity, itemId);
-    }
-
-    /**
-     * Event that triggers casting an items ability on left or right click
-     */
-    @EventHandler
-    private void onPlayerInteract(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        ItemStack stack = event.getItem();
-        String itemId = this.getItemIdFromStack(stack);
-
-        if (itemId == null) return;
-
-        Item item = this.createItem(player, itemId);
-
-        if (item == null) return;
-        if (item.getOwner() == null || player != item.getOwner()) return;
-
-        Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, player);
-        properties.set(AbilityProperties.ITEM, item);
-        properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.BLOCK_ACTION, event.getAction());
-        properties.set(AbilityProperties.BLOCK, event.getClickedBlock());
-        properties.set(AbilityProperties.BLOCK_FACE, event.getBlockFace());
-        properties.set(AbilityProperties.EVENT, event);
-
-        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            item.castAbility(ItemAction.LEFT_CLICK, properties);
-        }
-
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            item.castAbility(ItemAction.RIGHT_CLICK, properties);
-        }
-    }
-
-    /**
-     * Event that triggers casting an items ability when an entity is damaged
-     */
-    @EventHandler
-    private void onDamageEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof LivingEntity)) return;
-
-        LivingEntity entity = (LivingEntity) event.getDamager();
-        EntityEquipment inv = entity.getEquipment();
-        ItemStack stack = inv.getItemInMainHand();
-
-        String itemId = this.getItemIdFromStack(stack);
-
-        if (itemId == null) return;
-
-        Item item = this.createItem(entity, itemId);
-
-        if (item == null) return;
-        if (item.getOwner() == null || entity != item.getOwner()) return;
-
-        Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, entity);
-        properties.set(AbilityProperties.TARGETS, new ArrayList<>(Arrays.asList((LivingEntity) event.getEntity())));
-        properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.EVENT, event);
-        properties.set(AbilityProperties.DAMAGE, event.getDamage());
-
-        item.castAbility(ItemAction.ON_DAMAGE_ENTITY, properties);
-    }
-
-    /**
-     * Event that triggers casting an items ability when an entity is killed
-     */
-    @EventHandler
-    private void onKillEntity(EntityDeathEvent event) {
-        Player player = event.getEntity().getKiller();
-
-        ItemStack stack = player.getInventory().getItemInMainHand();
-
-        String itemId = this.getItemIdFromStack(stack);
-
-        if (itemId == null) return;
-
-        Item item = this.createItem(player, itemId);
-
-        if (item == null) return;
-        if (item.getOwner() == null || player != item.getOwner()) return;
-
-        Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, player);
-        properties.set(AbilityProperties.ITEM, item);
-        properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.EVENT, event);
-        properties.set(AbilityProperties.TARGETS, new ArrayList<>(Arrays.asList(event.getEntity())));
-        properties.set(AbilityProperties.DROPS, event.getDrops());
-
-        item.castAbility(ItemAction.ON_KILL_ENTITY, properties);
-    }
-
-    /**
-     * Event that triggers casting an items ability when a block is broken
-     */
-    @EventHandler
-    private void onPlayerBreakBlock(BlockBreakEvent event) {
-        Player player = event.getPlayer();
-        ItemStack stack = player.getInventory().getItemInMainHand();
-
-        String itemId = this.getItemIdFromStack(stack);
-
-        if (itemId == null) return;
-
-        Item item = this.createItem(player, itemId);
-
-        if (item == null) return;
-        if (item.getOwner() == null || player != item.getOwner()) return;
-
-        Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, player);
-        properties.set(AbilityProperties.ITEM, item);
-        properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.BLOCK, event.getBlock());
-        properties.set(AbilityProperties.EVENT, event);
-
-        item.castAbility(ItemAction.ON_BREAK_BLOCK, properties);
-    }
-
-    /**
-     * Event that triggers casting an items ability when the item is consumed (food, potions)
-     */
-    @EventHandler
-    private void onPlayerEat(PlayerItemConsumeEvent event) {
-        Player player = event.getPlayer();
-        ItemStack stack = player.getInventory().getItemInMainHand();
-
-        String itemId = this.getItemIdFromStack(stack);
-
-        if (itemId == null) return;
-
-        Item item = this.createItem(player, itemId);
-
-        if (item == null) return;
-        if (item.getOwner() == null || player != item.getOwner()) return;
-
-        Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, player);
-        properties.set(AbilityProperties.ITEM, item);
-        properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.EVENT, event);
-
-        item.castAbility(ItemAction.ON_CONSUME_ITEM, properties);
-    }
-
-    /**
-     * Event that triggers casting an items ability when a fish is caught
-     */
-    @EventHandler
-    private void onPlayerFish(PlayerFishEvent event) {
-        if (event.getState() != PlayerFishEvent.State.CAUGHT_ENTITY && event.getState() != PlayerFishEvent.State.CAUGHT_FISH)
-            return;
-
-        Player player = event.getPlayer();
-        ItemStack stack = player.getInventory().getItemInMainHand();
-        String itemId = this.getItemIdFromStack(stack);
-
-        if (itemId == null) return;
-
-        Item item = this.createItem(player, itemId);
-
-        if (item == null) return;
-        if (item.getOwner() == null || player != item.getOwner()) return;
-
-        Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, event.getPlayer());
-        properties.set(AbilityProperties.EVENT, event);
-        properties.set(AbilityProperties.CAUGHT, event.getCaught());
-        properties.set(AbilityProperties.HOOK, event.getHook());
-
-        item.castAbility(ItemAction.ON_CATCH_FISH, properties);
-    }
-
-    /**
-     * Event that triggers casting an items ability on swapping offhand (pushing F)
-     */
-    @EventHandler
-    private void onPlayerOffhand(PlayerSwapHandItemsEvent event) {
-        Player player = event.getPlayer();
-        ItemStack stack = event.getOffHandItem();
-        String itemId = this.getItemIdFromStack(stack);
-
-        if (itemId == null) return;
-
-        Item item = this.createItem(player, itemId);
-
-        if (item == null) return;
-        if (item.getOwner() == null || player != item.getOwner()) return;
-
-        if (item.hasAbility(ItemAction.ON_SWAP_OFFHAND)) {
-            Properties properties = new Properties();
-            properties.set(AbilityProperties.CASTER, player);
-            properties.set(AbilityProperties.ITEM, item);
-            properties.set(AbilityProperties.ITEM_STACK, stack);
-            properties.set(AbilityProperties.EVENT, event);
-
-            event.setCancelled(true);
-
-            item.castAbility(ItemAction.ON_SWAP_OFFHAND, properties);
-        }
-    }
-
-    /**
-     * Event that triggers casting an items ability on shooting a bow
-     */
-    @EventHandler
-    private void onLivingEntityShootBow(EntityShootBowEvent event) {
-        LivingEntity entity = event.getEntity();
-        ItemStack stack = event.getBow();
-        String itemId = this.getItemIdFromStack(stack);
-
-        if (itemId == null) return;
-
-        Item item = this.createItem(entity, itemId);
-
-        if (item == null) return;
-        if (item.getOwner() == null || entity != item.getOwner()) return;
-        if (item.hasAbility(ItemAction.ON_SHOOT)) return;
-
-        Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, entity);
-        properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.FORCE, event.getForce());
-        properties.set(AbilityProperties.VELOCITY, event.getProjectile().getVelocity());
-        properties.set(AbilityProperties.EVENT, event);
-
-        event.setCancelled(true);
-
-        item.castAbility(ItemAction.ON_SHOOT, properties);
-    }
-
-    /**
-     * Event that triggers casting an items ability on throwing an egg
-     */
-    @EventHandler
-    private void onPlayerThrowEgg(PlayerEggThrowEvent event) {
-        LivingEntity entity = event.getPlayer();
-        ItemStack stack = event.getEgg().getItem();
-        String itemId = this.getItemIdFromStack(stack);
-
-        if (itemId == null) return;
-
-        Item item = this.createItem(entity, itemId);
-
-        if (item == null) return;
-        if (item.getOwner() == null || entity != item.getOwner()) return;
-        if (item.hasAbility(ItemAction.ON_SHOOT)) return;
-
-        Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, entity);
-        properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.FORCE, 1.0f);
-        properties.set(AbilityProperties.VELOCITY, event.getEgg().getVelocity());
-        properties.set(AbilityProperties.EVENT, event);
-
-        event.setHatching(false);
-
-        item.castAbility(ItemAction.ON_SHOOT, properties);
-    }
-
-    /**
-     * Event that triggers casting an items ability on sneak
-     */
-    @EventHandler
-    private void onPlayerSneak(PlayerToggleSneakEvent event) {
-        if (!event.isSneaking()) return;
-
-        Player player = event.getPlayer();
-        ItemStack stack = player.getInventory().getItemInMainHand();
-        String itemId = this.getItemIdFromStack(stack);
-
-        if (itemId == null) return;
-
-        Item item = this.createItem(player, itemId);
-
-        if (item == null) return;
-        if (item.getOwner() == null || player != item.getOwner()) return;
-
-        Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, player);
-        properties.set(AbilityProperties.ITEM, item);
-        properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.EVENT, event);
-
-        item.castAbility(ItemAction.ON_SNEAK, properties);
     }
 }

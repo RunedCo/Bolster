@@ -4,10 +4,7 @@ import co.runed.bolster.commands.CommandItems;
 import co.runed.bolster.commands.CommandMana;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
-import co.runed.bolster.managers.CommandManager;
-import co.runed.bolster.managers.CooldownManager;
-import co.runed.bolster.managers.ItemManager;
-import co.runed.bolster.managers.ManaManager;
+import co.runed.bolster.managers.*;
 import co.runed.bolster.properties.Properties;
 import co.runed.bolster.registries.ItemRegistry;
 import co.runed.bolster.registries.Registry;
@@ -27,6 +24,7 @@ public class Bolster extends JavaPlugin {
     private CommandManager commandManager;
     private CooldownManager cooldownManager;
     private ItemManager itemManager;
+    private AbilityManager abilityManager;
     private ManaManager manaManager;
     private Properties gameProperties;
 
@@ -45,6 +43,7 @@ public class Bolster extends JavaPlugin {
         this.commandManager = new CommandManager();
         this.cooldownManager = new CooldownManager(this);
         this.itemManager = new ItemManager(this);
+        this.abilityManager = new AbilityManager(this);
         this.gameProperties = new GameProperties(this);
 
         this.manaManager = new ManaManager(this);
@@ -84,6 +83,10 @@ public class Bolster extends JavaPlugin {
 
     public static ItemManager getItemManager() {
         return Bolster.getInstance().itemManager;
+    }
+
+    public static AbilityManager getAbilityManager() {
+        return Bolster.getInstance().abilityManager;
     }
 
     public static ManaManager getManaManager() {

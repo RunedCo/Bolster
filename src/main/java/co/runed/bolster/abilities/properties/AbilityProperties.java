@@ -10,6 +10,7 @@ import org.bukkit.entity.FishHook;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -42,6 +43,8 @@ public class AbilityProperties {
     // FISHING PROPERTIES
     public static final Property<Entity> CAUGHT = new Property<>("caught");
     public static final Property<FishHook> HOOK = new Property<>("hook");
+    public static final Property<PlayerFishEvent.State> FISH_STATE = new Property<>("fish_state");
+
 
     // DAMAGE PROPERTIES
     public static final Property<Double> DAMAGE = new Property<>("double", 0.0d);

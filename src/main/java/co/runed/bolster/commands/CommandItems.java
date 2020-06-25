@@ -41,11 +41,11 @@ public class CommandItems extends CommandBase
 
         ChestMenu.Builder pageTemplate = ChestMenu.builder(6).title("Items").redraw(true);
         Mask itemSlots = BinaryMask.builder(pageTemplate.getDimensions())
-                .pattern("010101010")
-                .pattern("010101010")
-                .pattern("010101010")
-                .pattern("010101010")
-                .pattern("010101010")
+                .pattern("111111111")
+                .pattern("111111111")
+                .pattern("111111111")
+                .pattern("111111111")
+                .pattern("111111111")
                 .pattern("000000000")
                 .build();
 
