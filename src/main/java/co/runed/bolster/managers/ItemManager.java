@@ -18,6 +18,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -125,26 +126,15 @@ public class ItemManager implements Listener {
     }
 
     public void removeItem(Player player, Item item, int count) {
-        for (ItemStack stack : player.getInventory()) {
-            String itemId = this.getItemIdFromStack(stack);
+        Inventory playerInv = player.getInventory();
+        ItemStack stack = item.toItemStack();
+        stack.setAmount(count);
 
-            if (itemId != null && itemId.equals(item.getId())) {
-                ItemStack toRemove = stack.clone();
-                toRemove.setAmount(count);
+        if(!playerInv.containsAtLeast(stack, count)) return;
 
-                player.getInventory().removeItem(toRemove);
+        playerInv.removeItem(stack);
 
-                break;
-            }
-        }
-
-        for (ItemStack stack : player.getInventory()) {
-            String itemId = this.getItemIdFromStack(stack);
-
-            if (itemId != null && itemId.equals(item.getId())) return;
-        }
-
-        this.clearItem(player, item);
+        if(!playerInv.containsAtLeast(stack, 1)) this.clearItem(player, item);
     }
 
     public void clearItem(LivingEntity entity, Item item) {

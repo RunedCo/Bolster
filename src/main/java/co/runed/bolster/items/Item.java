@@ -5,6 +5,7 @@ import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.IAbilitySource;
 import co.runed.bolster.abilities.conditions.HoldingItemCondition;
+import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import org.bukkit.ChatColor;
@@ -93,6 +94,8 @@ public abstract class Item implements IAbilitySource {
         for (AbilityData abilityData : this.abilities) {
             Ability ability = abilityData.ability;
 
+            if(ability.getCaster() == owner) continue;
+
             ability.setCaster(owner);
             Bolster.getAbilityManager().add(owner, abilityData.trigger, ability);
         }
@@ -133,10 +136,7 @@ public abstract class Item implements IAbilitySource {
     }
 
     public Boolean hasAbility(AbilityTrigger trigger) {
-        return this.abilities.stream()
-                .anyMatch(
-                        (info) -> info.trigger.equals(trigger)
-                );
+        return this.abilities.stream().anyMatch((info) -> info.trigger.equals(trigger));
     }
 
     @Override
