@@ -9,7 +9,6 @@ import org.bukkit.block.Block;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class BlockIsMaterialCondition extends Condition {
     Collection<Material> materials = new ArrayList<>();

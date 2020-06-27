@@ -5,7 +5,6 @@ import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.IAbilitySource;
 import co.runed.bolster.abilities.conditions.HoldingItemCondition;
-import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import org.bukkit.ChatColor;
@@ -17,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public abstract class Item implements IAbilitySource {
     public static final NamespacedKey ITEM_ID_KEY = new NamespacedKey(Bolster.getInstance(), "item-id");

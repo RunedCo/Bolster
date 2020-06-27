@@ -1,7 +1,6 @@
 package co.runed.bolster.state;
 
 import co.runed.bolster.Bolster;
-import org.bukkit.Bukkit;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

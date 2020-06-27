@@ -2,7 +2,6 @@ package co.runed.bolster.sidebar;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.util.StringUtil;
-import com.sun.corba.se.impl.naming.cosnaming.InternalBindingKey;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,9 +14,9 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-import sun.plugin2.main.server.Plugin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Sidebar implements Listener {
     private List<Player> players = new ArrayList<>();
