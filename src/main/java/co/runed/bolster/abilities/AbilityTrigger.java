@@ -10,6 +10,8 @@ public enum AbilityTrigger {
     ON_BREAK_BLOCK("on_break_block", "L-Click"),
     ON_CONSUME_ITEM("on_consume_item", "R-Click"),
     ON_CATCH_FISH("on_catch_fish", "R-Click"),
+    ON_TAKE_DAMAGE("on_take_damage", "Passive"),
+    ON_TAKE_FATAL_DAMAGE("on_take_fatal_damage", "Passive"),
     ON_DAMAGE_ENTITY("on_damage_entity", "Passive"),
     ON_KILL_ENTITY("on_kill_entity", "Passive"),
     ON_SNEAK("on_sneak", "Shift"),

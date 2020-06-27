@@ -20,6 +20,7 @@ public class AbilityManager {
     public AbilityManager(Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(new EntityDamageListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityKillListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new EntityPickupItemListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityShootBowListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerBreakBlockListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerDropItemListener(), plugin);
@@ -99,6 +100,8 @@ public class AbilityManager {
     public void trigger(LivingEntity entity, AbilityTrigger trigger, Properties properties) {
         EntityPreCastAbilityEvent preCastEvent = new EntityPreCastAbilityEvent(entity, trigger);
         Bukkit.getPluginManager().callEvent(preCastEvent);
+
+        if(preCastEvent.isCancelled()) return;
 
         List<Ability> abilities = new ArrayList<>(this.getAbilities(entity, trigger));
 

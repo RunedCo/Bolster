@@ -2,6 +2,7 @@ package co.runed.bolster.sidebar;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.util.StringUtil;
+import com.sun.corba.se.impl.naming.cosnaming.InternalBindingKey;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -14,11 +15,12 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import sun.plugin2.main.server.Plugin;
 
 import java.util.*;
 
 public abstract class Sidebar implements Listener {
-    private Map<Player, Scoreboard> playerScoreboards = new HashMap<>();
+    private List<Player> players = new ArrayList<>();
 
     // Update task variables
     private long updateInterval = 10;
@@ -28,26 +30,6 @@ public abstract class Sidebar implements Listener {
     // Sidebar lines
     private List<String> lines = new ArrayList<>();
     private List<String> bottomLines = new ArrayList<>();
-
-    /**
-     * Gets the player's scoreboard instance for this sidebar
-     *
-     * @param player The player
-     * @return The scoreboard
-     */
-    public Scoreboard getPlayerScoreboard(Player player) {
-        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-
-        if(playerScoreboards.containsKey(player)) {
-            scoreboard = playerScoreboards.get(player);
-        }
-
-        player.setScoreboard(scoreboard);
-
-        playerScoreboards.put(player, scoreboard);
-
-        return scoreboard;
-    }
 
     /**
      * Returns the title of the sidebar
@@ -150,7 +132,7 @@ public abstract class Sidebar implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         if(this.autoAddPlayers) {
-            this.addPlayer(event.getPlayer());
+            Bolster.getScoreboardManager().setSidebar(event.getPlayer(), this);
         }
     }
 
@@ -168,9 +150,9 @@ public abstract class Sidebar implements Listener {
      * @param player The player
      */
     public void addPlayer(Player player) {
-        if (this.playerScoreboards.containsKey(player)) return;
+        if(this.players.contains(player)) return;
 
-        player.setScoreboard(this.getPlayerScoreboard(player));
+        this.players.add(player);
 
         if(this.getUpdateInterval() > 0) {
             if(this.updateTask == null || this.updateTask.isCancelled()) {
@@ -184,20 +166,22 @@ public abstract class Sidebar implements Listener {
      * @param player The player
      */
     public void removePlayer(Player player) {
-        Scoreboard scoreboard = this.getPlayerScoreboard(player);
+        if(!this.players.contains(player)) return;
 
-        Objective objective = this.getOrCreateObjective(scoreboard, this.getTitle());
+        Scoreboard scoreboard = Bolster.getScoreboardManager().getScoreboard(player);
+
+        Objective objective = this.getOrCreateObjective(player, scoreboard, this.getTitle());
         objective.unregister();
 
-        this.playerScoreboards.remove(player);
+        this.players.remove(player);
 
-        if(this.getPlayers().size() <= 0) {
+        if(this.players.size() <= 0) {
             if(this.updateTask != null) {
                 this.updateTask.cancel();
             }
         }
 
-        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        Bolster.getScoreboardManager().setScoreboard(player, Bukkit.getScoreboardManager().getMainScoreboard());
     }
 
     /**
@@ -205,17 +189,8 @@ public abstract class Sidebar implements Listener {
      */
     public void addAllPlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            this.addPlayer(player);
+            Bolster.getScoreboardManager().setSidebar(player, this);
         }
-    }
-
-    /**
-     * Returns every player that has been added to the sidebar
-     *
-     * @return A list of players
-     */
-    public List<Player> getPlayers() {
-        return new ArrayList<>(this.playerScoreboards.keySet());
     }
 
     /**
@@ -226,7 +201,7 @@ public abstract class Sidebar implements Listener {
             this.updateTask.cancel();
         }
 
-        for (Player player : this.getPlayers()) {
+        for (Player player : this.players) {
             this.removePlayer(player);
         }
 
@@ -264,8 +239,8 @@ public abstract class Sidebar implements Listener {
      * @param title The sidebar title
      * @return The objective
      */
-    private Objective getOrCreateObjective(Scoreboard scoreboard, String title) {
-        String id = ChatColor.stripColor(title.toLowerCase());
+    private Objective getOrCreateObjective(Player player, Scoreboard scoreboard, String title) {
+        String id = player.getName();
         Objective existing = scoreboard.getObjective(id);
 
         if(existing != null) {
@@ -305,13 +280,13 @@ public abstract class Sidebar implements Listener {
      * Updates at the tick speed returned from {@link #getUpdateInterval()}
      */
     public void update() {
-        for (Player player : this.getPlayers()) {
+        for (Player player : this.players) {
             this.resetLines();
 
             Sidebar sidebar = this.draw(player);
 
-            Scoreboard scoreboard = this.getPlayerScoreboard(player);
-            Objective objective = this.getOrCreateObjective(scoreboard, this.getTitle());
+            Scoreboard scoreboard = Bolster.getScoreboardManager().getScoreboard(player);
+            Objective objective = this.getOrCreateObjective(player, scoreboard, this.getTitle());
 
             // Sets objective to display in sidebar
             if(objective.getDisplaySlot() != DisplaySlot.SIDEBAR) objective.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -321,6 +296,8 @@ public abstract class Sidebar implements Listener {
 
             // Loops through all teams and if the team name is longer than the number of lines remove it
             for (Team team : scoreboard.getTeams()) {
+                if (!ChatColor.stripColor(team.getName()).equals("")) continue;
+
                 int count = team.getName().length() / 2;
 
                 if(count > lineCount) team.unregister();

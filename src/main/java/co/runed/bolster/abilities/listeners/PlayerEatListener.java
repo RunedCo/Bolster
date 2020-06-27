@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Event that triggers casting an ability when the item is consumed (food, potions)
+ * Event that triggers casting an ability when an item is consumed (food, potions)
  */
 public class PlayerEatListener implements Listener {
     @EventHandler

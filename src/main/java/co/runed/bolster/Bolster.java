@@ -26,6 +26,8 @@ public class Bolster extends JavaPlugin {
     private ItemManager itemManager;
     private AbilityManager abilityManager;
     private ManaManager manaManager;
+    private ScoreboardManager scoreboardManager;
+
     private Properties gameProperties;
 
     @Override
@@ -44,6 +46,8 @@ public class Bolster extends JavaPlugin {
         this.cooldownManager = new CooldownManager(this);
         this.itemManager = new ItemManager(this);
         this.abilityManager = new AbilityManager(this);
+        this.scoreboardManager = new ScoreboardManager(this);
+
         this.gameProperties = new GameProperties(this);
 
         this.manaManager = new ManaManager(this);
@@ -95,6 +99,10 @@ public class Bolster extends JavaPlugin {
 
     public static CommandManager getCommandManager() {
         return Bolster.getInstance().commandManager;
+    }
+
+    public static ScoreboardManager getScoreboardManager() {
+        return Bolster.getInstance().scoreboardManager;
     }
 
     public static Properties getGameProperties() {

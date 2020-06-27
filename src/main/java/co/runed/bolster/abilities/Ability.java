@@ -97,11 +97,11 @@ public abstract class Ability implements Listener {
         Bolster.getCooldownManager().clearCooldown(this.getCaster(), this.id);
     }
 
-    public void setCancelEventOnCast(Boolean cancelEventOnCast) {
+    public void setShouldCancelEvent(Boolean cancelEventOnCast) {
         this.cancelEventOnCast = cancelEventOnCast;
     }
 
-    public Boolean shouldCancelEventOnCast() {
+    public Boolean shouldCancelEvent() {
         return cancelEventOnCast;
     }
 
@@ -132,7 +132,7 @@ public abstract class Ability implements Listener {
             if(properties.get(AbilityProperties.EVENT) != null) {
                 Event event = properties.get(AbilityProperties.EVENT);
 
-                if(event instanceof Cancellable && this.shouldCancelEventOnCast()) {
+                if(event instanceof Cancellable && this.shouldCancelEvent()) {
                     ((Cancellable)event).setCancelled(true);
                 }
             }
