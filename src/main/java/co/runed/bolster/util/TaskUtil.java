@@ -1,8 +1,6 @@
 package co.runed.bolster.util;
 
 import co.runed.bolster.Bolster;
-import org.bukkit.Location;
-import org.bukkit.entity.Arrow;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
