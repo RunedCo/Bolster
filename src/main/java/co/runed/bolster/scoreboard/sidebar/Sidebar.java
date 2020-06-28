@@ -1,6 +1,8 @@
-package co.runed.bolster.sidebar;
+package co.runed.bolster.scoreboard.sidebar;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.scoreboard.PacketScoreboard;
+import co.runed.bolster.scoreboard.ScoreboardObjective;
 import co.runed.bolster.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,24 +13,30 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
+
+import co.runed.bolster.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Sidebar implements Listener {
-    private List<Player> players = new ArrayList<>();
+    Scoreboard scoreboard;
+
+    private final List<Player> players = new ArrayList<>();
 
     // Update task variables
     private long updateInterval = 10;
     private boolean autoAddPlayers = false;
     private BukkitTask updateTask;
+    private int blankLineCount = 0;
 
     // Sidebar lines
-    private List<String> lines = new ArrayList<>();
-    private List<String> bottomLines = new ArrayList<>();
+    private final List<String> lines = new ArrayList<>();
+    private final List<String> bottomLines = new ArrayList<>();
+
+    public Sidebar() {
+        this.scoreboard = new PacketScoreboard(Bolster.getInstance());
+    }
 
     /**
      * Returns the title of the sidebar
@@ -43,7 +51,7 @@ public abstract class Sidebar implements Listener {
      * @return The sidebar instance
      */
     public Sidebar addLine() {
-        return this.addLine("");
+        return this.addLine(StringUtil.repeat(" ", this.blankLineCount++));
     }
 
     /**
@@ -64,7 +72,7 @@ public abstract class Sidebar implements Listener {
      * @return The sidebar instance
      */
     public Sidebar addSuffixLine() {
-        return this.addSuffixLine("");
+        return this.addSuffixLine(StringUtil.repeat(" ", this.blankLineCount++));
     }
 
     /**
@@ -131,7 +139,7 @@ public abstract class Sidebar implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         if(this.autoAddPlayers) {
-            Bolster.getScoreboardManager().setSidebar(event.getPlayer(), this);
+            Bolster.getSidebarManager().setSidebar(event.getPlayer(), this);
         }
     }
 
@@ -151,6 +159,8 @@ public abstract class Sidebar implements Listener {
     public void addPlayer(Player player) {
         if(this.players.contains(player)) return;
 
+        Bolster.getSidebarManager().removeSidebar(player);
+
         this.players.add(player);
 
         if(this.getUpdateInterval() > 0) {
@@ -167,10 +177,8 @@ public abstract class Sidebar implements Listener {
     public void removePlayer(Player player) {
         if(!this.players.contains(player)) return;
 
-        Scoreboard scoreboard = Bolster.getScoreboardManager().getScoreboard(player);
-
-        Objective objective = this.getOrCreateObjective(player, scoreboard, this.getTitle());
-        objective.unregister();
+        ScoreboardObjective objective = this.getOrCreateObjective(player, this.getTitle());
+        objective.unsubscribe(player);
 
         this.players.remove(player);
 
@@ -179,8 +187,6 @@ public abstract class Sidebar implements Listener {
                 this.updateTask.cancel();
             }
         }
-
-        Bolster.getScoreboardManager().setScoreboard(player, Bukkit.getScoreboardManager().getMainScoreboard());
     }
 
     /**
@@ -188,7 +194,7 @@ public abstract class Sidebar implements Listener {
      */
     public void addAllPlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Bolster.getScoreboardManager().setSidebar(player, this);
+            Bolster.getSidebarManager().setSidebar(player, this);
         }
     }
 
@@ -222,7 +228,7 @@ public abstract class Sidebar implements Listener {
      *
      * @return All the scoreboard rows
      */
-    private List<String> getAllLines() {
+    private List<String> getLines() {
         List<String> scores = new ArrayList<>();
 
         scores.addAll(this.lines);
@@ -234,13 +240,11 @@ public abstract class Sidebar implements Listener {
     /**
      * Gets the objective instance from a scoreboard based on the title
      *
-     * @param scoreboard The scoreboard
      * @param title The sidebar title
      * @return The objective
      */
-    private Objective getOrCreateObjective(Player player, Scoreboard scoreboard, String title) {
-        String id = player.getName();
-        Objective existing = scoreboard.getObjective(id);
+    private ScoreboardObjective getOrCreateObjective(Player player, String title) {
+        ScoreboardObjective existing = scoreboard.getPlayerObjective(player, title);
 
         if(existing != null) {
             existing.setDisplayName(title);
@@ -248,7 +252,7 @@ public abstract class Sidebar implements Listener {
             return existing;
         }
 
-        return scoreboard.registerNewObjective(id, "dummy", title);
+        return scoreboard.createPlayerObjective(player, title, DisplaySlot.SIDEBAR);
     }
 
     /**
@@ -259,19 +263,7 @@ public abstract class Sidebar implements Listener {
     private void resetLines() {
         this.lines.clear();
         this.bottomLines.clear();
-    }
-
-    /**
-     * Generates a team name based on row number.
-     * Team names can be max 16 characters so it changes the {@link ChatColor} symbol used to allow for more than 8 rows
-     *
-     * @param value The length of the team name
-     * @return The team name
-     */
-    private String getTeamName(int value) {
-        ChatColor colorSymbol = ChatColor.values()[value % ChatColor.values().length];
-
-        return StringUtil.repeat(colorSymbol.toString(), (value % 8) + 1);
+        this.blankLineCount = 0;
     }
 
     /**
@@ -284,45 +276,9 @@ public abstract class Sidebar implements Listener {
 
             Sidebar sidebar = this.draw(player);
 
-            Scoreboard scoreboard = Bolster.getScoreboardManager().getScoreboard(player);
-            Objective objective = this.getOrCreateObjective(player, scoreboard, this.getTitle());
+            ScoreboardObjective objective = this.getOrCreateObjective(player, this.getTitle());
 
-            // Sets objective to display in sidebar
-            if(objective.getDisplaySlot() != DisplaySlot.SIDEBAR) objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-            List<String> lines = sidebar.getAllLines();
-            int lineCount = lines.size();
-
-            // Loops through all teams and if the team name is longer than the number of lines remove it
-            for (Team team : scoreboard.getTeams()) {
-                if (!ChatColor.stripColor(team.getName()).equals("")) continue;
-
-                int count = team.getName().length() / 2;
-
-                if(count > lineCount) team.unregister();
-            }
-
-            // Loops through every line and add to sidebar
-            // Uses team prefixes to avoid flickering on the scoreboard
-            // If we run into issues with running out of characters we can use suffixes as well as prefixes
-            for (int i = 0; i < lineCount; i++) {
-                String line = lines.get(i);
-                int value = lineCount - 1 - i;
-
-                String teamId = this.getTeamName(value);
-
-                // Tries to get team
-                Team team = scoreboard.getTeam(teamId);
-
-                if(team == null) {
-                    team = scoreboard.registerNewTeam(teamId);
-                    team.addEntry(teamId);
-
-                    objective.getScore(teamId).setScore(value);
-                }
-
-                if(!team.getPrefix().equals(line)) team.setPrefix(line);
-            }
+            objective.applyLines(sidebar.getLines());
         }
     }
 

@@ -26,7 +26,7 @@ public class Bolster extends JavaPlugin {
     private ItemManager itemManager;
     private AbilityManager abilityManager;
     private ManaManager manaManager;
-    private ScoreboardManager scoreboardManager;
+    private SidebarManager sidebarManager;
 
     private Properties gameProperties;
 
@@ -46,7 +46,7 @@ public class Bolster extends JavaPlugin {
         this.cooldownManager = new CooldownManager(this);
         this.itemManager = new ItemManager(this);
         this.abilityManager = new AbilityManager(this);
-        this.scoreboardManager = new ScoreboardManager(this);
+        this.sidebarManager = new SidebarManager(this);
 
         this.gameProperties = new GameProperties(this);
 
@@ -101,8 +101,8 @@ public class Bolster extends JavaPlugin {
         return Bolster.getInstance().commandManager;
     }
 
-    public static ScoreboardManager getScoreboardManager() {
-        return Bolster.getInstance().scoreboardManager;
+    public static SidebarManager getSidebarManager() {
+        return Bolster.getInstance().sidebarManager;
     }
 
     public static Properties getGameProperties() {
