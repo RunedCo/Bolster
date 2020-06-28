@@ -4,7 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -76,8 +80,10 @@ public class GameProperties extends Properties implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onEntityDamageEntity(EntityDamageByEntityEvent event) {
-        if (event.getDamager().getType() == EntityType.PLAYER) {
-            if (event.getEntityType() == EntityType.PLAYER) {
+        Entity damager = event.getDamager();
+
+        if (event.getEntityType() == EntityType.PLAYER) {
+            if (damager.getType() == EntityType.PLAYER || (damager instanceof Projectile && ((Projectile)damager).getShooter() instanceof Player)) {
                 if (!this.get(GameProperties.ENABLE_PVP)) event.setCancelled(true);
             } else {
                 if (!this.get(GameProperties.ENABLE_PVE)) event.setCancelled(true);
@@ -122,13 +128,15 @@ public class GameProperties extends Properties implements Listener {
 
             if(!this.get(GameProperties.ENABLE_LOG_STRIP)) {
                 if (Tag.LOGS.isTagged(block.getType())) {
-                    e.setCancelled(true);
+                    e.setUseInteractedBlock(Event.Result.ALLOW);
+                    e.setUseItemInHand(Event.Result.DENY);
                 }
             }
 
             if(!this.get(GameProperties.ENABLE_GRASS_PATH)) {
                 if(block.getType() == Material.GRASS_BLOCK) {
-                    e.setCancelled(true);
+                    e.setUseInteractedBlock(Event.Result.ALLOW);
+                    e.setUseItemInHand(Event.Result.DENY);
                 }
             }
         }

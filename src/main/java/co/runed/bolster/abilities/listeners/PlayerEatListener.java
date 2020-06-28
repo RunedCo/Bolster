@@ -17,7 +17,7 @@ public class PlayerEatListener implements Listener {
     @EventHandler
     private void onPlayerEat(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
-        ItemStack stack = player.getInventory().getItemInMainHand();
+        ItemStack stack = event.getItem();
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, player);

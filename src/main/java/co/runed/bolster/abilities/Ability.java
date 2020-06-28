@@ -22,7 +22,7 @@ public abstract class Ability implements Listener {
     private float manaCost = 0;
     private Boolean cancelEventOnCast = false;
     private LivingEntity caster;
-    private IAbilitySource abilitySource;
+    private AbilityProvider abilitySource;
 
     private final HashSet<ConditionData> conditions = new HashSet<>();
 
@@ -61,11 +61,11 @@ public abstract class Ability implements Listener {
         this.manaCost = manaCost;
     }
 
-    public IAbilitySource getAbilitySource() {
+    public AbilityProvider getAbilitySource() {
         return this.abilitySource;
     }
 
-    public void setAbilitySource(IAbilitySource abilitySource) {
+    public void setAbilitySource(AbilityProvider abilitySource) {
         this.abilitySource = abilitySource;
     }
 

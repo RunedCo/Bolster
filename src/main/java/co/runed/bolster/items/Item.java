@@ -3,7 +3,7 @@ package co.runed.bolster.items;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.abilities.IAbilitySource;
+import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.conditions.HoldingItemCondition;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
@@ -17,7 +17,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
-public abstract class Item implements IAbilitySource {
+public abstract class Item extends AbilityProvider {
     public static final NamespacedKey ITEM_ID_KEY = new NamespacedKey(Bolster.getInstance(), "item-id");
     public static final NamespacedKey ITEM_SKIN_KEY = new NamespacedKey(Bolster.getInstance(), "item-skin");
     public static final NamespacedKey ITEM_OWNER_KEY = new NamespacedKey(Bolster.getInstance(), "item-owner");
@@ -30,9 +30,7 @@ public abstract class Item implements IAbilitySource {
     private ItemSkin skin;
     private final List<ItemCategory> categories = new ArrayList<>(Collections.singletonList(ItemCategory.ALL));
 
-    private LivingEntity owner;
-
-    private final Collection<AbilityData> abilities = new ArrayList<>();
+    private final Map<Ability, Boolean> abilityCooldowns = new HashMap<>();
 
     public void setId(String id) {
         this.id = id;
@@ -57,7 +55,7 @@ public abstract class Item implements IAbilitySource {
     public List<String> getLore() {
         List<String> loreWithAbilities = new ArrayList<>();
 
-        for (AbilityData abilityData : this.abilities) {
+        for (AbilityData abilityData : this.getAbilities()) {
             Ability ability = abilityData.ability;
 
             if (ability.getDescription() == null) continue;
@@ -82,23 +80,6 @@ public abstract class Item implements IAbilitySource {
         this.itemStack = stack;
     }
 
-    public LivingEntity getOwner() {
-        return this.owner;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.owner = owner;
-
-        for (AbilityData abilityData : this.abilities) {
-            Ability ability = abilityData.ability;
-
-            if(ability.getCaster() == owner) continue;
-
-            ability.setCaster(owner);
-            Bolster.getAbilityManager().add(owner, abilityData.trigger, ability);
-        }
-    }
-
     public boolean hasSkin() {
         return this.getSkin() != null;
     }
@@ -121,60 +102,29 @@ public abstract class Item implements IAbilitySource {
         this.categories.add(category);
     }
 
-    public void addAbility(AbilityTrigger trigger, Ability ability) {
-        this.addAbility(trigger, ability, false);
-    }
 
     public void addAbility(AbilityTrigger trigger, Ability ability, Boolean showCooldown) {
-        ability.setAbilitySource(this);
+        this.abilityCooldowns.put(ability, showCooldown);
 
-        ability.addCondition(new HoldingItemCondition(this));
-
-        this.abilities.add(new AbilityData(trigger, ability, showCooldown));
-    }
-
-    public Boolean hasAbility(AbilityTrigger trigger) {
-        return this.abilities.stream().anyMatch((info) -> info.trigger.equals(trigger));
+        this.addAbility(trigger, ability);
     }
 
     @Override
+    public void addAbility(AbilityTrigger trigger, Ability ability) {
+        ability.addCondition(new HoldingItemCondition(this));
+
+        super.addAbility(trigger, ability);
+    }
+
     public void onCastAbility(Ability ability, Boolean success) {
-        Optional<AbilityData> filtered = this.abilities.stream().filter((info) -> info.ability == ability).findFirst();
+        Optional<AbilityData> filtered = this.getAbilities().stream().filter((info) -> info.ability == ability).findFirst();
 
         if(!filtered.isPresent()) return;
 
-        AbilityData abilityData = filtered.get();
-
-        if (abilityData.showCooldown && success) {
+        if (this.abilityCooldowns.containsKey(ability) && this.abilityCooldowns.get(ability) && success) {
             ((Player)this.getOwner()).setCooldown(this.getItemStack().getType(), (int) (ability.getCooldown() * 20));
         }
     }
-
-    /* public List<Ability> getAbilities(AbilityTrigger trigger) {
-        if(this.abilities.containsKey(trigger)) {
-            return this.abilities.get(trigger);
-        }
-
-        return new ArrayList<>();
-    } */
-
-    /* public void castAbility(AbilityTrigger trigger, Properties properties) {
-        List<Ability> abilities = this.getAbilities(trigger);
-
-        for (Ability ability : abilities) {
-            if(ability == null) continue;
-
-            ability.setCaster(this.getOwner());
-
-            boolean success = ability.activate(properties);
-
-            if (!success) continue;
-
-            if(this.primaryAbility == trigger && this.getOwner().getType() == EntityType.PLAYER) {
-                ((Player)this.getOwner()).setCooldown(this.getItemStack().getType(), (int) (ability.getCooldown() * 20));
-            }
-        }
-    } */
 
     public ItemStack toItemStack() {
         ItemBuilder builder = new ItemBuilder(this.getItemStack())
@@ -196,22 +146,11 @@ public abstract class Item implements IAbilitySource {
     }
 
     public void destroy() {
-        for (AbilityData abilityData : this.abilities) {
+        for (AbilityData abilityData : this.getAbilities()) {
             Bolster.getAbilityManager().remove(this.getOwner(), abilityData.ability);
         }
 
-        this.abilities.clear();
-    }
-
-    public static class AbilityData {
-        public AbilityTrigger trigger;
-        public Ability ability;
-        public Boolean showCooldown;
-
-        public AbilityData(AbilityTrigger trigger, Ability ability, Boolean showCooldown) {
-            this.trigger = trigger;
-            this.ability = ability;
-            this.showCooldown = showCooldown;
-        }
+        this.getAbilities().clear();
+        this.abilityCooldowns.clear();
     }
 }

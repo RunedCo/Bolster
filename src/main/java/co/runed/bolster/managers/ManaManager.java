@@ -95,14 +95,14 @@ public class ManaManager implements Listener {
     public void updateManaDisplay(Player player) {
         if(!this.enableXpBarDisplay) return;
 
-        float currentMana = this.getCurrentMana(player);
+        int currentMana = (int)Math.floor(this.getCurrentMana(player));
         float maxMana = this.getMaximumMana(player);
-
-        player.setLevel((int)currentMana);
 
         float xpPercent = maxMana > 0 ? (currentMana / maxMana) : 0;
 
-        player.setExp(xpPercent);
+        player.setExp(Math.min(xpPercent, 0.999f));
+
+        player.setLevel(currentMana);
     }
 
     @EventHandler

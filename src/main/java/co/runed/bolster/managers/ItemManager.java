@@ -1,7 +1,7 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.abilities.IAbilitySource;
+import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.events.EntityCastAbilityEvent;
 import co.runed.bolster.abilities.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.abilities.properties.AbilityProperties;
@@ -205,7 +205,7 @@ public class ItemManager implements Listener {
 
     @EventHandler
     private void onCastAbility(EntityCastAbilityEvent event) {
-        IAbilitySource abilitySource = event.getAbility().getAbilitySource();
+        AbilityProvider abilitySource = event.getAbility().getAbilitySource();
 
         if(abilitySource instanceof Item) {
             event.getProperties().set(AbilityProperties.ITEM, (Item) abilitySource);
