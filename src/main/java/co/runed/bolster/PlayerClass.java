@@ -3,7 +3,7 @@ package co.runed.bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 
-public class PlayerClass extends AbilityProvider {
+public abstract class PlayerClass extends AbilityProvider {
     private String id;
 
     public void setId(String id) {
