@@ -27,7 +27,6 @@ package co.runed.bolster.scoreboard;
 
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.google.common.base.Preconditions;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,20 +36,20 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.DisplaySlot;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Implements {@link Scoreboard} using ProtocolLib.
  *
  * <p>This class as well as all returned instances are thread safe.</p>
  */
-public class PacketScoreboard implements Scoreboard, Listener {
+public class PacketScoreboard implements Scoreboard, Listener
+{
 
     // teams & objectives shared by all players.
     // these are automatically subscribed to when players join
@@ -61,31 +60,38 @@ public class PacketScoreboard implements Scoreboard, Listener {
     private final Map<UUID, Map<String, PacketScoreboardTeam>> playerTeams = Collections.synchronizedMap(new HashMap<>());
     private final Map<UUID, Map<String, PacketScoreboardObjective>> playerObjectives = Collections.synchronizedMap(new HashMap<>());
 
-    public PacketScoreboard(@Nonnull Plugin plugin) {
+    public PacketScoreboard(@Nonnull Plugin plugin)
+    {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
-    private void handlePlayerJoin(PlayerJoinEvent event) {
+    private void handlePlayerJoin(PlayerJoinEvent event)
+    {
         Player player = event.getPlayer();
 
         // auto subscribe to teams
-        for (PacketScoreboardTeam t : this.teams.values()) {
-            if (t.shouldAutoSubscribe()) {
+        for (PacketScoreboardTeam t : this.teams.values())
+        {
+            if (t.shouldAutoSubscribe())
+            {
                 t.subscribe(player);
             }
         }
 
         // auto subscribe to objectives
-        for (PacketScoreboardObjective o : this.objectives.values()) {
-            if (o.shouldAutoSubscribe()) {
+        for (PacketScoreboardObjective o : this.objectives.values())
+        {
+            if (o.shouldAutoSubscribe())
+            {
                 o.subscribe(player);
             }
         }
     }
 
     @EventHandler
-    private void handlePlayerQuit(PlayerQuitEvent event) {
+    private void handlePlayerQuit(PlayerQuitEvent event)
+    {
         Player player = event.getPlayer();
 
         this.teams.values().forEach(t -> {
@@ -96,12 +102,14 @@ public class PacketScoreboard implements Scoreboard, Listener {
         this.objectives.values().forEach(o -> o.unsubscribe(player, true));
 
         Map<String, PacketScoreboardObjective> playerObjectives = this.playerObjectives.remove(player.getUniqueId());
-        if (playerObjectives != null) {
+        if (playerObjectives != null)
+        {
             playerObjectives.values().forEach(o -> o.unsubscribe(player, true));
         }
 
         Map<String, PacketScoreboardTeam> playerTeams = this.playerTeams.remove(player.getUniqueId());
-        if (playerTeams != null) {
+        if (playerTeams != null)
+        {
             playerTeams.values().forEach(t -> {
                 t.unsubscribe(player, true);
                 t.removePlayer(player);
@@ -110,13 +118,16 @@ public class PacketScoreboard implements Scoreboard, Listener {
     }
 
     @Override
-    public PacketScoreboardTeam createTeam(String id, String title, boolean autoSubscribe) {
+    public PacketScoreboardTeam createTeam(String id, String title, boolean autoSubscribe)
+    {
         Preconditions.checkArgument(id.length() <= 16, "id cannot be longer than 16 characters");
         Preconditions.checkState(!this.teams.containsKey(id), "id already exists");
 
         PacketScoreboardTeam team = new PacketScoreboardTeam(id, title, autoSubscribe);
-        if (autoSubscribe) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
+        if (autoSubscribe)
+        {
+            for (Player player : Bukkit.getOnlinePlayers())
+            {
                 team.subscribe(player);
             }
         }
@@ -127,14 +138,17 @@ public class PacketScoreboard implements Scoreboard, Listener {
 
     @Override
     @Nullable
-    public PacketScoreboardTeam getTeam(String id) {
+    public PacketScoreboardTeam getTeam(String id)
+    {
         return this.teams.get(id);
     }
 
     @Override
-    public boolean removeTeam(String id) {
+    public boolean removeTeam(String id)
+    {
         PacketScoreboardTeam team = this.teams.remove(id);
-        if (team == null) {
+        if (team == null)
+        {
             return false;
         }
 
@@ -143,13 +157,16 @@ public class PacketScoreboard implements Scoreboard, Listener {
     }
 
     @Override
-    public PacketScoreboardObjective createObjective(String id, String title, DisplaySlot displaySlot, boolean autoSubscribe) {
+    public PacketScoreboardObjective createObjective(String id, String title, DisplaySlot displaySlot, boolean autoSubscribe)
+    {
         Preconditions.checkArgument(id.length() <= 16, "id cannot be longer than 16 characters");
         Preconditions.checkState(!this.objectives.containsKey(id), "id already exists");
 
         PacketScoreboardObjective objective = new PacketScoreboardObjective(id, title, displaySlot, autoSubscribe);
-        if (autoSubscribe) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
+        if (autoSubscribe)
+        {
+            for (Player player : Bukkit.getOnlinePlayers())
+            {
                 objective.subscribe(player);
             }
         }
@@ -160,14 +177,17 @@ public class PacketScoreboard implements Scoreboard, Listener {
 
     @Override
     @Nullable
-    public PacketScoreboardObjective getObjective(String id) {
+    public PacketScoreboardObjective getObjective(String id)
+    {
         return this.objectives.get(id);
     }
 
     @Override
-    public boolean removeObjective(String id) {
+    public boolean removeObjective(String id)
+    {
         PacketScoreboardObjective objective = this.objectives.remove(id);
-        if (objective == null) {
+        if (objective == null)
+        {
             return false;
         }
 
@@ -176,13 +196,15 @@ public class PacketScoreboard implements Scoreboard, Listener {
     }
 
     @Override
-    public PacketScoreboardTeam createPlayerTeam(Player player, String id, String title, boolean autoSubscribe) {
+    public PacketScoreboardTeam createPlayerTeam(Player player, String id, String title, boolean autoSubscribe)
+    {
         Preconditions.checkArgument(id.length() <= 16, "id cannot be longer than 16 characters");
         Map<String, PacketScoreboardTeam> teams = this.playerTeams.computeIfAbsent(player.getUniqueId(), p -> new HashMap<>());
         Preconditions.checkState(!teams.containsKey(id), "id already exists");
 
         PacketScoreboardTeam team = new PacketScoreboardTeam(id, title, autoSubscribe);
-        if (autoSubscribe) {
+        if (autoSubscribe)
+        {
             team.subscribe(player);
         }
         teams.put(id, team);
@@ -192,9 +214,11 @@ public class PacketScoreboard implements Scoreboard, Listener {
 
     @Override
     @Nullable
-    public PacketScoreboardTeam getPlayerTeam(Player player, String id) {
+    public PacketScoreboardTeam getPlayerTeam(Player player, String id)
+    {
         Map<String, PacketScoreboardTeam> map = this.playerTeams.get(player.getUniqueId());
-        if (map == null) {
+        if (map == null)
+        {
             return null;
         }
 
@@ -202,14 +226,17 @@ public class PacketScoreboard implements Scoreboard, Listener {
     }
 
     @Override
-    public boolean removePlayerTeam(Player player, String id) {
+    public boolean removePlayerTeam(Player player, String id)
+    {
         Map<String, PacketScoreboardTeam> map = this.playerTeams.get(player.getUniqueId());
-        if (map == null) {
+        if (map == null)
+        {
             return false;
         }
 
         PacketScoreboardTeam team = map.remove(id);
-        if (team == null) {
+        if (team == null)
+        {
             return false;
         }
 
@@ -218,13 +245,15 @@ public class PacketScoreboard implements Scoreboard, Listener {
     }
 
     @Override
-    public PacketScoreboardObjective createPlayerObjective(Player player, String id, String title, DisplaySlot displaySlot, boolean autoSubscribe) {
+    public PacketScoreboardObjective createPlayerObjective(Player player, String id, String title, DisplaySlot displaySlot, boolean autoSubscribe)
+    {
         Preconditions.checkArgument(id.length() <= 16, "id cannot be longer than 16 characters");
         Map<String, PacketScoreboardObjective> objectives = this.playerObjectives.computeIfAbsent(player.getUniqueId(), p -> new HashMap<>());
         Preconditions.checkState(!objectives.containsKey(id), "id already exists");
 
         PacketScoreboardObjective objective = new PacketScoreboardObjective(id, title, displaySlot, autoSubscribe);
-        if (autoSubscribe) {
+        if (autoSubscribe)
+        {
             objective.subscribe(player);
         }
         objectives.put(id, objective);
@@ -234,9 +263,11 @@ public class PacketScoreboard implements Scoreboard, Listener {
 
     @Override
     @Nullable
-    public PacketScoreboardObjective getPlayerObjective(Player player, String id) {
+    public PacketScoreboardObjective getPlayerObjective(Player player, String id)
+    {
         Map<String, PacketScoreboardObjective> map = this.playerObjectives.get(player.getUniqueId());
-        if (map == null) {
+        if (map == null)
+        {
             return null;
         }
 
@@ -244,14 +275,17 @@ public class PacketScoreboard implements Scoreboard, Listener {
     }
 
     @Override
-    public boolean removePlayerObjective(Player player, String id) {
+    public boolean removePlayerObjective(Player player, String id)
+    {
         Map<String, PacketScoreboardObjective> map = this.playerObjectives.get(player.getUniqueId());
-        if (map == null) {
+        if (map == null)
+        {
             return false;
         }
 
         PacketScoreboardObjective objective = map.remove(id);
-        if (objective == null) {
+        if (objective == null)
+        {
             return false;
         }
 
@@ -259,7 +293,8 @@ public class PacketScoreboard implements Scoreboard, Listener {
         return true;
     }
 
-    static WrappedChatComponent toComponent(String text) {
+    static WrappedChatComponent toComponent(String text)
+    {
         return WrappedChatComponent.fromText(text);
     }
 

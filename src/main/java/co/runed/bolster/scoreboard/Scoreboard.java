@@ -30,12 +30,13 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 import javax.annotation.Nullable;
 
-public interface Scoreboard {
+public interface Scoreboard
+{
     /**
      * Creates a new scoreboard team
      *
-     * @param id the id of the team
-     * @param title the initial title for the team
+     * @param id            the id of the team
+     * @param title         the initial title for the team
      * @param autoSubscribe if players should be automatically subscribed
      * @return the new team
      * @throws IllegalStateException if a team with the same id already exists
@@ -45,23 +46,25 @@ public interface Scoreboard {
     /**
      * Creates a new scoreboard team
      *
-     * @param id the id of the team
+     * @param id    the id of the team
      * @param title the initial title for the team
      * @return the new team
      * @throws IllegalStateException if a team with the same id already exists
      */
-    default ScoreboardTeam createTeam(String id, String title) {
+    default ScoreboardTeam createTeam(String id, String title)
+    {
         return createTeam(id, title, true);
     }
 
     /**
      * Creates a new scoreboard team with an automatically generated id
      *
-     * @param title the initial title for the team
+     * @param title         the initial title for the team
      * @param autoSubscribe if players should be automatically subscribed
      * @return the new team
      */
-    default ScoreboardTeam createTeam(String title, boolean autoSubscribe) {
+    default ScoreboardTeam createTeam(String title, boolean autoSubscribe)
+    {
         return createTeam(Long.toHexString(System.nanoTime()), title, autoSubscribe);
     }
 
@@ -71,7 +74,8 @@ public interface Scoreboard {
      * @param title the initial title for the team
      * @return the new team
      */
-    default ScoreboardTeam createTeam(String title) {
+    default ScoreboardTeam createTeam(String title)
+    {
         return createTeam(title, true);
     }
 
@@ -95,9 +99,9 @@ public interface Scoreboard {
     /**
      * Creates a new scoreboard objective
      *
-     * @param id the id of the objective
-     * @param title the initial title for the objective
-     * @param displaySlot the display slot to use for this objective
+     * @param id            the id of the objective
+     * @param title         the initial title for the objective
+     * @param displaySlot   the display slot to use for this objective
      * @param autoSubscribe if players should be automatically subscribed
      * @return the new objective
      * @throws IllegalStateException if an objective with the same id already exists
@@ -107,36 +111,39 @@ public interface Scoreboard {
     /**
      * Creates a new scoreboard objective
      *
-     * @param id the id of the objective
-     * @param title the initial title for the objective
+     * @param id          the id of the objective
+     * @param title       the initial title for the objective
      * @param displaySlot the display slot to use for this objective
      * @return the new objective
      * @throws IllegalStateException if an objective with the same id already exists
      */
-    default ScoreboardObjective createObjective(String id, String title, DisplaySlot displaySlot) {
+    default ScoreboardObjective createObjective(String id, String title, DisplaySlot displaySlot)
+    {
         return createObjective(id, title, displaySlot, true);
     }
 
     /**
      * Creates a new scoreboard objective with an automatically generated id
      *
-     * @param title the initial title for the objective
-     * @param displaySlot the display slot to use for this objective
+     * @param title         the initial title for the objective
+     * @param displaySlot   the display slot to use for this objective
      * @param autoSubscribe if players should be automatically subscribed
      * @return the new objective
      */
-    default ScoreboardObjective createObjective(String title, DisplaySlot displaySlot, boolean autoSubscribe) {
+    default ScoreboardObjective createObjective(String title, DisplaySlot displaySlot, boolean autoSubscribe)
+    {
         return createObjective(Long.toHexString(System.nanoTime()), title, displaySlot, autoSubscribe);
     }
 
     /**
      * Creates a new scoreboard objective with an automatically generated id
      *
-     * @param title the initial title for the objective
+     * @param title       the initial title for the objective
      * @param displaySlot the display slot to use for this objective
      * @return the new objective
      */
-    default ScoreboardObjective createObjective(String title, DisplaySlot displaySlot) {
+    default ScoreboardObjective createObjective(String title, DisplaySlot displaySlot)
+    {
         return createObjective(title, displaySlot, true);
     }
 
@@ -160,9 +167,9 @@ public interface Scoreboard {
     /**
      * Creates a new per-player scoreboard team
      *
-     * @param player the player to make the team for
-     * @param id the id of the team
-     * @param title the initial title of the team
+     * @param player        the player to make the team for
+     * @param id            the id of the team
+     * @param title         the initial title of the team
      * @param autoSubscribe if players should be automatically subscribed
      * @return the new team
      * @throws IllegalStateException if a team with the same id already exists
@@ -173,24 +180,26 @@ public interface Scoreboard {
      * Creates a new per-player scoreboard team
      *
      * @param player the player to make the team for
-     * @param id the id of the team
-     * @param title the initial title of the team
+     * @param id     the id of the team
+     * @param title  the initial title of the team
      * @return the new team
      * @throws IllegalStateException if a team with the same id already exists
      */
-    default ScoreboardTeam createPlayerTeam(Player player, String id, String title) {
+    default ScoreboardTeam createPlayerTeam(Player player, String id, String title)
+    {
         return createPlayerTeam(player, id, title, true);
     }
 
     /**
      * Creates a new per-player scoreboard team with an automatically generated id
      *
-     * @param player the player to make the team for
-     * @param title the initial title of the team
+     * @param player        the player to make the team for
+     * @param title         the initial title of the team
      * @param autoSubscribe if players should be automatically subscribed
      * @return the new team
      */
-    default ScoreboardTeam createPlayerTeam(Player player, String title, boolean autoSubscribe) {
+    default ScoreboardTeam createPlayerTeam(Player player, String title, boolean autoSubscribe)
+    {
         return createPlayerTeam(player, Long.toHexString(System.nanoTime()), title, autoSubscribe);
     }
 
@@ -198,10 +207,11 @@ public interface Scoreboard {
      * Creates a new per-player scoreboard team with an automatically generated id
      *
      * @param player the player to make the team for
-     * @param title the initial title of the team
+     * @param title  the initial title of the team
      * @return the new team
      */
-    default ScoreboardTeam createPlayerTeam(Player player, String title) {
+    default ScoreboardTeam createPlayerTeam(Player player, String title)
+    {
         return createPlayerTeam(player, title, true);
     }
 
@@ -209,7 +219,7 @@ public interface Scoreboard {
      * Gets an existing per-player scoreboard team if one with the id exists
      *
      * @param player the player to get the team for
-     * @param id the id of the team
+     * @param id     the id of the team
      * @return the team, if present, otherwise null
      */
     @Nullable
@@ -219,7 +229,7 @@ public interface Scoreboard {
      * Removes a per-player scoreboard team from this scoreboard
      *
      * @param player the player to remove the team for
-     * @param id the id of the team
+     * @param id     the id of the team
      * @return true if the team was removed successfully
      */
     boolean removePlayerTeam(Player player, String id);
@@ -227,10 +237,10 @@ public interface Scoreboard {
     /**
      * Creates a new per-player scoreboard objective
      *
-     * @param player the player to make the objective for
-     * @param id the id of the objective
-     * @param title the initial title of the objective
-     * @param displaySlot the display slot to use for this objective
+     * @param player        the player to make the objective for
+     * @param id            the id of the objective
+     * @param title         the initial title of the objective
+     * @param displaySlot   the display slot to use for this objective
      * @param autoSubscribe if players should be automatically subscribed
      * @return the new objective
      * @throws IllegalStateException if an objective with the same id already exists
@@ -240,38 +250,41 @@ public interface Scoreboard {
     /**
      * Creates a new per-player scoreboard objective
      *
-     * @param player the player to make the objective for
-     * @param id the id of the objective
-     * @param title the initial title of the objective
+     * @param player      the player to make the objective for
+     * @param id          the id of the objective
+     * @param title       the initial title of the objective
      * @param displaySlot the display slot to use for this objective
      * @return the new objective
      * @throws IllegalStateException if an objective with the same id already exists
      */
-    default ScoreboardObjective createPlayerObjective(Player player, String id, String title, DisplaySlot displaySlot) {
+    default ScoreboardObjective createPlayerObjective(Player player, String id, String title, DisplaySlot displaySlot)
+    {
         return createPlayerObjective(player, id, title, displaySlot, true);
     }
 
     /**
      * Creates a new per-player scoreboard objective with an automatically generated id
      *
-     * @param player the player to make the objective for
-     * @param title the initial title of the objective
+     * @param player      the player to make the objective for
+     * @param title       the initial title of the objective
      * @param displaySlot the display slot to use for this objective
      * @return the new objective
      */
-    default ScoreboardObjective createPlayerObjective(Player player, String title, DisplaySlot displaySlot, boolean autoSubscribe) {
+    default ScoreboardObjective createPlayerObjective(Player player, String title, DisplaySlot displaySlot, boolean autoSubscribe)
+    {
         return createPlayerObjective(player, Long.toHexString(System.nanoTime()), title, displaySlot, autoSubscribe);
     }
 
     /**
      * Creates a new per-player scoreboard objective with an automatically generated id
      *
-     * @param player the player to make the objective for
-     * @param title the initial title of the objective
+     * @param player      the player to make the objective for
+     * @param title       the initial title of the objective
      * @param displaySlot the display slot to use for this objective
      * @return the new objective
      */
-    default ScoreboardObjective createPlayerObjective(Player player, String title, DisplaySlot displaySlot) {
+    default ScoreboardObjective createPlayerObjective(Player player, String title, DisplaySlot displaySlot)
+    {
         return createPlayerObjective(player, title, displaySlot, true);
     }
 
@@ -279,7 +292,7 @@ public interface Scoreboard {
      * Gets an existing per-player scoreboard objective if one with the id exists
      *
      * @param player the player to get the objective for
-     * @param id the id of the objective
+     * @param id     the id of the objective
      * @return the objective, if present, otherwise null
      */
     @Nullable
@@ -289,7 +302,7 @@ public interface Scoreboard {
      * Removes a per-player scoreboard objective from this scoreboard
      *
      * @param player the player to remove the objective for
-     * @param id the id of the objective
+     * @param id     the id of the objective
      * @return true if the objective was removed successfully
      */
     boolean removePlayerObjective(Player player, String id);

@@ -13,9 +13,11 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Event that triggers casting an ability on throwing an egg
  */
-public class PlayerThrowEggListener implements Listener {
+public class PlayerThrowEggListener implements Listener
+{
     @EventHandler
-    private void onPlayerThrowEgg(PlayerEggThrowEvent event) {
+    private void onPlayerThrowEgg(PlayerEggThrowEvent event)
+    {
         LivingEntity entity = event.getPlayer();
         ItemStack stack = event.getEgg().getItem();
 

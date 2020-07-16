@@ -5,33 +5,41 @@ import co.runed.bolster.Bolster;
 import java.time.Duration;
 import java.util.List;
 
-public class StateSeries extends StateHolder {
+public class StateSeries extends StateHolder
+{
     protected int current = 0;
     protected boolean skipping = false;
 
-    public void addNext(State state) {
+    public void addNext(State state)
+    {
         this.states.add(current + 1, state);
     }
 
-    public void addNext(List<State> newStates) {
+    public void addNext(List<State> newStates)
+    {
         int i = 1;
-        for (State state : newStates) {
+        for (State state : newStates)
+        {
             this.states.add(current + i, state);
             ++i;
         }
     }
 
-    public void skip() {
+    public void skip()
+    {
         skipping = true;
     }
 
-    public State getCurrent() {
+    public State getCurrent()
+    {
         return this.states.get(current);
     }
 
     @Override
-    public void onStart() {
-        if(states.isEmpty()) {
+    public void onStart()
+    {
+        if (states.isEmpty())
+        {
             end();
             return;
         }
@@ -41,11 +49,14 @@ public class StateSeries extends StateHolder {
     }
 
     @Override
-    public void onUpdate() {
+    public void onUpdate()
+    {
         this.states.get(current).update();
 
-        if((this.states.get(current).isReadyToEnd() && !this.states.get(current).getFrozen()) || skipping) {
-            if(skipping) {
+        if ((this.states.get(current).isReadyToEnd() && !this.states.get(current).getFrozen()) || skipping)
+        {
+            if (skipping)
+            {
                 skipping = false;
             }
 
@@ -54,7 +65,8 @@ public class StateSeries extends StateHolder {
 
             ++current;
 
-            if(current >= this.states.size()) {
+            if (current >= this.states.size())
+            {
                 end();
                 return;
             }
@@ -65,23 +77,27 @@ public class StateSeries extends StateHolder {
     }
 
     @Override
-    public boolean isReadyToEnd() {
+    public boolean isReadyToEnd()
+    {
         return (current == this.states.size() - 1 && this.states.get(current).isReadyToEnd());
     }
 
     @Override
-    public void onEnd() {
-        if(current < this.states.size())
+    public void onEnd()
+    {
+        if (current < this.states.size())
         {
             this.states.get(current).end();
         }
     }
 
     @Override
-    public Duration getDuration() {
+    public Duration getDuration()
+    {
         Duration duration = Duration.ZERO;
 
-        for (State state : this.states) {
+        for (State state : this.states)
+        {
             duration = duration.plus(state.getDuration());
         }
 

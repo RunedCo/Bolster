@@ -13,9 +13,11 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Event that triggers casting an ability on swapping offhand (pushing F)
  */
-public class PlayerOffhandListener implements Listener {
+public class PlayerOffhandListener implements Listener
+{
     @EventHandler
-    private void onPlayerOffhand(PlayerSwapHandItemsEvent event) {
+    private void onPlayerOffhand(PlayerSwapHandItemsEvent event)
+    {
         Player player = event.getPlayer();
         ItemStack stack = event.getOffHandItem();
 

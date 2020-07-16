@@ -13,9 +13,11 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Event that triggers casting an ability when an item is consumed (food, potions)
  */
-public class PlayerEatListener implements Listener {
+public class PlayerEatListener implements Listener
+{
     @EventHandler
-    private void onPlayerEat(PlayerItemConsumeEvent event) {
+    private void onPlayerEat(PlayerItemConsumeEvent event)
+    {
         Player player = event.getPlayer();
         ItemStack stack = event.getItem();
 

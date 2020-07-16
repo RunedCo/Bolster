@@ -13,9 +13,11 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Event that triggers casting ability on shooting a bow
  */
-public class EntityShootBowListener implements Listener {
+public class EntityShootBowListener implements Listener
+{
     @EventHandler
-    private void onLivingEntityShootBow(EntityShootBowEvent event) {
+    private void onLivingEntityShootBow(EntityShootBowEvent event)
+    {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getBow();
 

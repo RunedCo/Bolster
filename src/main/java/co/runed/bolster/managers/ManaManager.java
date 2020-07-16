@@ -16,7 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ManaManager implements Listener {
+public class ManaManager implements Listener
+{
     private final Plugin plugin;
     private final Map<UUID, ManaData> manaData = new HashMap<>();
 
@@ -24,27 +25,32 @@ public class ManaManager implements Listener {
     private boolean refillOnSpawn = true;
     private boolean enableXpBarDisplay = false;
 
-    public ManaManager(Plugin plugin) {
+    public ManaManager(Plugin plugin)
+    {
         this.plugin = plugin;
 
         Bukkit.getPluginManager().registerEvents(this, this.plugin);
     }
 
-    public void setDefaultMaximumMana(float value) {
+    public void setDefaultMaximumMana(float value)
+    {
         this.defaultMaxMana = value;
     }
 
-    public void setRefillManaOnSpawn(boolean shouldRefill) {
+    public void setRefillManaOnSpawn(boolean shouldRefill)
+    {
         this.refillOnSpawn = shouldRefill;
     }
 
-    public void setEnableXpManaBar(boolean enabled) {
+    public void setEnableXpManaBar(boolean enabled)
+    {
         this.enableXpBarDisplay = true;
 
         Bolster.getGameProperties().set(GameProperties.ENABLE_XP, false);
     }
 
-    public void setMaximumMana(LivingEntity entity, float value) {
+    public void setMaximumMana(LivingEntity entity, float value)
+    {
         this.manaData.putIfAbsent(entity.getUniqueId(), new ManaData(this.defaultMaxMana));
 
         ManaData data = this.manaData.get(entity.getUniqueId());
@@ -54,20 +60,24 @@ public class ManaManager implements Listener {
 
         this.manaData.put(entity.getUniqueId(), data);
 
-        if(entity.getType() == EntityType.PLAYER) {
-            this.updateManaDisplay((Player)entity);
+        if (entity.getType() == EntityType.PLAYER)
+        {
+            this.updateManaDisplay((Player) entity);
         }
     }
 
-    public float getMaximumMana(LivingEntity entity) {
+    public float getMaximumMana(LivingEntity entity)
+    {
         return this.manaData.getOrDefault(entity.getUniqueId(), new ManaData(this.defaultMaxMana)).maxMana;
     }
 
-    public void addMaximumMana(LivingEntity entity, float value) {
+    public void addMaximumMana(LivingEntity entity, float value)
+    {
         this.setMaximumMana(entity, this.getMaximumMana(entity) + value);
     }
 
-    public void setCurrentMana(LivingEntity entity, float value) {
+    public void setCurrentMana(LivingEntity entity, float value)
+    {
         this.manaData.putIfAbsent(entity.getUniqueId(), new ManaData(this.defaultMaxMana));
 
         value = Math.min(value, this.getMaximumMana(entity));
@@ -79,23 +89,27 @@ public class ManaManager implements Listener {
 
         this.manaData.put(entity.getUniqueId(), data);
 
-        if(entity.getType() == EntityType.PLAYER) {
-            this.updateManaDisplay((Player)entity);
+        if (entity.getType() == EntityType.PLAYER)
+        {
+            this.updateManaDisplay((Player) entity);
         }
     }
 
-    public float getCurrentMana(LivingEntity entity) {
+    public float getCurrentMana(LivingEntity entity)
+    {
         return this.manaData.getOrDefault(entity.getUniqueId(), new ManaData(this.defaultMaxMana)).currentMana;
     }
 
-    public void addCurrentMana(LivingEntity entity, float value) {
+    public void addCurrentMana(LivingEntity entity, float value)
+    {
         this.setCurrentMana(entity, this.getCurrentMana(entity) + value);
     }
 
-    public void updateManaDisplay(Player player) {
-        if(!this.enableXpBarDisplay) return;
+    public void updateManaDisplay(Player player)
+    {
+        if (!this.enableXpBarDisplay) return;
 
-        int currentMana = (int)Math.floor(this.getCurrentMana(player));
+        int currentMana = (int) Math.floor(this.getCurrentMana(player));
         float maxMana = this.getMaximumMana(player);
 
         float xpPercent = maxMana > 0 ? (currentMana / maxMana) : 0;
@@ -106,10 +120,12 @@ public class ManaManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent event) {
+    public void onPlayerRespawn(PlayerRespawnEvent event)
+    {
         Player player = event.getPlayer();
 
-        if (this.refillOnSpawn) {
+        if (this.refillOnSpawn)
+        {
             this.setCurrentMana(player, this.getMaximumMana(player));
         }
 
@@ -117,31 +133,37 @@ public class ManaManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event)
+    {
         Player player = event.getPlayer();
 
-        if(!this.manaData.containsKey(player.getUniqueId())) {
+        if (!this.manaData.containsKey(player.getUniqueId()))
+        {
             this.setMaximumMana(player, this.defaultMaxMana);
 
-            if(this.refillOnSpawn) this.setCurrentMana(player, this.getMaximumMana(player));
+            if (this.refillOnSpawn) this.setCurrentMana(player, this.getMaximumMana(player));
         }
 
         this.updateManaDisplay(player);
     }
 
-    private static class ManaData {
+    private static class ManaData
+    {
         private float maxMana;
         private float currentMana;
 
-        private ManaData() {
+        private ManaData()
+        {
             this(0);
         }
 
-        private ManaData(float maxMana) {
+        private ManaData(float maxMana)
+        {
             this(maxMana, 0);
         }
 
-        private ManaData(float maxMana, float currentMana) {
+        private ManaData(float maxMana, float currentMana)
+        {
             this.maxMana = maxMana;
             this.currentMana = currentMana;
         }

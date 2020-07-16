@@ -25,12 +25,13 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-public class GameProperties extends Properties implements Listener {
+public class GameProperties extends Properties implements Listener
+{
     public static final Property<Boolean> ENABLE_FALL_DAMAGE = new Property<>("enable_fall_damage", true);
     public static final Property<Boolean> ENABLE_EXPLOSION_DAMAGE = new Property<>("enable_explosion_damage", true);
     public static final Property<Boolean> ENABLE_POISON_DAMAGE = new Property<>("enable_poison_damage", true);
     public static final Property<Boolean> ENABLE_WITHER_DAMAGE = new Property<>("enable_wither_damage", true);
-    public static final Property<Boolean> ENABLE_FIRE_DAMAGE = new Property<>("enable_fire_damage",true);
+    public static final Property<Boolean> ENABLE_FIRE_DAMAGE = new Property<>("enable_fire_damage", true);
 
     public static final Property<Boolean> ENABLE_PVP = new Property<>("enable_pvp", true);
     public static final Property<Boolean> ENABLE_PVE = new Property<>("enable_pve", true);
@@ -45,15 +46,18 @@ public class GameProperties extends Properties implements Listener {
     public static final Property<Boolean> ENABLE_LOG_STRIP = new Property<>("enable_log_strip", true);
     public static final Property<Boolean> ENABLE_GRASS_PATH = new Property<>("enable_grass_path", true);
 
-    public GameProperties(Plugin plugin) {
+    public GameProperties(Plugin plugin)
+    {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onEntityTakeDamage(EntityDamageEvent event) {
+    private void onEntityTakeDamage(EntityDamageEvent event)
+    {
         DamageCause cause = event.getCause();
 
-        switch (cause) {
+        switch (cause)
+        {
             case FALL:
                 if (!this.get(GameProperties.ENABLE_FALL_DAMAGE)) event.setCancelled(true);
                 break;
@@ -79,62 +83,79 @@ public class GameProperties extends Properties implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onEntityDamageEntity(EntityDamageByEntityEvent event) {
+    private void onEntityDamageEntity(EntityDamageByEntityEvent event)
+    {
         Entity damager = event.getDamager();
 
-        if (event.getEntityType() == EntityType.PLAYER) {
-            if (damager.getType() == EntityType.PLAYER || (damager instanceof Projectile && ((Projectile)damager).getShooter() instanceof Player)) {
+        if (event.getEntityType() == EntityType.PLAYER)
+        {
+            if (damager.getType() == EntityType.PLAYER || (damager instanceof Projectile && ((Projectile) damager).getShooter() instanceof Player))
+            {
                 if (!this.get(GameProperties.ENABLE_PVP)) event.setCancelled(true);
-            } else {
+            }
+            else
+            {
                 if (!this.get(GameProperties.ENABLE_PVE)) event.setCancelled(true);
             }
         }
     }
 
     @EventHandler
-    private void onPlayerOffhand(PlayerSwapHandItemsEvent event) {
+    private void onPlayerOffhand(PlayerSwapHandItemsEvent event)
+    {
         if (!this.get(GameProperties.ENABLE_OFFHAND)) event.setCancelled(true);
     }
 
     @EventHandler
-    private void onPlayerHunger(FoodLevelChangeEvent event) {
-        if (!this.get(GameProperties.ENABLE_HUNGER)) {
+    private void onPlayerHunger(FoodLevelChangeEvent event)
+    {
+        if (!this.get(GameProperties.ENABLE_HUNGER))
+        {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent e) {
+    public void onPlayerDeath(PlayerDeathEvent e)
+    {
         if (!this.get(GameProperties.ENABLE_XP)) e.setDroppedExp(0);
     }
 
     @EventHandler
-    public void onBreakBlock(BlockBreakEvent e) {
+    public void onBreakBlock(BlockBreakEvent e)
+    {
         if (!this.get(GameProperties.ENABLE_XP)) e.setExpToDrop(0);
     }
 
     @EventHandler
-    public void onExpChange(PlayerExpChangeEvent event) {
+    public void onExpChange(PlayerExpChangeEvent event)
+    {
         if (!this.get(GameProperties.ENABLE_XP)) event.setAmount(0);
     }
 
     @EventHandler
-    public void onInteractStrip(PlayerInteractEvent e) {
-        if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+    public void onInteractStrip(PlayerInteractEvent e)
+    {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
+        {
             Block block = e.getClickedBlock();
             ItemStack item = e.getItem();
 
-            if(item == null || item.getType().isBlock()) return;
+            if (item == null || item.getType().isBlock()) return;
 
-            if(!this.get(GameProperties.ENABLE_LOG_STRIP)) {
-                if (Tag.LOGS.isTagged(block.getType())) {
+            if (!this.get(GameProperties.ENABLE_LOG_STRIP))
+            {
+                if (Tag.LOGS.isTagged(block.getType()))
+                {
                     e.setUseInteractedBlock(Event.Result.ALLOW);
                     e.setUseItemInHand(Event.Result.DENY);
                 }
             }
 
-            if(!this.get(GameProperties.ENABLE_GRASS_PATH)) {
-                if(block.getType() == Material.GRASS_BLOCK) {
+            if (!this.get(GameProperties.ENABLE_GRASS_PATH))
+            {
+                if (block.getType() == Material.GRASS_BLOCK)
+                {
                     e.setUseInteractedBlock(Event.Result.ALLOW);
                     e.setUseItemInHand(Event.Result.DENY);
                 }

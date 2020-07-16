@@ -13,9 +13,11 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Event that triggers casting an ability when a fish is caught
  */
-public class PlayerFishListener implements Listener {
+public class PlayerFishListener implements Listener
+{
     @EventHandler
-    private void onPlayerFish(PlayerFishEvent event) {
+    private void onPlayerFish(PlayerFishEvent event)
+    {
         if (event.getState() != PlayerFishEvent.State.CAUGHT_ENTITY && event.getState() != PlayerFishEvent.State.CAUGHT_FISH)
             return;
 

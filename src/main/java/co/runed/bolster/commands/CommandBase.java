@@ -25,7 +25,8 @@ public class CommandBase
         if (arguments != null) this.arguments = arguments;
     }
 
-    public void run(CommandSender sender, Object[] args) throws WrapperCommandSyntaxException {
+    public void run(CommandSender sender, Object[] args) throws WrapperCommandSyntaxException
+    {
     }
 
     public void register()

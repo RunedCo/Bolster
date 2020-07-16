@@ -18,9 +18,11 @@ import java.util.Collections;
 /**
  * Event that triggers casting an ability when an entity is damaged
  */
-public class EntityDamageListener implements Listener {
+public class EntityDamageListener implements Listener
+{
     @EventHandler
-    private void onDamageEntity(EntityDamageByEntityEvent event) {
+    private void onDamageEntity(EntityDamageByEntityEvent event)
+    {
         if (!(event.getDamager() instanceof LivingEntity)) return;
 
         LivingEntity entity = (LivingEntity) event.getDamager();
@@ -38,7 +40,8 @@ public class EntityDamageListener implements Listener {
     }
 
     @EventHandler
-    private void onEntityFatalDamage(EntityDamageEvent event) {
+    private void onEntityFatalDamage(EntityDamageEvent event)
+    {
         if (!(event.getEntity() instanceof LivingEntity)) return;
 
         LivingEntity entity = (LivingEntity) event.getEntity();
@@ -52,7 +55,8 @@ public class EntityDamageListener implements Listener {
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.DAMAGE, damage);
 
-        if (entity.getHealth() - damage <= 0) {
+        if (entity.getHealth() - damage <= 0)
+        {
             Bolster.getAbilityManager().trigger(entity, AbilityTrigger.ON_TAKE_FATAL_DAMAGE, properties);
         }
 

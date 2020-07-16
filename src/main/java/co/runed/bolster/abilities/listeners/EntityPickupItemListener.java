@@ -13,9 +13,11 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Event that triggers casting an ability when an item is picked up
  */
-public class EntityPickupItemListener implements Listener {
+public class EntityPickupItemListener implements Listener
+{
     @EventHandler
-    private void onPickupItem(EntityPickupItemEvent event) {
+    private void onPickupItem(EntityPickupItemEvent event)
+    {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getItem().getItemStack();
 

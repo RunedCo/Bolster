@@ -13,7 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
 
-public class Bolster extends JavaPlugin {
+public class Bolster extends JavaPlugin
+{
     // SINGLETON INSTANCE
     private static Bolster instance;
 
@@ -31,12 +32,14 @@ public class Bolster extends JavaPlugin {
     private Properties gameProperties;
 
     @Override
-    public void onLoad() {
+    public void onLoad()
+    {
         instance = this;
     }
 
     @Override
-    public void onEnable() {
+    public void onEnable()
+    {
         super.onEnable();
 
         this.itemRegistry = new ItemRegistry(this);
@@ -65,47 +68,58 @@ public class Bolster extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() {
+    public void onDisable()
+    {
         super.onDisable();
     }
 
-    public static Bolster getInstance() {
+    public static Bolster getInstance()
+    {
         return instance;
     }
 
-    public static Registry<Item> getItemRegistry() {
+    public static Registry<Item> getItemRegistry()
+    {
         return Bolster.getInstance().itemRegistry;
     }
 
-    public static Registry<ItemSkin> getItemSkinRegistry() {
+    public static Registry<ItemSkin> getItemSkinRegistry()
+    {
         return Bolster.getInstance().itemSkinRegistry;
     }
 
-    public static CooldownManager getCooldownManager() {
+    public static CooldownManager getCooldownManager()
+    {
         return Bolster.getInstance().cooldownManager;
     }
 
-    public static ItemManager getItemManager() {
+    public static ItemManager getItemManager()
+    {
         return Bolster.getInstance().itemManager;
     }
 
-    public static AbilityManager getAbilityManager() {
+    public static AbilityManager getAbilityManager()
+    {
         return Bolster.getInstance().abilityManager;
     }
 
-    public static ManaManager getManaManager() {
+    public static ManaManager getManaManager()
+    {
         return Bolster.getInstance().manaManager;
     }
 
-    public static CommandManager getCommandManager() {
+    public static CommandManager getCommandManager()
+    {
         return Bolster.getInstance().commandManager;
     }
 
-    public static SidebarManager getSidebarManager() {
+    public static SidebarManager getSidebarManager()
+    {
         return Bolster.getInstance().sidebarManager;
     }
 
-    public static Properties getGameProperties() {
+    public static Properties getGameProperties()
+    {
         return Bolster.getInstance().gameProperties;
     }
 }

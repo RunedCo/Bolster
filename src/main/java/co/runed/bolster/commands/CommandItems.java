@@ -31,12 +31,14 @@ public class CommandItems extends CommandBase
     @Override
     public void run(CommandSender sender, Object[] args)
     {
-        if(sender instanceof Player) {
-            this.openMenu((Player)sender);
+        if (sender instanceof Player)
+        {
+            this.openMenu((Player) sender);
         }
     }
 
-    private void openMenu(Player player) {
+    private void openMenu(Player player)
+    {
         HashMap<ItemCategory, List<ItemStack>> itemCategories = new HashMap<>();
 
         ChestMenu.Builder pageTemplate = ChestMenu.builder(6).title("Items").redraw(true);
@@ -58,10 +60,12 @@ public class CommandItems extends CommandBase
 
         Map<String, Callable<? extends Item>> items = Bolster.getItemRegistry().getEntries();
 
-        for (String id : items.keySet()){
+        for (String id : items.keySet())
+        {
             Item item = Bolster.getItemRegistry().createInstance(id);
 
-            for (ItemCategory category : item.getCategories()) {
+            for (ItemCategory category : item.getCategories())
+            {
                 itemCategories.putIfAbsent(category, new ArrayList<>());
 
                 itemCategories.get(category).add(item.toItemStack());
@@ -75,15 +79,19 @@ public class CommandItems extends CommandBase
 
         SlotSettings allItems = null;
 
-        for (ItemCategory category : sortedCategories) {
+        for (ItemCategory category : sortedCategories)
+        {
             List<ItemStack> categoryItems = itemCategories.get(category);
 
             SlotSettings settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(category.getIcon()))
-                    .clickHandler((p, info) -> {this.openCategory(player, category, categoryItems);})
+                    .clickHandler((p, info) -> {
+                        this.openCategory(player, category, categoryItems);
+                    })
                     .build();
 
-            if(category == ItemCategory.ALL) {
+            if (category == ItemCategory.ALL)
+            {
                 allItems = settings;
 
                 continue;
@@ -99,7 +107,8 @@ public class CommandItems extends CommandBase
         pages.get(0).open(player);
     }
 
-    private void openCategory(Player player, ItemCategory category, List<ItemStack> items) {
+    private void openCategory(Player player, ItemCategory category, List<ItemStack> items)
+    {
         ChestMenu.Builder pageTemplate = ChestMenu.builder(6).title("Items - " + category.getName()).redraw(true);
         Mask itemSlots = BinaryMask.builder(pageTemplate.getDimensions())
                 .pattern("111111111")
@@ -117,7 +126,8 @@ public class CommandItems extends CommandBase
                 .previousButton(new ItemStack(Material.ARROW))
                 .previousButtonSlot(47);
 
-        for (ItemStack item : items){
+        for (ItemStack item : items)
+        {
             SlotSettings settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(item))
                     .clickHandler(this::givePlayerItem)
@@ -131,12 +141,14 @@ public class CommandItems extends CommandBase
         pages.get(0).open(player);
     }
 
-    private void givePlayerItem(Player player, ClickInformation info) {
+    private void givePlayerItem(Player player, ClickInformation info)
+    {
         int stackAmount = info.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || info.getAction() == InventoryAction.DROP_ALL_SLOT ? 64 : 1;
         ItemStack stack = info.getClickedSlot().getItem(player);
         String itemId = Bolster.getItemManager().getItemIdFromStack(stack);
 
-        if (info.getAction() == InventoryAction.DROP_ALL_SLOT || info.getAction() == InventoryAction.DROP_ONE_SLOT) {
+        if (info.getAction() == InventoryAction.DROP_ALL_SLOT || info.getAction() == InventoryAction.DROP_ONE_SLOT)
+        {
             Item item = Bolster.getItemManager().createItem(player, itemId);
 
             ItemStack itemStack = item.toItemStack();
