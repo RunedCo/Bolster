@@ -11,26 +11,31 @@ import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 
-public class AbilityOffCooldownCondition extends Condition {
+public class AbilityOffCooldownCondition extends Condition
+{
     private static DecimalFormat df2 = new DecimalFormat("#.#");
 
     @Override
-    public boolean evaluate(Ability ability, Properties properties) {
+    public boolean evaluate(Ability ability, Properties properties)
+    {
         return !ability.isOnCooldown();
     }
 
     //TODO: REMOVE HARDCODED MESSAGE
     @Override
-    public void onFail(Ability ability, Properties properties) {
-        if(ability instanceof PassiveAbility) return;
+    public void onFail(Ability ability, Properties properties)
+    {
+        if (ability instanceof PassiveAbility) return;
 
         LivingEntity entity = properties.get(AbilityProperties.CASTER);
 
-        if(entity.getType() == EntityType.PLAYER) {
+        if (entity.getType() == EntityType.PLAYER)
+        {
             double cooldown = ability.getRemainingCooldown();
-            String formattedCooldown = "" + (int)cooldown;
+            String formattedCooldown = "" + (int) cooldown;
 
-            if(cooldown < 1) {
+            if (cooldown < 1)
+            {
                 formattedCooldown = df2.format(cooldown);
             }
 

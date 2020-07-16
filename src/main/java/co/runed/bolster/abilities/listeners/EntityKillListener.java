@@ -16,9 +16,11 @@ import java.util.Collections;
 /**
  * Event that triggers casting an ability when an entity kills an entity
  */
-public class EntityKillListener implements Listener {
+public class EntityKillListener implements Listener
+{
     @EventHandler
-    private void onKillEntity(EntityDeathEvent event) {
+    private void onKillEntity(EntityDeathEvent event)
+    {
         Player player = event.getEntity().getKiller();
         ItemStack stack = player.getInventory().getItemInMainHand();
 

@@ -14,9 +14,11 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Event that triggers casting an ability on sneak
  */
-public class PlayerSneakListener implements Listener {
+public class PlayerSneakListener implements Listener
+{
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onPlayerSneak(PlayerToggleSneakEvent event) {
+    private void onPlayerSneak(PlayerToggleSneakEvent event)
+    {
         if (!event.isSneaking()) return;
 
         Player player = event.getPlayer();

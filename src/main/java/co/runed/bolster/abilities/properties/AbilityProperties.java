@@ -18,9 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  List of variables passed to an ability when cast
+ * List of variables passed to an ability when cast
  */
-public class AbilityProperties {
+public class AbilityProperties
+{
     // GENERAL PROPERTIES
     public static final Property<LivingEntity> CASTER = new Property<>("caster");
     public static final Property<List<LivingEntity>> TARGETS = new Property<>("targets", new ArrayList<>());

@@ -5,23 +5,28 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-public class TaskUtil {
-    public static synchronized BukkitTask runRepeatingTaskTimer(Plugin plugin, Runnable task, int numberOfRepeats, long initialDelay, long period) {
-        BukkitRunnable run = new BukkitRunnable() {
+public class TaskUtil
+{
+    public static synchronized BukkitTask runRepeatingTaskTimer(Plugin plugin, Runnable task, int numberOfRepeats, long initialDelay, long period)
+    {
+        BukkitRunnable run = new BukkitRunnable()
+        {
             int i = 0;
 
             @Override
-            public void run() {
+            public void run()
+            {
                 task.run();
 
                 i++;
 
-                if(i >= numberOfRepeats) {
+                if (i >= numberOfRepeats)
+                {
                     this.cancel();
                 }
             }
         };
 
-        return run.runTaskTimer(Bolster.getInstance(),initialDelay, period);
+        return run.runTaskTimer(Bolster.getInstance(), initialDelay, period);
     }
 }

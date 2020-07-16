@@ -31,7 +31,8 @@ import org.bukkit.scoreboard.DisplaySlot;
 import java.util.Collection;
 import java.util.Map;
 
-public interface ScoreboardObjective {
+public interface ScoreboardObjective
+{
     /**
      * Gets the id of this objective
      *
@@ -107,7 +108,7 @@ public interface ScoreboardObjective {
     /**
      * Sets a new score value
      *
-     * @param name the name of the score
+     * @param name  the name of the score
      * @param value the value to set the score to
      */
     void setScore(String name, int value);
@@ -164,7 +165,7 @@ public interface ScoreboardObjective {
      * Unsubscribes a player from this objective
      *
      * @param player the player to unsubscribe
-     * @param fast if true, the removal packet will not be sent (for use when the player is leaving)
+     * @param fast   if true, the removal packet will not be sent (for use when the player is leaving)
      */
     void unsubscribe(Player player, boolean fast);
 

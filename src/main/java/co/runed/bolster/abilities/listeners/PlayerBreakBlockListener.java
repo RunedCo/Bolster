@@ -13,9 +13,11 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Event that triggers casting an ability when a block is broken
  */
-public class PlayerBreakBlockListener implements Listener {
+public class PlayerBreakBlockListener implements Listener
+{
     @EventHandler
-    private void onPlayerBreakBlock(BlockBreakEvent event) {
+    private void onPlayerBreakBlock(BlockBreakEvent event)
+    {
         Player player = event.getPlayer();
         ItemStack stack = player.getInventory().getItemInMainHand();
 

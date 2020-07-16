@@ -28,6 +28,7 @@ public class Bolster extends JavaPlugin
     private AbilityManager abilityManager;
     private ManaManager manaManager;
     private SidebarManager sidebarManager;
+    private ClassManager classManager;
 
     private Properties gameProperties;
 
@@ -42,27 +43,34 @@ public class Bolster extends JavaPlugin
     {
         super.onEnable();
 
+        // CREATE REGISTRIES
         this.itemRegistry = new ItemRegistry(this);
         this.itemSkinRegistry = new Registry<>(this);
 
+        // CREATE MANAGERS
         this.commandManager = new CommandManager();
         this.cooldownManager = new CooldownManager(this);
         this.itemManager = new ItemManager(this);
         this.abilityManager = new AbilityManager(this);
         this.sidebarManager = new SidebarManager(this);
-
-        this.gameProperties = new GameProperties(this);
-
+        this.classManager = new ClassManager(this);
         this.manaManager = new ManaManager(this);
 
+        // CREATE GAME PROPERTIES
+        this.gameProperties = new GameProperties(this);
+
+        // SET MANA MANAGER SETTINGS
         this.manaManager.setDefaultMaximumMana(200);
         this.manaManager.setEnableXpManaBar(true);
 
+        // REGISTER COMMANDS
         this.commandManager.add(new CommandItems());
         this.commandManager.add(new CommandMana());
 
+        // REGISTER BUNGEECORD PLUGIN CHANNEL
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
+        // REGISTER MENU EVENTS
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new TestListener(), this);
     }
@@ -73,6 +81,7 @@ public class Bolster extends JavaPlugin
         super.onDisable();
     }
 
+    // SINGLETON GETTERS
     public static Bolster getInstance()
     {
         return instance;
@@ -116,6 +125,11 @@ public class Bolster extends JavaPlugin
     public static SidebarManager getSidebarManager()
     {
         return Bolster.getInstance().sidebarManager;
+    }
+
+    public static ClassManager getClassManager()
+    {
+        return Bolster.getInstance().classManager;
     }
 
     public static Properties getGameProperties()

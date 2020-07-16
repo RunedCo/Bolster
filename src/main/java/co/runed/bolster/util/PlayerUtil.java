@@ -18,23 +18,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class PlayerUtil {
+public class PlayerUtil
+{
 
-    public static List<Player> getPlayersWithGamemode(GameMode mode) {
+    public static List<Player> getPlayersWithGamemode(GameMode mode)
+    {
         List<Player> players = new ArrayList<>();
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
             if (player.getGameMode() == mode) players.add(player);
         }
 
         return players;
     }
 
-    public static void setNickName(Player player, String nickname) {
+    public static void setNickName(Player player, String nickname)
+    {
         player.setDisplayName(nickname);
     }
 
-    public static void sendPlayerToServer(Player player, String server) throws IOException {
+    public static void sendPlayerToServer(Player player, String server) throws IOException
+    {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
 
@@ -44,17 +49,23 @@ public class PlayerUtil {
         player.sendPluginMessage(Bolster.getInstance(), "BungeeCord", b.toByteArray());
     }
 
-    public static void sendAllToServer(String server) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            try {
+    public static void sendAllToServer(String server)
+    {
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+            try
+            {
                 PlayerUtil.sendPlayerToServer(player, server);
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 e.printStackTrace();
             }
         }
     }
 
-    public static void sendActionBar(Player player, String message) {
+    public static void sendActionBar(Player player, String message)
+    {
         message = message.replaceAll("%player%", player.getDisplayName());
         message = ChatColor.translateAlternateColorCodes('&', message);
         IChatBaseComponent chatComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + message + "\"}");
@@ -65,7 +76,8 @@ public class PlayerUtil {
         craftPlayer.getHandle().playerConnection.sendPacket(packet);
     }
 
-    public static void showScreenShake(Player player) {
+    public static void showScreenShake(Player player)
+    {
         Location loc = player.getLocation();
         float playerYaw = loc.getYaw();
         float playerPitch = loc.getPitch();
@@ -83,7 +95,8 @@ public class PlayerUtil {
         //((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
-    public static void dropItem(Player player, ItemStack itemStack) {
+    public static void dropItem(Player player, ItemStack itemStack)
+    {
         Random random = new Random();
         World world = player.getWorld();
 

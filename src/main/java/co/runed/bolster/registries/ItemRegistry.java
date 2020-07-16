@@ -5,21 +5,26 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
 
-public class ItemRegistry extends Registry<Item> {
+public class ItemRegistry extends Registry<Item>
+{
     private final HashMap<String, Class<? extends Item>> fileItems = new HashMap<>();
 
-    public ItemRegistry(Plugin plugin) {
+    public ItemRegistry(Plugin plugin)
+    {
         super(plugin);
     }
 
     @Override
-    public boolean contains(String id) {
+    public boolean contains(String id)
+    {
         return super.contains(id) || this.fileItems.containsKey(id);
     }
 
     @Override
-    public Item createInstance(String id) {
-        if(super.contains(id)) {
+    public Item createInstance(String id)
+    {
+        if (super.contains(id))
+        {
             Item item = super.createInstance(id);
 
             if (item == null) return null;

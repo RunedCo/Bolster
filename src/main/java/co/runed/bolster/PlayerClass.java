@@ -23,4 +23,9 @@ public abstract class PlayerClass extends AbilityProvider
     {
 
     }
+
+    public void destroy()
+    {
+
+    }
 }

@@ -1,6 +1,7 @@
 package co.runed.bolster.abilities;
 
-public enum AbilityTrigger {
+public enum AbilityTrigger
+{
     LEFT_CLICK("left_click", "L-Click"),
     RIGHT_CLICK("right_click", "R-Click"),
     ON_SHOOT("on_shoot", "R-Click"),
@@ -20,16 +21,19 @@ public enum AbilityTrigger {
     private final String id;
     private final String displayName;
 
-    private AbilityTrigger(String id, String displayName) {
+    private AbilityTrigger(String id, String displayName)
+    {
         this.id = id;
         this.displayName = displayName;
     }
 
-    public String getId() {
+    public String getId()
+    {
         return id;
     }
 
-    public String getDisplayName() {
+    public String getDisplayName()
+    {
         return displayName;
     }
 }

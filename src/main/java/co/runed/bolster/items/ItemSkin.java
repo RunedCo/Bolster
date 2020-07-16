@@ -1,25 +1,30 @@
 package co.runed.bolster.items;
 
-public class ItemSkin {
+public class ItemSkin
+{
     private String id;
     private String name;
     private int customModelData = 0;
 
-    public ItemSkin(String id, String name, int customModelData) {
+    public ItemSkin(String id, String name, int customModelData)
+    {
         this.id = id;
         this.name = name;
         this.customModelData = customModelData;
     }
 
-    public String getId() {
+    public String getId()
+    {
         return id;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public int getCustomModelData() {
+    public int getCustomModelData()
+    {
         return customModelData;
     }
 }

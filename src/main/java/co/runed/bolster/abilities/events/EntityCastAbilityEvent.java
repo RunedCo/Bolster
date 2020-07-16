@@ -8,7 +8,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public final class EntityCastAbilityEvent extends Event implements Cancellable {
+public final class EntityCastAbilityEvent extends Event implements Cancellable
+{
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
 
@@ -17,45 +18,54 @@ public final class EntityCastAbilityEvent extends Event implements Cancellable {
     private final AbilityTrigger trigger;
     private final Properties properties;
 
-    public EntityCastAbilityEvent(LivingEntity entity, Ability ability, AbilityTrigger trigger, Properties properties) {
+    public EntityCastAbilityEvent(LivingEntity entity, Ability ability, AbilityTrigger trigger, Properties properties)
+    {
         this.entity = entity;
         this.ability = ability;
         this.trigger = trigger;
         this.properties = properties;
     }
 
-    public Ability getAbility() {
+    public Ability getAbility()
+    {
         return ability;
     }
 
-    public LivingEntity getEntity() {
+    public LivingEntity getEntity()
+    {
         return entity;
     }
 
-    public AbilityTrigger getTrigger() {
+    public AbilityTrigger getTrigger()
+    {
         return trigger;
     }
 
-    public Properties getProperties() {
+    public Properties getProperties()
+    {
         return properties;
     }
 
     @Override
-    public boolean isCancelled() {
+    public boolean isCancelled()
+    {
         return this.cancelled;
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
+    public void setCancelled(boolean cancelled)
+    {
         this.cancelled = cancelled;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public HandlerList getHandlers()
+    {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public static HandlerList getHandlerList()
+    {
         return handlers;
     }
 }

@@ -2,8 +2,10 @@ package co.runed.bolster.util;
 
 import java.time.Duration;
 
-public class DurationUtil {
-    public static String formatDurationHhMmSs(Duration duration) {
+public class DurationUtil
+{
+    public static String formatDurationHhMmSs(Duration duration)
+    {
         long seconds = duration.getSeconds();
         long absSeconds = Math.abs(seconds);
         String positive = String.format(
@@ -12,7 +14,8 @@ public class DurationUtil {
                 (absSeconds % 3600) / 60,
                 absSeconds % 60);
 
-        if(positive.startsWith("0:")) {
+        if (positive.startsWith("0:"))
+        {
             positive = positive.substring(2);
         }
 

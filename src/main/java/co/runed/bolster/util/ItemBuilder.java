@@ -11,15 +11,18 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.List;
 
 
-public class ItemBuilder {
+public class ItemBuilder
+{
 
     private ItemStack item;
 
-    public ItemBuilder(ItemStack itemstack) {
+    public ItemBuilder(ItemStack itemstack)
+    {
         this.item = itemstack;
     }
 
-    public ItemBuilder addAllItemFlags() {
+    public ItemBuilder addAllItemFlags()
+    {
         ItemMeta meta = this.item.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
@@ -32,45 +35,54 @@ public class ItemBuilder {
         return new ItemBuilder(this.item);
     }
 
-    public ItemBuilder setDisplayName(String name) {
+    public ItemBuilder setDisplayName(String name)
+    {
         ItemMeta meta = this.item.getItemMeta();
         meta.setDisplayName(name);
         this.item.setItemMeta(meta);
         return new ItemBuilder(this.item);
     }
 
-    public ItemBuilder addLore(String line) {
+    public ItemBuilder addLore(String line)
+    {
         ItemMeta meta = this.item.getItemMeta();
         meta.getLore().add(line);
         this.item.setItemMeta(meta);
         return new ItemBuilder(this.item);
     }
 
-    public ItemBuilder setLore(List<String> lore) {
+    public ItemBuilder setLore(List<String> lore)
+    {
         ItemMeta meta = this.item.getItemMeta();
         meta.setLore(lore);
         this.item.setItemMeta(meta);
         return new ItemBuilder(this.item);
     }
 
-    public ItemBuilder setLore(String lore) {
+    public ItemBuilder setLore(String lore)
+    {
         if (lore == null) return new ItemBuilder(this.item);
 
         return this.setLore(StringUtil.formatLore(lore));
     }
 
-    public ItemBuilder addItemFlag(ItemFlag flag) {
+    public ItemBuilder addItemFlag(ItemFlag flag)
+    {
         ItemMeta meta = this.item.getItemMeta();
         meta.addItemFlags(flag);
         this.item.setItemMeta(meta);
         return new ItemBuilder(this.item);
     }
 
-    public ItemBuilder setUnbreakable(boolean unbreakable) {
+    public ItemBuilder setUnbreakable(boolean unbreakable)
+    {
         ItemMeta meta = this.item.getItemMeta();
-        if(unbreakable) {
+        if (unbreakable)
+        {
             meta.setUnbreakable(true);
-        } else {
+        }
+        else
+        {
             meta.setUnbreakable(false);
         }
 
@@ -78,39 +90,48 @@ public class ItemBuilder {
         return new ItemBuilder(this.item);
     }
 
-    public ItemBuilder setCustomModelData(int data) {
+    public ItemBuilder setCustomModelData(int data)
+    {
         ItemMeta meta = this.item.getItemMeta();
         meta.setCustomModelData(data);
         this.item.setItemMeta(meta);
         return new ItemBuilder(this.item);
     }
 
-    public ItemBuilder addUnsafeEnchant(Enchantment ench, int level) {
+    public ItemBuilder addUnsafeEnchant(Enchantment ench, int level)
+    {
         ItemMeta meta = this.item.getItemMeta();
         meta.addEnchant(ench, level, true);
         this.item.setItemMeta(meta);
         return new ItemBuilder(this.item);
     }
 
-    public <T, Z> ItemBuilder setPersistentData(NamespacedKey key, PersistentDataType<T, Z> dataType, Z value) {
+    public <T, Z> ItemBuilder setPersistentData(NamespacedKey key, PersistentDataType<T, Z> dataType, Z value)
+    {
         ItemMeta meta = this.item.getItemMeta();
         meta.getPersistentDataContainer().set(key, dataType, value);
         this.item.setItemMeta(meta);
         return new ItemBuilder(this.item);
     }
 
-    public ItemStack build() {
+    public ItemStack build()
+    {
         return this.item;
     }
 
-    public static boolean hasItemName(String name, ItemStack item) {
-        if(item == null || item.getType() == Material.AIR) {
+    public static boolean hasItemName(String name, ItemStack item)
+    {
+        if (item == null || item.getType() == Material.AIR)
+        {
             return false;
         }
 
-        if(item.hasItemMeta()) {
-            if(item.getItemMeta().hasDisplayName()) {
-                if(item.getItemMeta().getDisplayName().equals(name)) {
+        if (item.hasItemMeta())
+        {
+            if (item.getItemMeta().hasDisplayName())
+            {
+                if (item.getItemMeta().getDisplayName().equals(name))
+                {
                     return true;
                 }
             }

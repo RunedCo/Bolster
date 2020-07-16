@@ -10,23 +10,28 @@ import org.bukkit.block.Block;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class BlockIsMaterialCondition extends Condition {
+public class BlockIsMaterialCondition extends Condition
+{
     Collection<Material> materials = new ArrayList<>();
 
-    public BlockIsMaterialCondition(Material material) {
+    public BlockIsMaterialCondition(Material material)
+    {
         materials.add(material);
     }
 
-    public BlockIsMaterialCondition(Tag<Material> tag) {
+    public BlockIsMaterialCondition(Tag<Material> tag)
+    {
         this.materials.addAll(tag.getValues());
     }
 
-    public BlockIsMaterialCondition(Collection<Material> materials) {
+    public BlockIsMaterialCondition(Collection<Material> materials)
+    {
         this.materials.addAll(materials);
     }
 
     @Override
-    public boolean evaluate(Ability ability, Properties properties) {
+    public boolean evaluate(Ability ability, Properties properties)
+    {
         Block block = properties.get(AbilityProperties.BLOCK);
 
         if (block == null) return false;

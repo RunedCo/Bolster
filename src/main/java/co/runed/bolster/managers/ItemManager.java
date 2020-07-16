@@ -28,18 +28,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemManager implements Listener {
+public class ItemManager implements Listener
+{
     Plugin plugin;
 
     private final HashMap<UUID, List<Item>> entityItems = new HashMap<>();
 
-    public ItemManager(Plugin plugin) {
+    public ItemManager(Plugin plugin)
+    {
         this.plugin = plugin;
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    public Item getItem(LivingEntity entity, Class<? extends Item> itemClass) {
+    public Item getItem(LivingEntity entity, Class<? extends Item> itemClass)
+    {
         return this.getItem(entity, Bolster.getItemRegistry().getId(itemClass));
     }
 
@@ -50,19 +53,22 @@ public class ItemManager implements Listener {
      * @param id     the {@link String} id of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
      * @return the existing {@link Item} instance or null
      */
-    public Item getItem(LivingEntity entity, String id) {
+    public Item getItem(LivingEntity entity, String id)
+    {
         this.entityItems.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
 
         List<Item> items = this.entityItems.get(entity.getUniqueId());
 
-        for (Item item : items) {
+        for (Item item : items)
+        {
             if (item.getId().equals(id)) return item;
         }
 
         return null;
     }
 
-    public Item createItem(LivingEntity entity, Class<? extends Item> itemClass) {
+    public Item createItem(LivingEntity entity, Class<? extends Item> itemClass)
+    {
         return this.createItem(entity, Bolster.getItemRegistry().getId(itemClass));
     }
 
@@ -73,7 +79,8 @@ public class ItemManager implements Listener {
      * @param entity the entity that the item should be created for
      * @param id     the {@link String} id of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
      */
-    public Item createItem(LivingEntity entity, String id) {
+    public Item createItem(LivingEntity entity, String id)
+    {
         this.entityItems.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
 
         List<Item> items = this.entityItems.get(entity.getUniqueId());
@@ -82,7 +89,8 @@ public class ItemManager implements Listener {
 
         Item item = this.getItem(entity, id);
 
-        if (item != null) {
+        if (item != null)
+        {
             item.setOwner(entity);
             return item;
         }
@@ -99,19 +107,23 @@ public class ItemManager implements Listener {
         return item;
     }
 
-    public Item giveItem(Player player, Class<? extends Item> itemClass) {
+    public Item giveItem(Player player, Class<? extends Item> itemClass)
+    {
         return this.giveItem(player, itemClass, 1);
     }
 
-    public Item giveItem(Player player, Class<? extends Item> itemClass, int amount) {
+    public Item giveItem(Player player, Class<? extends Item> itemClass, int amount)
+    {
         return this.giveItem(player, Bolster.getItemRegistry().getId(itemClass), amount);
     }
 
-    public Item giveItem(Player player, String itemId) {
+    public Item giveItem(Player player, String itemId)
+    {
         return this.giveItem(player, itemId, 1);
     }
 
-    public Item giveItem(Player player, String itemId, int amount) {
+    public Item giveItem(Player player, String itemId, int amount)
+    {
         Item item = this.createItem(player, itemId);
 
         ItemStack stack = item.toItemStack();
@@ -122,23 +134,26 @@ public class ItemManager implements Listener {
         return item;
     }
 
-    public void removeItem(Player player, Item item) {
+    public void removeItem(Player player, Item item)
+    {
         this.removeItem(player, item, 1);
     }
 
-    public void removeItem(Player player, Item item, int count) {
+    public void removeItem(Player player, Item item, int count)
+    {
         Inventory playerInv = player.getInventory();
         ItemStack stack = item.toItemStack();
         stack.setAmount(count);
 
-        if(!playerInv.containsAtLeast(stack, count)) return;
+        if (!playerInv.containsAtLeast(stack, count)) return;
 
         playerInv.removeItem(stack);
 
-        if(!playerInv.containsAtLeast(stack, 1)) this.clearItem(player, item);
+        if (!playerInv.containsAtLeast(stack, 1)) this.clearItem(player, item);
     }
 
-    public void clearItem(LivingEntity entity, Item item) {
+    public void clearItem(LivingEntity entity, Item item)
+    {
         if (!this.entityItems.containsKey(entity.getUniqueId())) return;
 
         item.destroy();
@@ -146,25 +161,30 @@ public class ItemManager implements Listener {
         this.entityItems.get(entity.getUniqueId()).remove(item);
     }
 
-    public void clearItems(LivingEntity entity) {
+    public void clearItems(LivingEntity entity)
+    {
         List<Item> items = new ArrayList<>(this.getItems(entity));
 
-        for (Item item : items) {
+        for (Item item : items)
+        {
             this.clearItem(entity, item);
         }
     }
 
-    public boolean hasItem(LivingEntity entity, String id) {
+    public boolean hasItem(LivingEntity entity, String id)
+    {
         return this.getItem(entity, id) != null;
     }
 
-    public List<Item> getItems(LivingEntity entity) {
+    public List<Item> getItems(LivingEntity entity)
+    {
         if (!this.entityItems.containsKey(entity.getUniqueId())) return new ArrayList<>();
 
         return this.entityItems.get(entity.getUniqueId());
     }
 
-    public String getItemIdFromStack(ItemStack stack) {
+    public String getItemIdFromStack(ItemStack stack)
+    {
         if (stack == null) return null;
         if (!stack.hasItemMeta()) return null;
 
@@ -174,7 +194,8 @@ public class ItemManager implements Listener {
         return pdc.get(Item.ITEM_ID_KEY, PersistentDataType.STRING);
     }
 
-    public boolean isEntityHolding(LivingEntity entity, Item item) {
+    public boolean isEntityHolding(LivingEntity entity, Item item)
+    {
         EntityEquipment inv = entity.getEquipment();
         ItemStack stack = inv.getItemInMainHand();
         String itemId = this.getItemIdFromStack(stack);
@@ -186,12 +207,14 @@ public class ItemManager implements Listener {
         return itemId.equals(item.getId());
     }
 
-    public void reset() {
+    public void reset()
+    {
         this.entityItems.clear();
     }
 
     @EventHandler
-    private void onPreCastAbility(EntityPreCastAbilityEvent event) {
+    private void onPreCastAbility(EntityPreCastAbilityEvent event)
+    {
         LivingEntity entity = event.getEntity();
         EntityEquipment inv = entity.getEquipment();
         ItemStack stack = inv.getItemInMainHand();
@@ -204,19 +227,23 @@ public class ItemManager implements Listener {
     }
 
     @EventHandler
-    private void onCastAbility(EntityCastAbilityEvent event) {
+    private void onCastAbility(EntityCastAbilityEvent event)
+    {
         AbilityProvider abilitySource = event.getAbility().getAbilitySource();
 
-        if(abilitySource instanceof Item) {
+        if (abilitySource instanceof Item)
+        {
             event.getProperties().set(AbilityProperties.ITEM, (Item) abilitySource);
         }
     }
 
     @EventHandler
-    private void onPlayerJoin(PlayerJoinEvent event) {
+    private void onPlayerJoin(PlayerJoinEvent event)
+    {
         Player player = event.getPlayer();
 
-        for (ItemStack stack : player.getInventory()) {
+        for (ItemStack stack : player.getInventory())
+        {
             String itemId = this.getItemIdFromStack(stack);
 
             if (itemId == null) return;
@@ -241,7 +268,8 @@ public class ItemManager implements Listener {
     }*/
 
     @EventHandler
-    private void onPlayerDie(PlayerDeathEvent event) {
+    private void onPlayerDie(PlayerDeathEvent event)
+    {
         Player player = event.getEntity();
 
         this.clearItems(player);
@@ -250,7 +278,8 @@ public class ItemManager implements Listener {
     }
 
     @EventHandler
-    private void onDropItem(PlayerDropItemEvent event) {
+    private void onDropItem(PlayerDropItemEvent event)
+    {
         Player player = event.getPlayer();
         ItemStack stack = event.getItemDrop().getItemStack();
         String itemId = this.getItemIdFromStack(stack);
@@ -266,7 +295,8 @@ public class ItemManager implements Listener {
     }
 
     @EventHandler
-    private void onPickupItem(EntityPickupItemEvent event) {
+    private void onPickupItem(EntityPickupItemEvent event)
+    {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getItem().getItemStack();
 
