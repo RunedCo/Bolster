@@ -1,7 +1,7 @@
 package co.runed.bolster.abilities.conditions;
 
 import co.runed.bolster.abilities.Ability;
-import co.runed.bolster.abilities.properties.AbilityProperties;
+import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.entity.EntityType;
 
