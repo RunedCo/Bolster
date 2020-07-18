@@ -15,6 +15,7 @@ public class ReplaceBlocksAbility extends Ability
     List<Material> materialsToReplace;
     List<Material> replaceWith;
 
+    int yOffset;
     int range;
     int radiusUp;
     int radiusDown;
@@ -22,12 +23,14 @@ public class ReplaceBlocksAbility extends Ability
 
     Random random = new Random();
 
-    public ReplaceBlocksAbility(List<Material> materialsToReplace, List<Material> replaceWith, int range, int radiusUp, int radiusDown, int radiusHorizontal)
+    public ReplaceBlocksAbility(List<Material> materialsToReplace, List<Material> replaceWith, int yOffset, int range, int radiusUp, int radiusDown, int radiusHorizontal)
     {
         super();
 
         this.materialsToReplace = materialsToReplace;
         this.replaceWith = replaceWith;
+
+        this.yOffset = yOffset;
 
         this.range = range;
         this.radiusUp = radiusUp;
@@ -44,8 +47,6 @@ public class ReplaceBlocksAbility extends Ability
         int u = radiusUp;
         int d = radiusDown;
         int h = radiusHorizontal;
-
-        int yOffset = 0;
 
         Block block;
 

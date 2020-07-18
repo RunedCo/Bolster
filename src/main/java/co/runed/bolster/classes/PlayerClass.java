@@ -1,4 +1,4 @@
-package co.runed.bolster;
+package co.runed.bolster.classes;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;

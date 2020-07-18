@@ -14,6 +14,8 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
+// TODO: MOVE PASSIVE TICK TO MANAGER AND REMOVE PASSIVE CLASS
+
 public class AbilityManager
 {
     Map<UUID, Map<AbilityTrigger, List<Ability>>> abilities = new HashMap<>();
