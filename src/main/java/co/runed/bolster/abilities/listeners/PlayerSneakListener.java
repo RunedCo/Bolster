@@ -27,6 +27,7 @@ public class PlayerSneakListener implements Listener
         Properties properties = new Properties();
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.CASTER, player);
+        properties.set(AbilityProperties.WORLD, player.getWorld());
         properties.set(AbilityProperties.ITEM_STACK, stack);
 
         Bolster.getAbilityManager().trigger(player, AbilityTrigger.ON_SNEAK, properties);

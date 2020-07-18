@@ -23,6 +23,7 @@ public class PlayerOffhandListener implements Listener
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, player);
+        properties.set(AbilityProperties.WORLD, player.getWorld());
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.ITEM_STACK, stack);
 

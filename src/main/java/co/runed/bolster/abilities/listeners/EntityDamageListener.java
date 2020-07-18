@@ -31,6 +31,7 @@ public class EntityDamageListener implements Listener
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, entity);
+        properties.set(AbilityProperties.WORLD, entity.getWorld());
         properties.set(AbilityProperties.TARGETS, new ArrayList<>(Collections.singletonList((LivingEntity) event.getEntity())));
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
@@ -51,6 +52,7 @@ public class EntityDamageListener implements Listener
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, entity);
+        properties.set(AbilityProperties.WORLD, entity.getWorld());
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.DAMAGE, damage);

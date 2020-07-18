@@ -20,6 +20,7 @@ public class PlayerDropItemListener implements Listener
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, player);
+        properties.set(AbilityProperties.WORLD, player.getWorld());
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
 

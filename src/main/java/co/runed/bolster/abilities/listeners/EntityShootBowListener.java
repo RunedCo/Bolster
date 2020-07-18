@@ -24,6 +24,7 @@ public class EntityShootBowListener implements Listener
         Properties properties = new Properties();
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.CASTER, entity);
+        properties.set(AbilityProperties.WORLD, entity.getWorld());
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.FORCE, event.getForce());
         properties.set(AbilityProperties.VELOCITY, event.getProjectile().getVelocity());

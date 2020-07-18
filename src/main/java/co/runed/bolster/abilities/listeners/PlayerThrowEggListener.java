@@ -23,6 +23,7 @@ public class PlayerThrowEggListener implements Listener
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, entity);
+        properties.set(AbilityProperties.WORLD, entity.getWorld());
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.FORCE, 1.0f);
         properties.set(AbilityProperties.VELOCITY, event.getEgg().getVelocity());

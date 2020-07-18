@@ -26,6 +26,7 @@ public class PlayerFishListener implements Listener
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.CASTER, event.getPlayer());
+        properties.set(AbilityProperties.WORLD, event.getPlayer().getWorld());
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.CAUGHT, event.getCaught());
         properties.set(AbilityProperties.HOOK, event.getHook());
