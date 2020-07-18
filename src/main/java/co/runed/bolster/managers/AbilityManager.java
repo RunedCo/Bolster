@@ -1,11 +1,11 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.events.EntityCastAbilityEvent;
 import co.runed.bolster.abilities.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.abilities.listeners.*;
-import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -26,6 +26,7 @@ public class AbilityManager
         Bukkit.getPluginManager().registerEvents(new EntityKillListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityPickupItemListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityShootBowListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new EntitySpawnListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerBreakBlockListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerDropItemListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerEatListener(), plugin);
@@ -82,6 +83,11 @@ public class AbilityManager
         if (!this.abilities.get(entity.getUniqueId()).containsKey(trigger)) return new ArrayList<>();
 
         return this.abilities.get(entity.getUniqueId()).get(trigger);
+    }
+
+    public boolean hasAbilities(LivingEntity entity, AbilityTrigger trigger)
+    {
+        return this.getAbilities(entity, trigger).size() > 0;
     }
 
     public void reset(LivingEntity entity)

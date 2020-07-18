@@ -14,8 +14,10 @@ public enum AbilityTrigger
     ON_TAKE_DAMAGE("on_take_damage", "Passive"),
     ON_TAKE_FATAL_DAMAGE("on_take_fatal_damage", "Passive"),
     ON_DAMAGE_ENTITY("on_damage_entity", "Passive"),
+    ON_DEATH("on_death", "Passive"), // TODO
     ON_KILL_ENTITY("on_kill_entity", "Passive"),
     ON_SNEAK("on_sneak", "Shift"),
+    ON_SPAWN("on_spawn", "Passive"),
     PASSIVE("passive", "Passive");
 
     private final String id;
