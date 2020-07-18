@@ -3,6 +3,7 @@ package co.runed.bolster.abilities;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
 import co.runed.bolster.abilities.conditions.Condition;
+import co.runed.bolster.abilities.conditions.ConditionPriority;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
 import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.properties.Properties;
@@ -12,8 +13,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-import java.util.HashSet;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class Ability implements Listener
 {
@@ -25,14 +25,14 @@ public abstract class Ability implements Listener
     private LivingEntity caster;
     private AbilityProvider abilitySource;
 
-    private final HashSet<ConditionData> conditions = new HashSet<>();
+    private final List<ConditionData> conditions = new ArrayList<>();
 
     public Ability()
     {
         Bolster.getInstance().getServer().getPluginManager().registerEvents(this, Bolster.getInstance());
 
-        this.addCondition(new AbilityOffCooldownCondition());
-        this.addCondition(new HasManaCondition());
+        this.addCondition(new AbilityOffCooldownCondition(), ConditionPriority.LOWEST);
+        this.addCondition(new HasManaCondition(), ConditionPriority.LOWEST);
     }
 
     public String getId()
@@ -87,7 +87,17 @@ public abstract class Ability implements Listener
 
     public void addCondition(Condition condition, boolean result)
     {
-        this.conditions.add(new ConditionData(condition, result));
+        this.addCondition(condition, result, ConditionPriority.NORMAL);
+    }
+
+    public void addCondition(Condition condition, ConditionPriority priority)
+    {
+        this.addCondition(condition, true, priority);
+    }
+
+    public void addCondition(Condition condition, boolean result, ConditionPriority priority)
+    {
+        this.conditions.add(new ConditionData(condition, result, priority));
     }
 
     public double getCooldown()
@@ -128,6 +138,8 @@ public abstract class Ability implements Listener
     public boolean canActivate(Properties properties)
     {
         if (!properties.contains(AbilityProperties.CASTER)) return false;
+
+        Collections.sort(this.conditions);
 
         for (ConditionData data : this.conditions)
         {
@@ -186,15 +198,23 @@ public abstract class Ability implements Listener
         HandlerList.unregisterAll(this);
     }
 
-    private static class ConditionData
+    private static class ConditionData implements Comparable<ConditionData>
     {
         Condition condition;
         boolean result;
+        public ConditionPriority priority;
 
-        public ConditionData(Condition condition, boolean result)
+        public ConditionData(Condition condition, boolean result, ConditionPriority priority)
         {
             this.condition = condition;
             this.result = result;
+            this.priority = priority;
+        }
+
+        @Override
+        public int compareTo(ConditionData condition)
+        {
+            return this.priority.compareTo(condition.priority);
         }
     }
 }
