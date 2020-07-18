@@ -2,6 +2,7 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.PlayerClass;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public class ClassManager
 
     }
 
-    public void setClass(Entity entity, PlayerClass playerClass)
+    public void setClass(LivingEntity entity, PlayerClass playerClass)
     {
         UUID uuid = entity.getUniqueId();
 
@@ -26,10 +27,12 @@ public class ClassManager
             this.playerClasses.get(uuid).destroy();
         }
 
+        playerClass.setOwner(entity);
+
         this.playerClasses.put(uuid, playerClass);
     }
 
-    public PlayerClass getClass(Entity entity)
+    public PlayerClass getClass(LivingEntity entity)
     {
         UUID uuid = entity.getUniqueId();
 
@@ -38,7 +41,7 @@ public class ClassManager
         return this.playerClasses.get(uuid);
     }
 
-    public void reset(Entity entity)
+    public void reset(LivingEntity entity)
     {
         this.setClass(entity, null);
     }

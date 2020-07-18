@@ -7,6 +7,7 @@ import co.runed.bolster.abilities.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.items.Item;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,8 +17,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -129,7 +130,15 @@ public class ItemManager implements Listener
         ItemStack stack = item.toItemStack();
         stack.setAmount(amount);
 
-        player.getInventory().addItem(stack);
+        PlayerInventory inv = player.getInventory();
+
+        if (inv.getItemInMainHand().getType() == Material.AIR)
+        {
+            inv.setItemInMainHand(stack);
+            return item;
+        }
+
+        inv.addItem(stack);
 
         return item;
     }
@@ -141,15 +150,35 @@ public class ItemManager implements Listener
 
     public void removeItem(Player player, Item item, int count)
     {
-        Inventory playerInv = player.getInventory();
+        PlayerInventory inv = player.getInventory();
         ItemStack stack = item.toItemStack();
         stack.setAmount(count);
 
-        if (!playerInv.containsAtLeast(stack, count)) return;
+        if (!inv.containsAtLeast(stack, count)) return;
 
-        playerInv.removeItem(stack);
+        ItemStack mainHand = inv.getItemInMainHand();
+        String itemId = this.getItemIdFromStack(mainHand);
+        int remaining = 0;
 
-        if (!playerInv.containsAtLeast(stack, 1)) this.clearItem(player, item);
+        if (itemId != null && itemId.equals(item.getId()))
+        {
+            remaining = count - mainHand.getAmount();
+
+            if (remaining >= 0)
+            {
+                inv.setItemInMainHand(new ItemStack(Material.AIR));
+
+                stack.setAmount(remaining);
+            }
+            else
+            {
+                mainHand.setAmount(mainHand.getAmount() - count);
+            }
+        }
+
+        if (remaining > 0) inv.removeItem(stack);
+
+        if (!inv.containsAtLeast(stack, 1)) this.clearItem(player, item);
     }
 
     public void clearItem(LivingEntity entity, Item item)

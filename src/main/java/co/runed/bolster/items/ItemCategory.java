@@ -10,6 +10,7 @@ public class ItemCategory
     public static final ItemCategory WEAPONS = new ItemCategory("Weapons", null, new ItemStack(Material.IRON_SWORD));
     public static final ItemCategory TOOLS = new ItemCategory("Tools", null, new ItemStack(Material.IRON_AXE));
     public static final ItemCategory MATERIALS = new ItemCategory("Materials", null, new ItemStack(Material.COBBLESTONE));
+    public static final ItemCategory UTILITY = new ItemCategory("Utility", null, new ItemStack(Material.FURNACE));
     public static final ItemCategory ALL = new ItemCategory("All Items", null, new ItemStack(Material.CHEST));
 
     String name;

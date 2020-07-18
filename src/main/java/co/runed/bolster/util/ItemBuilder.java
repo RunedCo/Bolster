@@ -16,6 +16,11 @@ public class ItemBuilder
 
     private ItemStack item;
 
+    public ItemBuilder(Material material)
+    {
+        this(new ItemStack(material));
+    }
+
     public ItemBuilder(ItemStack itemstack)
     {
         this.item = itemstack;
