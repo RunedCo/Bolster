@@ -4,7 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.events.EntityCastAbilityEvent;
 import co.runed.bolster.abilities.events.EntityPreCastAbilityEvent;
-import co.runed.bolster.abilities.properties.AbilityProperties;
+import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.items.Item;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

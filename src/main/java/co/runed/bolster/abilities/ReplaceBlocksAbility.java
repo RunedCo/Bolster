@@ -1,12 +1,9 @@
 package co.runed.bolster.abilities;
 
-import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.properties.Properties;
 import co.runed.bolster.util.WorldUtil;
-import net.minecraft.server.v1_16_R1.EntityLiving;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 

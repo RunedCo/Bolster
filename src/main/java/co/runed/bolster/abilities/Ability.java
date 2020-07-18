@@ -5,7 +5,6 @@ import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
 import co.runed.bolster.abilities.conditions.Condition;
 import co.runed.bolster.abilities.conditions.ConditionPriority;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
-import co.runed.bolster.abilities.properties.AbilityProperties;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;

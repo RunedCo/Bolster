@@ -2,7 +2,7 @@ package co.runed.bolster.abilities.conditions;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.PassiveAbility;
-import co.runed.bolster.abilities.properties.AbilityProperties;
+import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.properties.Properties;
 import co.runed.bolster.util.PlayerUtil;
 import org.bukkit.entity.EntityType;
