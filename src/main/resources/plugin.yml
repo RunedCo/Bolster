@@ -3,4 +3,4 @@ version: "001"
 main: co.runed.bolster.Bolster
 api-version: "1.15"
 
-depend: [ CommandAPI, ProtocolLib ]
+depend: [ CommandAPI, ProtocolLib, LibsDisguises ]

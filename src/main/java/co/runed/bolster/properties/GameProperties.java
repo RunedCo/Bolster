@@ -79,7 +79,7 @@ public class GameProperties extends Properties implements Listener
                 break;
         }
 
-        if (this.get(GameProperties.DISABLE_ALL_DAMAGE)) event.setCancelled(true);
+        if (cause != DamageCause.VOID && this.get(GameProperties.DISABLE_ALL_DAMAGE)) event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
