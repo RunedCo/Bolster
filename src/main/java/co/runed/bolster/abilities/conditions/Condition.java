@@ -11,5 +11,25 @@ public abstract class Condition
     {
 
     }
+
+    public static class Data implements Comparable<Data>
+    {
+        public Condition condition;
+        public boolean result;
+        public ConditionPriority priority;
+
+        public Data(Condition condition, boolean result, ConditionPriority priority)
+        {
+            this.condition = condition;
+            this.result = result;
+            this.priority = priority;
+        }
+
+        @Override
+        public int compareTo(Data condition)
+        {
+            return this.priority.compareTo(condition.priority);
+        }
+    }
 }
 

@@ -21,7 +21,7 @@ public abstract class PassiveAbility extends Ability
         }
     }
 
-    private void run()
+    protected void run()
     {
         if (this.getCaster() == null) return;
 

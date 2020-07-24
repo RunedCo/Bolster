@@ -1,8 +1,8 @@
 package co.runed.bolster.abilities.listeners;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.AbilityProperties;
+import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

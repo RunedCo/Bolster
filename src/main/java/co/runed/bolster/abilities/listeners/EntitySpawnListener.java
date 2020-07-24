@@ -5,7 +5,6 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,8 +36,9 @@ public class EntitySpawnListener implements Listener
         this.run(event, event.getPlayer());
     }
 
-    private void run(Event event, LivingEntity entity) {
-        if(!Bolster.getAbilityManager().hasAbilities(entity, AbilityTrigger.ON_SPAWN)) return;
+    private void run(Event event, LivingEntity entity)
+    {
+        if (!Bolster.getAbilityManager().hasAbilities(entity, AbilityTrigger.ON_SPAWN)) return;
 
         ItemStack stack = entity.getEquipment().getItemInMainHand();
 

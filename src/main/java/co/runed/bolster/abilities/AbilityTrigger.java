@@ -23,7 +23,7 @@ public enum AbilityTrigger
     private final String id;
     private final String displayName;
 
-    private AbilityTrigger(String id, String displayName)
+    AbilityTrigger(String id, String displayName)
     {
         this.id = id;
         this.displayName = displayName;

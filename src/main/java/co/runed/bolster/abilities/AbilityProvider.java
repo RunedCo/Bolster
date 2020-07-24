@@ -6,6 +6,10 @@ import org.bukkit.entity.LivingEntity;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Class that handles common functionality for prociding abilities
+ * Used by {@link co.runed.bolster.classes.EntityClass} and {@link co.runed.bolster.items.Item}
+ */
 public abstract class AbilityProvider
 {
     private final Collection<AbilityData> abilities = new ArrayList<>();

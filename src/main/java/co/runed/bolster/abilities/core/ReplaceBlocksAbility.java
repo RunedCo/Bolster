@@ -1,5 +1,7 @@
-package co.runed.bolster.abilities;
+package co.runed.bolster.abilities.core;
 
+import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.properties.Properties;
 import co.runed.bolster.util.WorldUtil;
 import org.bukkit.Location;
@@ -50,11 +52,15 @@ public class ReplaceBlocksAbility extends Ability
 
         Block block;
 
-        for (int y = target.getBlockY() - d + yOffset; y <= target.getBlockY() + u + yOffset; y++) {
-            for (int x = target.getBlockX() - h; x <= target.getBlockX() + h; x++) {
-                for (int z = target.getBlockZ() - h; z <= target.getBlockZ() + h; z++) {
+        for (int y = target.getBlockY() - d + yOffset; y <= target.getBlockY() + u + yOffset; y++)
+        {
+            for (int x = target.getBlockX() - h; x <= target.getBlockX() + h; x++)
+            {
+                for (int z = target.getBlockZ() - h; z <= target.getBlockZ() + h; z++)
+                {
                     block = target.getWorld().getBlockAt(x, y, z);
-                    for (int i = 0; i < this.materialsToReplace.size(); i++) {
+                    for (int i = 0; i < this.materialsToReplace.size(); i++)
+                    {
                         // If specific blocks are being replaced, skip if the block isn't replaceable.
                         if (!this.materialsToReplace.get(i).equals(block.getType())) continue;
                         // If all blocks are being replaced, skip if the block is already replaced.

@@ -1,10 +1,13 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.abilities.conditions.IConditional;
 import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
 import co.runed.bolster.abilities.conditions.Condition;
 import co.runed.bolster.abilities.conditions.ConditionPriority;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
+import co.runed.bolster.abilities.cost.AbilityCost;
+import co.runed.bolster.abilities.cost.ManaAbilityCost;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
@@ -14,7 +17,7 @@ import org.bukkit.event.Listener;
 
 import java.util.*;
 
-public abstract class Ability implements Listener
+public abstract class Ability implements Listener, IConditional
 {
     private final String id = UUID.randomUUID().toString();
     private String description;
@@ -24,11 +27,14 @@ public abstract class Ability implements Listener
     private LivingEntity caster;
     private AbilityProvider abilitySource;
 
-    private final List<ConditionData> conditions = new ArrayList<>();
+    private final List<Condition.Data> conditions = new ArrayList<>();
+    private final List<AbilityCost> costs = new ArrayList<>();
 
     public Ability()
     {
         Bolster.getInstance().getServer().getPluginManager().registerEvents(this, Bolster.getInstance());
+
+        this.addCost(new ManaAbilityCost(this.getManaCost()));
 
         this.addCondition(new AbilityOffCooldownCondition(), ConditionPriority.LOWEST);
         this.addCondition(new HasManaCondition(), ConditionPriority.LOWEST);
@@ -69,34 +75,9 @@ public abstract class Ability implements Listener
         this.manaCost = manaCost;
     }
 
-    public AbilityProvider getAbilitySource()
+    public void addCost(AbilityCost cost)
     {
-        return this.abilitySource;
-    }
-
-    public void setAbilitySource(AbilityProvider abilitySource)
-    {
-        this.abilitySource = abilitySource;
-    }
-
-    public void addCondition(Condition condition)
-    {
-        this.addCondition(condition, true);
-    }
-
-    public void addCondition(Condition condition, boolean result)
-    {
-        this.addCondition(condition, result, ConditionPriority.NORMAL);
-    }
-
-    public void addCondition(Condition condition, ConditionPriority priority)
-    {
-        this.addCondition(condition, true, priority);
-    }
-
-    public void addCondition(Condition condition, boolean result, ConditionPriority priority)
-    {
-        this.conditions.add(new ConditionData(condition, result, priority));
+        this.costs.add(cost);
     }
 
     public double getCooldown()
@@ -124,12 +105,28 @@ public abstract class Ability implements Listener
         Bolster.getCooldownManager().clearCooldown(this.getCaster(), this.id);
     }
 
-    public void setShouldCancelEvent(Boolean cancelEventOnCast)
+    public AbilityProvider getAbilitySource()
+    {
+        return this.abilitySource;
+    }
+
+    public void setAbilitySource(AbilityProvider abilitySource)
+    {
+        this.abilitySource = abilitySource;
+    }
+
+    @Override
+    public void addCondition(Condition condition, boolean result, ConditionPriority priority)
+    {
+        this.conditions.add(new Condition.Data(condition, result, priority));
+    }
+
+    public void setShouldCancelEvent(boolean cancelEventOnCast)
     {
         this.cancelEventOnCast = cancelEventOnCast;
     }
 
-    public Boolean shouldCancelEvent()
+    public boolean shouldCancelEvent()
     {
         return cancelEventOnCast;
     }
@@ -140,7 +137,7 @@ public abstract class Ability implements Listener
 
         Collections.sort(this.conditions);
 
-        for (ConditionData data : this.conditions)
+        for (Condition.Data data : this.conditions)
         {
             Condition condition = data.condition;
 
@@ -150,6 +147,16 @@ public abstract class Ability implements Listener
             {
                 condition.onFail(this, properties);
 
+                return false;
+            }
+        }
+
+        for (AbilityCost cost : this.costs)
+        {
+            boolean result = cost.run(this, properties);
+
+            if (!result)
+            {
                 return false;
             }
         }
@@ -175,8 +182,6 @@ public abstract class Ability implements Listener
                 }
             }
 
-            this.onPostActivate(properties);
-
             Bolster.getManaManager().addCurrentMana(this.getCaster(), -this.getManaCost());
 
             return true;
@@ -187,34 +192,9 @@ public abstract class Ability implements Listener
 
     public abstract void onActivate(Properties properties);
 
-    public void onPostActivate(Properties properties)
-    {
-
-    }
-
     public void destroy()
     {
         HandlerList.unregisterAll(this);
-    }
-
-    private static class ConditionData implements Comparable<ConditionData>
-    {
-        Condition condition;
-        boolean result;
-        public ConditionPriority priority;
-
-        public ConditionData(Condition condition, boolean result, ConditionPriority priority)
-        {
-            this.condition = condition;
-            this.result = result;
-            this.priority = priority;
-        }
-
-        @Override
-        public int compareTo(ConditionData condition)
-        {
-            return this.priority.compareTo(condition.priority);
-        }
     }
 }
 

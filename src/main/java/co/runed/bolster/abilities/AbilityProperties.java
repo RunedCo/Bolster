@@ -44,7 +44,6 @@ public class AbilityProperties
     public static final Property<FishHook> HOOK = new Property<>("hook");
     public static final Property<PlayerFishEvent.State> FISH_STATE = new Property<>("fish_state");
 
-
     // DAMAGE PROPERTIES
     public static final Property<Double> DAMAGE = new Property<>("double", 0.0d);
 

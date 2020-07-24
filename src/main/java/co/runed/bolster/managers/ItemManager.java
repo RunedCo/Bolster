@@ -1,10 +1,10 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.events.EntityCastAbilityEvent;
 import co.runed.bolster.abilities.events.EntityPreCastAbilityEvent;
-import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.items.Item;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -143,18 +143,18 @@ public class ItemManager implements Listener
         return item;
     }
 
-    public void removeItem(Player player, Item item)
+    public boolean removeItem(Player player, Item item)
     {
-        this.removeItem(player, item, 1);
+        return this.removeItem(player, item, 1);
     }
 
-    public void removeItem(Player player, Item item, int count)
+    public boolean removeItem(Player player, Item item, int count)
     {
         PlayerInventory inv = player.getInventory();
         ItemStack stack = item.toItemStack();
         stack.setAmount(count);
 
-        if (!inv.containsAtLeast(stack, count)) return;
+        if (!inv.containsAtLeast(stack, count)) return false;
 
         ItemStack mainHand = inv.getItemInMainHand();
         String itemId = this.getItemIdFromStack(mainHand);
@@ -179,6 +179,8 @@ public class ItemManager implements Listener
         if (remaining > 0) inv.removeItem(stack);
 
         if (!inv.containsAtLeast(stack, 1)) this.clearItem(player, item);
+
+        return true;
     }
 
     public void clearItem(LivingEntity entity, Item item)

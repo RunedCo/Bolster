@@ -1,6 +1,6 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.classes.PlayerClass;
+import co.runed.bolster.classes.EntityClass;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
@@ -10,14 +10,14 @@ import java.util.UUID;
 
 public class ClassManager
 {
-    private Map<UUID, PlayerClass> playerClasses = new HashMap<>();
+    private Map<UUID, EntityClass> playerClasses = new HashMap<>();
 
     public ClassManager(Plugin plugin)
     {
 
     }
 
-    public void setClass(LivingEntity entity, PlayerClass playerClass)
+    public void setClass(LivingEntity entity, EntityClass entityClass)
     {
         UUID uuid = entity.getUniqueId();
 
@@ -26,12 +26,12 @@ public class ClassManager
             this.playerClasses.get(uuid).destroy();
         }
 
-        playerClass.setOwner(entity);
+        entityClass.setOwner(entity);
 
-        this.playerClasses.put(uuid, playerClass);
+        this.playerClasses.put(uuid, entityClass);
     }
 
-    public PlayerClass getClass(LivingEntity entity)
+    public EntityClass getClass(LivingEntity entity)
     {
         UUID uuid = entity.getUniqueId();
 
