@@ -2,7 +2,7 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.conditions.IConditional;
-import co.runed.bolster.abilities.conditions.AbilityOffCooldownCondition;
+import co.runed.bolster.abilities.conditions.OffCooldownCondition;
 import co.runed.bolster.abilities.conditions.Condition;
 import co.runed.bolster.abilities.conditions.ConditionPriority;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
@@ -36,7 +36,7 @@ public abstract class Ability implements Listener, IConditional
 
         this.addCost(new ManaAbilityCost(this.getManaCost()));
 
-        this.addCondition(new AbilityOffCooldownCondition(), ConditionPriority.LOWEST);
+        this.addCondition(new OffCooldownCondition(), ConditionPriority.LOWEST);
         this.addCondition(new HasManaCondition(), ConditionPriority.LOWEST);
     }
 

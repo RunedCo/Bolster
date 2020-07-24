@@ -38,4 +38,10 @@ public class BlockIsMaterialCondition extends Condition
 
         return this.materials.contains(block.getType());
     }
+
+    @Override
+    public void onFail(Ability ability, Properties properties)
+    {
+
+    }
 }

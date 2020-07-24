@@ -11,9 +11,9 @@ import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 
-public class AbilityOffCooldownCondition extends Condition
+public class OffCooldownCondition extends Condition
 {
-    private static DecimalFormat df2 = new DecimalFormat("#.#");
+    private static final DecimalFormat decimalFormatter = new DecimalFormat("#.#");
 
     @Override
     public boolean evaluate(Ability ability, Properties properties)
@@ -36,7 +36,7 @@ public class AbilityOffCooldownCondition extends Condition
 
             if (cooldown < 1)
             {
-                formattedCooldown = df2.format(cooldown);
+                formattedCooldown = decimalFormatter.format(cooldown);
             }
 
             PlayerUtil.sendActionBar((Player) entity, "Ability on cooldown (" + formattedCooldown + " seconds remaining)");

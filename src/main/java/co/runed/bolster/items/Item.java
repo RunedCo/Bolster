@@ -4,13 +4,14 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.abilities.conditions.HoldingItemCondition;
+import co.runed.bolster.abilities.conditions.ItemEquippedCondition;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -117,7 +118,6 @@ public abstract class Item extends AbilityProvider
         this.categories.add(category);
     }
 
-
     public void addAbility(AbilityTrigger trigger, Ability ability, Boolean showCooldown)
     {
         this.abilityCooldowns.put(ability, showCooldown);
@@ -128,11 +128,12 @@ public abstract class Item extends AbilityProvider
     @Override
     public void addAbility(AbilityTrigger trigger, Ability ability)
     {
-        ability.addCondition(new HoldingItemCondition(this));
+        ability.addCondition(new ItemEquippedCondition(EnumSet.allOf(EquipmentSlot.class), this));
 
         super.addAbility(trigger, ability);
     }
 
+    @Override
     public void onCastAbility(Ability ability, Boolean success)
     {
         Optional<AbilityData> filtered = this.getAbilities().stream().filter((info) -> info.ability == ability).findFirst();

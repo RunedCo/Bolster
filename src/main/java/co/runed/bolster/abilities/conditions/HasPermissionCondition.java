@@ -21,4 +21,10 @@ public class HasPermissionCondition extends Condition
 
         return entity.hasPermission(this.permission);
     }
+
+    @Override
+    public void onFail(Ability ability, Properties properties)
+    {
+
+    }
 }

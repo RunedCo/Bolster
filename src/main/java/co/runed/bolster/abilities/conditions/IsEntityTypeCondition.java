@@ -5,11 +5,11 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.entity.EntityType;
 
-public class CasterIsEntityTypeCondition extends Condition
+public class IsEntityTypeCondition extends Condition
 {
     EntityType type;
 
-    public CasterIsEntityTypeCondition(EntityType type)
+    public IsEntityTypeCondition(EntityType type)
     {
         this.type = type;
     }
@@ -18,5 +18,11 @@ public class CasterIsEntityTypeCondition extends Condition
     public boolean evaluate(Ability ability, Properties properties)
     {
         return properties.get(AbilityProperties.CASTER).getType() == EntityType.PLAYER;
+    }
+
+    @Override
+    public void onFail(Ability ability, Properties properties)
+    {
+
     }
 }

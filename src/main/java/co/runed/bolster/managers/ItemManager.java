@@ -17,6 +17,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -299,16 +300,17 @@ public class ItemManager implements Listener
     }
 
     /**
-     * Check if an entity is holding an item
+     * Check if an entity has equipped an item
      *
      * @param entity the entity
      * @param item   the item
+     * @param slot the slot
      * @return
      */
-    public boolean isEntityHolding(LivingEntity entity, Item item)
+    public boolean isItemEquipped(LivingEntity entity, Item item, EquipmentSlot slot)
     {
         EntityEquipment inv = entity.getEquipment();
-        ItemStack stack = inv.getItemInMainHand();
+        ItemStack stack = inv.getItem(slot);
         String itemId = this.getItemIdFromStack(stack);
 
         if (item.getOwner() == null || entity != item.getOwner()) return false;

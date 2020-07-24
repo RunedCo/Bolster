@@ -44,7 +44,7 @@ public class ManaManager implements Listener
     /**
      * Set whether an entity should get their maximum mana on spawn
      *
-     * @param enabled
+     * @param enabled enabled
      */
     public void setRefillManaOnSpawn(boolean enabled)
     {
@@ -54,7 +54,7 @@ public class ManaManager implements Listener
     /**
      * Set whether the XP bar should be used to show current mana
      *
-     * @param enabled
+     * @param enabled enabled
      */
     public void setEnableXpManaBar(boolean enabled)
     {

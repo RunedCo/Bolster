@@ -4,7 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.conditions.BlockIsMaterialCondition;
-import co.runed.bolster.abilities.conditions.CasterIsEntityTypeCondition;
+import co.runed.bolster.abilities.conditions.IsEntityTypeCondition;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.Material;
@@ -33,7 +33,7 @@ public class CollectItemAbility extends Ability
         // SET DEFAULT COOLDOWN
         this.setCooldown(10);
 
-        this.addCondition(new CasterIsEntityTypeCondition(EntityType.PLAYER));
+        this.addCondition(new IsEntityTypeCondition(EntityType.PLAYER));
         this.addCondition(new BlockIsMaterialCondition(material));
     }
 
