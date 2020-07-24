@@ -1,6 +1,7 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.classes.BolsterClass;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.Collection;
 
 /**
  * Class that handles common functionality for prociding abilities
- * Used by {@link co.runed.bolster.classes.EntityClass} and {@link co.runed.bolster.items.Item}
+ * Used by {@link BolsterClass} and {@link co.runed.bolster.items.Item}
  */
 public abstract class AbilityProvider
 {

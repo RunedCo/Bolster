@@ -174,7 +174,7 @@ public abstract class Sidebar implements Listener
     {
         if (this.players.contains(player)) return;
 
-        Bolster.getSidebarManager().removeSidebar(player);
+        Bolster.getSidebarManager().clearSidebar(player);
 
         this.players.add(player);
 

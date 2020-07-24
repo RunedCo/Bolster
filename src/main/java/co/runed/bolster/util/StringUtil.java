@@ -9,11 +9,24 @@ import java.util.List;
 
 public class StringUtil
 {
+    /**
+     * Format a string to the default length, keeping {@link ChatColor} between lines
+     *
+     * @param text the text
+     * @return
+     */
     public static List<String> formatLore(String text)
     {
         return formatLore(text, 45);
     }
 
+    /**
+     * Format a string to a list of a specific length, keeping {@link ChatColor} between lines
+     *
+     * @param text the text
+     * @param lineLength the maximum line length
+     * @return
+     */
     public static List<String> formatLore(String text, int lineLength)
     {
         List<String> lore = new ArrayList<>();
@@ -43,9 +56,16 @@ public class StringUtil
         return lore;
     }
 
-    public static String repeat(String stringToRepeat, int numRepeats)
+    /**
+     * Repeat a string a certain number of times
+     *
+     * @param string the string
+     * @param count the number of times to repeat
+     * @return
+     */
+    public static String repeat(String string, int count)
     {
-        return new String(new char[numRepeats]).replace("\0", stringToRepeat);
+        return new String(new char[count]).replace("\0", string);
     }
 
     public static int countMatches(String source, String find)

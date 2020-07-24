@@ -4,6 +4,12 @@ import java.time.Duration;
 
 public class DurationUtil
 {
+    /**
+     * Format a duration to hh:mm:ss text
+     *
+     * @param duration
+     * @return
+     */
     public static String formatDurationHhMmSs(Duration duration)
     {
         long seconds = duration.getSeconds();

@@ -18,27 +18,52 @@ public class CooldownManager
         this.plugin = plugin;
     }
 
-    public void setCooldown(LivingEntity entity, String source, double cooldownSeconds)
+    /**
+     * Sets the cooldown for a specific cooldown source for an entity
+     *
+     * @param entity the entity
+     * @param source the source
+     * @param cooldown the cooldown in seconds
+     */
+    public void setCooldown(LivingEntity entity, String source, double cooldown)
     {
-        if (cooldownSeconds <= 0) return;
+        if (cooldown <= 0) return;
 
         if (this.getRemainingTime(entity, source) <= 0)
         {
             this.clearCooldown(entity, source);
-            this.cooldowns.add(new CooldownData(entity, source, Instant.now(), (long) (cooldownSeconds * 1000)));
+            this.cooldowns.add(new CooldownData(entity, source, Instant.now(), (long) (cooldown * 1000)));
         }
     }
 
+    /**
+     * Clear all cooldowns from an entity
+     *
+     * @param entity the entity
+     */
     public void clearAllFrom(LivingEntity entity)
     {
         this.cooldowns.removeIf(cd -> cd.caster.equals(entity));
     }
 
+    /**
+     * Clear a specific cooldown from an entity
+     *
+     * @param entity the entity
+     * @param source the source
+     */
     public void clearCooldown(LivingEntity entity, String source)
     {
         this.cooldowns.removeIf(cd -> cd.source.equals(source) && cd.caster.equals(entity));
     }
 
+    /**
+     * Get the amount of time remaining an entity's specific cooldown source
+     *
+     * @param entity the entity
+     * @param source the source
+     * @return the time remaining in seconds
+     */
     public double getRemainingTime(LivingEntity entity, String source)
     {
         for (CooldownData cd : this.cooldowns)
@@ -67,6 +92,11 @@ public class CooldownManager
             this.cooldown = cooldownMs;
         }
 
+        /**
+         * Get remaining time for a cooldown in ms
+         *
+         * @return the remaining time in milliseconds
+         */
         public long getRemainingTime()
         {
             Duration sinceStart = Duration.between(this.castTime, Instant.now());

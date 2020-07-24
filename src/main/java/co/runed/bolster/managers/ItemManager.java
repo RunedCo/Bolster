@@ -42,6 +42,10 @@ public class ItemManager implements Listener
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
+    /**
+     * @param itemClass the class of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
+     * @see #getItem(LivingEntity, String)
+     */
     public Item getItem(LivingEntity entity, Class<? extends Item> itemClass)
     {
         return this.getItem(entity, Bolster.getItemRegistry().getId(itemClass));
@@ -68,6 +72,10 @@ public class ItemManager implements Listener
         return null;
     }
 
+    /**
+     * @param itemClass the class of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
+     * @see #createItem(LivingEntity, String)
+     */
     public Item createItem(LivingEntity entity, Class<? extends Item> itemClass)
     {
         return this.createItem(entity, Bolster.getItemRegistry().getId(itemClass));
@@ -77,8 +85,9 @@ public class ItemManager implements Listener
      * Creates an {@link Item} instance unless entity already has one
      * in which case it gets the existing instance
      *
-     * @param entity the entity that the item should be created for
+     * @param entity the entity
      * @param id     the {@link String} id of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
+     * @return the item instance
      */
     public Item createItem(LivingEntity entity, String id)
     {
@@ -108,21 +117,42 @@ public class ItemManager implements Listener
         return item;
     }
 
+    /**
+     * {@code amount} defaults to {@code 1}
+     *
+     * @see #giveItem(Player, String, int)
+     */
     public Item giveItem(Player player, Class<? extends Item> itemClass)
     {
         return this.giveItem(player, itemClass, 1);
     }
 
+    /**
+     * @see #giveItem(Player, String, int)
+     */
     public Item giveItem(Player player, Class<? extends Item> itemClass, int amount)
     {
         return this.giveItem(player, Bolster.getItemRegistry().getId(itemClass), amount);
     }
 
+    /**
+     * {@code amount} defaults to {@code 1}
+     *
+     * @see #giveItem(Player, String, int)
+     */
     public Item giveItem(Player player, String itemId)
     {
         return this.giveItem(player, itemId, 1);
     }
 
+    /**
+     * Creates an item instance for the player and gives them an amount in their inventory
+     *
+     * @param player the player
+     * @param itemId the item id
+     * @param amount the amount of items to give
+     * @return the item instance
+     */
     public Item giveItem(Player player, String itemId, int amount)
     {
         Item item = this.createItem(player, itemId);
@@ -143,11 +173,24 @@ public class ItemManager implements Listener
         return item;
     }
 
+    /**
+     * {@code amount} defaults to {@code 1}
+     *
+     * @see #removeItem(Player, Item, int)
+     */
     public boolean removeItem(Player player, Item item)
     {
         return this.removeItem(player, item, 1);
     }
 
+    /**
+     * Removes a number of an item from a player's inventory
+     *
+     * @param player the player
+     * @param item   the item
+     * @param count  the number of items to remove
+     * @return true if there were enough items to successfully remove
+     */
     public boolean removeItem(Player player, Item item, int count)
     {
         PlayerInventory inv = player.getInventory();
@@ -183,6 +226,12 @@ public class ItemManager implements Listener
         return true;
     }
 
+    /**
+     * Clear a specific item instance from an entity
+     *
+     * @param entity the entity
+     * @param item   the item
+     */
     public void clearItem(LivingEntity entity, Item item)
     {
         if (!this.entityItems.containsKey(entity.getUniqueId())) return;
@@ -192,6 +241,11 @@ public class ItemManager implements Listener
         this.entityItems.get(entity.getUniqueId()).remove(item);
     }
 
+    /**
+     * Remove all item instances from an entity
+     *
+     * @param entity the entity
+     */
     public void clearItems(LivingEntity entity)
     {
         List<Item> items = new ArrayList<>(this.getItems(entity));
@@ -202,11 +256,24 @@ public class ItemManager implements Listener
         }
     }
 
+    /**
+     * Check whether a player has an item instance
+     *
+     * @param entity the entity
+     * @param id     the item id
+     * @return
+     */
     public boolean hasItem(LivingEntity entity, String id)
     {
         return this.getItem(entity, id) != null;
     }
 
+    /**
+     * Get a list of every item a player has an instance created for
+     *
+     * @param entity the entity
+     * @return a list of items
+     */
     public List<Item> getItems(LivingEntity entity)
     {
         if (!this.entityItems.containsKey(entity.getUniqueId())) return new ArrayList<>();
@@ -214,6 +281,12 @@ public class ItemManager implements Listener
         return this.entityItems.get(entity.getUniqueId());
     }
 
+    /**
+     * Gets the item id from an item stack
+     *
+     * @param stack the item stack
+     * @return the item id
+     */
     public String getItemIdFromStack(ItemStack stack)
     {
         if (stack == null) return null;
@@ -225,6 +298,13 @@ public class ItemManager implements Listener
         return pdc.get(Item.ITEM_ID_KEY, PersistentDataType.STRING);
     }
 
+    /**
+     * Check if an entity is holding an item
+     *
+     * @param entity the entity
+     * @param item   the item
+     * @return
+     */
     public boolean isEntityHolding(LivingEntity entity, Item item)
     {
         EntityEquipment inv = entity.getEquipment();
@@ -238,6 +318,9 @@ public class ItemManager implements Listener
         return itemId.equals(item.getId());
     }
 
+    /**
+     * Reset the {@link ItemManager}
+     */
     public void reset()
     {
         this.entityItems.clear();

@@ -21,7 +21,13 @@ import java.util.Random;
 public class PlayerUtil
 {
 
-    public static List<Player> getPlayersWithGamemode(GameMode mode)
+    /**
+     * Get every player that have a specific gamemode
+     *
+     * @param mode the gamemode
+     * @return
+     */
+    public static List<Player> getPlayersWithGameMode(GameMode mode)
     {
         List<Player> players = new ArrayList<>();
 
@@ -38,6 +44,13 @@ public class PlayerUtil
         player.setDisplayName(nickname);
     }
 
+    /**
+     * Send a specific player to a server
+     *
+     * @param player the player
+     * @param server the server
+     * @throws IOException
+     */
     public static void sendPlayerToServer(Player player, String server) throws IOException
     {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -49,6 +62,11 @@ public class PlayerUtil
         player.sendPluginMessage(Bolster.getInstance(), "BungeeCord", b.toByteArray());
     }
 
+    /**
+     * Send every online player to a server
+     *
+     * @param server the server
+     */
     public static void sendAllToServer(String server)
     {
         for (Player player : Bukkit.getOnlinePlayers())
@@ -64,6 +82,12 @@ public class PlayerUtil
         }
     }
 
+    /**
+     * Set the actionbar display for a player
+     *
+     * @param player the player
+     * @param message the text to display
+     */
     public static void sendActionBar(Player player, String message)
     {
         message = message.replaceAll("%player%", player.getDisplayName());
@@ -76,6 +100,11 @@ public class PlayerUtil
         craftPlayer.getHandle().playerConnection.sendPacket(packet);
     }
 
+    /**
+     * Shake the players screen
+     *
+     * @param player the player
+     */
     public static void showScreenShake(Player player)
     {
         Location loc = player.getLocation();
@@ -95,6 +124,12 @@ public class PlayerUtil
         //((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
+    /**
+     * Drop an item from a player in a realistic manner
+     *
+     * @param player the player
+     * @param itemStack the item stack
+     */
     public static void dropItem(Player player, ItemStack itemStack)
     {
         Random random = new Random();

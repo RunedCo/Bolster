@@ -15,6 +15,11 @@ public class CommandManager
         this.commands = new ArrayList<>();
     }
 
+    /**
+     * Register a command
+     *
+     * @param command the command
+     */
     public void add(CommandBase command)
     {
         this.commands.add(command);
@@ -22,6 +27,9 @@ public class CommandManager
         command.register();
     }
 
+    /**
+     * Deregister all commands
+     */
     public void deregisterCommands()
     {
         for (CommandBase command : this.commands)

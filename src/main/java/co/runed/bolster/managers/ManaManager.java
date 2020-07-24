@@ -32,16 +32,30 @@ public class ManaManager implements Listener
         Bukkit.getPluginManager().registerEvents(this, this.plugin);
     }
 
+    /**
+     * Set the default maximum mana for all entities
+     * @param value the default maximum mana
+     */
     public void setDefaultMaximumMana(float value)
     {
         this.defaultMaxMana = value;
     }
 
-    public void setRefillManaOnSpawn(boolean shouldRefill)
+    /**
+     * Set whether an entity should get their maximum mana on spawn
+     *
+     * @param enabled
+     */
+    public void setRefillManaOnSpawn(boolean enabled)
     {
-        this.refillOnSpawn = shouldRefill;
+        this.refillOnSpawn = enabled;
     }
 
+    /**
+     * Set whether the XP bar should be used to show current mana
+     *
+     * @param enabled
+     */
     public void setEnableXpManaBar(boolean enabled)
     {
         this.enableXpBarDisplay = true;
@@ -49,6 +63,12 @@ public class ManaManager implements Listener
         Bolster.getGameProperties().set(GameProperties.ENABLE_XP, false);
     }
 
+    /**
+     * Set an entity's maximum mana
+     *
+     * @param entity the entity
+     * @param value the new maximum mana
+     */
     public void setMaximumMana(LivingEntity entity, float value)
     {
         this.manaData.putIfAbsent(entity.getUniqueId(), new ManaData(this.defaultMaxMana));
@@ -66,16 +86,34 @@ public class ManaManager implements Listener
         }
     }
 
+    /**
+     * Get an entity's maxmium mana
+     *
+     * @param entity the entity
+     * @return the entity's maximum mana
+     */
     public float getMaximumMana(LivingEntity entity)
     {
         return this.manaData.getOrDefault(entity.getUniqueId(), new ManaData(this.defaultMaxMana)).maxMana;
     }
 
+    /**
+     * Add to an entity's maximum mana
+     *
+     * @param entity the entity
+     * @param value the amount of mana to add
+     */
     public void addMaximumMana(LivingEntity entity, float value)
     {
         this.setMaximumMana(entity, this.getMaximumMana(entity) + value);
     }
 
+    /**
+     * Set an entity's current mana
+     *
+     * @param entity the entity
+     * @param value the new current mana
+     */
     public void setCurrentMana(LivingEntity entity, float value)
     {
         this.manaData.putIfAbsent(entity.getUniqueId(), new ManaData(this.defaultMaxMana));
@@ -95,16 +133,33 @@ public class ManaManager implements Listener
         }
     }
 
+    /**
+     * Get an entity's current mana
+     *
+     * @param entity the entity
+     * @return the entity's current mana
+     */
     public float getCurrentMana(LivingEntity entity)
     {
         return this.manaData.getOrDefault(entity.getUniqueId(), new ManaData(this.defaultMaxMana)).currentMana;
     }
 
+    /**
+     * Add to an entity's current mana
+     *
+     * @param entity the entity
+     * @param value the amount of mana to add
+     */
     public void addCurrentMana(LivingEntity entity, float value)
     {
         this.setCurrentMana(entity, this.getCurrentMana(entity) + value);
     }
 
+    /**
+     * Update the XP bar mana display for a player
+     *
+     * @param player the player
+     */
     public void updateManaDisplay(Player player)
     {
         if (!this.enableXpBarDisplay) return;
@@ -120,7 +175,7 @@ public class ManaManager implements Listener
     }
 
     @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent event)
+    private void onPlayerRespawn(PlayerRespawnEvent event)
     {
         Player player = event.getPlayer();
 
@@ -133,7 +188,7 @@ public class ManaManager implements Listener
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event)
+    private void onPlayerJoin(PlayerJoinEvent event)
     {
         Player player = event.getPlayer();
 

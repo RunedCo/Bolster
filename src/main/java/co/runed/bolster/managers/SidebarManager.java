@@ -21,8 +21,8 @@ public class SidebarManager
     /**
      * Gets the player's active sidebar instance
      *
-     * @param player The player
-     * @return The sidebar
+     * @param player the player
+     * @return the sidebar
      */
     public Sidebar getSidebar(Player player)
     {
@@ -31,6 +31,12 @@ public class SidebarManager
         return this.playerSidebars.get(player);
     }
 
+    /**
+     * Set a player's active sidebar instance
+     *
+     * @param player  the player
+     * @param sidebar the sidebar
+     */
     public void setSidebar(Player player, Sidebar sidebar)
     {
         if (this.playerSidebars.containsKey(player))
@@ -43,7 +49,12 @@ public class SidebarManager
         this.playerSidebars.put(player, sidebar);
     }
 
-    public void removeSidebar(Player player)
+    /**
+     * Clears a players active sidebar instance
+     *
+     * @param player the player
+     */
+    public void clearSidebar(Player player)
     {
         if (this.playerSidebars.containsKey(player))
         {
