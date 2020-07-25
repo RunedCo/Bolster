@@ -1,6 +1,10 @@
 package co.runed.bolster.util;
 
 import co.runed.bolster.Bolster;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.KeybindComponent;
+import net.md_5.bungee.api.chat.Keybinds;
 import net.minecraft.server.v1_16_R1.*;
 import org.bukkit.World;
 import org.bukkit.*;
@@ -98,6 +102,12 @@ public class PlayerUtil
 
         PacketPlayOutChat packet = new PacketPlayOutChat(chatComponent, ChatMessageType.GAME_INFO, player.getUniqueId());
         craftPlayer.getHandle().playerConnection.sendPacket(packet);
+
+        BaseComponent kb = new KeybindComponent(Keybinds.DROP);
+        kb.setColor(net.md_5.bungee.api.ChatColor.RED);
+        ComponentBuilder cb = new ComponentBuilder().append("Your drop key is bound to ").append(kb);
+
+        player.spigot().sendMessage(cb.create());
     }
 
     /**

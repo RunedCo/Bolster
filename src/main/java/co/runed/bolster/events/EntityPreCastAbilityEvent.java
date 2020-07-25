@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities.events;
+package co.runed.bolster.events;
 
 import co.runed.bolster.abilities.AbilityTrigger;
 import org.bukkit.entity.LivingEntity;

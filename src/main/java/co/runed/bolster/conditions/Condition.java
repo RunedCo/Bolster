@@ -1,6 +1,5 @@
-package co.runed.bolster.abilities.conditions;
+package co.runed.bolster.conditions;
 
-import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.properties.Properties;
 
 public abstract class Condition
@@ -8,19 +7,19 @@ public abstract class Condition
     /**
      * Evaluate the outcome of a condition
      *
-     * @param ability    the ability
-     * @param properties the ability properties
+     * @param conditional the conditional
+     * @param properties  the conditional properties
      * @return true if the condition passes
      */
-    public abstract boolean evaluate(Ability ability, Properties properties);
+    public abstract boolean evaluate(IConditional conditional, Properties properties);
 
     /**
      * Callback for when a condition fails
      *
-     * @param ability    the ability
-     * @param properties the ability properties
+     * @param conditional the conditional
+     * @param properties  the conditional properties
      */
-    public abstract void onFail(Ability ability, Properties properties);
+    public abstract void onFail(IConditional conditional, Properties properties);
 
     public static class Data implements Comparable<Data>
     {

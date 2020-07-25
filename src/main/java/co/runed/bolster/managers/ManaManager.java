@@ -34,6 +34,7 @@ public class ManaManager implements Listener
 
     /**
      * Set the default maximum mana for all entities
+     *
      * @param value the default maximum mana
      */
     public void setDefaultMaximumMana(float value)
@@ -67,7 +68,7 @@ public class ManaManager implements Listener
      * Set an entity's maximum mana
      *
      * @param entity the entity
-     * @param value the new maximum mana
+     * @param value  the new maximum mana
      */
     public void setMaximumMana(LivingEntity entity, float value)
     {
@@ -101,7 +102,7 @@ public class ManaManager implements Listener
      * Add to an entity's maximum mana
      *
      * @param entity the entity
-     * @param value the amount of mana to add
+     * @param value  the amount of mana to add
      */
     public void addMaximumMana(LivingEntity entity, float value)
     {
@@ -112,7 +113,7 @@ public class ManaManager implements Listener
      * Set an entity's current mana
      *
      * @param entity the entity
-     * @param value the new current mana
+     * @param value  the new current mana
      */
     public void setCurrentMana(LivingEntity entity, float value)
     {
@@ -145,10 +146,22 @@ public class ManaManager implements Listener
     }
 
     /**
+     * Check whether an entity has enough mana
+     *
+     * @param entity   the entity
+     * @param manaCost the mana required
+     * @return true if enough mana
+     */
+    public boolean hasEnoughMana(LivingEntity entity, float manaCost)
+    {
+        return this.getCurrentMana(entity) - manaCost >= 0;
+    }
+
+    /**
      * Add to an entity's current mana
      *
      * @param entity the entity
-     * @param value the amount of mana to add
+     * @param value  the amount of mana to add
      */
     public void addCurrentMana(LivingEntity entity, float value)
     {

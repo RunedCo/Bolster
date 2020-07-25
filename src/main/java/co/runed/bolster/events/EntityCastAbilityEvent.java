@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities.events;
+package co.runed.bolster.events;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityTrigger;

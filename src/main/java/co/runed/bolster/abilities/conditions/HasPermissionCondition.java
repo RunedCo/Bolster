@@ -1,7 +1,8 @@
 package co.runed.bolster.abilities.conditions;
 
-import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
+import co.runed.bolster.conditions.Condition;
+import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 
@@ -15,7 +16,7 @@ public class HasPermissionCondition extends Condition
     }
 
     @Override
-    public boolean evaluate(Ability ability, Properties properties)
+    public boolean evaluate(IConditional conditional, Properties properties)
     {
         LivingEntity entity = properties.get(AbilityProperties.CASTER);
 
@@ -23,7 +24,7 @@ public class HasPermissionCondition extends Condition
     }
 
     @Override
-    public void onFail(Ability ability, Properties properties)
+    public void onFail(IConditional conditional, Properties properties)
     {
 
     }

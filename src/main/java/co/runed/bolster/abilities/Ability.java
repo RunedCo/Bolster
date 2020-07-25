@@ -1,10 +1,10 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.abilities.conditions.IConditional;
+import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.abilities.conditions.OffCooldownCondition;
-import co.runed.bolster.abilities.conditions.Condition;
-import co.runed.bolster.abilities.conditions.ConditionPriority;
+import co.runed.bolster.conditions.Condition;
+import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
 import co.runed.bolster.abilities.cost.AbilityCost;
 import co.runed.bolster.abilities.cost.ManaAbilityCost;
@@ -80,6 +80,22 @@ public abstract class Ability implements Listener, IConditional
         this.costs.add(cost);
     }
 
+    @Override
+    public void addCondition(Condition condition, boolean result, ConditionPriority priority)
+    {
+        this.conditions.add(new Condition.Data(condition, result, priority));
+    }
+
+    public void setShouldCancelEvent(boolean cancelEventOnCast)
+    {
+        this.cancelEventOnCast = cancelEventOnCast;
+    }
+
+    public boolean shouldCancelEvent()
+    {
+        return cancelEventOnCast;
+    }
+
     public double getCooldown()
     {
         return this.cooldown;
@@ -115,22 +131,6 @@ public abstract class Ability implements Listener, IConditional
         this.abilitySource = abilitySource;
     }
 
-    @Override
-    public void addCondition(Condition condition, boolean result, ConditionPriority priority)
-    {
-        this.conditions.add(new Condition.Data(condition, result, priority));
-    }
-
-    public void setShouldCancelEvent(boolean cancelEventOnCast)
-    {
-        this.cancelEventOnCast = cancelEventOnCast;
-    }
-
-    public boolean shouldCancelEvent()
-    {
-        return cancelEventOnCast;
-    }
-
     public boolean canActivate(Properties properties)
     {
         if (!properties.contains(AbilityProperties.CASTER)) return false;
@@ -151,6 +151,7 @@ public abstract class Ability implements Listener, IConditional
             }
         }
 
+        // loop through every cost and remove
         for (AbilityCost cost : this.costs)
         {
             boolean result = cost.run(this, properties);

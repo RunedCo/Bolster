@@ -4,6 +4,8 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.PassiveAbility;
+import co.runed.bolster.conditions.Condition;
+import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.properties.Properties;
 import co.runed.bolster.util.PlayerUtil;
 import org.bukkit.ChatColor;
@@ -14,17 +16,19 @@ import org.bukkit.entity.Player;
 public class HasManaCondition extends Condition
 {
     @Override
-    public boolean evaluate(Ability ability, Properties properties)
+    public boolean evaluate(IConditional conditional, Properties properties)
     {
+        if (!(conditional instanceof Ability)) return false;
+
         LivingEntity entity = properties.get(AbilityProperties.CASTER);
 
-        return Bolster.getManaManager().getCurrentMana(entity) - ability.getManaCost() >= 0;
+        return Bolster.getManaManager().hasEnoughMana(entity, ((Ability) conditional).getManaCost());
     }
 
     @Override
-    public void onFail(Ability ability, Properties properties)
+    public void onFail(IConditional conditional, Properties properties)
     {
-        if (ability instanceof PassiveAbility) return;
+        if (conditional instanceof PassiveAbility) return;
 
         LivingEntity entity = properties.get(AbilityProperties.CASTER);
 

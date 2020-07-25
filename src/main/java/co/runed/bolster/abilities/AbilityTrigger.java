@@ -18,7 +18,16 @@ public enum AbilityTrigger
     ON_KILL_ENTITY("on_kill_entity", "Passive"),
     ON_SNEAK("on_sneak", "Shift"),
     ON_SPAWN("on_spawn", "Passive"),
-    PASSIVE("passive", "Passive");
+    PASSIVE("passive", "Passive"),
+
+    // CUSTOM TRIGGERS
+    // You can assign these to a specific event to easily trigger all abilities
+    // For example, DvZ assigns CUSTOM_1 to trigger when a shrine is destroyed
+    CUSTOM_1("custom_1", "Passive"),
+    CUSTOM_2("custom_2", "Passive"),
+    CUSTOM_3("custom_3", "Passive"),
+    CUSTOM_4("custom_4", "Passive"),
+    CUSTOM_5("custom_5", "Passive");
 
     private final String id;
     private final String displayName;

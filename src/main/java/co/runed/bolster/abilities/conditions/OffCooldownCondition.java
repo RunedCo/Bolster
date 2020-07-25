@@ -3,6 +3,8 @@ package co.runed.bolster.abilities.conditions;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.PassiveAbility;
+import co.runed.bolster.conditions.Condition;
+import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.properties.Properties;
 import co.runed.bolster.util.PlayerUtil;
 import org.bukkit.entity.EntityType;
@@ -16,22 +18,28 @@ public class OffCooldownCondition extends Condition
     private static final DecimalFormat decimalFormatter = new DecimalFormat("#.#");
 
     @Override
-    public boolean evaluate(Ability ability, Properties properties)
+    public boolean evaluate(IConditional conditional, Properties properties)
     {
-        return !ability.isOnCooldown();
+        if (conditional instanceof Ability)
+        {
+            return !((Ability) conditional).isOnCooldown();
+        }
+
+        return false;
     }
 
     //TODO: REMOVE HARDCODED MESSAGE
     @Override
-    public void onFail(Ability ability, Properties properties)
+    public void onFail(IConditional conditional, Properties properties)
     {
-        if (ability instanceof PassiveAbility) return;
+        if (conditional instanceof PassiveAbility) return;
+        if (!(conditional instanceof Ability)) return;
 
         LivingEntity entity = properties.get(AbilityProperties.CASTER);
 
         if (entity.getType() == EntityType.PLAYER)
         {
-            double cooldown = ability.getRemainingCooldown();
+            double cooldown = ((Ability) conditional).getRemainingCooldown();
             String formattedCooldown = "" + (int) cooldown;
 
             if (cooldown < 1)
@@ -41,6 +49,5 @@ public class OffCooldownCondition extends Condition
 
             PlayerUtil.sendActionBar((Player) entity, "Ability on cooldown (" + formattedCooldown + " seconds remaining)");
         }
-        //player.sendMessage("Ability on cooldown (" + ability.getRemainingCooldown() +" seconds remaining)");
     }
 }

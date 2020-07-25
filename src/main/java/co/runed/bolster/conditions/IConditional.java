@@ -1,8 +1,4 @@
-package co.runed.bolster.abilities.conditions;
-
-import co.runed.bolster.abilities.Ability;
-import co.runed.bolster.abilities.conditions.Condition;
-import co.runed.bolster.abilities.conditions.ConditionPriority;
+package co.runed.bolster.conditions;
 
 public interface IConditional
 {
