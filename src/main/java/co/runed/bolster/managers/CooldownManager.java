@@ -1,5 +1,6 @@
 package co.runed.bolster.managers;
 
+import co.runed.bolster.abilities.ICooldownSource;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
@@ -25,7 +26,7 @@ public class CooldownManager
      * @param source the source
      * @param cooldown the cooldown in seconds
      */
-    public void setCooldown(LivingEntity entity, String source, double cooldown)
+    public void setCooldown(LivingEntity entity, ICooldownSource source, double cooldown)
     {
         if (cooldown <= 0) return;
 
@@ -52,7 +53,7 @@ public class CooldownManager
      * @param entity the entity
      * @param source the source
      */
-    public void clearCooldown(LivingEntity entity, String source)
+    public void clearCooldown(LivingEntity entity, ICooldownSource source)
     {
         this.cooldowns.removeIf(cd -> cd.source.equals(source) && cd.caster.equals(entity));
     }
@@ -64,7 +65,7 @@ public class CooldownManager
      * @param source the source
      * @return the time remaining in seconds
      */
-    public double getRemainingTime(LivingEntity entity, String source)
+    public double getRemainingTime(LivingEntity entity, ICooldownSource source)
     {
         for (CooldownData cd : this.cooldowns)
         {
@@ -80,11 +81,11 @@ public class CooldownManager
     private static class CooldownData
     {
         private final LivingEntity caster;
-        private final String source;
+        private final ICooldownSource source;
         private final Instant castTime;
         private final long cooldown;
 
-        private CooldownData(LivingEntity entity, String source, Instant castTime, long cooldownMs)
+        private CooldownData(LivingEntity entity, ICooldownSource source, Instant castTime, long cooldownMs)
         {
             this.caster = entity;
             this.source = source;

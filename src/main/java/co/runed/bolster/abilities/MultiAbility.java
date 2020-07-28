@@ -1,13 +1,28 @@
 package co.runed.bolster.abilities;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.properties.Properties;
+import co.runed.bolster.util.DurationUtil;
+import org.bukkit.Bukkit;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MultiAbility extends Ability
 {
     List<Ability> abilities = new ArrayList<>();
+    boolean isSequence = false;
+
+    public MultiAbility()
+    {
+        this(false);
+    }
+
+    public MultiAbility(boolean isSequence)
+    {
+        this.isSequence = isSequence;
+    }
 
     public MultiAbility addAbility(Ability ability)
     {
@@ -17,11 +32,28 @@ public class MultiAbility extends Ability
     }
 
     @Override
-    public void onActivate(Properties properties)
+    public Duration getDuration()
     {
+        Duration duration = Duration.ZERO;
+
         for (Ability ability : this.abilities)
         {
-            ability.activate(properties);
+            duration = duration.plus(ability.getDuration());
+        }
+
+        return duration;
+    }
+
+    @Override
+    public void onActivate(Properties properties)
+    {
+        long ticks = 0;
+
+        for (Ability ability : this.abilities)
+        {
+            if (isSequence) ticks += DurationUtil.toTicks(ability.getDuration());
+
+            Bukkit.getServer().getScheduler().runTaskLater(Bolster.getInstance(), () -> ability.activate(properties), ticks);
         }
     }
 }

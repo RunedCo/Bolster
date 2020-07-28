@@ -2,12 +2,12 @@ package co.runed.bolster;
 
 import co.runed.bolster.commands.CommandItems;
 import co.runed.bolster.commands.CommandMana;
+import co.runed.bolster.commands.CommandModelData;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.properties.GameProperties;
 import co.runed.bolster.properties.Properties;
-import co.runed.bolster.registries.ItemRegistry;
 import co.runed.bolster.registries.Registry;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,6 +29,7 @@ public class Bolster extends JavaPlugin
     private ManaManager manaManager;
     private SidebarManager sidebarManager;
     private ClassManager classManager;
+    private StatusEffectManager statusEffectManager;
 
     private Properties gameProperties;
 
@@ -44,7 +45,7 @@ public class Bolster extends JavaPlugin
         super.onEnable();
 
         // CREATE REGISTRIES
-        this.itemRegistry = new ItemRegistry(this);
+        this.itemRegistry = new Registry<>(this);
         this.itemSkinRegistry = new Registry<>(this);
 
         // CREATE MANAGERS
@@ -55,6 +56,7 @@ public class Bolster extends JavaPlugin
         this.sidebarManager = new SidebarManager(this);
         this.classManager = new ClassManager(this);
         this.manaManager = new ManaManager(this);
+        this.statusEffectManager = new StatusEffectManager(this);
 
         // CREATE GAME PROPERTIES
         this.gameProperties = new GameProperties(this);
@@ -66,6 +68,7 @@ public class Bolster extends JavaPlugin
         // REGISTER COMMANDS
         this.commandManager.add(new CommandItems());
         this.commandManager.add(new CommandMana());
+        this.commandManager.add(new CommandModelData());
 
         // REGISTER BUNGEECORD PLUGIN CHANNEL
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -130,6 +133,11 @@ public class Bolster extends JavaPlugin
     public static ClassManager getClassManager()
     {
         return Bolster.getInstance().classManager;
+    }
+
+    public static StatusEffectManager getStatusEffectManager()
+    {
+        return Bolster.getInstance().statusEffectManager;
     }
 
     public static Properties getGameProperties()

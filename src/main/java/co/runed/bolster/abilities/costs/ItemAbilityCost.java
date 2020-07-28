@@ -1,10 +1,11 @@
-package co.runed.bolster.abilities.cost;
+package co.runed.bolster.abilities.costs;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.properties.Properties;
+import org.bukkit.GameMode;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -41,6 +42,11 @@ public class ItemAbilityCost extends AbilityCost
 
         if (!(caster instanceof Player)) return false;
 
+        Player player = (Player) caster;
+
+        // If player is in creative don't remove items
+        if (player.getGameMode().equals(GameMode.CREATIVE)) return true;
+
         Item item;
 
         if (this.itemClass == null)
@@ -49,9 +55,11 @@ public class ItemAbilityCost extends AbilityCost
 
             if (item == null) return false;
         }
+        else
+        {
+            item = Bolster.getItemManager().createItem(player, this.itemClass);
+        }
 
-        item = Bolster.getItemManager().createItem(caster, this.itemClass);
-
-        return Bolster.getItemManager().removeItem((Player) caster, item, this.count);
+        return Bolster.getItemManager().removeItem(player, item, this.count);
     }
 }

@@ -27,7 +27,12 @@ public enum AbilityTrigger
     CUSTOM_2("custom_2", "Passive"),
     CUSTOM_3("custom_3", "Passive"),
     CUSTOM_4("custom_4", "Passive"),
-    CUSTOM_5("custom_5", "Passive");
+    CUSTOM_5("custom_5", "Passive"),
+    CUSTOM_6("custom_6", "Passive"),
+    CUSTOM_7("custom_7", "Passive"),
+    CUSTOM_8("custom_8", "Passive"),
+    CUSTOM_9("custom_9", "Passive"),
+    CUSTOM_10("custom_10", "Passive");
 
     private final String id;
     private final String displayName;

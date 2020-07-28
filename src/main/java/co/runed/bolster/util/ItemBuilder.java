@@ -13,7 +13,6 @@ import java.util.List;
 
 public class ItemBuilder
 {
-
     private ItemStack item;
 
     public ItemBuilder(Material material)

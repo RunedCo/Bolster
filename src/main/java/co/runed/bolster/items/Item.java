@@ -5,6 +5,7 @@ import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.conditions.ItemEquippedCondition;
+import co.runed.bolster.registries.IRegisterable;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import org.bukkit.ChatColor;
@@ -17,7 +18,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
-public abstract class Item extends AbilityProvider
+public abstract class Item extends AbilityProvider implements IRegisterable
 {
     public static final NamespacedKey ITEM_ID_KEY = new NamespacedKey(Bolster.getInstance(), "item-id");
     public static final NamespacedKey ITEM_SKIN_KEY = new NamespacedKey(Bolster.getInstance(), "item-skin");
@@ -33,11 +34,13 @@ public abstract class Item extends AbilityProvider
 
     private final Map<Ability, Boolean> abilityCooldowns = new HashMap<>();
 
+    @Override
     public void setId(String id)
     {
         this.id = id;
     }
 
+    @Override
     public String getId()
     {
         return this.id;
@@ -53,9 +56,14 @@ public abstract class Item extends AbilityProvider
         this.name = name;
     }
 
-    public void addLore(String description)
+    public void addLore(String lore)
     {
-        this.lore.addAll(StringUtil.formatLore(description));
+        this.lore.addAll(StringUtil.formatLore(lore));
+    }
+
+    public void addLore(List<String> lore)
+    {
+        this.lore.addAll(lore);
     }
 
     public List<String> getLore()

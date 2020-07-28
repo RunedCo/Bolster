@@ -22,6 +22,9 @@ public class EntityKillListener implements Listener
     private void onKillEntity(EntityDeathEvent event)
     {
         Player player = event.getEntity().getKiller();
+
+        if (player == null) return;
+
         ItemStack stack = player.getInventory().getItemInMainHand();
 
         Properties properties = new Properties();

@@ -59,10 +59,11 @@ public class ReplaceBlocksAbility extends Ability
                 for (int z = target.getBlockZ() - h; z <= target.getBlockZ() + h; z++)
                 {
                     block = target.getWorld().getBlockAt(x, y, z);
-                    for (int i = 0; i < this.materialsToReplace.size(); i++)
+
+                    for (Material material : this.materialsToReplace)
                     {
                         // If specific blocks are being replaced, skip if the block isn't replaceable.
-                        if (!this.materialsToReplace.get(i).equals(block.getType())) continue;
+                        if (!material.equals(block.getType())) continue;
                         // If all blocks are being replaced, skip if the block is already replaced.
                         if (replaceWith.contains(block.getType())) continue;
 

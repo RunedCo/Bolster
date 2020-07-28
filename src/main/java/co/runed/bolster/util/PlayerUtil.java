@@ -102,12 +102,6 @@ public class PlayerUtil
 
         PacketPlayOutChat packet = new PacketPlayOutChat(chatComponent, ChatMessageType.GAME_INFO, player.getUniqueId());
         craftPlayer.getHandle().playerConnection.sendPacket(packet);
-
-        BaseComponent kb = new KeybindComponent(Keybinds.DROP);
-        kb.setColor(net.md_5.bungee.api.ChatColor.RED);
-        ComponentBuilder cb = new ComponentBuilder().append("Your drop key is bound to ").append(kb);
-
-        player.spigot().sendMessage(cb.create());
     }
 
     /**
@@ -132,6 +126,12 @@ public class PlayerUtil
 
         //PacketPlayOutPosition packet = new PacketPlayOutPosition(0.0, 0.0, 0.0, yaw, pitch, teleportFlags, 0);
         //((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+    }
+
+    public static void swingArm(Player player)
+    {
+        PacketPlayOutAnimation packet = new PacketPlayOutAnimation(((CraftPlayer) player).getHandle(), 0);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
     /**

@@ -1,6 +1,8 @@
 package co.runed.bolster.items;
 
-public class ItemSkin
+import co.runed.bolster.registries.IRegisterable;
+
+public class ItemSkin implements IRegisterable
 {
     private String id;
     private String name;
@@ -13,9 +15,16 @@ public class ItemSkin
         this.customModelData = customModelData;
     }
 
+    @Override
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+    @Override
     public String getId()
     {
-        return id;
+        return this.id;
     }
 
     public String getName()

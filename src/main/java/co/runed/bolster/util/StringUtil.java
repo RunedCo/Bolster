@@ -56,6 +56,15 @@ public class StringUtil
         return lore;
     }
 
+    public static List<String> formatQuote(String quote, String author)
+    {
+        List<String> quoteList = formatLore(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + quote);
+
+        quoteList.add(ChatColor.GRAY + "- "+ author);
+
+        return quoteList;
+    }
+
     /**
      * Repeat a string a certain number of times
      *

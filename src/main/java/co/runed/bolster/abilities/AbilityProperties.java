@@ -49,4 +49,6 @@ public class AbilityProperties
 
     // KILL PROPERTIES
     public static final Property<List<ItemStack>> DROPS = new Property<>("drops", new ArrayList<>());
+
+    public static final Property<Long> CHARGE_TIME = new Property<>("charge_time");
 }

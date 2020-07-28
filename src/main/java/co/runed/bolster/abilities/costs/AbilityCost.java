@@ -1,7 +1,6 @@
-package co.runed.bolster.abilities.cost;
+package co.runed.bolster.abilities.costs;
 
 import co.runed.bolster.abilities.Ability;
-import co.runed.bolster.items.Item;
 import co.runed.bolster.properties.Properties;
 
 public abstract class AbilityCost

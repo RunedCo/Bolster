@@ -6,18 +6,21 @@ import co.runed.bolster.abilities.conditions.OffCooldownCondition;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
-import co.runed.bolster.abilities.cost.AbilityCost;
-import co.runed.bolster.abilities.cost.ManaAbilityCost;
+import co.runed.bolster.abilities.costs.AbilityCost;
+import co.runed.bolster.abilities.costs.ManaAbilityCost;
+import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.properties.Properties;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
+import java.time.Duration;
 import java.util.*;
 
-public abstract class Ability implements Listener, IConditional
+public abstract class Ability implements Listener, IConditional, ICooldownSource
 {
     private final String id = UUID.randomUUID().toString();
     private String description;
@@ -32,7 +35,7 @@ public abstract class Ability implements Listener, IConditional
 
     public Ability()
     {
-        Bolster.getInstance().getServer().getPluginManager().registerEvents(this, Bolster.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
 
         this.addCost(new ManaAbilityCost(this.getManaCost()));
 
@@ -86,9 +89,9 @@ public abstract class Ability implements Listener, IConditional
         this.conditions.add(new Condition.Data(condition, result, priority));
     }
 
-    public void setShouldCancelEvent(boolean cancelEventOnCast)
+    public Duration getDuration()
     {
-        this.cancelEventOnCast = cancelEventOnCast;
+        return Duration.ZERO;
     }
 
     public boolean shouldCancelEvent()
@@ -96,29 +99,38 @@ public abstract class Ability implements Listener, IConditional
         return cancelEventOnCast;
     }
 
-    public double getCooldown()
+    public void setShouldCancelEvent(boolean cancelEventOnCast)
     {
+        this.cancelEventOnCast = cancelEventOnCast;
+    }
+
+    @Override
+    public double getCooldown() {
         return this.cooldown;
     }
 
-    public void setCooldown(double cooldownSeconds)
+    @Override
+    public void setCooldown(double cooldown)
     {
-        this.cooldown = cooldownSeconds;
+        this.cooldown = cooldown;
     }
 
+    @Override
     public double getRemainingCooldown()
     {
-        return Bolster.getCooldownManager().getRemainingTime(this.getCaster(), this.id);
+        return Bolster.getCooldownManager().getRemainingTime(this.getCaster(), this);
     }
 
+    @Override
     public boolean isOnCooldown()
     {
         return this.getRemainingCooldown() > 0;
     }
 
+    @Override
     public void clearCooldown()
     {
-        Bolster.getCooldownManager().clearCooldown(this.getCaster(), this.id);
+        Bolster.getCooldownManager().clearCooldown(this.getCaster(), this);
     }
 
     public AbilityProvider getAbilitySource()
@@ -171,7 +183,7 @@ public abstract class Ability implements Listener, IConditional
         {
             this.onActivate(properties);
 
-            Bolster.getCooldownManager().setCooldown(this.getCaster(), this.id, this.getCooldown());
+            Bolster.getCooldownManager().setCooldown(this.getCaster(), this, this.getCooldown());
 
             if (properties.get(AbilityProperties.EVENT) != null)
             {
@@ -182,8 +194,6 @@ public abstract class Ability implements Listener, IConditional
                     ((Cancellable) event).setCancelled(true);
                 }
             }
-
-            Bolster.getManaManager().addCurrentMana(this.getCaster(), -this.getManaCost());
 
             return true;
         }
@@ -196,6 +206,8 @@ public abstract class Ability implements Listener, IConditional
     public void destroy()
     {
         HandlerList.unregisterAll(this);
+
+        Bolster.getCooldownManager().clearCooldown(this.getCaster(), this);
     }
 }
 

@@ -27,4 +27,16 @@ public class DurationUtil
 
         return seconds < 0 ? "-" + positive : positive;
     }
+
+    public static long toTicks(Duration duration)
+    {
+        long seconds = duration.toMillis() / 1000;
+
+        return seconds * 20;
+    }
+
+    public static Duration fromSeconds(double seconds)
+    {
+        return Duration.ofMillis((long) (seconds * 1000));
+    }
 }

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class Registry<T>
+public class Registry<T extends IRegisterable>
 {
     public Plugin plugin;
     private final HashMap<String, Callable<? extends T>> entries = new HashMap<>();
@@ -88,7 +88,11 @@ public class Registry<T>
 
         try
         {
-            return this.entries.get(id).call();
+            T value = this.entries.get(id).call();
+
+            value.setId(id);
+
+            return value;
         }
         catch (Exception e)
         {

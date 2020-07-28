@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities.cost;
+package co.runed.bolster.abilities.costs;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
