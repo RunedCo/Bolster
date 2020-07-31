@@ -30,7 +30,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     private ItemStack itemStack = new ItemStack(Material.STICK);
 
     private ItemSkin skin;
-    private final List<ItemCategory> categories = new ArrayList<>(Collections.singletonList(ItemCategory.ALL));
+    private final List<Category> categories = new ArrayList<>(Collections.singletonList(Category.ALL));
 
     private final Map<Ability, Boolean> abilityCooldowns = new HashMap<>();
 
@@ -94,6 +94,11 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         return this.itemStack.clone();
     }
 
+    protected void setItemStack(ItemBuilder builder)
+    {
+        this.itemStack = builder.build();
+    }
+
     protected void setItemStack(ItemStack stack)
     {
         this.itemStack = stack;
@@ -114,12 +119,12 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         this.skin = skin;
     }
 
-    public List<ItemCategory> getCategories()
+    public List<Category> getCategories()
     {
         return this.categories;
     }
 
-    public void addCategory(ItemCategory category)
+    public void addCategory(Category category)
     {
         if (this.categories.contains(category)) return;
 

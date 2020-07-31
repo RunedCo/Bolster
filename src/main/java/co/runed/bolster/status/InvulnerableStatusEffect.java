@@ -1,5 +1,6 @@
 package co.runed.bolster.status;
 
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -8,6 +9,18 @@ public class InvulnerableStatusEffect extends StatusEffect
     public InvulnerableStatusEffect(int duration)
     {
         super(1, duration);
+    }
+
+    @Override
+    public String getName()
+    {
+        return "Invulnerable";
+    }
+
+    @Override
+    public ChatColor getColor()
+    {
+        return ChatColor.GOLD;
     }
 
     @Override

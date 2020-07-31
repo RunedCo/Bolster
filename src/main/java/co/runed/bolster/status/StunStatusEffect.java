@@ -10,6 +10,12 @@ public class StunStatusEffect extends StatusEffect
     }
 
     @Override
+    public String getName()
+    {
+        return "Stunned";
+    }
+
+    @Override
     public void onStart()
     {
 

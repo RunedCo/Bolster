@@ -70,7 +70,7 @@ public class TaskUtil
      */
     public static synchronized BukkitTask runDurationTaskTimer(Plugin plugin, Runnable task, Duration duration, long initialDelay, long period, Runnable onFinish)
     {
-        BukkitRunnable run = new BolsterRunnable()
+        BukkitRunnable run = new BolsterRunnable(onFinish)
         {
             int runs = 0;
             final long totalDuration = (duration.toMillis() / 1000) * 20;
@@ -82,7 +82,7 @@ public class TaskUtil
 
                 runs++;
 
-                if (totalDuration >= ((period * runs) + initialDelay))
+                if (((period * runs) + initialDelay) >= this.totalDuration)
                 {
                     this.cancel();
                 }

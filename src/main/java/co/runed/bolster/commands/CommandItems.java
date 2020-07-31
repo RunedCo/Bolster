@@ -2,7 +2,7 @@ package co.runed.bolster.commands;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.items.Item;
-import co.runed.bolster.items.ItemCategory;
+import co.runed.bolster.items.Category;
 import co.runed.bolster.util.PlayerUtil;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -39,7 +39,7 @@ public class CommandItems extends CommandBase
 
     private void openMenu(Player player)
     {
-        HashMap<ItemCategory, List<ItemStack>> itemCategories = new HashMap<>();
+        HashMap<Category, List<ItemStack>> itemCategories = new HashMap<>();
 
         ChestMenu.Builder pageTemplate = ChestMenu.builder(6).title("Items").redraw(true);
         Mask itemSlots = BinaryMask.builder(pageTemplate.getDimensions())
@@ -64,7 +64,7 @@ public class CommandItems extends CommandBase
         {
             Item item = Bolster.getItemRegistry().createInstance(id);
 
-            for (ItemCategory category : item.getCategories())
+            for (Category category : item.getCategories())
             {
                 itemCategories.putIfAbsent(category, new ArrayList<>());
 
@@ -74,12 +74,12 @@ public class CommandItems extends CommandBase
             item.destroy();
         }
 
-        List<ItemCategory> sortedCategories = new ArrayList<>(itemCategories.keySet());
-        sortedCategories.sort(Comparator.comparing(ItemCategory::getName));
+        List<Category> sortedCategories = new ArrayList<>(itemCategories.keySet());
+        sortedCategories.sort(Comparator.comparing(Category::getName));
 
         SlotSettings allItems = null;
 
-        for (ItemCategory category : sortedCategories)
+        for (Category category : sortedCategories)
         {
             List<ItemStack> categoryItems = itemCategories.get(category);
 
@@ -90,7 +90,7 @@ public class CommandItems extends CommandBase
                     })
                     .build();
 
-            if (category == ItemCategory.ALL)
+            if (category == Category.ALL)
             {
                 allItems = settings;
 
@@ -107,7 +107,7 @@ public class CommandItems extends CommandBase
         pages.get(0).open(player);
     }
 
-    private void openCategory(Player player, ItemCategory category, List<ItemStack> items)
+    private void openCategory(Player player, Category category, List<ItemStack> items)
     {
         ChestMenu.Builder pageTemplate = ChestMenu.builder(6).title("Items - " + category.getName()).redraw(true);
         Mask itemSlots = BinaryMask.builder(pageTemplate.getDimensions())

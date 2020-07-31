@@ -4,10 +4,14 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.util.DurationUtil;
 import co.runed.bolster.util.TaskUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public abstract class StatusEffect implements Listener
 {
@@ -22,6 +26,18 @@ public abstract class StatusEffect implements Listener
         this.setDuration(duration);
 
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
+    }
+
+    public abstract String getName();
+
+    public ChatColor getColor()
+    {
+        return ChatColor.WHITE;
+    }
+
+    public Collection<Class<? extends StatusEffect>> getOverrides()
+    {
+        return new ArrayList<>();
     }
 
     public double getDuration()
