@@ -2,7 +2,7 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.properties.Properties;
-import co.runed.bolster.util.DurationUtil;
+import co.runed.bolster.util.TimeUtil;
 import org.bukkit.Bukkit;
 
 import java.time.Duration;
@@ -51,7 +51,7 @@ public class MultiAbility extends Ability
 
         for (Ability ability : this.abilities)
         {
-            if (isSequence) ticks += DurationUtil.toTicks(ability.getDuration());
+            if (isSequence) ticks += TimeUtil.toTicks(ability.getDuration());
 
             Bukkit.getServer().getScheduler().runTaskLater(Bolster.getInstance(), () -> ability.activate(properties), ticks);
         }

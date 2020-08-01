@@ -1,8 +1,8 @@
 package co.runed.bolster.status;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.util.DurationUtil;
 import co.runed.bolster.util.TaskUtil;
+import co.runed.bolster.util.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
@@ -10,19 +10,20 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public abstract class StatusEffect implements Listener
 {
-    int strength;
     double duration;
     LivingEntity entity;
     BukkitTask task;
 
-    public StatusEffect(int strength, int duration)
+    boolean active;
+
+    public StatusEffect(double duration)
     {
-        this.setStrength(strength);
         this.setDuration(duration);
 
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
@@ -50,14 +51,9 @@ public abstract class StatusEffect implements Listener
         this.duration = duration;
     }
 
-    public int getStrength()
+    public void addDuration(double duration)
     {
-        return strength;
-    }
-
-    public void setStrength(int strength)
-    {
-        this.strength = strength;
+        this.duration += duration;
     }
 
     public LivingEntity getEntity()
@@ -75,6 +71,11 @@ public abstract class StatusEffect implements Listener
         return true;
     }
 
+    public boolean isActive()
+    {
+        return this.active;
+    }
+
     public void start(LivingEntity entity)
     {
         this.setEntity(entity);
@@ -85,7 +86,7 @@ public abstract class StatusEffect implements Listener
         }
 
         this.task = TaskUtil.runDurationTaskTimer(Bolster.getInstance(), this::onTick,
-                DurationUtil.fromSeconds(this.getDuration()), 0, 1L, this::end);
+                TimeUtil.fromSeconds(this.getDuration()), 0, 1L, this::end);
     }
 
     public void end()
@@ -102,6 +103,8 @@ public abstract class StatusEffect implements Listener
         if (this.task == null || this.task.isCancelled()) return;
 
         this.task.cancel();
+
+        this.end();
     }
 
     public abstract void onStart();

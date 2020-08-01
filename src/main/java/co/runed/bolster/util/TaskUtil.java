@@ -5,6 +5,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Duration;
+import java.time.Instant;
 
 public class TaskUtil
 {
@@ -72,17 +73,14 @@ public class TaskUtil
     {
         BukkitRunnable run = new BolsterRunnable(onFinish)
         {
-            int runs = 0;
-            final long totalDuration = (duration.toMillis() / 1000) * 20;
+            Instant startTime = Instant.now();
 
             @Override
             public void run()
             {
                 task.run();
 
-                runs++;
-
-                if (((period * runs) + initialDelay) >= this.totalDuration)
+                if (startTime.plus(duration).isBefore(Instant.now()))
                 {
                     this.cancel();
                 }

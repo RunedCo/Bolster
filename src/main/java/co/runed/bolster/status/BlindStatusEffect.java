@@ -4,9 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class GroundedStatusEffect extends StatusEffect
+public class BlindStatusEffect extends StatusEffect
 {
-    public GroundedStatusEffect(double duration)
+    public BlindStatusEffect(double duration)
     {
         super(duration);
     }
@@ -14,25 +14,25 @@ public class GroundedStatusEffect extends StatusEffect
     @Override
     public String getName()
     {
-        return "Grounded";
+        return "Blinded";
     }
 
     @Override
     public ChatColor getColor()
     {
-        return ChatColor.GRAY;
+        return ChatColor.DARK_GRAY;
     }
 
     @Override
     public void onStart()
     {
-        this.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128, true, false, false));
+        this.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 9, true, false, true));
     }
 
     @Override
     public void onEnd()
     {
-        this.getEntity().removePotionEffect(PotionEffectType.JUMP);
+        this.getEntity().removePotionEffect(PotionEffectType.BLINDNESS);
     }
 
     @Override

@@ -141,7 +141,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     @Override
     public void addAbility(AbilityTrigger trigger, Ability ability)
     {
-        ability.addCondition(new ItemEquippedCondition(EnumSet.allOf(EquipmentSlot.class), this));
+        ability.addCondition(new ItemEquippedCondition(EnumSet.allOf(EquipmentSlot.class), this.getClass()));
 
         super.addAbility(trigger, ability);
     }

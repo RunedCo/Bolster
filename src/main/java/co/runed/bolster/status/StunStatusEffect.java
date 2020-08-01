@@ -1,12 +1,10 @@
 package co.runed.bolster.status;
 
-import org.bukkit.entity.LivingEntity;
-
 public class StunStatusEffect extends StatusEffect
 {
-    public StunStatusEffect(int duration)
+    public StunStatusEffect(double duration)
     {
-        super(1, duration);
+        super(duration);
     }
 
     @Override

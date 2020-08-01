@@ -2,7 +2,7 @@ package co.runed.bolster.status;
 
 public class UntargetableStatusEffect extends InvulnerableStatusEffect
 {
-    public UntargetableStatusEffect(int duration)
+    public UntargetableStatusEffect(double duration)
     {
         super(duration);
     }

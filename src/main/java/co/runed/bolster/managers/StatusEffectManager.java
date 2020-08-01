@@ -106,7 +106,7 @@ public class StatusEffectManager implements Listener
 
         //PlayerUtil.sendActionBar(player, ChatColor.BOLD + display.toString());
 
-        player.sendTitle("", display.toString(), 0, 10, 0);
+        //player.sendTitle("", display.toString(), 0, 10, 0);
     }
 
     @EventHandler

@@ -10,9 +10,9 @@ public class RootStatusEffect extends StatusEffect
 {
     public static float DEFAULT_WALK_SPEED = 0.2f;
 
-    public RootStatusEffect(int duration)
+    public RootStatusEffect(double duration)
     {
-        super(1, duration);
+        super(duration);
     }
 
     @Override

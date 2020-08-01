@@ -6,9 +6,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class InvulnerableStatusEffect extends StatusEffect
 {
-    public InvulnerableStatusEffect(int duration)
+    public InvulnerableStatusEffect(double duration)
     {
-        super(1, duration);
+        super(duration);
     }
 
     @Override

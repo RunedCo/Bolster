@@ -15,14 +15,14 @@ import java.util.EnumSet;
 public class ItemEquippedCondition extends Condition
 {
     Collection<EquipmentSlot> slots;
-    Item item;
+    Class<? extends Item> item;
 
-    public ItemEquippedCondition(EquipmentSlot slot, Item item)
+    public ItemEquippedCondition(EquipmentSlot slot, Class<? extends Item> item)
     {
         this(EnumSet.of(slot), item);
     }
 
-    public ItemEquippedCondition(Collection<EquipmentSlot> slots, Item item)
+    public ItemEquippedCondition(Collection<EquipmentSlot> slots, Class<? extends Item> item)
     {
         this.slots = slots;
         this.item = item;

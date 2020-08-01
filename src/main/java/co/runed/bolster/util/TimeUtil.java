@@ -1,8 +1,9 @@
 package co.runed.bolster.util;
 
 import java.time.Duration;
+import java.time.Instant;
 
-public class DurationUtil
+public class TimeUtil
 {
     /**
      * Format a duration to hh:mm:ss text
@@ -38,5 +39,20 @@ public class DurationUtil
     public static Duration fromSeconds(double seconds)
     {
         return Duration.ofMillis((long) (seconds * 1000));
+    }
+
+    public static Instant addSeconds(Instant instant, double seconds)
+    {
+        return instant.plusMillis((long) (seconds * 1000));
+    }
+
+    public static Instant plusInstants(Instant instant1, Instant instant2)
+    {
+        return instant1.plusMillis(instant2.toEpochMilli());
+    }
+
+    public static Instant minusInstants(Instant instant1, Instant instant2)
+    {
+        return instant1.minusMillis(instant2.toEpochMilli());
     }
 }

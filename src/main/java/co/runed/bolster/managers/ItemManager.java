@@ -300,7 +300,7 @@ public class ItemManager implements Listener
     }
 
     /**
-     * Check if an entity has equipped an item
+     * Check if an entity has a specific item equipped
      *
      * @param entity the entity
      * @param item   the item
@@ -318,6 +318,25 @@ public class ItemManager implements Listener
         if (item.getId() == null) return false;
 
         return itemId.equals(item.getId());
+    }
+
+    /**
+     * Check if an entity has a specific item equipped
+     *
+     * @param entity the entity
+     * @param item   the item class
+     * @param slot the slot
+     * @return
+     */
+    public boolean isItemEquipped(LivingEntity entity, Class<? extends Item> item, EquipmentSlot slot)
+    {
+        EntityEquipment inv = entity.getEquipment();
+        ItemStack stack = inv.getItem(slot);
+        String itemId = this.getItemIdFromStack(stack);
+
+        if (itemId == null) return false;
+
+        return itemId.equals(Bolster.getItemRegistry().getId(item));
     }
 
     /**

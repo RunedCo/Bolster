@@ -2,9 +2,16 @@ package co.runed.bolster.conditions;
 
 import co.runed.bolster.properties.Properties;
 
+import java.util.List;
+
 public class OrCondition extends Condition
 {
     Condition[] conditions;
+
+    public OrCondition(List<Condition> conditions)
+    {
+        this(conditions.toArray(new Condition[0]));
+    }
 
     public OrCondition(Condition... conditions)
     {
