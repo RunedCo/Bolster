@@ -1,17 +1,19 @@
 package co.runed.bolster.abilities.passives;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.abilities.PassiveAbility;
 import co.runed.bolster.properties.Properties;
 
-public class ManaRegenPassiveAbility extends PassiveAbility
+public class ManaRegenPassiveAbility extends Ability
 {
     float manaPerSecond = 0;
 
     public ManaRegenPassiveAbility(float manaPerSecond)
     {
-        super(10);
+        super();
+
+        this.setCooldown(0.5d);
 
         this.manaPerSecond = manaPerSecond;
     }

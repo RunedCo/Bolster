@@ -2,7 +2,7 @@ package co.runed.bolster.abilities.conditions;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.abilities.PassiveAbility;
+import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.properties.Properties;
@@ -32,7 +32,7 @@ public class OffCooldownCondition extends Condition
     @Override
     public void onFail(IConditional conditional, Properties properties)
     {
-        if (conditional instanceof PassiveAbility) return;
+        if (conditional instanceof Ability && ((Ability) conditional).getTrigger() == AbilityTrigger.TICK) return;
         if (!(conditional instanceof Ability)) return;
 
         LivingEntity entity = properties.get(AbilityProperties.CASTER);

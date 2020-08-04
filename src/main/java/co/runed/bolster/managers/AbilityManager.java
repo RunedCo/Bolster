@@ -1,16 +1,18 @@
 package co.runed.bolster.managers;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.abilities.listeners.*;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
-import co.runed.bolster.abilities.listeners.*;
 import co.runed.bolster.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -18,7 +20,7 @@ import java.util.*;
 
 public class AbilityManager
 {
-    Map<UUID, Map<AbilityTrigger, List<Ability>>> abilities = new HashMap<>();
+    Map<UUID, List<AbilityData>> abilities = new HashMap<>();
 
     public AbilityManager(Plugin plugin)
     {
@@ -39,9 +41,13 @@ public class AbilityManager
 
     public Ability add(LivingEntity entity, AbilityTrigger trigger, Ability ability)
     {
-        this.abilities.putIfAbsent(entity.getUniqueId(), new HashMap<>());
-        this.abilities.get(entity.getUniqueId()).putIfAbsent(trigger, new ArrayList<>());
-        this.abilities.get(entity.getUniqueId()).get(trigger).add(ability);
+        this.abilities.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
+
+        AbilityData abilityData = new AbilityData(trigger, ability);
+
+        this.abilities.get(entity.getUniqueId()).add(abilityData);
+
+        ability.setTrigger(trigger);
 
         return ability;
     }
@@ -51,14 +57,17 @@ public class AbilityManager
         if (entity == null) return;
         if (!this.abilities.containsKey(entity.getUniqueId())) return;
 
-        Map<AbilityTrigger, List<Ability>> abilityMap = this.abilities.get(entity.getUniqueId());
+        List<AbilityData> abilities = this.abilities.get(entity.getUniqueId());
 
-        for (AbilityTrigger trigger : abilityMap.keySet())
-        {
-            abilityMap.get(trigger).remove(ability);
-        }
+        Optional<AbilityData> filtered = abilities.stream().filter((data) -> data.ability == ability).findFirst();
 
-        ability.destroy();
+        if (!filtered.isPresent()) return;
+
+        AbilityData data = filtered.get();
+
+        abilities.remove(data);
+
+        data.destroy();
     }
 
     public List<Ability> getAbilities(LivingEntity entity)
@@ -67,11 +76,11 @@ public class AbilityManager
 
         if (!this.abilities.containsKey(entity.getUniqueId())) return abilityList;
 
-        Map<AbilityTrigger, List<Ability>> abilityMap = this.abilities.get(entity.getUniqueId());
+        List<AbilityData> abilities = this.abilities.get(entity.getUniqueId());
 
-        for (AbilityTrigger trigger : abilityMap.keySet())
+        for (AbilityData data : abilities)
         {
-            abilityList.addAll(abilityMap.get(trigger));
+            abilityList.add(data.ability);
         }
 
         return abilityList;
@@ -79,10 +88,18 @@ public class AbilityManager
 
     public List<Ability> getAbilities(LivingEntity entity, AbilityTrigger trigger)
     {
-        if (!this.abilities.containsKey(entity.getUniqueId())) return new ArrayList<>();
-        if (!this.abilities.get(entity.getUniqueId()).containsKey(trigger)) return new ArrayList<>();
+        List<Ability> abilityList = new ArrayList<>();
 
-        return this.abilities.get(entity.getUniqueId()).get(trigger);
+        if (!this.abilities.containsKey(entity.getUniqueId())) return abilityList;
+
+        List<AbilityData> abilities = this.abilities.get(entity.getUniqueId());
+
+        for (AbilityData data : abilities)
+        {
+            if (data.trigger == trigger) abilityList.add(data.ability);
+        }
+
+        return abilityList;
     }
 
     public boolean hasAbilities(LivingEntity entity, AbilityTrigger trigger)
@@ -92,18 +109,15 @@ public class AbilityManager
 
     public void reset(LivingEntity entity)
     {
-        Map<AbilityTrigger, List<Ability>> abilityMap = this.abilities.get(entity.getUniqueId());
+        List<AbilityData> abilityData = this.abilities.get(entity.getUniqueId());
 
-        for (List<Ability> abilities : abilityMap.values())
+        for (AbilityData data : abilityData)
         {
-            for (Ability ability : abilities)
-            {
-                ability.destroy();
-            }
+            data.destroy();
         }
 
         this.abilities.remove(entity.getUniqueId());
-        this.abilities.putIfAbsent(entity.getUniqueId(), new HashMap<>());
+        this.abilities.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
     }
 
     public void resetAll()
@@ -144,6 +158,45 @@ public class AbilityManager
             if (ability.getAbilitySource() != null)
             {
                 ability.getAbilitySource().onCastAbility(ability, success);
+            }
+        }
+    }
+
+    public static class AbilityData
+    {
+        AbilityTrigger trigger;
+        Ability ability;
+        BukkitTask task = null;
+
+        public AbilityData(AbilityTrigger trigger, Ability ability)
+        {
+            this.trigger = trigger;
+            this.ability = ability;
+
+            if (this.trigger == AbilityTrigger.TICK)
+            {
+                this.task = Bukkit.getServer().getScheduler().runTaskTimer(Bolster.getInstance(), this::run, 0L, (long) (ability.getCooldown() * 20));
+            }
+        }
+
+        protected void run()
+        {
+            if (ability.getCaster() == null) return;
+
+            Properties properties = new Properties();
+            properties.set(AbilityProperties.CASTER, ability.getCaster());
+            properties.set(AbilityProperties.WORLD, ability.getCaster().getWorld());
+
+            Bolster.getAbilityManager().trigger(ability.getCaster(), this.trigger, properties);
+        }
+
+        public void destroy()
+        {
+            ability.destroy();
+
+            if (this.task != null)
+            {
+                this.task.cancel();
             }
         }
     }

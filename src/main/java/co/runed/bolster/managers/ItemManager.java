@@ -44,7 +44,7 @@ public class ItemManager implements Listener
     }
 
     /**
-     * @param itemClass the class of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
+     * @param itemClass the class of the item as registered in {@link co.runed.bolster.registries.Registry<Item>}
      * @see #getItem(LivingEntity, String)
      */
     public Item getItem(LivingEntity entity, Class<? extends Item> itemClass)
@@ -56,7 +56,7 @@ public class ItemManager implements Listener
      * Gets an {@link Item} from a {@link LivingEntity}
      *
      * @param entity the entity that has the item
-     * @param id     the {@link String} id of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
+     * @param id     the {@link String} id of the item as registered in {@link co.runed.bolster.registries.Registry<Item>}
      * @return the existing {@link Item} instance or null
      */
     public Item getItem(LivingEntity entity, String id)
@@ -74,7 +74,7 @@ public class ItemManager implements Listener
     }
 
     /**
-     * @param itemClass the class of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
+     * @param itemClass the class of the item as registered in {@link co.runed.bolster.registries.Registry<Item>}
      * @see #createItem(LivingEntity, String)
      */
     public Item createItem(LivingEntity entity, Class<? extends Item> itemClass)
@@ -87,7 +87,7 @@ public class ItemManager implements Listener
      * in which case it gets the existing instance
      *
      * @param entity the entity
-     * @param id     the {@link String} id of the item as registered in {@link co.runed.bolster.registries.ItemRegistry}
+     * @param id     the {@link String} id of the item as registered in {@link co.runed.bolster.registries.Registry<Item>}
      * @return the item instance
      */
     public Item createItem(LivingEntity entity, String id)

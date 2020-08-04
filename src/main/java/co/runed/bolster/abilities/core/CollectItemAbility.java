@@ -11,30 +11,42 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import java.util.*;
+
 public class CollectItemAbility extends Ability
 {
-    Material material;
+    Collection<Material> materials = new ArrayList<>();
     Class<? extends Item> itemClass;
     int outputCount = 1;
 
     public CollectItemAbility(Material material, Class<? extends Item> itemClass)
     {
-        this(material, itemClass, 1);
+        this(Collections.singletonList(material), itemClass);
+    }
+
+    public CollectItemAbility(Collection<Material> materials, Class<? extends Item> itemClass)
+    {
+        this(materials, itemClass, 1);
     }
 
     public CollectItemAbility(Material material, Class<? extends Item> itemClass, int outputCount)
     {
+        this(Collections.singletonList(material), itemClass, outputCount);
+    }
+
+    public CollectItemAbility(Collection<Material> materials, Class<? extends Item> itemClass, int outputCount)
+    {
         super();
 
         this.itemClass = itemClass;
-        this.material = material;
+        this.materials = materials;
         this.outputCount = outputCount;
 
         // SET DEFAULT COOLDOWN
         this.setCooldown(10);
 
         this.addCondition(new IsEntityTypeCondition(EntityType.PLAYER));
-        this.addCondition(new BlockIsMaterialCondition(material));
+        this.addCondition(new BlockIsMaterialCondition(this.materials));
     }
 
     @Override

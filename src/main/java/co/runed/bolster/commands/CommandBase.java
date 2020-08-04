@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.LinkedHashMap;
 
-public class CommandBase
+public abstract class CommandBase
 {
     public String command;
     public String[] aliases = new String[0];
@@ -25,9 +25,7 @@ public class CommandBase
         if (arguments != null) this.arguments = arguments;
     }
 
-    public void run(CommandSender sender, Object[] args) throws WrapperCommandSyntaxException
-    {
-    }
+    public abstract void run(CommandSender sender, Object[] args) throws WrapperCommandSyntaxException;
 
     public void register()
     {

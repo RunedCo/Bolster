@@ -18,7 +18,8 @@ public enum AbilityTrigger
     ON_KILL_ENTITY("on_kill_entity", "Passive"),
     ON_SNEAK("on_sneak", "Shift"),
     ON_SPAWN("on_spawn", "Passive"),
-    PASSIVE("passive", "Passive"),
+    TICK("tick", "Passive"),
+    //PASSIVE("passive", "Passive"),
 
     // CUSTOM TRIGGERS
     // You can assign these to a specific event to easily trigger all abilities

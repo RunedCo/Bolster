@@ -29,6 +29,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private Boolean cancelEventOnCast = false;
     private LivingEntity caster;
     private AbilityProvider abilitySource;
+    private AbilityTrigger trigger;
 
     private final List<Condition.Data> conditions = new ArrayList<>();
     private final List<AbilityCost> costs = new ArrayList<>();
@@ -81,6 +82,16 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     public void addCost(AbilityCost cost)
     {
         this.costs.add(cost);
+    }
+
+    public AbilityTrigger getTrigger()
+    {
+        return this.trigger;
+    }
+
+    public void setTrigger(AbilityTrigger trigger)
+    {
+        this.trigger = trigger;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package co.runed.bolster;
 
 import co.runed.bolster.commands.CommandItems;
+import co.runed.bolster.commands.CommandLightLevel;
 import co.runed.bolster.commands.CommandMana;
 import co.runed.bolster.commands.CommandModelData;
 import co.runed.bolster.items.Item;
@@ -69,6 +70,7 @@ public class Bolster extends JavaPlugin
         this.commandManager.add(new CommandItems());
         this.commandManager.add(new CommandMana());
         this.commandManager.add(new CommandModelData());
+        this.commandManager.add(new CommandLightLevel());
 
         // REGISTER BUNGEECORD PLUGIN CHANNEL
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
