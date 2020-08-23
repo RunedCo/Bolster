@@ -1,6 +1,6 @@
 package co.runed.bolster.conditions;
 
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.util.properties.Properties;
 
 import java.util.List;
 

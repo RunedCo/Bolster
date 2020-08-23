@@ -1,7 +1,11 @@
 package co.runed.bolster.abilities;
 
+import co.runed.bolster.Bolster;
+import co.runed.bolster.entity.BolsterLivingEntity;
+import co.runed.bolster.util.target.Target;
 import co.runed.bolster.items.Item;
-import co.runed.bolster.properties.Property;
+import co.runed.bolster.util.properties.Property;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -24,7 +28,7 @@ public class AbilityProperties
 {
     // GENERAL PROPERTIES
     public static final Property<LivingEntity> CASTER = new Property<>("caster");
-    public static final Property<List<LivingEntity>> TARGETS = new Property<>("targets", new ArrayList<>());
+    public static final Property<List<Entity>> TARGETS = new Property<>("targets", new ArrayList<>());
     public static final Property<World> WORLD = new Property<>("world");
     public static final Property<Event> EVENT = new Property<>("event");
     public static final Property<ItemStack> ITEM_STACK = new Property<>("item_stack");
@@ -46,9 +50,13 @@ public class AbilityProperties
 
     // DAMAGE PROPERTIES
     public static final Property<Double> DAMAGE = new Property<>("double", 0.0d);
+    public static final Property<Entity> DAMAGER = new Property<>("damager");
 
     // KILL PROPERTIES
     public static final Property<List<ItemStack>> DROPS = new Property<>("drops", new ArrayList<>());
 
+    // CHARGE PROPERTIES
     public static final Property<Long> CHARGE_TIME = new Property<>("charge_time");
+
+    public static final Property<Target<Location>> TARGET_LOCATION = new Property<>("target_location", Target.CASTER_LOCATION);
 }

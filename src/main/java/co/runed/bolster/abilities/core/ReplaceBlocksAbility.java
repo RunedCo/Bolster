@@ -1,21 +1,21 @@
 package co.runed.bolster.abilities.core;
 
-import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.abilities.TargetedAbility;
+import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.util.RandomCollection;
 import co.runed.bolster.util.WorldUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 
-import java.util.List;
-import java.util.Random;
+import java.util.Collection;
 
-public class ReplaceBlocksAbility extends Ability
+public class ReplaceBlocksAbility extends TargetedAbility
 {
-    List<Material> materialsToReplace;
-    List<Material> replaceWith;
+    Collection<Material> materialsToReplace;
+    RandomCollection<Material> replaceWith;
 
     int yOffset;
     int range;
@@ -23,9 +23,7 @@ public class ReplaceBlocksAbility extends Ability
     int radiusDown;
     int radiusHorizontal;
 
-    Random random = new Random();
-
-    public ReplaceBlocksAbility(List<Material> materialsToReplace, List<Material> replaceWith, int yOffset, int range, int radiusUp, int radiusDown, int radiusHorizontal)
+    public ReplaceBlocksAbility(Collection<Material> materialsToReplace, RandomCollection<Material> replaceWith, int yOffset, int range, int radiusUp, int radiusDown, int radiusHorizontal)
     {
         super();
 
@@ -44,7 +42,7 @@ public class ReplaceBlocksAbility extends Ability
     public void onActivate(Properties properties)
     {
         LivingEntity caster = properties.get(AbilityProperties.CASTER);
-        Location target = WorldUtil.getTargetBlock(caster, range).getLocation();
+        Location target = properties.get(AbilityProperties.TARGET_LOCATION).getTarget(properties); WorldUtil.getTargetBlock(caster, range).getLocation();
 
         int u = radiusUp;
         int d = radiusDown;
@@ -67,7 +65,7 @@ public class ReplaceBlocksAbility extends Ability
                         // If all blocks are being replaced, skip if the block is already replaced.
                         if (replaceWith.contains(block.getType())) continue;
 
-                        block.setType(replaceWith.get(this.random.nextInt(replaceWith.size())));
+                        block.setType(replaceWith.next());
                         break;
                     }
                 }

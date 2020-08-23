@@ -3,7 +3,7 @@ package co.runed.bolster.abilities.conditions;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;

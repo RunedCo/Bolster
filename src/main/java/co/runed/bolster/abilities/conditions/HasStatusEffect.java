@@ -4,7 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.status.StatusEffect;
 import org.bukkit.entity.LivingEntity;
 

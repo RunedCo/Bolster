@@ -5,7 +5,7 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.items.Item;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
 

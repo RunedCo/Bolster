@@ -8,8 +8,8 @@ import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
 import co.runed.bolster.abilities.costs.AbilityCost;
 import co.runed.bolster.abilities.costs.ManaAbilityCost;
-import co.runed.bolster.managers.CooldownManager;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.entity.BolsterLivingEntity;
+import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
@@ -27,7 +27,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private double cooldown = 0;
     private float manaCost = 0;
     private Boolean cancelEventOnCast = false;
-    private LivingEntity caster;
+    private BolsterLivingEntity caster;
     private AbilityProvider abilitySource;
     private AbilityTrigger trigger;
 
@@ -59,12 +59,12 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         this.description = description;
     }
 
-    public LivingEntity getCaster()
+    public BolsterLivingEntity getCaster()
     {
         return this.caster;
     }
 
-    public void setCaster(LivingEntity caster)
+    public void setCaster(BolsterLivingEntity caster)
     {
         this.caster = caster;
     }
@@ -133,6 +133,12 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     }
 
     @Override
+    public void setOnCooldown(boolean onCooldown)
+    {
+        Bolster.getCooldownManager().setCooldown(this.getCaster(), this, this.getCooldown());
+    }
+
+    @Override
     public boolean isOnCooldown()
     {
         return this.getRemainingCooldown() > 0;
@@ -194,17 +200,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         {
             this.onActivate(properties);
 
-            Bolster.getCooldownManager().setCooldown(this.getCaster(), this, this.getCooldown());
-
-            if (properties.get(AbilityProperties.EVENT) != null)
-            {
-                Event event = properties.get(AbilityProperties.EVENT);
-
-                if (event instanceof Cancellable && this.shouldCancelEvent())
-                {
-                    ((Cancellable) event).setCancelled(true);
-                }
-            }
+            this.onPostActivate(properties);
 
             return true;
         }
@@ -213,6 +209,21 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     }
 
     public abstract void onActivate(Properties properties);
+
+    public void onPostActivate(Properties properties)
+    {
+        this.setOnCooldown(true);
+
+        if (properties.get(AbilityProperties.EVENT) != null)
+        {
+            Event event = properties.get(AbilityProperties.EVENT);
+
+            if (event instanceof Cancellable && this.shouldCancelEvent())
+            {
+                ((Cancellable) event).setCancelled(true);
+            }
+        }
+    }
 
     public void destroy()
     {

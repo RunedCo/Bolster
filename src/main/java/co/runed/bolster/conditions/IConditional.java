@@ -4,12 +4,7 @@ public interface IConditional
 {
     default void addCondition(Condition condition)
     {
-        this.addCondition(condition, true);
-    }
-
-    default void addCondition(Condition condition, boolean result)
-    {
-        this.addCondition(condition, result, ConditionPriority.NORMAL);
+        this.addCondition(condition, ConditionPriority.NORMAL);
     }
 
     default void addCondition(Condition condition, ConditionPriority priority)

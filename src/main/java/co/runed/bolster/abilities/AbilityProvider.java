@@ -2,6 +2,7 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.ArrayList;
@@ -11,11 +12,12 @@ import java.util.Collection;
  * Class that handles common functionality for prociding abilities
  * Used by {@link BolsterClass} and {@link co.runed.bolster.items.Item}
  */
-public abstract class AbilityProvider
+public abstract class AbilityProvider implements IRegisterable
 {
     private final Collection<AbilityData> abilities = new ArrayList<>();
     private LivingEntity owner;
 
+    @Override
     public abstract String getId();
 
     public abstract void onCastAbility(Ability ability, Boolean success);

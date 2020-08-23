@@ -7,7 +7,8 @@ import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.listeners.*;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.util.Manager;
+import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -16,19 +17,20 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
-// TODO: MOVE PASSIVE TICK TO MANAGER AND REMOVE PASSIVE CLASS
-
-public class AbilityManager
+public class AbilityManager extends Manager
 {
     Map<UUID, List<AbilityData>> abilities = new HashMap<>();
 
     public AbilityManager(Plugin plugin)
     {
+        super(plugin);
+        
         Bukkit.getPluginManager().registerEvents(new EntityDamageListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityKillListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityPickupItemListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityShootBowListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntitySpawnListener(), plugin);
+
         Bukkit.getPluginManager().registerEvents(new PlayerBreakBlockListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerDropItemListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerEatListener(), plugin);
@@ -37,6 +39,9 @@ public class AbilityManager
         Bukkit.getPluginManager().registerEvents(new PlayerOffhandListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerSneakListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerThrowEggListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new PlayerInteractAtEntityListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new PlayerSelectListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new PlayerPortalListener(), plugin);
     }
 
     public Ability add(LivingEntity entity, AbilityTrigger trigger, Ability ability)
@@ -141,7 +146,7 @@ public class AbilityManager
 
         List<Ability> abilities = new ArrayList<>(this.getAbilities(entity, trigger));
 
-        properties.set(AbilityProperties.CASTER, entity);
+        properties.set(AbilityProperties.CASTER, EntityManager.from(entity));
 
         for (Ability ability : abilities)
         {

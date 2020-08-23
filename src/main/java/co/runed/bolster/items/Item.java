@@ -5,7 +5,8 @@ import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.conditions.ItemEquippedCondition;
-import co.runed.bolster.registries.IRegisterable;
+import co.runed.bolster.abilities.conditions.ItemStackIsItemCondition;
+import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import org.bukkit.ChatColor;
@@ -131,7 +132,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         this.categories.add(category);
     }
 
-    public void addAbility(AbilityTrigger trigger, Ability ability, Boolean showCooldown)
+    public void addAbility(AbilityTrigger trigger, Ability ability, boolean showCooldown)
     {
         this.abilityCooldowns.put(ability, showCooldown);
 
@@ -141,7 +142,14 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     @Override
     public void addAbility(AbilityTrigger trigger, Ability ability)
     {
-        ability.addCondition(new ItemEquippedCondition(EnumSet.allOf(EquipmentSlot.class), this.getClass()));
+        if (trigger == AbilityTrigger.ON_SELECT_ITEM || trigger == AbilityTrigger.ON_DESELECT_ITEM)
+        {
+            ability.addCondition(new ItemStackIsItemCondition(this.getClass()));
+        }
+        else
+        {
+            ability.addCondition(new ItemEquippedCondition(EnumSet.allOf(EquipmentSlot.class), this.getClass()));
+        }
 
         super.addAbility(trigger, ability);
     }

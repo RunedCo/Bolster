@@ -6,7 +6,7 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.conditions.IsEntityTypeCondition;
 import co.runed.bolster.abilities.costs.ItemAbilityCost;
 import co.runed.bolster.items.Item;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 

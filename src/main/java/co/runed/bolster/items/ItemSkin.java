@@ -1,6 +1,6 @@
 package co.runed.bolster.items;
 
-import co.runed.bolster.registries.IRegisterable;
+import co.runed.bolster.util.registries.IRegisterable;
 
 public class ItemSkin implements IRegisterable
 {

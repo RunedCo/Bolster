@@ -3,9 +3,8 @@ package co.runed.bolster.abilities.conditions;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
 
 public class LightLevelCondition extends Condition
 {
@@ -21,9 +20,8 @@ public class LightLevelCondition extends Condition
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        LivingEntity caster = properties.get(AbilityProperties.CASTER);
-
-        return lightLevel(caster.getLocation());
+        Location location = (Location)properties.get(AbilityProperties.TARGET_LOCATION).getTarget(properties);
+        return lightLevel(location);
     }
 
     @Override

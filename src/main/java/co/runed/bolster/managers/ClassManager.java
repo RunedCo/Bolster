@@ -1,6 +1,7 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.util.Manager;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
@@ -8,13 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ClassManager
+public class ClassManager extends Manager
 {
-    private Map<UUID, BolsterClass> bolsterClasses = new HashMap<>();
+    private final Map<UUID, BolsterClass> bolsterClasses = new HashMap<>();
 
     public ClassManager(Plugin plugin)
     {
-
+        super(plugin);
     }
 
     /**
@@ -38,7 +39,7 @@ public class ClassManager
     }
 
     /**
-     * Gets and entity's {@link BolsterClass}
+     * Gets an entity's {@link BolsterClass}
      *
      * @param entity the entity
      * @return the class

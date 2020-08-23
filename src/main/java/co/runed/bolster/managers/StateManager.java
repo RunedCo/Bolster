@@ -1,8 +1,8 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.state.ScheduledStateSeries;
-import co.runed.bolster.state.State;
-import co.runed.bolster.state.StateSeries;
+import co.runed.bolster.util.state.ScheduledStateSeries;
+import co.runed.bolster.util.state.State;
+import co.runed.bolster.util.state.StateSeries;
 import org.bukkit.plugin.Plugin;
 
 public class StateManager

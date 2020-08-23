@@ -2,7 +2,7 @@ package co.runed.bolster.abilities.core;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.util.properties.Properties;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.Disguise;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;

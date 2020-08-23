@@ -1,6 +1,6 @@
 package co.runed.bolster.conditions;
 
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.util.properties.Properties;
 
 public abstract class Condition
 {

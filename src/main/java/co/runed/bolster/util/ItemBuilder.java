@@ -2,6 +2,8 @@ package co.runed.bolster.util;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -106,6 +108,14 @@ public class ItemBuilder
     {
         ItemMeta meta = this.itemStack.getItemMeta();
         meta.addEnchant(ench, level, true);
+        this.itemStack.setItemMeta(meta);
+        return new ItemBuilder(this.itemStack);
+    }
+
+    public ItemBuilder addAttributeModifier(Attribute attribute, AttributeModifier modifier)
+    {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        meta.addAttributeModifier(attribute, modifier);
         this.itemStack.setItemMeta(meta);
         return new ItemBuilder(this.itemStack);
     }

@@ -1,6 +1,6 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.entity.BolsterLivingEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,18 +14,18 @@ import java.util.*;
 
 public class PlayerManager implements Listener
 {
-    Map<UUID, BolsterEntity> players = new HashMap<>();
+    Map<UUID, BolsterLivingEntity> players = new HashMap<>();
 
     public PlayerManager(Plugin plugin)
     {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    public BolsterEntity getPlayerByName(String name)
+    public BolsterLivingEntity getPlayerByName(String name)
     {
         Player player = Bukkit.getPlayer(name);
 
-        for (BolsterEntity p : this.players.values())
+        for (BolsterLivingEntity p : this.players.values())
         {
             if (p.getBukkitInstance().equals(player)) return p;
         }
@@ -33,7 +33,7 @@ public class PlayerManager implements Listener
         return null;
     }
 
-    public BolsterEntity getPlayerByUUID(UUID uuid)
+    public BolsterLivingEntity getPlayerByUUID(UUID uuid)
     {
         if (this.players.containsKey(uuid))
         {
@@ -43,16 +43,16 @@ public class PlayerManager implements Listener
         return null;
     }
 
-    public Collection<BolsterEntity> getAllPlayers()
+    public Collection<BolsterLivingEntity> getAllPlayers()
     {
         return this.players.values();
     }
 
-    public Collection<BolsterEntity> getOnlinePlayers()
+    public Collection<BolsterLivingEntity> getOnlinePlayers()
     {
-        Collection<BolsterEntity> players = new ArrayList<>();
+        Collection<BolsterLivingEntity> players = new ArrayList<>();
 
-        for (BolsterEntity player : this.getAllPlayers())
+        for (BolsterLivingEntity player : this.getAllPlayers())
         {
             if (player.isOnline())
             {

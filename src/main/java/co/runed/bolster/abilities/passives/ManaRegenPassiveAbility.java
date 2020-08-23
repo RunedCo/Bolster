@@ -3,7 +3,7 @@ package co.runed.bolster.abilities.passives;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.util.properties.Properties;
 
 public class ManaRegenPassiveAbility extends Ability
 {

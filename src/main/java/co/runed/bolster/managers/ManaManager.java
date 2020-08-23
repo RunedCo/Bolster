@@ -1,7 +1,7 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.properties.GameProperties;
+import co.runed.bolster.util.properties.GameProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;

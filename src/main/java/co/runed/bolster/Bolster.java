@@ -1,5 +1,6 @@
 package co.runed.bolster;
 
+import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.commands.CommandItems;
 import co.runed.bolster.commands.CommandLightLevel;
 import co.runed.bolster.commands.CommandMana;
@@ -7,9 +8,10 @@ import co.runed.bolster.commands.CommandModelData;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
 import co.runed.bolster.managers.*;
-import co.runed.bolster.properties.GameProperties;
-import co.runed.bolster.properties.Properties;
-import co.runed.bolster.registries.Registry;
+import co.runed.bolster.particles.ParticleSet;
+import co.runed.bolster.util.properties.GameProperties;
+import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.util.registries.Registry;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
@@ -21,7 +23,9 @@ public class Bolster extends JavaPlugin
 
     // GLOBAL REGISTRIES FOR SERIALIZATION
     private Registry<Item> itemRegistry;
+    private Registry<BolsterClass> classRegistry;
     private Registry<ItemSkin> itemSkinRegistry;
+    private Registry<ParticleSet> particleSetRegistry;
 
     private CommandManager commandManager;
     private CooldownManager cooldownManager;
@@ -31,6 +35,8 @@ public class Bolster extends JavaPlugin
     private SidebarManager sidebarManager;
     private ClassManager classManager;
     private StatusEffectManager statusEffectManager;
+
+    private EntityManager entityManager;
 
     private Properties gameProperties;
 
@@ -47,7 +53,11 @@ public class Bolster extends JavaPlugin
 
         // CREATE REGISTRIES
         this.itemRegistry = new Registry<>(this);
+        this.classRegistry = new Registry<>(this);
         this.itemSkinRegistry = new Registry<>(this);
+        this.particleSetRegistry = new Registry<>(this);
+
+        this.particleSetRegistry.register("bruce_test", ParticleSet::new);
 
         // CREATE MANAGERS
         this.commandManager = new CommandManager();
@@ -58,6 +68,7 @@ public class Bolster extends JavaPlugin
         this.classManager = new ClassManager(this);
         this.manaManager = new ManaManager(this);
         this.statusEffectManager = new StatusEffectManager(this);
+        this.entityManager = new EntityManager();
 
         // CREATE GAME PROPERTIES
         this.gameProperties = new GameProperties(this);
@@ -97,9 +108,19 @@ public class Bolster extends JavaPlugin
         return Bolster.getInstance().itemRegistry;
     }
 
+    public static Registry<BolsterClass> getClassRegistry()
+    {
+        return Bolster.getInstance().classRegistry;
+    }
+
     public static Registry<ItemSkin> getItemSkinRegistry()
     {
         return Bolster.getInstance().itemSkinRegistry;
+    }
+
+    public static Registry<ParticleSet> getParticleSetRegistry()
+    {
+        return Bolster.getInstance().particleSetRegistry;
     }
 
     public static CooldownManager getCooldownManager()
@@ -140,6 +161,11 @@ public class Bolster extends JavaPlugin
     public static StatusEffectManager getStatusEffectManager()
     {
         return Bolster.getInstance().statusEffectManager;
+    }
+
+    public static EntityManager getEntityManager()
+    {
+        return Bolster.getInstance().entityManager;
     }
 
     public static Properties getGameProperties()

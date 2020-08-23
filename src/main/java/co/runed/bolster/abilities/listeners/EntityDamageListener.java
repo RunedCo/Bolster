@@ -3,7 +3,8 @@ package co.runed.bolster.abilities.listeners;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.entity.BolsterLivingEntity;
+import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,14 +26,14 @@ public class EntityDamageListener implements Listener
     {
         if (!(event.getDamager() instanceof LivingEntity)) return;
 
-        LivingEntity entity = (LivingEntity) event.getDamager();
+        LivingEntity entity = Bolster.getEntityManager().from((LivingEntity) event.getDamager());
         EntityEquipment inv = entity.getEquipment();
         ItemStack stack = inv.getItemInMainHand();
 
         Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, entity);
+        properties.set(AbilityProperties.CASTER, BolsterLivingEntity.from(entity));
         properties.set(AbilityProperties.WORLD, entity.getWorld());
-        properties.set(AbilityProperties.TARGETS, new ArrayList<>(Collections.singletonList((LivingEntity) event.getEntity())));
+        properties.set(AbilityProperties.TARGETS, new ArrayList<>(Collections.singletonList(Bolster.getEntityManager().from((LivingEntity) event.getEntity()))));
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.DAMAGE, event.getFinalDamage());
@@ -45,17 +46,22 @@ public class EntityDamageListener implements Listener
     {
         if (!(event.getEntity() instanceof LivingEntity)) return;
 
-        LivingEntity entity = (LivingEntity) event.getEntity();
+        LivingEntity entity = Bolster.getEntityManager().from((LivingEntity) event.getEntity());
         EntityEquipment inv = entity.getEquipment();
         ItemStack stack = inv.getItemInMainHand();
         double damage = event.getFinalDamage();
 
         Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, entity);
+        properties.set(AbilityProperties.CASTER, BolsterLivingEntity.from(entity));
         properties.set(AbilityProperties.WORLD, entity.getWorld());
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.DAMAGE, damage);
+
+        if (event instanceof EntityDamageByEntityEvent)
+        {
+            properties.set(AbilityProperties.DAMAGER, ((EntityDamageByEntityEvent) event).getDamager());
+        }
 
         if (entity.getHealth() - damage <= 0)
         {

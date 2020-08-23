@@ -3,7 +3,8 @@ package co.runed.bolster.abilities.listeners;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.properties.Properties;
+import co.runed.bolster.entity.BolsterLivingEntity;
+import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,7 +23,7 @@ public class PlayerBreakBlockListener implements Listener
         ItemStack stack = player.getInventory().getItemInMainHand();
 
         Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, player);
+        properties.set(AbilityProperties.CASTER, BolsterLivingEntity.from(player));
         properties.set(AbilityProperties.WORLD, player.getWorld());
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.BLOCK, event.getBlock());
