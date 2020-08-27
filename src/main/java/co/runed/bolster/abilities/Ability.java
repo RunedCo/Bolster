@@ -9,6 +9,8 @@ import co.runed.bolster.abilities.conditions.HasManaCondition;
 import co.runed.bolster.abilities.costs.AbilityCost;
 import co.runed.bolster.abilities.costs.ManaAbilityCost;
 import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.util.target.ITargeted;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
@@ -39,7 +41,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
 
         this.addCost(new ManaAbilityCost(this.getManaCost()));
 
-        this.addCondition(new OffCooldownCondition(), ConditionPriority.LOWEST);
+        this.addCondition(new OffCooldownCondition(Target.CASTER), ConditionPriority.LOWEST);
         this.addCondition(new HasManaCondition(), ConditionPriority.LOWEST);
     }
 

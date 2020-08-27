@@ -1,14 +1,10 @@
 package co.runed.bolster.util;
 
 import co.runed.bolster.Bolster;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.KeybindComponent;
-import net.md_5.bungee.api.chat.Keybinds;
-import net.minecraft.server.v1_16_R1.*;
+import net.minecraft.server.v1_16_R2.*;
 import org.bukkit.World;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -111,21 +107,8 @@ public class PlayerUtil
      */
     public static void showScreenShake(Player player)
     {
-        Location loc = player.getLocation();
-        float playerYaw = loc.getYaw();
-        float playerPitch = loc.getPitch();
-
-        float yaw = playerYaw - 1f;
-        float pitch = playerPitch - 1f;
-
-        //PacketPlayOutAnimation packet = new PacketPlayOutAnimation(((CraftPlayer)player).getHandle(), 1);
-        //((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
-
         PacketPlayOutAnimation packet = new PacketPlayOutAnimation(((CraftPlayer) player).getHandle(), 3);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-
-        //PacketPlayOutPosition packet = new PacketPlayOutPosition(0.0, 0.0, 0.0, yaw, pitch, teleportFlags, 0);
-        //((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
     public static void swingArm(Player player)
@@ -155,13 +138,13 @@ public class PlayerUtil
         float pitch = player.getEyeLocation().getPitch();
         float yaw = player.getEyeLocation().getYaw();
 
-        float f = 0.3F;
         float f1 = MathHelper.sin(pitch * 0.017453292F);
         float f2 = MathHelper.cos(pitch * 0.017453292F);
         float f3 = MathHelper.sin(yaw * 0.017453292F);
         float f4 = MathHelper.cos(yaw * 0.017453292F);
         float f5 = random.nextFloat() * 6.2831855F;
         float f6 = 0.02F * random.nextFloat();
+
         item.setVelocity(new Vector((double) (-f3 * f2 * 0.3F) + Math.cos(f5) * (double) f6,
                 (-f1 * 0.3F + 0.1F + (random.nextFloat() - random.nextFloat()) * 0.1F),
                 (double) (f4 * f2 * 0.3F) + Math.sin(f5) * (double) f6));

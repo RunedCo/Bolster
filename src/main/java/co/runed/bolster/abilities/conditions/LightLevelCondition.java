@@ -3,16 +3,20 @@ package co.runed.bolster.abilities.conditions;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
+import co.runed.bolster.conditions.TargetedCondition;
 import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.Location;
 
-public class LightLevelCondition extends Condition
+public class LightLevelCondition extends TargetedCondition<Location>
 {
     int level;
     Operator operator;
 
-    public LightLevelCondition(int level, Operator operator)
+    public LightLevelCondition(Target<Location> target, int level, Operator operator)
     {
+        super(target);
+
         this.level = level;
         this.operator = operator;
     }
@@ -20,7 +24,7 @@ public class LightLevelCondition extends Condition
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        Location location = (Location)properties.get(AbilityProperties.TARGET_LOCATION).getTarget(properties);
+        Location location = this.getTarget(conditional).get(properties);
         return lightLevel(location);
     }
 

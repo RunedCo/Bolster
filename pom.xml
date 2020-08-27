@@ -28,6 +28,11 @@
             <id>minecraft-repo</id>
             <url>https://libraries.minecraft.net/</url>
         </repository>
+
+        <repository>
+            <id>commandapi</id>
+            <url>https://raw.githubusercontent.com/JorelAli/CommandAPI/mvn-repo/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -62,7 +67,7 @@
         <dependency>
             <groupId>LibsDisguises</groupId>
             <artifactId>LibsDisguises</artifactId>
-            <version>10.0.15-SNAPSHOT</version>
+            <version>10.0.16-SNAPSHOT</version>
         </dependency>
 
         <dependency>

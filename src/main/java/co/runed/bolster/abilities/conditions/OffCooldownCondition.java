@@ -5,17 +5,24 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
+import co.runed.bolster.conditions.TargetedCondition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.PlayerUtil;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 
-public class OffCooldownCondition extends Condition
+public class OffCooldownCondition extends TargetedCondition<LivingEntity>
 {
     private static final DecimalFormat decimalFormatter = new DecimalFormat("#.#");
+
+    public OffCooldownCondition(Target<LivingEntity> target)
+    {
+        super(target);
+    }
 
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
@@ -35,7 +42,7 @@ public class OffCooldownCondition extends Condition
         if (conditional instanceof Ability && ((Ability) conditional).getTrigger() == AbilityTrigger.TICK) return;
         if (!(conditional instanceof Ability)) return;
 
-        LivingEntity entity = properties.get(AbilityProperties.CASTER);
+        LivingEntity entity = this.getTarget(conditional).get(properties);
 
         if (entity.getType() == EntityType.PLAYER)
         {

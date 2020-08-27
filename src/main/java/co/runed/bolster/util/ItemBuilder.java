@@ -83,15 +83,7 @@ public class ItemBuilder
     public ItemBuilder setUnbreakable(boolean unbreakable)
     {
         ItemMeta meta = this.itemStack.getItemMeta();
-        if (unbreakable)
-        {
-            meta.setUnbreakable(true);
-        }
-        else
-        {
-            meta.setUnbreakable(false);
-        }
-
+        meta.setUnbreakable(unbreakable);
         this.itemStack.setItemMeta(meta);
         return new ItemBuilder(this.itemStack);
     }

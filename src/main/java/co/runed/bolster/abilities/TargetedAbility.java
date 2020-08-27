@@ -5,16 +5,11 @@ import co.runed.bolster.util.target.Target;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Location;
 
-public abstract class TargetedAbility extends Ability implements ITargeted<Location>
+public abstract class TargetedAbility<T> extends Ability implements ITargeted<T>
 {
-    Target<Location> target;
+    Target<T> target;
 
-    public TargetedAbility()
-    {
-        this(Target.CASTER_LOCATION);
-    }
-
-    public TargetedAbility(Target<Location> target)
+    public TargetedAbility(Target<T> target)
     {
         super();
 
@@ -22,22 +17,15 @@ public abstract class TargetedAbility extends Ability implements ITargeted<Locat
     }
 
     @Override
-    public Target<Location> getTarget()
+    public Target<T> getTarget()
     {
         return this.target;
     }
 
     @Override
-    public void setTarget(Target<Location> target)
+    public void setTarget(Target<T> target)
     {
         this.target = target;
     }
 
-    @Override
-    public boolean canActivate(Properties properties)
-    {
-        properties.set(AbilityProperties.TARGET_LOCATION, this.target);
-
-        return super.canActivate(properties);
-    }
 }

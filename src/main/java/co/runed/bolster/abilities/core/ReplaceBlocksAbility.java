@@ -5,6 +5,7 @@ import co.runed.bolster.abilities.TargetedAbility;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.RandomCollection;
 import co.runed.bolster.util.WorldUtil;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,7 +13,7 @@ import org.bukkit.entity.LivingEntity;
 
 import java.util.Collection;
 
-public class ReplaceBlocksAbility extends TargetedAbility
+public class ReplaceBlocksAbility extends TargetedAbility<Location>
 {
     Collection<Material> materialsToReplace;
     RandomCollection<Material> replaceWith;
@@ -23,9 +24,9 @@ public class ReplaceBlocksAbility extends TargetedAbility
     int radiusDown;
     int radiusHorizontal;
 
-    public ReplaceBlocksAbility(Collection<Material> materialsToReplace, RandomCollection<Material> replaceWith, int yOffset, int range, int radiusUp, int radiusDown, int radiusHorizontal)
+    public ReplaceBlocksAbility(Target<Location> target, Collection<Material> materialsToReplace, RandomCollection<Material> replaceWith, int yOffset, int range, int radiusUp, int radiusDown, int radiusHorizontal)
     {
-        super();
+        super(target);
 
         this.materialsToReplace = materialsToReplace;
         this.replaceWith = replaceWith;
@@ -42,7 +43,7 @@ public class ReplaceBlocksAbility extends TargetedAbility
     public void onActivate(Properties properties)
     {
         LivingEntity caster = properties.get(AbilityProperties.CASTER);
-        Location target = properties.get(AbilityProperties.TARGET_LOCATION).getTarget(properties); WorldUtil.getTargetBlock(caster, range).getLocation();
+        Location target = this.getTarget().get(properties);
 
         int u = radiusUp;
         int d = radiusDown;
