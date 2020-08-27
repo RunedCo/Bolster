@@ -1,7 +1,6 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.entity.BolsterLivingEntity;
 import co.runed.bolster.util.target.Target;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Property;

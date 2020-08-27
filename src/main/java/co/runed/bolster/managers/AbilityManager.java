@@ -146,7 +146,8 @@ public class AbilityManager extends Manager
 
         List<Ability> abilities = new ArrayList<>(this.getAbilities(entity, trigger));
 
-        properties.set(AbilityProperties.CASTER, EntityManager.from(entity));
+        properties.set(AbilityProperties.CASTER, entity);
+        properties.set(AbilityProperties.WORLD, entity.getWorld());
 
         for (Ability ability : abilities)
         {

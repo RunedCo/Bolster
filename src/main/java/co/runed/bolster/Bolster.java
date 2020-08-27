@@ -36,8 +36,6 @@ public class Bolster extends JavaPlugin
     private ClassManager classManager;
     private StatusEffectManager statusEffectManager;
 
-    private EntityManager entityManager;
-
     private Properties gameProperties;
 
     @Override
@@ -68,7 +66,6 @@ public class Bolster extends JavaPlugin
         this.classManager = new ClassManager(this);
         this.manaManager = new ManaManager(this);
         this.statusEffectManager = new StatusEffectManager(this);
-        this.entityManager = new EntityManager();
 
         // CREATE GAME PROPERTIES
         this.gameProperties = new GameProperties(this);
@@ -161,11 +158,6 @@ public class Bolster extends JavaPlugin
     public static StatusEffectManager getStatusEffectManager()
     {
         return Bolster.getInstance().statusEffectManager;
-    }
-
-    public static EntityManager getEntityManager()
-    {
-        return Bolster.getInstance().entityManager;
     }
 
     public static Properties getGameProperties()

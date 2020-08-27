@@ -23,8 +23,6 @@ public class EntityPickupItemListener implements Listener
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.EVENT, event);
-        properties.set(AbilityProperties.CASTER, entity);
-        properties.set(AbilityProperties.WORLD, entity.getWorld());
         properties.set(AbilityProperties.ITEM_STACK, stack);
 
         Bolster.getAbilityManager().trigger(entity, AbilityTrigger.ON_PICKUP_ITEM, properties);

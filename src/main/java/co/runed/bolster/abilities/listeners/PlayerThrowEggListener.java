@@ -3,7 +3,6 @@ package co.runed.bolster.abilities.listeners;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.entity.BolsterLivingEntity;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -23,8 +22,6 @@ public class PlayerThrowEggListener implements Listener
         ItemStack stack = event.getEgg().getItem();
 
         Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, BolsterLivingEntity.from(entity));
-        properties.set(AbilityProperties.WORLD, entity.getWorld());
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.FORCE, 1.0f);
         properties.set(AbilityProperties.VELOCITY, event.getEgg().getVelocity());

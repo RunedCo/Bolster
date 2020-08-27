@@ -8,7 +8,6 @@ import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
 import co.runed.bolster.abilities.costs.AbilityCost;
 import co.runed.bolster.abilities.costs.ManaAbilityCost;
-import co.runed.bolster.entity.BolsterLivingEntity;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
@@ -27,7 +26,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private double cooldown = 0;
     private float manaCost = 0;
     private Boolean cancelEventOnCast = false;
-    private BolsterLivingEntity caster;
+    private LivingEntity caster;
     private AbilityProvider abilitySource;
     private AbilityTrigger trigger;
 
@@ -59,12 +58,12 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         this.description = description;
     }
 
-    public BolsterLivingEntity getCaster()
+    public LivingEntity getCaster()
     {
         return this.caster;
     }
 
-    public void setCaster(BolsterLivingEntity caster)
+    public void setCaster(LivingEntity caster)
     {
         this.caster = caster;
     }

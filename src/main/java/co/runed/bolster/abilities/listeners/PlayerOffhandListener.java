@@ -3,7 +3,6 @@ package co.runed.bolster.abilities.listeners;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.entity.BolsterLivingEntity;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,8 +22,6 @@ public class PlayerOffhandListener implements Listener
         ItemStack stack = event.getOffHandItem();
 
         Properties properties = new Properties();
-        properties.set(AbilityProperties.CASTER, BolsterLivingEntity.from(player));
-        properties.set(AbilityProperties.WORLD, player.getWorld());
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.ITEM_STACK, stack);
 
