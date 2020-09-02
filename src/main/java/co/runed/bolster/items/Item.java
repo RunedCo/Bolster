@@ -9,6 +9,7 @@ import co.runed.bolster.abilities.conditions.ItemStackIsItemCondition;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -148,7 +149,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         }
         else
         {
-            ability.addCondition(new ItemEquippedCondition(EnumSet.allOf(EquipmentSlot.class), this.getClass()));
+            ability.addCondition(new ItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()));
         }
 
         super.addAbility(trigger, ability);

@@ -33,6 +33,11 @@
             <id>commandapi</id>
             <url>https://raw.githubusercontent.com/JorelAli/CommandAPI/mvn-repo/</url>
         </repository>
+
+        <repository>
+            <id>elMakers</id>
+            <url>http://maven.elmakers.com/repository/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -83,6 +88,13 @@
             <version>4.0</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>de.slikey</groupId>
+            <artifactId>EffectLib</artifactId>
+            <version>6.3</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -111,8 +123,15 @@
                             <artifactSet>
                                 <includes>
                                     <include>org.ipvp:canvas</include>
+                                    <include>de.slikey:EffectLib</include>
                                 </includes>
                             </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>de.slikey</pattern>
+                                    <shadedPattern>co.runed.api.slikey</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>

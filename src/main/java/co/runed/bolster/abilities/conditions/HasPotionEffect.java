@@ -22,7 +22,7 @@ public class HasPotionEffect extends TargetedCondition<LivingEntity>
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        return this.getTarget(conditional).get(properties).hasPotionEffect(potionEffect);
+        return this.getTarget().get(properties).hasPotionEffect(potionEffect);
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.util.BoundingBox;
 
 import java.util.*;
 
@@ -36,5 +37,34 @@ public class WorldUtil
         entities.removeIf(entity -> entity.getLocation().distanceSquared(location) > radius * radius);
 
         return entities;
+    }
+
+    public static BoundingBox radiusBoundingBox(Location location, double radius)
+    {
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+
+        return new BoundingBox(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius);
+    }
+
+    public static List<Block> getBlocksRadius(Location position, int radiusUp, int radiusDown, int radiusHorizontal)
+    {
+        List<Block> blocks = new ArrayList<>();
+
+        for (int y = position.getBlockY() - radiusDown; y <= position.getBlockY() + radiusUp; y++)
+        {
+            for (int x = position.getBlockX() - radiusHorizontal; x <= position.getBlockX() + radiusHorizontal; x++)
+            {
+                for (int z = position.getBlockZ() - radiusHorizontal; z <= position.getBlockZ() + radiusHorizontal; z++)
+                {
+                    Block block = position.getWorld().getBlockAt(x, y, z);
+
+                    blocks.add(block);
+                }
+            }
+        }
+
+        return blocks;
     }
 }

@@ -5,7 +5,7 @@ import co.runed.bolster.util.target.Target;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
-public abstract class TargetedCondition<T> extends Condition
+public abstract class TargetedCondition<T> extends Condition implements ITargeted<T>
 {
     Target<T> target;
 
@@ -14,16 +14,15 @@ public abstract class TargetedCondition<T> extends Condition
         this.target = target;
     }
 
-    public Target<T> getTarget(IConditional conditional)
+    @Override
+    public Target<T> getTarget()
     {
-        try
-        {
-            Target target = ((ITargeted) conditional).getTarget();
-            return (Target<T>)target;
-        }
-        catch (Exception e)
-        {
-            return this.target;
-        }
+        return this.target;
+    }
+
+    @Override
+    public void setTarget(Target<T> target)
+    {
+        this.target = target;
     }
 }

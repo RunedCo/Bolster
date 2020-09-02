@@ -42,7 +42,7 @@ public class OffCooldownCondition extends TargetedCondition<LivingEntity>
         if (conditional instanceof Ability && ((Ability) conditional).getTrigger() == AbilityTrigger.TICK) return;
         if (!(conditional instanceof Ability)) return;
 
-        LivingEntity entity = this.getTarget(conditional).get(properties);
+        LivingEntity entity = this.getTarget().get(properties);
 
         if (entity.getType() == EntityType.PLAYER)
         {

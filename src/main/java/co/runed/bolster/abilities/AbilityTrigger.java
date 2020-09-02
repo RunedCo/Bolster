@@ -29,12 +29,15 @@ public class AbilityTrigger
     public static final AbilityTrigger ON_DAMAGE_ENTITY = new AbilityTrigger("on_damage_entity", "Passive");
     public static final AbilityTrigger ON_DEATH = new AbilityTrigger("on_death", "Passive");
     public static final AbilityTrigger ON_KILL_ENTITY = new AbilityTrigger("on_kill_entity", "Passive");
-    public static final AbilityTrigger ON_SELECT_ITEM = new AbilityTrigger("on_select_item", "Passive"); // TODO
-    public static final AbilityTrigger ON_DESELECT_ITEM = new AbilityTrigger("on_deselect_item", "Passive"); // TODO
+    public static final AbilityTrigger ON_SELECT_ITEM = new AbilityTrigger("on_select_item", "Passive");
+    public static final AbilityTrigger ON_DESELECT_ITEM = new AbilityTrigger("on_deselect_item", "Passive");
     public static final AbilityTrigger ON_INTERACT_ENTITY = new AbilityTrigger("on_interact_entity", "Passive");
     public static final AbilityTrigger ON_INTERACTED_WITH = new AbilityTrigger("on_interacted_with", "Passive");
     public static final AbilityTrigger ON_SPAWN = new AbilityTrigger("on_spawn", "Passive");
     public static final AbilityTrigger ON_ENTER_PORTAL = new AbilityTrigger("on_enter_portal", "Passive");
+
+    // TRIGGERED WHEN YOU BECOME THIS CLASS
+    public static final AbilityTrigger BECOME = new AbilityTrigger("become", "Passive");
 
     // PASSIVE ACTIONS
     public static final AbilityTrigger TICK = new AbilityTrigger("tick", "Passive");

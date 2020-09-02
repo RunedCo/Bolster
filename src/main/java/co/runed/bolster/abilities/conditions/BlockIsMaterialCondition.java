@@ -1,32 +1,34 @@
 package co.runed.bolster.abilities.conditions;
 
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
+import co.runed.bolster.conditions.TargetedCondition;
 import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
-public class BlockIsMaterialCondition extends Condition
+public class BlockIsMaterialCondition extends TargetedCondition<Block>
 {
     Collection<Material> materials = new ArrayList<>();
 
     public BlockIsMaterialCondition(Material material)
     {
-        materials.add(material);
+        this(Collections.singletonList(material));
     }
 
     public BlockIsMaterialCondition(Tag<Material> tag)
     {
-        this.materials.addAll(tag.getValues());
+        this(tag.getValues());
     }
 
     public BlockIsMaterialCondition(Collection<Material> materials)
     {
+        super(Target.BLOCK);
+
         this.materials.addAll(materials);
     }
 

@@ -24,7 +24,7 @@ public class LightLevelCondition extends TargetedCondition<Location>
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        Location location = this.getTarget(conditional).get(properties);
+        Location location = this.getTarget().get(properties);
         return lightLevel(location);
     }
 

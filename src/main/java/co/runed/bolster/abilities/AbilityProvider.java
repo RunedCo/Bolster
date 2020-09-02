@@ -1,12 +1,16 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.abilities.core.LambdaAbility;
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 /**
  * Class that handles common functionality for prociding abilities
@@ -40,11 +44,18 @@ public abstract class AbilityProvider implements IRegisterable
             ability.setCaster(owner);
             Bolster.getAbilityManager().add(owner, abilityData.trigger, ability);
         }
+
+        Bolster.getAbilityManager().trigger(owner, this, AbilityTrigger.BECOME, new Properties());
+    }
+
+    public void addAbility(AbilityTrigger trigger, BiConsumer<LivingEntity, Properties> lambda)
+    {
+        this.addAbility(trigger, new LambdaAbility(lambda));
     }
 
     public void addAbility(AbilityTrigger trigger, Ability ability)
     {
-        ability.setAbilitySource(this);
+        ability.setAbilityProvider(this);
 
         AbilityData data = new AbilityData(trigger, ability);
 

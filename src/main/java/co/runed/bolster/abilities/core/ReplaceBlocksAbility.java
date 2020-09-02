@@ -42,34 +42,24 @@ public class ReplaceBlocksAbility extends TargetedAbility<Location>
     @Override
     public void onActivate(Properties properties)
     {
-        LivingEntity caster = properties.get(AbilityProperties.CASTER);
         Location target = this.getTarget().get(properties);
+        target.add(0, yOffset, 0);
 
         int u = radiusUp;
         int d = radiusDown;
         int h = radiusHorizontal;
 
-        Block block;
-
-        for (int y = target.getBlockY() - d + yOffset; y <= target.getBlockY() + u + yOffset; y++)
+        for (Block block : WorldUtil.getBlocksRadius(target, radiusUp, radiusDown, radiusHorizontal))
         {
-            for (int x = target.getBlockX() - h; x <= target.getBlockX() + h; x++)
+            for (Material material : this.materialsToReplace)
             {
-                for (int z = target.getBlockZ() - h; z <= target.getBlockZ() + h; z++)
-                {
-                    block = target.getWorld().getBlockAt(x, y, z);
+                // If specific blocks are being replaced, skip if the block isn't replaceable.
+                if (!material.equals(block.getType())) continue;
+                // If all blocks are being replaced, skip if the block is already replaced.
+                if (replaceWith.contains(block.getType())) continue;
 
-                    for (Material material : this.materialsToReplace)
-                    {
-                        // If specific blocks are being replaced, skip if the block isn't replaceable.
-                        if (!material.equals(block.getType())) continue;
-                        // If all blocks are being replaced, skip if the block is already replaced.
-                        if (replaceWith.contains(block.getType())) continue;
-
-                        block.setType(replaceWith.next());
-                        break;
-                    }
-                }
+                block.setType(replaceWith.next());
+                break;
             }
         }
     }

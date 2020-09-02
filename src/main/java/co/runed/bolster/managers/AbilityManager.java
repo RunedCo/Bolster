@@ -3,6 +3,7 @@ package co.runed.bolster.managers;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
+import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.listeners.*;
 import co.runed.bolster.events.EntityCastAbilityEvent;
@@ -30,6 +31,7 @@ public class AbilityManager extends Manager
         Bukkit.getPluginManager().registerEvents(new EntityPickupItemListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityShootBowListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntitySpawnListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new EntityDeathListener(), plugin);
 
         Bukkit.getPluginManager().registerEvents(new PlayerBreakBlockListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerDropItemListener(), plugin);
@@ -139,6 +141,11 @@ public class AbilityManager extends Manager
 
     public void trigger(LivingEntity entity, AbilityTrigger trigger, Properties properties)
     {
+        this.trigger(entity, null, trigger, properties);
+    }
+
+    public void trigger(LivingEntity entity, AbilityProvider provider, AbilityTrigger trigger, Properties properties)
+    {
         EntityPreCastAbilityEvent preCastEvent = new EntityPreCastAbilityEvent(entity, trigger);
         Bukkit.getPluginManager().callEvent(preCastEvent);
 
@@ -152,6 +159,7 @@ public class AbilityManager extends Manager
         for (Ability ability : abilities)
         {
             if (ability == null) continue;
+            if (provider != null && provider != ability.getAbilityProvider()) continue;
 
             EntityCastAbilityEvent castEvent = new EntityCastAbilityEvent(entity, ability, trigger, properties);
 
@@ -161,9 +169,9 @@ public class AbilityManager extends Manager
 
             boolean success = ability.activate(properties);
 
-            if (ability.getAbilitySource() != null)
+            if (provider != null)
             {
-                ability.getAbilitySource().onCastAbility(ability, success);
+                provider.onCastAbility(ability, success);
             }
         }
     }

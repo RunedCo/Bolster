@@ -364,7 +364,7 @@ public class ItemManager implements Listener
     @EventHandler
     private void onCastAbility(EntityCastAbilityEvent event)
     {
-        AbilityProvider abilitySource = event.getAbility().getAbilitySource();
+        AbilityProvider abilitySource = event.getAbility().getAbilityProvider();
 
         if (abilitySource instanceof Item)
         {

@@ -9,7 +9,6 @@ import co.runed.bolster.abilities.conditions.HasManaCondition;
 import co.runed.bolster.abilities.costs.AbilityCost;
 import co.runed.bolster.abilities.costs.ManaAbilityCost;
 import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.util.target.ITargeted;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
@@ -29,7 +28,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private float manaCost = 0;
     private Boolean cancelEventOnCast = false;
     private LivingEntity caster;
-    private AbilityProvider abilitySource;
+    private AbilityProvider abilityProvider;
     private AbilityTrigger trigger;
 
     private final List<Condition.Data> conditions = new ArrayList<>();
@@ -42,12 +41,12 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         this.addCost(new ManaAbilityCost(this.getManaCost()));
 
         this.addCondition(new OffCooldownCondition(Target.CASTER), ConditionPriority.LOWEST);
-        this.addCondition(new HasManaCondition(), ConditionPriority.LOWEST);
+        this.addCondition(new HasManaCondition(Target.CASTER), ConditionPriority.LOWEST);
     }
 
     public String getId()
     {
-        return this.getAbilitySource().getId() + "." + this.id;
+        return this.getAbilityProvider().getId() + "." + this.id;
     }
 
     public String getDescription()
@@ -151,14 +150,14 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         Bolster.getCooldownManager().clearCooldown(this.getCaster(), this);
     }
 
-    public AbilityProvider getAbilitySource()
+    public AbilityProvider getAbilityProvider()
     {
-        return this.abilitySource;
+        return this.abilityProvider;
     }
 
-    public void setAbilitySource(AbilityProvider abilitySource)
+    public void setAbilityProvider(AbilityProvider abilityProvider)
     {
-        this.abilitySource = abilitySource;
+        this.abilityProvider = abilityProvider;
     }
 
     public boolean canActivate(Properties properties)
