@@ -1,5 +1,7 @@
-package co.runed.bolster.util.properties;
+package co.runed.bolster.game;
 
+import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.util.properties.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -51,11 +53,6 @@ public class GameProperties extends Properties implements Listener
 
     private static final Set<Material> SHOVELS = EnumSet.of(Material.STONE_SHOVEL, Material.DIAMOND_SHOVEL, Material.GOLDEN_SHOVEL, Material.IRON_SHOVEL, Material.NETHERITE_SHOVEL, Material.WOODEN_SHOVEL);
     private static final Set<Material> AXES = EnumSet.of(Material.STONE_AXE, Material.DIAMOND_AXE, Material.GOLDEN_AXE, Material.IRON_AXE, Material.NETHERITE_AXE, Material.WOODEN_AXE);
-
-    public GameProperties(Plugin plugin)
-    {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onEntityTakeDamage(EntityDamageEvent event)

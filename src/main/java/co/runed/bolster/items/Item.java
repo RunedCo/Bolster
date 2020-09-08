@@ -6,6 +6,7 @@ import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.conditions.ItemEquippedCondition;
 import co.runed.bolster.abilities.conditions.ItemStackIsItemCondition;
+import co.runed.bolster.util.Category;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
@@ -168,6 +169,12 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         }
     }
 
+    @Override
+    public void onToggleCooldown(Ability ability)
+    {
+
+    }
+
     public ItemStack toItemStack()
     {
         ItemBuilder builder = new ItemBuilder(this.getItemStack())
@@ -190,14 +197,11 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         return builder.build();
     }
 
+    @Override
     public void destroy()
     {
-        for (AbilityData abilityData : this.getAbilities())
-        {
-            Bolster.getAbilityManager().remove(this.getOwner(), abilityData.ability);
-        }
+        super.destroy();
 
-        this.getAbilities().clear();
         this.abilityCooldowns.clear();
     }
 }

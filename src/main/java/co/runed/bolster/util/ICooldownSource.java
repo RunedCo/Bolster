@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities;
+package co.runed.bolster.util;
 
 public interface ICooldownSource
 {

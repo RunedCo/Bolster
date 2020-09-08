@@ -1,8 +1,11 @@
 package co.runed.bolster.items;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.game.BolsterEntity;
+import co.runed.bolster.util.Category;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -28,7 +31,7 @@ public class Hat extends Item
         @Override
         public void onActivate(Properties properties)
         {
-            LivingEntity caster = properties.get(AbilityProperties.CASTER);
+            BolsterEntity caster = properties.get(AbilityProperties.CASTER);
             ItemStack item = properties.get(AbilityProperties.ITEM_STACK);
 
             EntityEquipment equipment = caster.getEquipment();

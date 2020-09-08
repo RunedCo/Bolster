@@ -24,13 +24,11 @@ public abstract class Condition
     public static class Data implements Comparable<Data>
     {
         public Condition condition;
-        public boolean result;
         public ConditionPriority priority;
 
-        public Data(Condition condition, boolean result, ConditionPriority priority)
+        public Data(Condition condition, ConditionPriority priority)
         {
             this.condition = condition;
-            this.result = result;
             this.priority = priority;
         }
 

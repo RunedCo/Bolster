@@ -1,4 +1,4 @@
-package co.runed.bolster.util.state;
+package co.runed.bolster.game.state;
 
 import co.runed.bolster.Bolster;
 
@@ -9,6 +9,7 @@ public class StateSeries extends StateHolder
 {
     protected int current = 0;
     protected boolean skipping = false;
+    protected Class<? extends State> skippingTo = null;
 
     public void addNext(State state)
     {
@@ -28,6 +29,12 @@ public class StateSeries extends StateHolder
     public void skip()
     {
         skipping = true;
+    }
+
+    public void skipTo(Class<? extends State> stateClass)
+    {
+        this.skipping = true;
+        this.skippingTo = stateClass;
     }
 
     public State getCurrent()
@@ -51,28 +58,34 @@ public class StateSeries extends StateHolder
     @Override
     public void onUpdate()
     {
-        this.states.get(current).update();
+        State currentState = this.states.get(current);
 
-        if ((this.states.get(current).isReadyToEnd() && !this.states.get(current).getFrozen()) || skipping)
+        currentState.update();
+
+        if ((currentState.isReadyToEnd() && !currentState.getFrozen()) || skipping)
         {
-            if (skipping)
-            {
-                skipping = false;
-            }
-
-            this.states.get(current).end();
-            Bolster.getInstance().getLogger().info("ENDING STATE " + this.states.get(current).getClass().toString());
+            currentState.end();
+            Bolster.getInstance().getLogger().info("ENDING STATE " + currentState.getClass().toString());
 
             ++current;
 
             if (current >= this.states.size())
             {
                 end();
+                this.skipping = false;
                 return;
             }
 
-            this.states.get(current).start();
-            Bolster.getInstance().getLogger().info("STARTING STATE " + this.states.get(current).getClass().toString());
+            currentState = this.states.get(current);
+
+            if (this.skipping && (this.skippingTo == null || currentState.getClass() == this.skippingTo))
+            {
+                this.skipping = false;
+                this.skippingTo = null;
+            }
+
+            currentState.start();
+            Bolster.getInstance().getLogger().info("STARTING STATE " + currentState.getClass().toString());
         }
     }
 

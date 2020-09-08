@@ -1,4 +1,4 @@
-package co.runed.bolster.util.state;
+package co.runed.bolster.game.state;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;

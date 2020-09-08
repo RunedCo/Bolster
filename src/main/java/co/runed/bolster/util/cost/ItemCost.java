@@ -1,44 +1,45 @@
-package co.runed.bolster.abilities.costs;
+package co.runed.bolster.util.cost;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-public class ItemAbilityCost extends AbilityCost
+public class ItemCost extends Cost
 {
     Class<? extends Item> itemClass;
     int count;
 
-    public ItemAbilityCost()
+    public ItemCost()
     {
         this(1);
     }
 
-    public ItemAbilityCost(int count)
+    public ItemCost(int count)
     {
         this(null, count);
     }
 
-    public ItemAbilityCost(Class<? extends Item> itemClass)
+    public ItemCost(Class<? extends Item> itemClass)
     {
         this(itemClass, 1);
     }
 
-    public ItemAbilityCost(Class<? extends Item> itemClass, int count)
+    public ItemCost(Class<? extends Item> itemClass, int count)
     {
         this.itemClass = itemClass;
         this.count = count;
     }
 
     @Override
-    public boolean run(Ability ability, Properties properties)
+    public boolean run(Properties properties)
     {
-        LivingEntity caster = properties.get(AbilityProperties.CASTER);
+        LivingEntity caster = properties.get(AbilityProperties.CASTER).getBukkit();
 
         if (!(caster instanceof Player)) return false;
 

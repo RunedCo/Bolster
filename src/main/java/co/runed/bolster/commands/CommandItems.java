@@ -2,7 +2,7 @@ package co.runed.bolster.commands;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.items.Item;
-import co.runed.bolster.items.Category;
+import co.runed.bolster.util.Category;
 import co.runed.bolster.util.PlayerUtil;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;

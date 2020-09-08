@@ -39,8 +39,6 @@ public class ItemManager implements Listener
     public ItemManager(Plugin plugin)
     {
         this.plugin = plugin;
-
-        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     /**

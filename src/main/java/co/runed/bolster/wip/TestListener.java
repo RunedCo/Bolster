@@ -1,4 +1,4 @@
-package co.runed.bolster;
+package co.runed.bolster.wip;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;

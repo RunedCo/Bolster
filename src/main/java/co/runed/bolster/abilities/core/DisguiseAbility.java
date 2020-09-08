@@ -33,6 +33,6 @@ public class DisguiseAbility extends Ability
     @Override
     public void onActivate(Properties properties)
     {
-        DisguiseAPI.disguiseEntity(properties.get(AbilityProperties.CASTER), this.disguise);
+        DisguiseAPI.disguiseEntity(properties.get(AbilityProperties.CASTER).getBukkit(), this.disguise);
     }
 }

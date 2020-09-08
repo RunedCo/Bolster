@@ -17,7 +17,6 @@ public class PlayerManager implements Listener
 
     public PlayerManager(Plugin plugin)
     {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public Player getPlayerByName(String name)

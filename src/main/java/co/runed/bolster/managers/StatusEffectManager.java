@@ -20,7 +20,6 @@ public class StatusEffectManager implements Listener
 
     public StatusEffectManager(Plugin plugin)
     {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public void addStatusEffect(LivingEntity entity, StatusEffect statusEffect)

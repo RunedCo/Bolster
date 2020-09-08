@@ -1,4 +1,4 @@
-package co.runed.bolster;
+package co.runed.bolster.wip;
 
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.entity.Player;

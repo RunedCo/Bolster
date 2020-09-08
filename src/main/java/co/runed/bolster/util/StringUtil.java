@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 public class StringUtil
 {
@@ -23,7 +24,7 @@ public class StringUtil
     /**
      * Format a string to a list of a specific length, keeping {@link ChatColor} between lines
      *
-     * @param text the text
+     * @param text       the text
      * @param lineLength the maximum line length
      * @return
      */
@@ -60,7 +61,7 @@ public class StringUtil
     {
         List<String> quoteList = formatLore(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + quote);
 
-        quoteList.add(ChatColor.GRAY + "- "+ author);
+        quoteList.add(ChatColor.GRAY + "- " + author);
 
         return quoteList;
     }
@@ -69,7 +70,7 @@ public class StringUtil
      * Repeat a string a certain number of times
      *
      * @param string the string
-     * @param count the number of times to repeat
+     * @param count  the number of times to repeat
      * @return
      */
     public static String repeat(String string, int count)
@@ -80,5 +81,36 @@ public class StringUtil
     public static int countMatches(String source, String find)
     {
         return StringUtils.countMatches(source, find);
+    }
+
+    private final static TreeMap<Integer, String> romanNumeralMap = new TreeMap<Integer, String>();
+
+    static
+    {
+        romanNumeralMap.put(1000, "M");
+        romanNumeralMap.put(900, "CM");
+        romanNumeralMap.put(500, "D");
+        romanNumeralMap.put(400, "CD");
+        romanNumeralMap.put(100, "C");
+        romanNumeralMap.put(90, "XC");
+        romanNumeralMap.put(50, "L");
+        romanNumeralMap.put(40, "XL");
+        romanNumeralMap.put(10, "X");
+        romanNumeralMap.put(9, "IX");
+        romanNumeralMap.put(5, "V");
+        romanNumeralMap.put(4, "IV");
+        romanNumeralMap.put(1, "I");
+    }
+
+    public static String toRoman(int number)
+    {
+        int l = romanNumeralMap.floorKey(number);
+
+        if (number == l)
+        {
+            return romanNumeralMap.get(number);
+        }
+
+        return romanNumeralMap.get(l) + toRoman(number - l);
     }
 }

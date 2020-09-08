@@ -12,7 +12,7 @@ public class ManaResetAbility extends Ability
     @Override
     public void onActivate(Properties properties)
     {
-        LivingEntity caster = properties.get(AbilityProperties.CASTER);
+        LivingEntity caster = properties.get(AbilityProperties.CASTER).getBukkit();
         ManaManager manaManager = Bolster.getManaManager();
 
         manaManager.setCurrentMana(caster, manaManager.getMaximumMana(caster));

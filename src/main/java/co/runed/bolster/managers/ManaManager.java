@@ -1,7 +1,7 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.util.properties.GameProperties;
+import co.runed.bolster.game.GameProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -28,8 +28,6 @@ public class ManaManager implements Listener
     public ManaManager(Plugin plugin)
     {
         this.plugin = plugin;
-
-        Bukkit.getPluginManager().registerEvents(this, this.plugin);
     }
 
     /**
@@ -61,7 +59,7 @@ public class ManaManager implements Listener
     {
         this.enableXpBarDisplay = true;
 
-        Bolster.getGameProperties().set(GameProperties.ENABLE_XP, false);
+        Bolster.getInstance().getActiveGameMode().getProperties().set(GameProperties.ENABLE_XP, false);
     }
 
     /**

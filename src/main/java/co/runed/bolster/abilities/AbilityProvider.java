@@ -1,7 +1,6 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.abilities.core.LambdaAbility;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
@@ -10,7 +9,6 @@ import org.bukkit.entity.LivingEntity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 
 /**
  * Class that handles common functionality for prociding abilities
@@ -26,6 +24,8 @@ public abstract class AbilityProvider implements IRegisterable
 
     public abstract void onCastAbility(Ability ability, Boolean success);
 
+    public abstract void onToggleCooldown(Ability ability);
+
     public LivingEntity getOwner()
     {
         return this.owner;
@@ -33,6 +33,8 @@ public abstract class AbilityProvider implements IRegisterable
 
     public void setOwner(LivingEntity owner)
     {
+        if (this.owner == owner) return;
+
         this.owner = owner;
 
         for (AbilityData abilityData : this.abilities)
@@ -70,6 +72,16 @@ public abstract class AbilityProvider implements IRegisterable
     public Collection<AbilityData> getAbilities()
     {
         return this.abilities;
+    }
+
+    public void destroy()
+    {
+        for (AbilityData abilityData : this.abilities)
+        {
+            Bolster.getAbilityManager().remove(this.getOwner(), abilityData.ability);
+        }
+
+        this.abilities.clear();
     }
 
     public static class AbilityData

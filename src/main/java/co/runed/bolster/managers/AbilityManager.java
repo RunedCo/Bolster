@@ -153,7 +153,7 @@ public class AbilityManager extends Manager
 
         List<Ability> abilities = new ArrayList<>(this.getAbilities(entity, trigger));
 
-        properties.set(AbilityProperties.CASTER, entity);
+        properties.set(AbilityProperties.CASTER, Bolster.getEntityManager().from(entity));
         properties.set(AbilityProperties.WORLD, entity.getWorld());
 
         for (Ability ability : abilities)
@@ -198,7 +198,7 @@ public class AbilityManager extends Manager
             if (ability.getCaster() == null) return;
 
             Properties properties = new Properties();
-            properties.set(AbilityProperties.CASTER, ability.getCaster());
+            properties.set(AbilityProperties.CASTER, Bolster.getEntityManager().from(ability.getCaster()));
             properties.set(AbilityProperties.WORLD, ability.getCaster().getWorld());
 
             Bolster.getAbilityManager().trigger(ability.getCaster(), this.trigger, properties);

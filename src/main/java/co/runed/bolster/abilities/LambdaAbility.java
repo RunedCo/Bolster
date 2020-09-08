@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities.core;
+package co.runed.bolster.abilities;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.util.properties.Properties;

@@ -5,8 +5,10 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.core.CancelEventAbility;
 import co.runed.bolster.util.properties.Properties;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
 
@@ -14,10 +16,12 @@ public class TargetDummyClass extends BolsterClass
 {
     public TargetDummyClass()
     {
-        super();
+        super(ChatColor.WHITE + "Target Dummy");
 
         this.addAbility(AbilityTrigger.ON_TAKE_DAMAGE, new TargetDummyAbility());
         this.addAbility(AbilityTrigger.ON_INTERACTED_WITH, new CancelEventAbility());
+
+        this.setIcon(new ItemStack(Material.ARMOR_STAND));
     }
 
     public static class TargetDummyAbility extends Ability

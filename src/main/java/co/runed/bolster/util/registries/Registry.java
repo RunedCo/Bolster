@@ -22,6 +22,11 @@ public class Registry<T extends IRegisterable>
         this.entries.putIfAbsent(id, () -> this.createFromClass(itemClass));
     }
 
+    public void register(String id, T obj)
+    {
+        this.entries.putIfAbsent(id, () -> obj);
+    }
+
     public void register(String id, Callable<? extends T> func)
     {
         this.entries.putIfAbsent(id, func);

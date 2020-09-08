@@ -1,6 +1,7 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.game.BolsterEntity;
 import co.runed.bolster.util.target.Target;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Property;
@@ -26,7 +27,7 @@ import java.util.List;
 public class AbilityProperties
 {
     // GENERAL PROPERTIES
-    public static final Property<LivingEntity> CASTER = new Property<>("caster");
+    public static final Property<BolsterEntity> CASTER = new Property<>("caster");
     public static final Property<List<Entity>> TARGETS = new Property<>("targets", new ArrayList<>());
     public static final Property<World> WORLD = new Property<>("world");
     public static final Property<Event> EVENT = new Property<>("event");

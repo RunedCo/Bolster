@@ -6,8 +6,9 @@ import co.runed.bolster.abilities.conditions.OffCooldownCondition;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
-import co.runed.bolster.abilities.costs.AbilityCost;
-import co.runed.bolster.abilities.costs.ManaAbilityCost;
+import co.runed.bolster.util.cost.Cost;
+import co.runed.bolster.util.cost.ManaCost;
+import co.runed.bolster.util.ICooldownSource;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
@@ -32,13 +33,13 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private AbilityTrigger trigger;
 
     private final List<Condition.Data> conditions = new ArrayList<>();
-    private final List<AbilityCost> costs = new ArrayList<>();
+    private final List<Cost> costs = new ArrayList<>();
 
     public Ability()
     {
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
 
-        this.addCost(new ManaAbilityCost(this.getManaCost()));
+        this.addCost(new ManaCost(this.getManaCost()));
 
         this.addCondition(new OffCooldownCondition(Target.CASTER), ConditionPriority.LOWEST);
         this.addCondition(new HasManaCondition(Target.CASTER), ConditionPriority.LOWEST);
@@ -79,7 +80,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         this.manaCost = manaCost;
     }
 
-    public void addCost(AbilityCost cost)
+    public void addCost(Cost cost)
     {
         this.costs.add(cost);
     }
@@ -95,9 +96,9 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     }
 
     @Override
-    public void addCondition(Condition condition, boolean result, ConditionPriority priority)
+    public void addCondition(Condition condition, ConditionPriority priority)
     {
-        this.conditions.add(new Condition.Data(condition, result, priority));
+        this.conditions.add(new Condition.Data(condition, priority));
     }
 
     public Duration getDuration()
@@ -135,6 +136,8 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     @Override
     public void setOnCooldown(boolean onCooldown)
     {
+        if (onCooldown) this.getAbilityProvider().onToggleCooldown(this);
+
         Bolster.getCooldownManager().setCooldown(this.getCaster(), this, this.getCooldown());
     }
 
@@ -172,7 +175,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
 
             boolean result = condition.evaluate(this, properties);
 
-            if (result != data.result)
+            if (!result)
             {
                 condition.onFail(this, properties);
 
@@ -181,9 +184,9 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         }
 
         // loop through every cost and remove
-        for (AbilityCost cost : this.costs)
+        for (Cost cost : this.costs)
         {
-            boolean result = cost.run(this, properties);
+            boolean result = cost.run(properties);
 
             if (!result)
             {

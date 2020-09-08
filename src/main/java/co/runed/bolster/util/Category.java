@@ -1,6 +1,5 @@
-package co.runed.bolster.items;
+package co.runed.bolster.util;
 
-import co.runed.bolster.util.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +11,7 @@ public class Category
     public static final Category MATERIALS = new Category("Materials", null, new ItemStack(Material.COBBLESTONE));
     public static final Category UTILITY = new Category("Utility", null, new ItemStack(Material.FURNACE));
     public static final Category HAT = new Category("Hat", null, new ItemStack(Material.PLAYER_HEAD));
-    public static final Category ALL = new Category("All Items", null, new ItemStack(Material.CHEST));
+    public static final Category ALL = new Category("All", null, new ItemStack(Material.CHEST));
 
     String name;
     String description;

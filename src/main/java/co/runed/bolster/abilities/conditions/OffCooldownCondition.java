@@ -1,11 +1,13 @@
 package co.runed.bolster.abilities.conditions;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.conditions.TargetedCondition;
+import co.runed.bolster.game.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.PlayerUtil;
 import co.runed.bolster.util.target.Target;
@@ -15,11 +17,11 @@ import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 
-public class OffCooldownCondition extends TargetedCondition<LivingEntity>
+public class OffCooldownCondition extends TargetedCondition<BolsterEntity>
 {
     private static final DecimalFormat decimalFormatter = new DecimalFormat("#.#");
 
-    public OffCooldownCondition(Target<LivingEntity> target)
+    public OffCooldownCondition(Target<BolsterEntity> target)
     {
         super(target);
     }
@@ -42,7 +44,7 @@ public class OffCooldownCondition extends TargetedCondition<LivingEntity>
         if (conditional instanceof Ability && ((Ability) conditional).getTrigger() == AbilityTrigger.TICK) return;
         if (!(conditional instanceof Ability)) return;
 
-        LivingEntity entity = this.getTarget().get(properties);
+        BolsterEntity entity = this.getTarget().get(properties);
 
         if (entity.getType() == EntityType.PLAYER)
         {

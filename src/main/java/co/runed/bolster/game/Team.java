@@ -1,4 +1,4 @@
-package co.runed.bolster.util;
+package co.runed.bolster.game;
 
 import co.runed.bolster.Bolster;
 import net.md_5.bungee.api.ChatColor;

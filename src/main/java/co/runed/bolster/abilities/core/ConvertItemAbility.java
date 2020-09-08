@@ -4,7 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.conditions.IsEntityTypeCondition;
-import co.runed.bolster.abilities.costs.ItemAbilityCost;
+import co.runed.bolster.util.cost.ItemCost;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.EntityType;
@@ -25,7 +25,7 @@ public class ConvertItemAbility extends Ability
         this.outputItemClass = outputItemClass;
         this.outputCount = outputItemCount;
 
-        this.addCost(new ItemAbilityCost(inputCost));
+        this.addCost(new ItemCost(inputCost));
         this.addCondition(new IsEntityTypeCondition(EntityType.PLAYER));
     }
 

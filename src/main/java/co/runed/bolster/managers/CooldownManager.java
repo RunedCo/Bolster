@@ -1,6 +1,6 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.abilities.ICooldownSource;
+import co.runed.bolster.util.ICooldownSource;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 

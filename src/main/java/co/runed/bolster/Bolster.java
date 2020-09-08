@@ -1,18 +1,17 @@
 package co.runed.bolster;
 
 import co.runed.bolster.classes.BolsterClass;
-import co.runed.bolster.commands.CommandItems;
-import co.runed.bolster.commands.CommandLightLevel;
-import co.runed.bolster.commands.CommandMana;
-import co.runed.bolster.commands.CommandModelData;
+import co.runed.bolster.classes.TargetDummyClass;
+import co.runed.bolster.commands.*;
+import co.runed.bolster.game.GameMode;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.particles.ParticleSet;
-import co.runed.bolster.util.properties.GameProperties;
-import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registry;
+import co.runed.bolster.wip.TestListener;
 import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
 
@@ -35,8 +34,9 @@ public class Bolster extends JavaPlugin
     private SidebarManager sidebarManager;
     private ClassManager classManager;
     private StatusEffectManager statusEffectManager;
+    private EntityManager entityManager;
 
-    private Properties gameProperties;
+    private GameMode activeGameMode;
 
     @Override
     public void onLoad()
@@ -67,8 +67,7 @@ public class Bolster extends JavaPlugin
         this.manaManager = new ManaManager(this);
         this.statusEffectManager = new StatusEffectManager(this);
 
-        // CREATE GAME PROPERTIES
-        this.gameProperties = new GameProperties(this);
+        this.entityManager = new EntityManager(this);
 
         // SET MANA MANAGER SETTINGS
         this.manaManager.setDefaultMaximumMana(200);
@@ -76,12 +75,15 @@ public class Bolster extends JavaPlugin
 
         // REGISTER COMMANDS
         this.commandManager.add(new CommandItems());
+        this.commandManager.add(new CommandBecome());
         this.commandManager.add(new CommandMana());
         this.commandManager.add(new CommandModelData());
         this.commandManager.add(new CommandLightLevel());
 
         // REGISTER BUNGEECORD PLUGIN CHANNEL
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
+        this.classRegistry.register("target_dummy", TargetDummyClass::new);
 
         // REGISTER MENU EVENTS
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
@@ -92,6 +94,22 @@ public class Bolster extends JavaPlugin
     public void onDisable()
     {
         super.onDisable();
+    }
+
+    public void setActiveGameMode(GameMode gameMode)
+    {
+        HandlerList.unregisterAll(this.activeGameMode);
+
+        this.activeGameMode = gameMode;
+
+        Bukkit.getPluginManager().registerEvents(this.activeGameMode, this);
+
+        this.activeGameMode.start();
+    }
+
+    public GameMode getActiveGameMode()
+    {
+        return this.activeGameMode;
     }
 
     // SINGLETON GETTERS
@@ -155,13 +173,13 @@ public class Bolster extends JavaPlugin
         return Bolster.getInstance().classManager;
     }
 
+    public static EntityManager getEntityManager()
+    {
+        return Bolster.getInstance().entityManager;
+    }
+
     public static StatusEffectManager getStatusEffectManager()
     {
         return Bolster.getInstance().statusEffectManager;
-    }
-
-    public static Properties getGameProperties()
-    {
-        return Bolster.getInstance().gameProperties;
     }
 }

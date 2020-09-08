@@ -1,0 +1,86 @@
+package co.runed.bolster.managers;
+
+import co.runed.bolster.game.BolsterEntity;
+import co.runed.bolster.util.Manager;
+import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.Plugin;
+
+import java.util.*;
+
+public class EntityManager extends Manager
+{
+    Map<UUID, BolsterEntity> entities = new HashMap<>();
+
+    public EntityManager(Plugin plugin)
+    {
+        super(plugin);
+    }
+
+    public BolsterEntity from(LivingEntity entity)
+    {
+        if (this.entities.containsKey(entity.getUniqueId())) return this.entities.get(entity.getUniqueId());
+
+        BolsterEntity bolsterEntity = new BolsterEntity(entity);
+
+        this.entities.put(entity.getUniqueId(), bolsterEntity);
+
+        return bolsterEntity;
+    }
+
+    public void remove(LivingEntity entity)
+    {
+        this.remove(entity.getUniqueId());
+    }
+
+    public void remove(BolsterEntity entity)
+    {
+        this.remove(entity.getUniqueId());
+    }
+
+    public void remove(UUID uuid)
+    {
+        if (!this.entities.containsKey(uuid)) return;
+
+        BolsterEntity bolsterEntity = this.entities.remove(uuid);
+        bolsterEntity.destroy();
+    }
+
+    public Collection<BolsterEntity> getPlayers()
+    {
+        return this.getAllOfType(EntityType.PLAYER);
+    }
+
+    public Collection<BolsterEntity> getAllOfType(EntityType type)
+    {
+        Collection<BolsterEntity> filtered = new ArrayList<>();
+
+        for (BolsterEntity entity : this.entities.values())
+        {
+            if (entity.getType() != type) continue;
+
+            filtered.add(entity);
+        }
+
+        return filtered;
+    }
+
+    @EventHandler
+    private void onPlayerJoin(PlayerJoinEvent event)
+    {
+        this.from(event.getPlayer());
+    }
+
+    @EventHandler
+    private void onEntityRemoved(EntityRemoveFromWorldEvent event)
+    {
+        if (!(event.getEntity() instanceof LivingEntity)) return;
+
+        LivingEntity entity = (LivingEntity) event.getEntity();
+
+        this.remove(entity);
+    }
+}
