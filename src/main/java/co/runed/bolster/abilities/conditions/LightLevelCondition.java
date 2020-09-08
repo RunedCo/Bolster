@@ -1,7 +1,5 @@
 package co.runed.bolster.abilities.conditions;
 
-import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.conditions.TargetedCondition;
 import co.runed.bolster.util.properties.Properties;
@@ -34,7 +32,8 @@ public class LightLevelCondition extends TargetedCondition<Location>
 
     }
 
-    private boolean lightLevel(Location location) {
+    private boolean lightLevel(Location location)
+    {
         if (operator == Operator.EQUAL) return location.getBlock().getLightLevel() == level;
         else if (operator == Operator.ABOVE) return location.getBlock().getLightLevel() > level;
         else if (operator == Operator.BELOW) return location.getBlock().getLightLevel() < level;

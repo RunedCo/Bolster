@@ -41,7 +41,7 @@ public class OffCooldownCondition extends TargetedCondition<BolsterEntity>
     @Override
     public void onFail(IConditional conditional, Properties properties)
     {
-        if (conditional instanceof Ability && ((Ability) conditional).getTrigger() == AbilityTrigger.TICK) return;
+        if (conditional instanceof Ability && ((Ability) conditional).getTrigger().isPassive()) return;
         if (!(conditional instanceof Ability)) return;
 
         BolsterEntity entity = this.getTarget().get(properties);
