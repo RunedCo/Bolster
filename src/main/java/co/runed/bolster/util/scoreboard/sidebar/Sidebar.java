@@ -63,7 +63,7 @@ public abstract class Sidebar implements Listener
      */
     public Sidebar addLine(String line)
     {
-        this.lines.add(line);
+        this.addLines(StringUtil.formatLore(line, 24));
 
         return this;
     }
@@ -99,10 +99,7 @@ public abstract class Sidebar implements Listener
      */
     public Sidebar addLines(List<String> lines)
     {
-        for (String line : lines)
-        {
-            this.addLine(line);
-        }
+        this.lines.addAll(lines);
 
         return this;
     }

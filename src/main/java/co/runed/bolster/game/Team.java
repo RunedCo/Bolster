@@ -5,14 +5,15 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Team implements Listener
 {
@@ -20,6 +21,9 @@ public class Team implements Listener
     ChatColor color;
     boolean autoAddPlayers = false;
     List<UUID> members = new ArrayList<>();
+    Map<UUID, Integer> kills = new HashMap<>();
+    int totalKills = 0;
+    boolean allowFriendlyFire;
 
     public Team(String name, ChatColor color)
     {
@@ -35,6 +39,7 @@ public class Team implements Listener
         if (this.members.contains(entity.getUniqueId())) return;
 
         this.members.add(entity.getUniqueId());
+        this.kills.put(entity.getUniqueId(), 0);
     }
 
     /**
@@ -69,6 +74,18 @@ public class Team implements Listener
         return entities;
     }
 
+    public int getEntityKills(LivingEntity entity)
+    {
+        if (!this.isInTeam(entity)) return 0;
+
+        return this.kills.get(entity.getUniqueId());
+    }
+
+    public int getTotalKills()
+    {
+        return this.totalKills;
+    }
+
     public int size()
     {
         return this.members.size();
@@ -99,17 +116,54 @@ public class Team implements Listener
         this.autoAddPlayers = shouldAdd;
     }
 
+    public boolean allowFriendlyFire()
+    {
+        return this.allowFriendlyFire;
+    }
+
+    public void setAllowFriendlyFire(boolean allow)
+    {
+        this.allowFriendlyFire = allow;
+    }
+
     /**
      * Player join event that handles adding players to the team
      *
      * @param event The event
      */
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event)
+    private void onPlayerJoin(PlayerJoinEvent event)
     {
         if (this.autoAddPlayers)
         {
             this.add(event.getPlayer());
+        }
+    }
+
+    @EventHandler
+    private void onEntityKill(EntityDeathEvent event)
+    {
+        Player player = event.getEntity().getKiller();
+
+        if (player == null) return;
+        if (!this.isInTeam(player)) return;
+
+        this.totalKills++;
+        this.kills.put(player.getUniqueId(), this.kills.get(player.getUniqueId()) + 1);
+    }
+
+    @EventHandler
+    private void onDamageEntity(EntityDamageByEntityEvent event)
+    {
+        if (!(event.getDamager() instanceof LivingEntity)) return;
+        if (!(event.getEntity() instanceof LivingEntity)) return;
+
+        LivingEntity damagee = (LivingEntity) event.getEntity();
+        LivingEntity damager = (LivingEntity) event.getDamager();
+
+        if (this.isInTeam(damagee) && this.isInTeam(damager) && !this.allowFriendlyFire())
+        {
+            event.setCancelled(true);
         }
     }
 }

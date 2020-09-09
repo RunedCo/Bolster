@@ -1,15 +1,11 @@
 package co.runed.bolster.abilities.conditions;
 
-import co.runed.bolster.Bolster;
-import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.conditions.TargetedCondition;
-import co.runed.bolster.game.BolsterEntity;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.target.Target;
-import org.bukkit.entity.LivingEntity;
 
 public class HasStatusEffect extends TargetedCondition<BolsterEntity>
 {

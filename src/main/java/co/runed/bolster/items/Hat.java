@@ -1,14 +1,12 @@
 package co.runed.bolster.items;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.game.BolsterEntity;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;

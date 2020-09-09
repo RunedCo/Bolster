@@ -1,7 +1,6 @@
 package co.runed.bolster.abilities;
 
-import co.runed.bolster.Bolster;
-import co.runed.bolster.game.BolsterEntity;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.target.Target;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Property;
@@ -11,7 +10,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerFishEvent;

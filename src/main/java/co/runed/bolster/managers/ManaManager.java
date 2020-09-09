@@ -58,8 +58,6 @@ public class ManaManager implements Listener
     public void setEnableXpManaBar(boolean enabled)
     {
         this.enableXpBarDisplay = true;
-
-        Bolster.getInstance().getActiveGameMode().getProperties().set(GameProperties.ENABLE_XP, false);
     }
 
     /**

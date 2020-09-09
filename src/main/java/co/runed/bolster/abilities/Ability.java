@@ -31,6 +31,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private LivingEntity caster;
     private AbilityProvider abilityProvider;
     private AbilityTrigger trigger;
+    private boolean showErrors;
 
     private final List<Condition.Data> conditions = new ArrayList<>();
     private final List<Cost> costs = new ArrayList<>();
@@ -114,6 +115,16 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     public void setShouldCancelEvent(boolean cancelEventOnCast)
     {
         this.cancelEventOnCast = cancelEventOnCast;
+    }
+
+    public void setShouldShowErrorMessages(boolean showErrors)
+    {
+        this.showErrors = showErrors;
+    }
+
+    public boolean shouldShowErrorMessages()
+    {
+        return this.showErrors;
     }
 
     @Override

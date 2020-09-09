@@ -1,6 +1,7 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.util.Manager;
+import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
@@ -8,6 +9,9 @@ import org.bukkit.plugin.Plugin;
 
 public class GameMode extends Manager implements IRegisterable
 {
+    public static final Property<Double> XP_MULTIPLER = new Property<>("xp_multiplier", 1.0);
+    public static final Property<Double> GOLD_MULTIPLER = new Property<>("gold_multiplier", 1.0);
+
     StateSeries mainState;
     String id;
 

@@ -2,10 +2,9 @@ package co.runed.bolster.util.cost;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.game.BolsterEntity;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.properties.Properties;
-import org.bukkit.entity.LivingEntity;
 
 public class ManaCost extends Cost
 {

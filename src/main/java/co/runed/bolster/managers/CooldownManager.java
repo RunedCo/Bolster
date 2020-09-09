@@ -1,5 +1,8 @@
 package co.runed.bolster.managers;
 
+import co.runed.bolster.Bolster;
+import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.game.Traits;
 import co.runed.bolster.util.ICooldownSource;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
@@ -29,6 +32,8 @@ public class CooldownManager
     public void setCooldown(LivingEntity entity, ICooldownSource source, double cooldown)
     {
         if (cooldown <= 0) return;
+
+        cooldown = cooldown * BolsterEntity.from(entity).getTrait(Traits.COOLDOWN_REDUCTION_MULTIPLIER);
 
         if (this.getRemainingTime(entity, source) <= 0)
         {

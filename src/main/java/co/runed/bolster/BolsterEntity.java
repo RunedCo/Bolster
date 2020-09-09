@@ -1,9 +1,10 @@
-package co.runed.bolster.game;
+package co.runed.bolster;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.PlayerUtil;
+import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.util.properties.Property;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -22,10 +23,12 @@ public class BolsterEntity
     private final LivingEntity _entity;
 
     private BolsterClass bolsterClass;
+    private final Properties traits;
 
     public BolsterEntity(LivingEntity entity)
     {
         this._entity = entity;
+        this.traits = new Properties();
     }
 
     public BolsterClass getBolsterClass()
@@ -38,6 +41,11 @@ public class BolsterEntity
         bolsterClass.setOwner(this._entity);
 
         this.bolsterClass = bolsterClass;
+    }
+
+    public Properties getTraits()
+    {
+        return traits;
     }
 
     public LivingEntity getBukkit()
@@ -176,7 +184,11 @@ public class BolsterEntity
 
     public void destroy()
     {
-        this.getBolsterClass().destroy();
+        if (this.getBolsterClass() != null)
+        {
+            this.getBolsterClass().destroy();
+        }
+
         this._entity.setHealth(0);
     }
 
@@ -184,4 +196,10 @@ public class BolsterEntity
     {
         return Bolster.getEntityManager().from(entity);
     }
+
+    public <T> T getTrait(Property<T> key)
+    {
+        return this.getTraits().get(key);
+    }
+
 }
