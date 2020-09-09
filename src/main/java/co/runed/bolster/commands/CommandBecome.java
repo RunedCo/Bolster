@@ -66,7 +66,10 @@ public class CommandBecome extends CommandBase
 
             SlotSettings settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(icon))
-                    .clickHandler((p, i) -> Bolster.getClassManager().setClass(p, clazz))
+                    .clickHandler((p, i) -> {
+                        Bolster.getClassManager().setClass(p, clazz);
+                        p.closeInventory();
+                    })
                     .build();
 
             builder.addItem(settings);

@@ -33,9 +33,9 @@ public class ClassManager extends Manager
             this.bolsterClasses.get(uuid).destroy();
         }
 
-        bolsterClass.setOwner(entity);
-
         this.bolsterClasses.put(uuid, bolsterClass);
+
+        bolsterClass.setOwner(entity);
     }
 
     /**

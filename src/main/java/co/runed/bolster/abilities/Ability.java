@@ -147,7 +147,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     @Override
     public void setOnCooldown(boolean onCooldown)
     {
-        if (onCooldown) this.getAbilityProvider().onToggleCooldown(this);
+        if (onCooldown && this.getAbilityProvider() != null) this.getAbilityProvider().onToggleCooldown(this);
 
         Bolster.getCooldownManager().setCooldown(this.getCaster(), this, this.getCooldown());
     }

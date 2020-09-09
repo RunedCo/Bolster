@@ -4,6 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -11,16 +12,13 @@ import org.bukkit.inventory.ItemStack;
 public abstract class BolsterClass extends AbilityProvider
 {
     String id;
-    String name;
+    String name = null;
     ItemStack icon = new ItemStack(Material.PLAYER_HEAD);
-
-    public BolsterClass(String name)
-    {
-        this.name = name;
-    }
 
     public String getName()
     {
+        if (name == null) return this.getId();
+
         return name;
     }
 
@@ -49,6 +47,15 @@ public abstract class BolsterClass extends AbilityProvider
     public String getId()
     {
         return this.id;
+    }
+
+    @Override
+    public void setOwner(LivingEntity owner)
+    {
+        super.setOwner(owner);
+
+        // TODO: MOVE OUTSIDE OF CLASS SPECIFIC IMPLEMENTATION
+        Bolster.getAbilityManager().trigger(owner, this, AbilityTrigger.BECOME, new Properties());
     }
 
     @Override

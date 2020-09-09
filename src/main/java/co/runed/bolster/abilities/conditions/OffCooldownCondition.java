@@ -1,14 +1,12 @@
 package co.runed.bolster.abilities.conditions;
 
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.conditions.TargetedCondition;
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.util.PlayerUtil;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 
@@ -36,7 +34,8 @@ public class OffCooldownCondition extends TargetedCondition<BolsterEntity>
     @Override
     public void onFail(IConditional conditional, Properties properties)
     {
-        if (conditional instanceof Ability && ((Ability) conditional).getTrigger().isPassive()) return;
+        if (conditional instanceof Ability && ((((Ability) conditional).getTrigger().isPassive()) || !((Ability) conditional).shouldShowErrorMessages()))
+            return;
         if (!(conditional instanceof Ability)) return;
 
         BolsterEntity entity = this.getTarget().get(properties);
@@ -51,7 +50,7 @@ public class OffCooldownCondition extends TargetedCondition<BolsterEntity>
                 formattedCooldown = decimalFormatter.format(cooldown);
             }
 
-            PlayerUtil.sendActionBar((Player) entity, "Ability on cooldown (" + formattedCooldown + " seconds remaining)");
+            entity.sendActionBar("Ability on cooldown (" + formattedCooldown + " seconds remaining)");
         }
     }
 }

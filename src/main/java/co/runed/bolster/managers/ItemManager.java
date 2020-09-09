@@ -6,6 +6,7 @@ import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.items.Item;
+import co.runed.bolster.util.Manager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -30,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemManager implements Listener
+public class ItemManager extends Manager
 {
     Plugin plugin;
 
@@ -38,6 +39,7 @@ public class ItemManager implements Listener
 
     public ItemManager(Plugin plugin)
     {
+        super(plugin);
         this.plugin = plugin;
     }
 

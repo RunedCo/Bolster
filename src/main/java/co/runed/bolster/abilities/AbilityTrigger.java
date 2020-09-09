@@ -38,6 +38,7 @@ public class AbilityTrigger
 
     // TRIGGERED WHEN YOU BECOME THIS CLASS
     public static final AbilityTrigger BECOME = new AbilityTrigger("become", "Passive", true);
+    public static final AbilityTrigger REMOVE = new AbilityTrigger("remove", "Passive", true);
 
     // PASSIVE ACTIONS
     public static final AbilityTrigger TICK = new AbilityTrigger("tick", "Passive", true);

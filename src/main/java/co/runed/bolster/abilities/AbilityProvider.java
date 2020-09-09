@@ -46,8 +46,6 @@ public abstract class AbilityProvider implements IRegisterable
             ability.setCaster(owner);
             Bolster.getAbilityManager().add(owner, abilityData.trigger, ability);
         }
-
-        Bolster.getAbilityManager().trigger(owner, this, AbilityTrigger.BECOME, new Properties());
     }
 
     public void addAbility(AbilityTrigger trigger, BiConsumer<LivingEntity, Properties> lambda)
@@ -76,6 +74,9 @@ public abstract class AbilityProvider implements IRegisterable
 
     public void destroy()
     {
+        if (this.getOwner() != null)
+            Bolster.getAbilityManager().trigger(this.getOwner(), this, AbilityTrigger.REMOVE, new Properties());
+
         for (AbilityData abilityData : this.abilities)
         {
             Bolster.getAbilityManager().remove(this.getOwner(), abilityData.ability);

@@ -52,7 +52,9 @@ public abstract class Sidebar implements Listener
      */
     public Sidebar addLine()
     {
-        return this.addLine(StringUtil.repeat(" ", this.blankLineCount++));
+        this.lines.add(StringUtil.repeat(" ", this.blankLineCount++));
+
+        return this;
     }
 
     /**

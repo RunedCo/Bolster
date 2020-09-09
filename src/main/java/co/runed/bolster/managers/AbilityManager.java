@@ -25,7 +25,7 @@ public class AbilityManager extends Manager
     public AbilityManager(Plugin plugin)
     {
         super(plugin);
-        
+
         Bukkit.getPluginManager().registerEvents(new EntityDamageListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityKillListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityPickupItemListener(), plugin);
@@ -146,6 +146,8 @@ public class AbilityManager extends Manager
 
     public void trigger(LivingEntity entity, AbilityProvider provider, AbilityTrigger trigger, Properties properties)
     {
+        if (entity == null) return;
+
         EntityPreCastAbilityEvent preCastEvent = new EntityPreCastAbilityEvent(entity, trigger);
         Bukkit.getPluginManager().callEvent(preCastEvent);
 

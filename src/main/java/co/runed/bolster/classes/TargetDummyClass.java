@@ -16,7 +16,9 @@ public class TargetDummyClass extends BolsterClass
 {
     public TargetDummyClass()
     {
-        super(ChatColor.WHITE + "Target Dummy");
+        super();
+
+        this.setName(ChatColor.WHITE + "Target Dummy");
 
         this.addAbility(AbilityTrigger.ON_TAKE_DAMAGE, new TargetDummyAbility());
         this.addAbility(AbilityTrigger.ON_INTERACTED_WITH, new CancelEventAbility());

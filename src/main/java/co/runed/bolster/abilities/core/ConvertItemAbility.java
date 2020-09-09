@@ -32,7 +32,7 @@ public class ConvertItemAbility extends Ability
     @Override
     public void onActivate(Properties properties)
     {
-        Player player = (Player) properties.get(AbilityProperties.CASTER);
+        Player player = (Player) properties.get(AbilityProperties.CASTER).getBukkit();
 
         Bolster.getItemManager().giveItem(player, this.outputItemClass, this.outputCount);
     }
