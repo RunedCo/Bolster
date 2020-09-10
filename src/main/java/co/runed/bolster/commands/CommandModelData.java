@@ -9,13 +9,15 @@ public class CommandModelData extends CommandBase
 {
     public CommandModelData()
     {
-        super("custommodeldata", "bolster.cmd", new String[]{"cmd"}, null);
+        super("custommodeldata", "bolster.cmd");
+
+        this.aliases = new String[]{"cmd"};
     }
 
     @Override
     public void run(CommandSender sender, Object[] args)
     {
-        if(sender instanceof Player)
+        if (sender instanceof Player)
         {
             Player player = (Player) sender;
             int modelData = (int) args[0];

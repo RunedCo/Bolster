@@ -20,7 +20,7 @@ public class CommandMana extends CommandBase
 
     public CommandMana()
     {
-        super("mana", "bolster.admin", null, null);
+        super("mana", "bolster.admin");
 
         operations.add("set");
         operations.add("add");

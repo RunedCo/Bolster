@@ -17,12 +17,10 @@ public abstract class CommandBase
 
     private CommandAPICommand commandAPICommand;
 
-    public CommandBase(String command, String permission, String[] aliases, LinkedHashMap<String, Argument> arguments)
+    public CommandBase(String command, String permission)
     {
         this.command = command;
-        if (aliases != null) this.aliases = aliases;
         if (permission != null) this.permission = CommandPermission.fromString(permission);
-        if (arguments != null) this.arguments = arguments;
     }
 
     public abstract void run(CommandSender sender, Object[] args) throws WrapperCommandSyntaxException;

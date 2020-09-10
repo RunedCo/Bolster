@@ -6,7 +6,7 @@ import org.bukkit.plugin.Plugin;
 
 public abstract class Manager implements Listener
 {
-    Plugin plugin;
+    public Plugin plugin;
 
     public Manager(Plugin plugin)
     {

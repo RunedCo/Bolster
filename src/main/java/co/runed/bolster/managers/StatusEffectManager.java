@@ -9,6 +9,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -118,6 +119,15 @@ public class StatusEffectManager implements Listener
         for (StatusEffect effect : this.statusEffects.get(uuid))
         {
             effect.setEntity(event.getPlayer());
+        }
+    }
+
+    @EventHandler
+    private void onEntityDeath(EntityDeathEvent event)
+    {
+        for (StatusEffect effect : this.getStatusEffects(event.getEntity()))
+        {
+            this.removeStatusEffect(event.getEntity(), effect);
         }
     }
 }

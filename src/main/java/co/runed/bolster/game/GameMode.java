@@ -27,7 +27,7 @@ public class GameMode extends Manager implements IRegisterable
         this.properties = new GameProperties();
     }
 
-    public State getMainState()
+    public StateSeries getMainState()
     {
         return this.mainState;
     }

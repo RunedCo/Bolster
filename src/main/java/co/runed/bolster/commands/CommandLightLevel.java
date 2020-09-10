@@ -12,7 +12,7 @@ public class CommandLightLevel extends CommandBase
 {
     public CommandLightLevel()
     {
-        super("lightlevel", null, null, new LinkedHashMap<>());
+        super("lightlevel", null);
     }
 
     @Override

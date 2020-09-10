@@ -22,7 +22,6 @@ public class BolsterEntity
 {
     private final LivingEntity _entity;
 
-    private BolsterClass bolsterClass;
     private final Properties traits;
 
     public BolsterEntity(LivingEntity entity)
@@ -33,19 +32,22 @@ public class BolsterEntity
 
     public BolsterClass getBolsterClass()
     {
-        return bolsterClass;
+        return Bolster.getClassManager().getClass(this._entity);
     }
 
     public void setBolsterClass(BolsterClass bolsterClass)
     {
-        bolsterClass.setOwner(this._entity);
-
-        this.bolsterClass = bolsterClass;
+        Bolster.getClassManager().setClass(this._entity, bolsterClass);
     }
 
     public Properties getTraits()
     {
         return traits;
+    }
+
+    public <T> void setTrait(Property<T> key, T value)
+    {
+        this.getTraits().set(key, value);
     }
 
     public LivingEntity getBukkit()

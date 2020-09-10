@@ -22,7 +22,7 @@ public class CommandBecome extends CommandBase
 {
     public CommandBecome()
     {
-        super("become", "bolster.admin", null, null);
+        super("become", "bolster.admin");
     }
 
     @Override
