@@ -1,5 +1,9 @@
 package co.runed.bolster.abilities;
 
+import co.runed.bolster.managers.AbilityManager;
+import co.runed.bolster.util.properties.Properties;
+import org.bukkit.entity.LivingEntity;
+
 public class AbilityTrigger
 {
     // LEFT CLICK VARIANTS
@@ -68,5 +72,15 @@ public class AbilityTrigger
     public boolean isPassive()
     {
         return passive;
+    }
+
+    public void trigger(LivingEntity entity, Properties properties)
+    {
+        this.trigger(entity, null, properties);
+    }
+
+    public void trigger(LivingEntity entity, AbilityProvider provider, Properties properties)
+    {
+        AbilityManager.getInstance().trigger(entity, provider, this, properties);
     }
 }
