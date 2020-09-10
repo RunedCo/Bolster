@@ -18,7 +18,7 @@ public class ManaCost extends Cost
     @Override
     public boolean run(Properties properties)
     {
-        ManaManager manager = Bolster.getManaManager();
+        ManaManager manager = ManaManager.getInstance();
         BolsterEntity caster = properties.get(AbilityProperties.CASTER);
 
         if (manager.getCurrentMana(caster.getBukkit()) < this.cost)

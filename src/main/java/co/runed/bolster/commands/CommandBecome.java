@@ -1,6 +1,7 @@
 package co.runed.bolster.commands;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.util.ItemBuilder;
 import org.bukkit.Material;
@@ -67,7 +68,7 @@ public class CommandBecome extends CommandBase
             SlotSettings settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(icon))
                     .clickHandler((p, i) -> {
-                        Bolster.getClassManager().setClass(p, clazz);
+                        BolsterEntity.from(p).setBolsterClass(clazz);
                         p.closeInventory();
                     })
                     .build();

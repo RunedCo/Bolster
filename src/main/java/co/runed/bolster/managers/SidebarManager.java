@@ -1,5 +1,6 @@
 package co.runed.bolster.managers;
 
+import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.scoreboard.sidebar.Sidebar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -7,15 +8,17 @@ import org.bukkit.plugin.Plugin;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SidebarManager
+public class SidebarManager extends Manager
 {
-    Plugin plugin;
-
     Map<Player, Sidebar> playerSidebars = new HashMap<>();
+
+    private static SidebarManager _instance;
 
     public SidebarManager(Plugin plugin)
     {
-        this.plugin = plugin;
+        super(plugin);
+
+        _instance = this;
     }
 
     /**
@@ -62,5 +65,10 @@ public class SidebarManager
         }
 
         this.playerSidebars.remove(player);
+    }
+
+    public static SidebarManager getInstance()
+    {
+        return _instance;
     }
 }

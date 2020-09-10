@@ -13,9 +13,13 @@ public class ClassManager extends Manager
 {
     private final Map<UUID, BolsterClass> bolsterClasses = new HashMap<>();
 
+    private static ClassManager _instance;
+
     public ClassManager(Plugin plugin)
     {
         super(plugin);
+
+        _instance = this;
     }
 
     /**
@@ -61,5 +65,10 @@ public class ClassManager extends Manager
     public void reset(LivingEntity entity)
     {
         this.setClass(entity, null);
+    }
+
+    public static ClassManager getInstance()
+    {
+        return _instance;
     }
 }

@@ -2,6 +2,7 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.game.GameProperties;
+import co.runed.bolster.util.Manager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -16,18 +17,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ManaManager implements Listener
+public class ManaManager extends Manager
 {
-    private final Plugin plugin;
     private final Map<UUID, ManaData> manaData = new HashMap<>();
 
     private float defaultMaxMana = 0.0f;
     private boolean refillOnSpawn = true;
     private boolean enableXpBarDisplay = false;
 
+    private static ManaManager _instance;
+
     public ManaManager(Plugin plugin)
     {
-        this.plugin = plugin;
+        super(plugin);
+
+        _instance = this;
     }
 
     /**
@@ -231,5 +235,10 @@ public class ManaManager implements Listener
             this.maxMana = maxMana;
             this.currentMana = currentMana;
         }
+    }
+
+    public static ManaManager getInstance()
+    {
+        return _instance;
     }
 }

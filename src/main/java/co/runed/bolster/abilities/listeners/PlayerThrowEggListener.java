@@ -3,6 +3,7 @@ package co.runed.bolster.abilities.listeners;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -27,6 +28,6 @@ public class PlayerThrowEggListener implements Listener
         properties.set(AbilityProperties.VELOCITY, event.getEgg().getVelocity());
         properties.set(AbilityProperties.EVENT, event);
 
-        Bolster.getAbilityManager().trigger(entity, AbilityTrigger.ON_SHOOT, properties);
+        AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_SHOOT, properties);
     }
 }

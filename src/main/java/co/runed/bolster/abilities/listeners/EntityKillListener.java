@@ -3,6 +3,7 @@ package co.runed.bolster.abilities.listeners;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,6 +34,6 @@ public class EntityKillListener implements Listener
         properties.set(AbilityProperties.TARGETS, new ArrayList<>(Collections.singletonList(event.getEntity())));
         properties.set(AbilityProperties.DROPS, event.getDrops());
 
-        Bolster.getAbilityManager().trigger(player, AbilityTrigger.ON_KILL_ENTITY, properties);
+        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_KILL_ENTITY, properties);
     }
 }

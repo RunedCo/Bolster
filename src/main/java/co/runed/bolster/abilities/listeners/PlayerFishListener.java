@@ -3,6 +3,7 @@ package co.runed.bolster.abilities.listeners;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,6 +32,6 @@ public class PlayerFishListener implements Listener
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.FISH_STATE, event.getState());
 
-        Bolster.getAbilityManager().trigger(player, AbilityTrigger.ON_CATCH_FISH, properties);
+        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_CATCH_FISH, properties);
     }
 }

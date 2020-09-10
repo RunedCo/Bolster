@@ -1,6 +1,7 @@
 package co.runed.bolster.commands;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.managers.ManaManager;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.FloatArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
@@ -50,11 +51,11 @@ public class CommandMana extends CommandBase
         {
             if (type.equals("max"))
             {
-                player.sendMessage("Your maximum mana is " + Bolster.getManaManager().getMaximumMana(player));
+                player.sendMessage("Your maximum mana is " + ManaManager.getInstance().getMaximumMana(player));
             }
             else
             {
-                player.sendMessage("You have " + Bolster.getManaManager().getCurrentMana(player) + " mana");
+                player.sendMessage("You have " + ManaManager.getInstance().getCurrentMana(player) + " mana");
             }
 
             return;
@@ -68,19 +69,19 @@ public class CommandMana extends CommandBase
         {
             if (operation.equals("add") || operation.equals("subtract"))
             {
-                amount = Bolster.getManaManager().getMaximumMana(player) + amount;
+                amount = ManaManager.getInstance().getMaximumMana(player) + amount;
             }
 
-            Bolster.getManaManager().setMaximumMana(player, amount);
+            ManaManager.getInstance().setMaximumMana(player, amount);
         }
         else
         {
             if (operation.equals("add") || operation.equals("subtract"))
             {
-                amount = Bolster.getManaManager().getCurrentMana(player) + amount;
+                amount = ManaManager.getInstance().getCurrentMana(player) + amount;
             }
 
-            Bolster.getManaManager().setCurrentMana(player, amount);
+            ManaManager.getInstance().setCurrentMana(player, amount);
         }
     }
 }

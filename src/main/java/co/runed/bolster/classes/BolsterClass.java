@@ -4,6 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -55,7 +56,7 @@ public abstract class BolsterClass extends AbilityProvider
         super.setOwner(owner);
 
         // TODO: MOVE OUTSIDE OF CLASS SPECIFIC IMPLEMENTATION
-        Bolster.getAbilityManager().trigger(owner, this, AbilityTrigger.BECOME, new Properties());
+        AbilityManager.getInstance().trigger(owner, this, AbilityTrigger.BECOME, new Properties());
     }
 
     @Override

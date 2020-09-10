@@ -1,6 +1,7 @@
 package co.runed.bolster.status;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.TimeUtil;
 import org.bukkit.Bukkit;
@@ -91,7 +92,7 @@ public abstract class StatusEffect implements Listener
 
     public void end()
     {
-        Bolster.getStatusEffectManager().removeStatusEffect(this.getEntity(), this);
+        StatusEffectManager.getInstance().removeStatusEffect(this.getEntity(), this);
 
         HandlerList.unregisterAll(this);
 

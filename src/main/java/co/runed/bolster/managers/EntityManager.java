@@ -15,9 +15,13 @@ public class EntityManager extends Manager
 {
     Map<UUID, BolsterEntity> entities = new HashMap<>();
 
+    private static EntityManager _instance;
+
     public EntityManager(Plugin plugin)
     {
         super(plugin);
+
+        _instance = this;
     }
 
     public BolsterEntity from(LivingEntity entity)
@@ -82,5 +86,10 @@ public class EntityManager extends Manager
         LivingEntity entity = (LivingEntity) event.getEntity();
 
         this.remove(entity);
+    }
+
+    public static EntityManager getInstance()
+    {
+        return _instance;
     }
 }

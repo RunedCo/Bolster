@@ -3,6 +3,7 @@ package co.runed.bolster.abilities.listeners;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -35,7 +36,7 @@ public class EntityDamageListener implements Listener
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.DAMAGE, event.getFinalDamage());
 
-        Bolster.getAbilityManager().trigger(entity, AbilityTrigger.ON_DAMAGE_ENTITY, properties);
+        AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_DAMAGE_ENTITY, properties);
     }
 
     @EventHandler
@@ -60,9 +61,9 @@ public class EntityDamageListener implements Listener
 
         if (entity.getHealth() - damage <= 0)
         {
-            Bolster.getAbilityManager().trigger(entity, AbilityTrigger.ON_TAKE_FATAL_DAMAGE, properties);
+            AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_TAKE_FATAL_DAMAGE, properties);
         }
 
-        Bolster.getAbilityManager().trigger(entity, AbilityTrigger.ON_TAKE_DAMAGE, properties);
+        AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_TAKE_DAMAGE, properties);
     }
 }

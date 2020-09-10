@@ -4,6 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.TargetedAbility;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.game.Traits;
+import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 
@@ -21,6 +22,6 @@ public class ManaRegenAbility extends TargetedAbility<BolsterEntity>
     {
         BolsterEntity target = this.getTarget().get(properties);
 
-        Bolster.getManaManager().addCurrentMana(target.getBukkit(), target.getTrait(Traits.MANA_PER_SECOND) / 2);
+        ManaManager.getInstance().addCurrentMana(target.getBukkit(), target.getTrait(Traits.MANA_PER_SECOND) / 2);
     }
 }

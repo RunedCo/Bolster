@@ -1,6 +1,7 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
@@ -22,9 +23,13 @@ public class AbilityManager extends Manager
 {
     Map<UUID, List<AbilityData>> abilities = new HashMap<>();
 
+    private static AbilityManager _instance;
+
     public AbilityManager(Plugin plugin)
     {
         super(plugin);
+
+        _instance = this;
 
         Bukkit.getPluginManager().registerEvents(new EntityDamageListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityKillListener(), plugin);
@@ -155,7 +160,7 @@ public class AbilityManager extends Manager
 
         List<Ability> abilities = new ArrayList<>(this.getAbilities(entity, trigger));
 
-        properties.set(AbilityProperties.CASTER, Bolster.getEntityManager().from(entity));
+        properties.set(AbilityProperties.CASTER, BolsterEntity.from(entity));
         properties.set(AbilityProperties.WORLD, entity.getWorld());
 
         for (Ability ability : abilities)
@@ -200,10 +205,10 @@ public class AbilityManager extends Manager
             if (ability.getCaster() == null) return;
 
             Properties properties = new Properties();
-            properties.set(AbilityProperties.CASTER, Bolster.getEntityManager().from(ability.getCaster()));
+            properties.set(AbilityProperties.CASTER, BolsterEntity.from(ability.getCaster()));
             properties.set(AbilityProperties.WORLD, ability.getCaster().getWorld());
 
-            Bolster.getAbilityManager().trigger(ability.getCaster(), this.trigger, properties);
+            AbilityManager.getInstance().trigger(ability.getCaster(), this.trigger, properties);
         }
 
         public void destroy()
@@ -215,5 +220,10 @@ public class AbilityManager extends Manager
                 this.task.cancel();
             }
         }
+    }
+
+    public static AbilityManager getInstance()
+    {
+        return _instance;
     }
 }

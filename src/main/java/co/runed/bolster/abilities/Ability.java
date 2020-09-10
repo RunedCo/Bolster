@@ -6,6 +6,7 @@ import co.runed.bolster.abilities.conditions.OffCooldownCondition;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.abilities.conditions.HasManaCondition;
+import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.util.cost.Cost;
 import co.runed.bolster.util.cost.ManaCost;
 import co.runed.bolster.util.ICooldownSource;
@@ -141,7 +142,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     @Override
     public double getRemainingCooldown()
     {
-        return Bolster.getCooldownManager().getRemainingTime(this.getCaster(), this);
+        return CooldownManager.getInstance().getRemainingTime(this.getCaster(), this);
     }
 
     @Override
@@ -149,7 +150,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     {
         if (onCooldown && this.getAbilityProvider() != null) this.getAbilityProvider().onToggleCooldown(this);
 
-        Bolster.getCooldownManager().setCooldown(this.getCaster(), this, this.getCooldown());
+        CooldownManager.getInstance().setCooldown(this.getCaster(), this, this.getCooldown());
     }
 
     @Override
@@ -161,7 +162,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     @Override
     public void clearCooldown()
     {
-        Bolster.getCooldownManager().clearCooldown(this.getCaster(), this);
+        CooldownManager.getInstance().clearCooldown(this.getCaster(), this);
     }
 
     public AbilityProvider getAbilityProvider()
@@ -243,7 +244,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     {
         HandlerList.unregisterAll(this);
 
-        Bolster.getCooldownManager().clearCooldown(this.getCaster(), this);
+        CooldownManager.getInstance().clearCooldown(this.getCaster(), this);
     }
 }
 

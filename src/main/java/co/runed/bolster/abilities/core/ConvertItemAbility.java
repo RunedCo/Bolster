@@ -4,6 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.conditions.IsEntityTypeCondition;
+import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.cost.ItemCost;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Properties;
@@ -34,6 +35,6 @@ public class ConvertItemAbility extends Ability
     {
         Player player = (Player) properties.get(AbilityProperties.CASTER).getBukkit();
 
-        Bolster.getItemManager().giveItem(player, this.outputItemClass, this.outputCount);
+        ItemManager.getInstance().giveItem(player, this.outputItemClass, this.outputCount);
     }
 }

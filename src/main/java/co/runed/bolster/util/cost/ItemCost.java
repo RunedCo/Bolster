@@ -3,6 +3,7 @@ package co.runed.bolster.util.cost;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.items.Item;
+import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -58,9 +59,9 @@ public class ItemCost extends Cost
         }
         else
         {
-            item = Bolster.getItemManager().createItem(player, this.itemClass);
+            item = ItemManager.getInstance().createItem(player, this.itemClass);
         }
 
-        return Bolster.getItemManager().removeItem(player, item, this.count);
+        return ItemManager.getInstance().removeItem(player, item, this.count);
     }
 }

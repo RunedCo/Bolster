@@ -3,6 +3,7 @@ package co.runed.bolster.abilities.listeners;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,16 +40,16 @@ public class PlayerInteractListener implements Listener
         {
             trigger = event.getAction() == Action.LEFT_CLICK_AIR ? AbilityTrigger.LEFT_CLICK_AIR : AbilityTrigger.LEFT_CLICK_BLOCK;
 
-            Bolster.getAbilityManager().trigger(player, AbilityTrigger.LEFT_CLICK, properties);
+            AbilityManager.getInstance().trigger(player, AbilityTrigger.LEFT_CLICK, properties);
         }
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
         {
             trigger = event.getAction() == Action.RIGHT_CLICK_AIR ? AbilityTrigger.RIGHT_CLICK_AIR : AbilityTrigger.RIGHT_CLICK_BLOCK;
 
-            Bolster.getAbilityManager().trigger(player, AbilityTrigger.RIGHT_CLICK, properties);
+            AbilityManager.getInstance().trigger(player, AbilityTrigger.RIGHT_CLICK, properties);
         }
 
-        Bolster.getAbilityManager().trigger(player, trigger, properties);
+        AbilityManager.getInstance().trigger(player, trigger, properties);
     }
 }

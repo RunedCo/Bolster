@@ -10,9 +10,13 @@ public class CommandManager
 {
     private final List<CommandBase> commands;
 
+    private static CommandManager _instance;
+
     public CommandManager()
     {
         this.commands = new ArrayList<>();
+
+        _instance = this;
     }
 
     /**
@@ -38,5 +42,10 @@ public class CommandManager
         }
 
         this.commands.clear();
+    }
+
+    public static CommandManager getInstance()
+    {
+        return _instance;
     }
 }

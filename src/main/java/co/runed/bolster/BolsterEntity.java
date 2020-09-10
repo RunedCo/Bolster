@@ -1,6 +1,9 @@
 package co.runed.bolster;
 
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.managers.ClassManager;
+import co.runed.bolster.managers.EntityManager;
+import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.PlayerUtil;
 import co.runed.bolster.util.properties.Properties;
@@ -32,12 +35,12 @@ public class BolsterEntity
 
     public BolsterClass getBolsterClass()
     {
-        return Bolster.getClassManager().getClass(this._entity);
+        return ClassManager.getInstance().getClass(this._entity);
     }
 
     public void setBolsterClass(BolsterClass bolsterClass)
     {
-        Bolster.getClassManager().setClass(this._entity, bolsterClass);
+        ClassManager.getInstance().setClass(this._entity, bolsterClass);
     }
 
     public Properties getTraits()
@@ -119,17 +122,17 @@ public class BolsterEntity
 
     public void addStatusEffect(StatusEffect statusEffect)
     {
-        Bolster.getStatusEffectManager().addStatusEffect(this._entity, statusEffect);
+        StatusEffectManager.getInstance().addStatusEffect(this._entity, statusEffect);
     }
 
     public void clearStatusEffect(Class<? extends StatusEffect> statusEffect)
     {
-        Bolster.getStatusEffectManager().clearStatusEffect(this._entity, statusEffect);
+        StatusEffectManager.getInstance().clearStatusEffect(this._entity, statusEffect);
     }
 
     public boolean hasStatusEffect(Class<? extends StatusEffect> statusEffect)
     {
-        return Bolster.getStatusEffectManager().hasStatusEffect(this._entity, statusEffect);
+        return StatusEffectManager.getInstance().hasStatusEffect(this._entity, statusEffect);
     }
 
     public EntityEquipment getEquipment()
@@ -196,7 +199,7 @@ public class BolsterEntity
 
     public static BolsterEntity from(LivingEntity entity)
     {
-        return Bolster.getEntityManager().from(entity);
+        return EntityManager.getInstance().from(entity);
     }
 
     public <T> T getTrait(Property<T> key)

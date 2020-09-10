@@ -137,49 +137,4 @@ public class Bolster extends JavaPlugin
     {
         return Bolster.getInstance().particleSetRegistry;
     }
-
-    public static CooldownManager getCooldownManager()
-    {
-        return Bolster.getInstance().cooldownManager;
-    }
-
-    public static ItemManager getItemManager()
-    {
-        return Bolster.getInstance().itemManager;
-    }
-
-    public static AbilityManager getAbilityManager()
-    {
-        return Bolster.getInstance().abilityManager;
-    }
-
-    public static ManaManager getManaManager()
-    {
-        return Bolster.getInstance().manaManager;
-    }
-
-    public static CommandManager getCommandManager()
-    {
-        return Bolster.getInstance().commandManager;
-    }
-
-    public static SidebarManager getSidebarManager()
-    {
-        return Bolster.getInstance().sidebarManager;
-    }
-
-    public static ClassManager getClassManager()
-    {
-        return Bolster.getInstance().classManager;
-    }
-
-    public static EntityManager getEntityManager()
-    {
-        return Bolster.getInstance().entityManager;
-    }
-
-    public static StatusEffectManager getStatusEffectManager()
-    {
-        return Bolster.getInstance().statusEffectManager;
-    }
 }

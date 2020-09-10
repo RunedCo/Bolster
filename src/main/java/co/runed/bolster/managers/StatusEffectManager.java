@@ -1,6 +1,7 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.status.StatusEffect;
+import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,12 +16,17 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
-public class StatusEffectManager implements Listener
+public class StatusEffectManager extends Manager
 {
     Map<UUID, List<StatusEffect>> statusEffects = new HashMap<>();
 
+    private static StatusEffectManager _instance;
+
     public StatusEffectManager(Plugin plugin)
     {
+        super(plugin);
+
+        _instance = this;
     }
 
     public void addStatusEffect(LivingEntity entity, StatusEffect statusEffect)
@@ -129,5 +135,10 @@ public class StatusEffectManager implements Listener
         {
             this.removeStatusEffect(event.getEntity(), effect);
         }
+    }
+
+    public static StatusEffectManager getInstance()
+    {
+        return _instance;
     }
 }

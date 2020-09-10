@@ -6,6 +6,7 @@ import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.conditions.TargetedCondition;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.items.Item;
+import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.inventory.EquipmentSlot;
@@ -40,7 +41,7 @@ public class ItemEquippedCondition extends TargetedCondition<BolsterEntity>
             {
                 BolsterEntity entity = properties.get(AbilityProperties.CASTER);
 
-                boolean isEquipped = Bolster.getItemManager().isItemEquipped(entity.getBukkit(), this.item, slot);
+                boolean isEquipped = ItemManager.getInstance().isItemEquipped(entity.getBukkit(), this.item, slot);
 
                 if (isEquipped) return true;
             }

@@ -2,6 +2,7 @@ package co.runed.bolster.commands;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.items.Item;
+import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.PlayerUtil;
 import org.bukkit.Material;
@@ -145,11 +146,11 @@ public class CommandItems extends CommandBase
     {
         int stackAmount = info.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || info.getAction() == InventoryAction.DROP_ALL_SLOT ? 64 : 1;
         ItemStack stack = info.getClickedSlot().getItem(player);
-        String itemId = Bolster.getItemManager().getItemIdFromStack(stack);
+        String itemId = ItemManager.getInstance().getItemIdFromStack(stack);
 
         if (info.getAction() == InventoryAction.DROP_ALL_SLOT || info.getAction() == InventoryAction.DROP_ONE_SLOT)
         {
-            Item item = Bolster.getItemManager().createItem(player, itemId);
+            Item item = ItemManager.getInstance().createItem(player, itemId);
 
             ItemStack itemStack = item.toItemStack();
             itemStack.setAmount(stackAmount);
@@ -158,6 +159,6 @@ public class CommandItems extends CommandBase
             return;
         }
 
-        Bolster.getItemManager().giveItem(player, itemId, stackAmount);
+        ItemManager.getInstance().giveItem(player, itemId, stackAmount);
     }
 }

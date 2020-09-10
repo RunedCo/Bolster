@@ -37,10 +37,12 @@ public class ItemManager extends Manager
 
     private final HashMap<UUID, List<Item>> entityItems = new HashMap<>();
 
+    private static ItemManager _instance;
+
     public ItemManager(Plugin plugin)
     {
         super(plugin);
-        this.plugin = plugin;
+        _instance = this;
     }
 
     /**
@@ -440,5 +442,10 @@ public class ItemManager extends Manager
         if (itemId == null) return;
 
         this.createItem(entity, itemId);
+    }
+
+    public static ItemManager getInstance()
+    {
+        return _instance;
     }
 }

@@ -2,6 +2,7 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.entity.LivingEntity;
@@ -44,7 +45,7 @@ public abstract class AbilityProvider implements IRegisterable
             if (ability.getCaster() == owner) continue;
 
             ability.setCaster(owner);
-            Bolster.getAbilityManager().add(owner, abilityData.trigger, ability);
+            AbilityManager.getInstance().add(owner, abilityData.trigger, ability);
         }
     }
 
@@ -75,11 +76,11 @@ public abstract class AbilityProvider implements IRegisterable
     public void destroy()
     {
         if (this.getOwner() != null)
-            Bolster.getAbilityManager().trigger(this.getOwner(), this, AbilityTrigger.REMOVE, new Properties());
+            AbilityManager.getInstance().trigger(this.getOwner(), this, AbilityTrigger.REMOVE, new Properties());
 
         for (AbilityData abilityData : this.abilities)
         {
-            Bolster.getAbilityManager().remove(this.getOwner(), abilityData.ability);
+            AbilityManager.getInstance().remove(this.getOwner(), abilityData.ability);
         }
 
         this.abilities.clear();

@@ -4,6 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.game.Traits;
 import co.runed.bolster.util.ICooldownSource;
+import co.runed.bolster.util.Manager;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
@@ -12,14 +13,17 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CooldownManager
+public class CooldownManager extends Manager
 {
-    private final Plugin plugin;
     private final List<CooldownData> cooldowns = new ArrayList<>();
+
+    private static CooldownManager _instance;
 
     public CooldownManager(Plugin plugin)
     {
-        this.plugin = plugin;
+        super(plugin);
+
+        _instance = this;
     }
 
     /**
@@ -110,5 +114,10 @@ public class CooldownManager
 
             return remaining.toMillis();
         }
+    }
+
+    public static CooldownManager getInstance()
+    {
+        return _instance;
     }
 }

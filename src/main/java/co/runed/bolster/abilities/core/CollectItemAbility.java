@@ -6,6 +6,7 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.conditions.BlockIsMaterialCondition;
 import co.runed.bolster.abilities.conditions.IsEntityTypeCondition;
 import co.runed.bolster.items.Item;
+import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -54,6 +55,6 @@ public class CollectItemAbility extends Ability
     {
         Player player = (Player) properties.get(AbilityProperties.CASTER).getBukkit();
 
-        Bolster.getItemManager().giveItem(player, itemClass, outputCount);
+        ItemManager.getInstance().giveItem(player, itemClass, outputCount);
     }
 }

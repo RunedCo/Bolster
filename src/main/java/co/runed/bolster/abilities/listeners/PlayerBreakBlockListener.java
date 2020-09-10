@@ -3,6 +3,7 @@ package co.runed.bolster.abilities.listeners;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,6 +27,6 @@ public class PlayerBreakBlockListener implements Listener
         properties.set(AbilityProperties.BLOCK, event.getBlock());
         properties.set(AbilityProperties.EVENT, event);
 
-        Bolster.getAbilityManager().trigger(player, AbilityTrigger.ON_BREAK_BLOCK, properties);
+        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_BREAK_BLOCK, properties);
     }
 }
