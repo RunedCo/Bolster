@@ -3,6 +3,8 @@ package co.runed.bolster.managers;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.util.Manager;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
@@ -25,7 +27,7 @@ public class ClassManager extends Manager
     /**
      * Sets an entity's {@link BolsterClass}
      *
-     * @param entity the entity
+     * @param entity       the entity
      * @param bolsterClass the class
      */
     public void setClass(LivingEntity entity, BolsterClass bolsterClass)
@@ -65,6 +67,16 @@ public class ClassManager extends Manager
     public void reset(LivingEntity entity)
     {
         this.setClass(entity, null);
+    }
+
+    @EventHandler
+    private void onConnect(PlayerJoinEvent event)
+    {
+        BolsterClass bolsterClass = this.getClass(event.getPlayer());
+
+        if (bolsterClass == null) return;
+
+        bolsterClass.setOwner(event.getPlayer());
     }
 
     public static ClassManager getInstance()

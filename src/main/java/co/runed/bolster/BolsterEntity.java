@@ -23,7 +23,7 @@ import java.util.UUID;
 
 public class BolsterEntity
 {
-    private final LivingEntity _entity;
+    private LivingEntity _entity;
 
     private final Properties traits;
 
@@ -56,6 +56,11 @@ public class BolsterEntity
     public LivingEntity getBukkit()
     {
         return this._entity;
+    }
+
+    public void setBukkit(LivingEntity entity)
+    {
+        this._entity = entity;
     }
 
     public void setAbsorption(double health)

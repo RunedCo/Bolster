@@ -5,6 +5,7 @@ import co.runed.bolster.util.Manager;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
@@ -26,7 +27,14 @@ public class EntityManager extends Manager
 
     public BolsterEntity from(LivingEntity entity)
     {
-        if (this.entities.containsKey(entity.getUniqueId())) return this.entities.get(entity.getUniqueId());
+        if (this.entities.containsKey(entity.getUniqueId()))
+        {
+            BolsterEntity bolsterEntity = this.entities.get(entity.getUniqueId());
+
+            bolsterEntity.setBukkit(entity);
+
+            return bolsterEntity;
+        }
 
         BolsterEntity bolsterEntity = new BolsterEntity(entity);
 
@@ -82,6 +90,7 @@ public class EntityManager extends Manager
     private void onEntityRemoved(EntityRemoveFromWorldEvent event)
     {
         if (!(event.getEntity() instanceof LivingEntity)) return;
+        if (event.getEntity() instanceof Player) return;
 
         LivingEntity entity = (LivingEntity) event.getEntity();
 

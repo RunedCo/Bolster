@@ -2,14 +2,10 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.Manager;
-import co.runed.bolster.util.PlayerUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
@@ -97,6 +93,14 @@ public class StatusEffectManager extends Manager
         return false;
     }
 
+    public void clearStatusEffects(LivingEntity entity)
+    {
+        for (StatusEffect effect : this.getStatusEffects(entity))
+        {
+            this.clearStatusEffect(entity, effect.getClass());
+        }
+    }
+
     public void updateTitleDisplay(Player player)
     {
         StringBuilder display = new StringBuilder();
@@ -131,10 +135,7 @@ public class StatusEffectManager extends Manager
     @EventHandler
     private void onEntityDeath(EntityDeathEvent event)
     {
-        for (StatusEffect effect : this.getStatusEffects(event.getEntity()))
-        {
-            this.removeStatusEffect(event.getEntity(), effect);
-        }
+        this.clearStatusEffects(event.getEntity());
     }
 
     public static StatusEffectManager getInstance()
