@@ -10,11 +10,13 @@ public class AbilityTrigger
     public static final AbilityTrigger LEFT_CLICK = new AbilityTrigger("left_click", "L-Click", false);
     public static final AbilityTrigger LEFT_CLICK_BLOCK = new AbilityTrigger("left_click_block", "L-Click", false);
     public static final AbilityTrigger LEFT_CLICK_AIR = new AbilityTrigger("left_click_air", "L-Click", false);
+    public static final AbilityTrigger SHIFT_LEFT_CLICK = new AbilityTrigger("shift_left_click", "Shift + L-Click", false);
 
     // RIGHT CLICK VARIANTS
     public static final AbilityTrigger RIGHT_CLICK = new AbilityTrigger("right_click", "R-Click", false);
     public static final AbilityTrigger RIGHT_CLICK_BLOCK = new AbilityTrigger("right_click_block", "R-Click", false);
     public static final AbilityTrigger RIGHT_CLICK_AIR = new AbilityTrigger("right_click_air", "R-Click", false);
+    public static final AbilityTrigger SHIFT_RIGHT_CLICK = new AbilityTrigger("shift_right_click", "Shift + R-Click", false);
 
     // ACTIVE ACTIONS
     public static final AbilityTrigger ON_SHOOT = new AbilityTrigger("on_shoot", "R-Click", false);

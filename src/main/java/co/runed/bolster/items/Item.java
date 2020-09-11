@@ -7,9 +7,9 @@ import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.conditions.ItemEquippedCondition;
 import co.runed.bolster.abilities.conditions.ItemStackIsItemCondition;
 import co.runed.bolster.util.Category;
-import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
+import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -122,11 +122,13 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         this.skin = skin;
     }
 
+    @Override
     public List<Category> getCategories()
     {
         return this.categories;
     }
 
+    @Override
     public void addCategory(Category category)
     {
         if (this.categories.contains(category)) return;

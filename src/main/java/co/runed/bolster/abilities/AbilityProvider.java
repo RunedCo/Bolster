@@ -1,6 +1,6 @@
 package co.runed.bolster.abilities;
 
-import co.runed.bolster.Bolster;
+import co.runed.bolster.ForwardTriggerAbility;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
@@ -52,6 +52,11 @@ public abstract class AbilityProvider implements IRegisterable
     public void addAbility(AbilityTrigger trigger, BiConsumer<LivingEntity, Properties> lambda)
     {
         this.addAbility(trigger, new LambdaAbility(lambda));
+    }
+
+    public void addAbility(AbilityTrigger trigger, AbilityTrigger forwarded)
+    {
+        this.addAbility(trigger, new ForwardTriggerAbility(forwarded));
     }
 
     public void addAbility(AbilityTrigger trigger, Ability ability)

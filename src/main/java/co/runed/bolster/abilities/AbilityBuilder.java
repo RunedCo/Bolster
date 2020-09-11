@@ -6,6 +6,7 @@ import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -19,6 +20,7 @@ public class AbilityBuilder
     String description = null;
     int cooldown = 0;
     int manaCost = 0;
+    Duration duration = null;
 
     public AbilityBuilder setDescription(String description)
     {
@@ -37,6 +39,13 @@ public class AbilityBuilder
     public AbilityBuilder setManaCost(int manaCost)
     {
         this.manaCost = manaCost;
+
+        return this;
+    }
+
+    public AbilityBuilder setDuration(Duration duration)
+    {
+        this.duration = duration;
 
         return this;
     }
@@ -92,6 +101,7 @@ public class AbilityBuilder
 
         ability.setCooldown(cooldown);
         ability.setManaCost(manaCost);
+        ability.setDuration(duration);
 
         return ability;
     }

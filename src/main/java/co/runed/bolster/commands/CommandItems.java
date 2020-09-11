@@ -5,6 +5,7 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.PlayerUtil;
+import co.runed.bolster.util.registries.Registry;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,7 +21,6 @@ import org.ipvp.canvas.template.StaticItemTemplate;
 import org.ipvp.canvas.type.ChestMenu;
 
 import java.util.*;
-import java.util.concurrent.Callable;
 
 public class CommandItems extends CommandBase
 {
@@ -59,13 +59,13 @@ public class CommandItems extends CommandBase
                 .previousButton(new ItemStack(Material.ARROW))
                 .previousButtonSlot(47);
 
-        Map<String, Callable<? extends Item>> items = Bolster.getItemRegistry().getEntries();
+        Map<String, Registry.Entry<? extends Item>> items = Bolster.getItemRegistry().getEntries();
 
-        for (String id : items.keySet())
+        for (Registry.Entry<? extends Item> entry : items.values())
         {
-            Item item = Bolster.getItemRegistry().createInstance(id);
+            Item item = entry.create();
 
-            for (Category category : item.getCategories())
+            for (Category category : entry.getCategories())
             {
                 itemCategories.putIfAbsent(category, new ArrayList<>());
 

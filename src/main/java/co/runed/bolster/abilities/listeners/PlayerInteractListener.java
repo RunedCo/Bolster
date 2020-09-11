@@ -1,6 +1,5 @@
 package co.runed.bolster.abilities.listeners;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.managers.AbilityManager;
@@ -40,12 +39,18 @@ public class PlayerInteractListener implements Listener
         {
             trigger = event.getAction() == Action.LEFT_CLICK_AIR ? AbilityTrigger.LEFT_CLICK_AIR : AbilityTrigger.LEFT_CLICK_BLOCK;
 
+            if (player.isSneaking())
+                AbilityManager.getInstance().trigger(player, AbilityTrigger.SHIFT_LEFT_CLICK, properties);
+
             AbilityManager.getInstance().trigger(player, AbilityTrigger.LEFT_CLICK, properties);
         }
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
         {
             trigger = event.getAction() == Action.RIGHT_CLICK_AIR ? AbilityTrigger.RIGHT_CLICK_AIR : AbilityTrigger.RIGHT_CLICK_BLOCK;
+
+            if (player.isSneaking())
+                AbilityManager.getInstance().trigger(player, AbilityTrigger.SHIFT_RIGHT_CLICK, properties);
 
             AbilityManager.getInstance().trigger(player, AbilityTrigger.RIGHT_CLICK, properties);
         }

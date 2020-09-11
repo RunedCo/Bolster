@@ -1,15 +1,15 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.conditions.IConditional;
+import co.runed.bolster.abilities.conditions.HasManaCondition;
 import co.runed.bolster.abilities.conditions.OffCooldownCondition;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.ConditionPriority;
-import co.runed.bolster.abilities.conditions.HasManaCondition;
+import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.managers.CooldownManager;
+import co.runed.bolster.util.ICooldownSource;
 import co.runed.bolster.util.cost.Cost;
 import co.runed.bolster.util.cost.ManaCost;
-import co.runed.bolster.util.ICooldownSource;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
@@ -20,7 +20,10 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public abstract class Ability implements Listener, IConditional, ICooldownSource
 {
@@ -33,6 +36,8 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private AbilityProvider abilityProvider;
     private AbilityTrigger trigger;
     private boolean showErrors;
+
+    private Duration duration = Duration.ofSeconds(0);
 
     private final List<Condition.Data> conditions = new ArrayList<>();
     private final List<Cost> costs = new ArrayList<>();
@@ -105,7 +110,14 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
 
     public Duration getDuration()
     {
-        return Duration.ZERO;
+        return this.duration;
+    }
+
+    public void setDuration(Duration duration)
+    {
+        if (duration == null) return;
+
+        this.duration = duration;
     }
 
     public boolean shouldCancelEvent()
@@ -129,7 +141,8 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     }
 
     @Override
-    public double getCooldown() {
+    public double getCooldown()
+    {
         return this.cooldown;
     }
 

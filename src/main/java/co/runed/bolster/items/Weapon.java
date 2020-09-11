@@ -1,5 +1,6 @@
 package co.runed.bolster.items;
 
+import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
@@ -14,6 +15,13 @@ public abstract class Weapon extends Item
 {
     double damage = 32;
     double attackSpeed = 10;
+
+    public Weapon()
+    {
+        super();
+
+        this.addCategory(Category.WEAPONS);
+    }
 
     @Override
     public List<String> getLore()
