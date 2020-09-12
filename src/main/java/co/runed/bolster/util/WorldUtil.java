@@ -1,15 +1,16 @@
 package co.runed.bolster.util;
 
-import net.minecraft.server.v1_16_R1.MathHelper;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.BoundingBox;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.List;
 
 public class WorldUtil
 {

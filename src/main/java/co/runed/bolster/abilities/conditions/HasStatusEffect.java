@@ -1,10 +1,10 @@
 package co.runed.bolster.abilities.conditions;
 
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.conditions.TargetedCondition;
-import co.runed.bolster.BolsterEntity;
-import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.status.StatusEffect;
+import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 
 public class HasStatusEffect extends TargetedCondition<BolsterEntity>

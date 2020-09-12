@@ -2,7 +2,6 @@ package co.runed.bolster.game;
 
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -25,7 +24,6 @@ import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 import java.util.EnumSet;
 import java.util.Set;

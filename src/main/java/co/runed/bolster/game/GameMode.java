@@ -1,10 +1,10 @@
 package co.runed.bolster.game;
 
+import co.runed.bolster.game.state.State;
+import co.runed.bolster.game.state.StateSeries;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.IRegisterable;
-import co.runed.bolster.game.state.State;
-import co.runed.bolster.game.state.StateSeries;
 import org.bukkit.plugin.Plugin;
 
 public abstract class GameMode extends Manager implements IRegisterable

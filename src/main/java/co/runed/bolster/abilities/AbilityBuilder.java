@@ -1,8 +1,8 @@
 package co.runed.bolster.abilities;
 
-import co.runed.bolster.util.cost.Cost;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.ConditionPriority;
+import co.runed.bolster.util.cost.Cost;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 

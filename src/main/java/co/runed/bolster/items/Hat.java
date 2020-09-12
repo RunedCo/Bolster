@@ -1,9 +1,9 @@
 package co.runed.bolster.items;
 
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Material;

@@ -1,6 +1,5 @@
 package co.runed.bolster.abilities.listeners;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.managers.AbilityManager;

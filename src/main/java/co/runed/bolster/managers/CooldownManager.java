@@ -1,6 +1,5 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.game.Traits;
 import co.runed.bolster.util.ICooldownSource;

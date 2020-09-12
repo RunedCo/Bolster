@@ -2,8 +2,6 @@ package co.runed.bolster.conditions;
 
 import co.runed.bolster.util.target.ITargeted;
 import co.runed.bolster.util.target.Target;
-import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
 
 public abstract class TargetedCondition<T> extends Condition implements ITargeted<T>
 {

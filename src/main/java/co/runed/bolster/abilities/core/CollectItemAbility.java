@@ -1,6 +1,5 @@
 package co.runed.bolster.abilities.core;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.conditions.BlockIsMaterialCondition;
@@ -12,7 +11,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class CollectItemAbility extends Ability
 {

@@ -1,14 +1,5 @@
 package co.runed.bolster.wip;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.*;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
-
-import java.util.List;
-import java.util.Random;
-
 public class EntityProjectile // extends BukkitRunnable
 {
     /* protected Player owner;

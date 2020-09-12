@@ -1,6 +1,5 @@
 package co.runed.bolster.abilities.core;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.managers.ManaManager;

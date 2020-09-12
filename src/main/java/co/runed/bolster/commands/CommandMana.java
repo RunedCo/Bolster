@@ -1,6 +1,5 @@
 package co.runed.bolster.commands;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.managers.ManaManager;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.FloatArgument;

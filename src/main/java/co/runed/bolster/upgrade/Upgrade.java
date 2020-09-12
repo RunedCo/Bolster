@@ -2,9 +2,9 @@ package co.runed.bolster.upgrade;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
+import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.cost.Cost;
 import co.runed.bolster.util.cost.ManaCost;
-import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

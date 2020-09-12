@@ -9,7 +9,9 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class BlockIsMaterialCondition extends TargetedCondition<Block>
 {

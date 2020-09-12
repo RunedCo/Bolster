@@ -1,15 +1,12 @@
 package co.runed.bolster.util.cost;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class ItemCost extends Cost
 {

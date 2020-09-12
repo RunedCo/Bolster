@@ -1,18 +1,15 @@
 package co.runed.bolster.abilities.core;
 
-import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.TargetedAbility;
-import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.RandomCollection;
 import co.runed.bolster.util.WorldUtil;
+import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.entity.LivingEntity;
 
 import java.util.Collection;
 

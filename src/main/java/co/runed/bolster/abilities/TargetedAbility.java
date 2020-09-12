@@ -2,8 +2,6 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.util.target.ITargeted;
 import co.runed.bolster.util.target.Target;
-import co.runed.bolster.util.properties.Properties;
-import org.bukkit.Location;
 
 public abstract class TargetedAbility<T> extends Ability implements ITargeted<T>
 {

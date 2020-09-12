@@ -2,10 +2,10 @@ package co.runed.bolster.util.scoreboard.sidebar;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.managers.SidebarManager;
+import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.scoreboard.PacketScoreboard;
 import co.runed.bolster.util.scoreboard.Scoreboard;
 import co.runed.bolster.util.scoreboard.ScoreboardObjective;
-import co.runed.bolster.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -1,14 +1,10 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.Bolster;
-import co.runed.bolster.game.GameProperties;
 import co.runed.bolster.util.Manager;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;

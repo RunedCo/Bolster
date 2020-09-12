@@ -1,8 +1,8 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.TimeUtil;
+import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 
