@@ -35,7 +35,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private LivingEntity caster;
     private AbilityProvider abilityProvider;
     private AbilityTrigger trigger;
-    private boolean showErrors;
+    private boolean showErrors = true;
 
     private Duration duration = Duration.ofSeconds(0);
 

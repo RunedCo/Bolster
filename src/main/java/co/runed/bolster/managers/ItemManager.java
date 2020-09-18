@@ -102,7 +102,7 @@ public class ItemManager extends Manager
 
         if (item != null)
         {
-            item.setOwner(entity);
+            item.setEntity(entity);
             return item;
         }
 
@@ -111,7 +111,7 @@ public class ItemManager extends Manager
 
         if (item == null) return null;
 
-        item.setOwner(entity);
+        item.setEntity(entity);
 
         items.add(item);
 
@@ -313,7 +313,7 @@ public class ItemManager extends Manager
         ItemStack stack = inv.getItem(slot);
         String itemId = this.getItemIdFromStack(stack);
 
-        if (item.getOwner() == null || entity != item.getOwner()) return false;
+        if (item.getEntity() == null || entity != item.getEntity()) return false;
         if (itemId == null) return false;
         if (item.getId() == null) return false;
 
@@ -424,7 +424,7 @@ public class ItemManager extends Manager
         Item item = this.createItem(player, itemId);
 
         if (item == null) return;
-        if (item.getOwner() == null || player != item.getOwner()) return;
+        if (item.getEntity() == null || player != item.getEntity()) return;
 
         this.removeItem(player, item);
     }

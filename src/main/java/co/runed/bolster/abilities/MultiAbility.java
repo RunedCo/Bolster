@@ -39,6 +39,17 @@ public class MultiAbility extends Ability
     }
 
     @Override
+    public void setCaster(LivingEntity caster)
+    {
+        super.setCaster(caster);
+
+        for (Ability ability : this.abilities)
+        {
+            ability.setCaster(caster);
+        }
+    }
+
+    @Override
     public Duration getDuration()
     {
         Duration duration = Duration.ZERO;

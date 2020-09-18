@@ -49,6 +49,20 @@ public class WorldUtil
         return new BoundingBox(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius);
     }
 
+    public static List<Block> getBlocksRadiusCircle(Location position, int radiusUp, int radiusDown, int radiusHorizontal)
+    {
+        List<Block> blocks = getBlocksRadius(position, radiusUp, radiusDown, radiusHorizontal);
+
+        // Remove the entities that are within the box above but not actually in the sphere we defined with the radius and location
+        // This code below could probably be replaced in Java 8 with a stream -> filter
+        // Create an iterator so we can loop through the list while removing entries
+        // If the entity is outside of the sphere...
+        // Remove it
+        blocks.removeIf(block -> block.getLocation().distanceSquared(position) > radiusHorizontal * radiusHorizontal);
+
+        return blocks;
+    }
+
     public static List<Block> getBlocksRadius(Location position, int radiusUp, int radiusDown, int radiusHorizontal)
     {
         List<Block> blocks = new ArrayList<>();

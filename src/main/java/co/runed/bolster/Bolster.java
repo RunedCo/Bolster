@@ -8,8 +8,10 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.particles.ParticleSet;
+import co.runed.bolster.upgrade.Upgrade;
 import co.runed.bolster.util.registries.Registry;
 import co.runed.bolster.wip.TestListener;
+import de.slikey.effectlib.EffectManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +27,7 @@ public class Bolster extends JavaPlugin
     private Registry<BolsterClass> classRegistry;
     private Registry<ItemSkin> itemSkinRegistry;
     private Registry<ParticleSet> particleSetRegistry;
+    private Registry<Upgrade> upgradeRegistry;
 
     private CommandManager commandManager;
     private CooldownManager cooldownManager;
@@ -35,6 +38,8 @@ public class Bolster extends JavaPlugin
     private ClassManager classManager;
     private StatusEffectManager statusEffectManager;
     private EntityManager entityManager;
+
+    private EffectManager effectManager;
 
     private GameMode activeGameMode;
 
@@ -54,6 +59,7 @@ public class Bolster extends JavaPlugin
         this.classRegistry = new Registry<>(this);
         this.itemSkinRegistry = new Registry<>(this);
         this.particleSetRegistry = new Registry<>(this);
+        this.upgradeRegistry = new Registry<>(this);
 
         this.particleSetRegistry.register("bruce_test", ParticleSet::new);
 
@@ -68,6 +74,8 @@ public class Bolster extends JavaPlugin
         this.statusEffectManager = new StatusEffectManager(this);
 
         this.entityManager = new EntityManager(this);
+
+        this.effectManager = new EffectManager(this);
 
         // SET MANA MANAGER SETTINGS
         this.manaManager.setDefaultMaximumMana(200);
@@ -112,6 +120,15 @@ public class Bolster extends JavaPlugin
         return this.activeGameMode;
     }
 
+    public static void registerAll(JavaPlugin plugin)
+    {
+        // get package
+        // loop through all classes in package
+        // check if class has annotation + check if any static fields have annotation
+        // for class check if has empty constructor
+        // register
+    }
+
     // SINGLETON GETTERS
     public static Bolster getInstance()
     {
@@ -136,5 +153,15 @@ public class Bolster extends JavaPlugin
     public static Registry<ParticleSet> getParticleSetRegistry()
     {
         return Bolster.getInstance().particleSetRegistry;
+    }
+
+    public static Registry<Upgrade> getUpgradeRegistry()
+    {
+        return Bolster.getInstance().upgradeRegistry;
+    }
+
+    public static EffectManager getEffectManager()
+    {
+        return Bolster.getInstance().effectManager;
     }
 }

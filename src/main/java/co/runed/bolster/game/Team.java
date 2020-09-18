@@ -4,6 +4,7 @@ import co.runed.bolster.Bolster;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,6 +22,7 @@ public class Team implements Listener
     ChatColor color;
     boolean autoAddPlayers = false;
     List<UUID> members = new ArrayList<>();
+    List<UUID> players = new ArrayList<>();
     Map<UUID, Integer> kills = new HashMap<>();
     int totalKills = 0;
     boolean allowFriendlyFire;
@@ -38,6 +40,8 @@ public class Team implements Listener
     {
         if (this.members.contains(entity.getUniqueId())) return;
 
+        if (entity.getType() == EntityType.PLAYER) this.players.add(entity.getUniqueId());
+
         this.members.add(entity.getUniqueId());
         this.kills.put(entity.getUniqueId(), 0);
     }
@@ -48,6 +52,8 @@ public class Team implements Listener
     public void remove(LivingEntity entity)
     {
         if (!this.members.contains(entity.getUniqueId())) return;
+
+        if (entity.getType() == EntityType.PLAYER) this.players.remove(entity.getUniqueId());
 
         this.members.remove(entity.getUniqueId());
     }
@@ -89,6 +95,11 @@ public class Team implements Listener
     public int size()
     {
         return this.members.size();
+    }
+
+    public int playerCount()
+    {
+        return this.players.size();
     }
 
     public void clear()

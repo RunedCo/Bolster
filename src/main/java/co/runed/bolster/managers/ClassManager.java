@@ -3,7 +3,10 @@ package co.runed.bolster.managers;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.util.Manager;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -36,12 +39,14 @@ public class ClassManager extends Manager
 
         if (this.bolsterClasses.containsKey(uuid))
         {
-            this.bolsterClasses.get(uuid).destroy();
+            BolsterClass existingClass = this.bolsterClasses.get(uuid);
+
+            if(existingClass != bolsterClass) existingClass.destroy();
         }
 
         this.bolsterClasses.put(uuid, bolsterClass);
 
-        bolsterClass.setOwner(entity);
+        if (bolsterClass != null && bolsterClass.getEntity() != entity) bolsterClass.setEntity(entity);
     }
 
     /**
@@ -76,7 +81,17 @@ public class ClassManager extends Manager
 
         if (bolsterClass == null) return;
 
-        bolsterClass.setOwner(event.getPlayer());
+        bolsterClass.setEntity(event.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private void onDeath(EntityDeathEvent event)
+    {
+        LivingEntity entity = event.getEntity();
+
+        if (entity instanceof Player) return;
+
+        this.reset(entity);
     }
 
     public static ClassManager getInstance()

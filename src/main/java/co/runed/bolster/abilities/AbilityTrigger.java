@@ -50,6 +50,9 @@ public class AbilityTrigger
     public static final AbilityTrigger TICK = new AbilityTrigger("tick", "Passive", true);
     public static final AbilityTrigger PASSIVE = new AbilityTrigger("passive", "Passive", true);
 
+    // ALWAYS TRIGGERED
+    public static final AbilityTrigger ALL = new AbilityTrigger("all", "Passive", true);
+
     private final String id;
     private final String displayName;
     private final boolean passive;

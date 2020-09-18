@@ -167,7 +167,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
         if (this.abilityCooldowns.containsKey(ability) && this.abilityCooldowns.get(ability) && success)
         {
-            ((Player) this.getOwner()).setCooldown(this.getItemStack().getType(), (int) (ability.getCooldown() * 20));
+            ((Player) this.getEntity()).setCooldown(this.getItemStack().getType(), (int) (ability.getCooldown() * 20));
         }
     }
 
@@ -191,9 +191,9 @@ public abstract class Item extends AbilityProvider implements IRegisterable
                     .setPersistentData(Item.ITEM_SKIN_KEY, PersistentDataType.STRING, this.getSkin().getId());
         }
 
-        if (this.getOwner() != null)
+        if (this.getEntity() != null)
         {
-            builder.setPersistentData(Item.ITEM_OWNER_KEY, PersistentDataType.STRING, this.getOwner().getUniqueId().toString());
+            builder.setPersistentData(Item.ITEM_OWNER_KEY, PersistentDataType.STRING, this.getEntity().getUniqueId().toString());
         }
 
         return builder.build();

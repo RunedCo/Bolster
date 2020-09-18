@@ -18,7 +18,7 @@ public class AbilityBuilder
     List<Cost> costs = new ArrayList<>();
 
     String description = null;
-    int cooldown = 0;
+    double cooldown = 0;
     int manaCost = 0;
     Duration duration = null;
 
@@ -29,7 +29,7 @@ public class AbilityBuilder
         return this;
     }
 
-    public AbilityBuilder setCooldown(int cooldown)
+    public AbilityBuilder setCooldown(double cooldown)
     {
         this.cooldown = cooldown;
 

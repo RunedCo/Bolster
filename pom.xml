@@ -123,15 +123,8 @@
                             <artifactSet>
                                 <includes>
                                     <include>org.ipvp:canvas</include>
-                                    <include>de.slikey:EffectLib</include>
                                 </includes>
                             </artifactSet>
-                            <relocations>
-                                <relocation>
-                                    <pattern>de.slikey</pattern>
-                                    <shadedPattern>co.runed.api.slikey</shadedPattern>
-                                </relocation>
-                            </relocations>
                         </configuration>
                     </execution>
                 </executions>

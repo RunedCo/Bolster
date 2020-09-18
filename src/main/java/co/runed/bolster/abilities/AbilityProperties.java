@@ -56,5 +56,5 @@ public class AbilityProperties
     // CHARGE PROPERTIES
     public static final Property<Long> CHARGE_TIME = new Property<>("charge_time");
 
-    public static final Property<Target<Location>> TARGET_LOCATION = new Property<>("target_location", Target.CASTER_LOCATION);
+    public static final Property<AbilityTrigger> TRIGGER = new Property<>("trigger", AbilityTrigger.ALL);
 }

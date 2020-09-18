@@ -4,6 +4,9 @@ import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.managers.AbilityManager;
+import co.runed.bolster.managers.ClassManager;
+import co.runed.bolster.managers.UpgradeManager;
+import co.runed.bolster.upgrade.Upgrade;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Material;
@@ -20,6 +23,7 @@ public abstract class BolsterClass extends AbilityProvider
     String name = null;
     ItemStack icon = new ItemStack(Material.PLAYER_HEAD);
     List<Category> categories = new ArrayList<>();
+    List<Upgrade> upgrades = new ArrayList<>();
 
     public String getName()
     {
@@ -70,12 +74,19 @@ public abstract class BolsterClass extends AbilityProvider
     }
 
     @Override
-    public void setOwner(LivingEntity owner)
+    public void setEntity(LivingEntity entity)
     {
-        super.setOwner(owner);
+        super.setEntity(entity);
+
+        ClassManager.getInstance().setClass(entity, this);
+
+        for (Upgrade upgrade : this.upgrades)
+        {
+            UpgradeManager.getInstance().addUpgrade(this.getEntity(), upgrade);
+        }
 
         // TODO: MOVE OUTSIDE OF CLASS SPECIFIC IMPLEMENTATION
-        AbilityManager.getInstance().trigger(owner, this, AbilityTrigger.BECOME, new Properties());
+        AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.BECOME, new Properties());
     }
 
     @Override
@@ -88,5 +99,38 @@ public abstract class BolsterClass extends AbilityProvider
     public void onToggleCooldown(Ability ability)
     {
 
+    }
+
+    public void addUpgrade(Upgrade upgrade)
+    {
+        this.upgrades.add(upgrade);
+
+        if (this.getEntity() != null)
+        {
+            UpgradeManager.getInstance().addUpgrade(this.getEntity(), upgrade);
+        }
+    }
+
+    public void removeUpgrade(Upgrade upgrade)
+    {
+        this.upgrades.remove(upgrade);
+
+        if (this.getEntity() != null)
+        {
+            UpgradeManager.getInstance().removeUpgrade(this.getEntity(), upgrade);
+        }
+    }
+
+    @Override
+    public void destroy()
+    {
+        super.destroy();
+
+        for (Upgrade upgrade : this.upgrades)
+        {
+            UpgradeManager.getInstance().removeUpgrade(this.getEntity(), upgrade);
+        }
+
+        // REMOVE UPGRADES
     }
 }

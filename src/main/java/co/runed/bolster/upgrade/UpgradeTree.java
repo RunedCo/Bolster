@@ -41,4 +41,18 @@ public class UpgradeTree
 
         return this;
     }
+
+    public List<Upgrade> getAllUpgrades()
+    {
+        List<Upgrade> upgrades = new ArrayList<>();
+
+        upgrades.add(this.upgrade);
+
+        for (UpgradeTree child : this.children)
+        {
+            upgrades.addAll(child.getAllUpgrades());
+        }
+
+        return upgrades;
+    }
 }

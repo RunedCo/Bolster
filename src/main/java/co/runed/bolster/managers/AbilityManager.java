@@ -162,11 +162,14 @@ public class AbilityManager extends Manager
 
         properties.set(AbilityProperties.CASTER, BolsterEntity.from(entity));
         properties.set(AbilityProperties.WORLD, entity.getWorld());
+        if (trigger != AbilityTrigger.ALL) properties.set(AbilityProperties.TRIGGER, trigger);
 
         for (Ability ability : abilities)
         {
             if (ability == null) continue;
             if (provider != null && provider != ability.getAbilityProvider()) continue;
+
+            AbilityProvider abilityProvider = provider != null ? provider : ability.getAbilityProvider();
 
             EntityCastAbilityEvent castEvent = new EntityCastAbilityEvent(entity, ability, trigger, properties);
 
@@ -176,11 +179,14 @@ public class AbilityManager extends Manager
 
             boolean success = ability.activate(properties);
 
-            if (provider != null)
+            if (abilityProvider != null)
             {
-                provider.onCastAbility(ability, success);
+                abilityProvider.onCastAbility(ability, success);
             }
         }
+
+        if (trigger != AbilityTrigger.ALL && trigger != AbilityTrigger.TICK)
+            this.trigger(entity, provider, AbilityTrigger.ALL, properties);
     }
 
     public static class AbilityData
@@ -196,17 +202,16 @@ public class AbilityManager extends Manager
 
             if (this.trigger == AbilityTrigger.TICK)
             {
-                this.task = Bukkit.getServer().getScheduler().runTaskTimer(Bolster.getInstance(), this::run, 0L, (long) (ability.getCooldown() * 20));
+                this.task = Bukkit.getServer().getScheduler().runTaskTimer(Bolster.getInstance(), this::run, 0L, 1L);
             }
         }
 
         protected void run()
         {
             if (ability.getCaster() == null) return;
+            if (ability.isOnCooldown()) return;
 
             Properties properties = new Properties();
-            properties.set(AbilityProperties.CASTER, BolsterEntity.from(ability.getCaster()));
-            properties.set(AbilityProperties.WORLD, ability.getCaster().getWorld());
 
             AbilityManager.getInstance().trigger(ability.getCaster(), this.trigger, properties);
         }

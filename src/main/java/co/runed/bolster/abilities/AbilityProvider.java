@@ -1,6 +1,5 @@
 package co.runed.bolster.abilities;
 
-import co.runed.bolster.ForwardTriggerAbility;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
@@ -18,7 +17,8 @@ import java.util.function.BiConsumer;
 public abstract class AbilityProvider implements IRegisterable
 {
     private final Collection<AbilityData> abilities = new ArrayList<>();
-    private LivingEntity owner;
+    private LivingEntity entity;
+    LivingEntity parent;
 
     @Override
     public abstract String getId();
@@ -27,26 +27,34 @@ public abstract class AbilityProvider implements IRegisterable
 
     public abstract void onToggleCooldown(Ability ability);
 
-    public LivingEntity getOwner()
+    public LivingEntity getEntity()
     {
-        return this.owner;
+        return this.entity;
     }
 
-    public void setOwner(LivingEntity owner)
+    public void setEntity(LivingEntity entity)
     {
-        if (this.owner == owner) return;
-
-        this.owner = owner;
+        this.entity = entity;
 
         for (AbilityData abilityData : this.abilities)
         {
             Ability ability = abilityData.ability;
 
-            if (ability.getCaster() == owner) continue;
+            if (ability.getCaster() == entity) continue;
 
-            ability.setCaster(owner);
-            AbilityManager.getInstance().add(owner, abilityData.trigger, ability);
+            ability.setCaster(entity);
+            AbilityManager.getInstance().add(entity, abilityData.trigger, ability);
         }
+    }
+
+    public LivingEntity getParent()
+    {
+        return parent;
+    }
+
+    public void setParent(LivingEntity parent)
+    {
+        this.parent = parent;
     }
 
     public void addAbility(AbilityTrigger trigger, BiConsumer<LivingEntity, Properties> lambda)
@@ -54,9 +62,9 @@ public abstract class AbilityProvider implements IRegisterable
         this.addAbility(trigger, new LambdaAbility(lambda));
     }
 
-    public void addAbility(AbilityTrigger trigger, AbilityTrigger forwarded)
+    public void forwardAbilityTrigger(AbilityTrigger from, AbilityTrigger to)
     {
-        this.addAbility(trigger, new ForwardTriggerAbility(forwarded));
+        this.addAbility(from, new ForwardTriggerAbility(to));
     }
 
     public void addAbility(AbilityTrigger trigger, Ability ability)
@@ -80,12 +88,12 @@ public abstract class AbilityProvider implements IRegisterable
 
     public void destroy()
     {
-        if (this.getOwner() != null)
-            AbilityManager.getInstance().trigger(this.getOwner(), this, AbilityTrigger.REMOVE, new Properties());
+        if (this.getEntity() != null)
+            AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.REMOVE, new Properties());
 
         for (AbilityData abilityData : this.abilities)
         {
-            AbilityManager.getInstance().remove(this.getOwner(), abilityData.ability);
+            AbilityManager.getInstance().remove(this.getEntity(), abilityData.ability);
         }
 
         this.abilities.clear();

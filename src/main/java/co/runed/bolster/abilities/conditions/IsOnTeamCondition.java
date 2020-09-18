@@ -1,6 +1,8 @@
-package co.runed.bolster.conditions;
+package co.runed.bolster.abilities.conditions;
 
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.conditions.IConditional;
+import co.runed.bolster.conditions.TargetedCondition;
 import co.runed.bolster.game.Team;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
