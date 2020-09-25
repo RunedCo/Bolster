@@ -6,8 +6,7 @@ import co.runed.bolster.managers.EntityManager;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.PlayerUtil;
-import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.util.properties.Property;
+import co.runed.bolster.wip.TraitProvider;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -19,18 +18,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class BolsterEntity
+public class BolsterEntity extends TraitProvider
 {
     private LivingEntity _entity;
-
-    private final Properties traits;
+    List<TraitProvider> traitProviders = new ArrayList<>();
 
     public BolsterEntity(LivingEntity entity)
     {
         this._entity = entity;
-        this.traits = new Properties();
     }
 
     public BolsterClass getBolsterClass()
@@ -43,16 +42,6 @@ public class BolsterEntity
         ClassManager.getInstance().setClass(this._entity, bolsterClass);
     }
 
-    public Properties getTraits()
-    {
-        return traits;
-    }
-
-    public <T> void setTrait(Property<T> key, T value)
-    {
-        this.getTraits().set(key, value);
-    }
-
     public LivingEntity getBukkit()
     {
         return this._entity;
@@ -62,6 +51,57 @@ public class BolsterEntity
     {
         this._entity = entity;
     }
+
+    /* public Properties getTraits()
+    {
+        Properties traits = new Properties();
+
+        for (TraitProvider traitProvider : this.traitProviders)
+        {
+            Properties existing = traitProvider.getTraits();
+
+            for (Property exProp : existing.getAll().keySet())
+            {
+                if (traits.contains(exProp))
+                {
+                    Object exValue = traits.get(exProp);
+
+                    if (exValue instanceof Number)
+                    {
+                        //traits.set(exProp, );
+                    }
+                }
+            }
+        }
+
+        return traits;
+    }
+
+    @Override
+    public <T> void setTrait(Property<T> key, T value)
+    {
+        super.setTrait(key, value);
+
+        if (!this.traitProviders.contains(this)) this.traitProviders.add(this);
+    }
+
+    public <T> void setTrait(TraitProvider provider, Property<T> key, T value)
+    {
+        provider.setTrait(key, value);
+
+        if (!this.traitProviders.contains(provider)) this.traitProviders.add(provider);
+    }
+
+    @Override
+    public <T> T getTrait(Property<T> key)
+    {
+        return this.getTraits().get(key);
+    }
+
+    public <T> T getTrait(TraitProvider provider, Property<T> key)
+    {
+        return this.getTraits().get(key);
+    } */
 
     public void setAbsorption(double health)
     {
@@ -91,6 +131,11 @@ public class BolsterEntity
     public Location getLocation()
     {
         return this._entity.getLocation();
+    }
+
+    public Location getEyeLocation()
+    {
+        return this._entity.getEyeLocation();
     }
 
     public boolean teleport(Location location)
@@ -206,10 +251,4 @@ public class BolsterEntity
     {
         return EntityManager.getInstance().from(entity);
     }
-
-    public <T> T getTrait(Property<T> key)
-    {
-        return this.getTraits().get(key);
-    }
-
 }

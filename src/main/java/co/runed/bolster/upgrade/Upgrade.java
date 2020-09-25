@@ -27,7 +27,7 @@ public class Upgrade implements IRegisterable
     String id;
     String name;
     ItemStack icon = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
-    Cost cost = new ManaCost(0);
+    int cost = 0;
     int maxLevel = 1;
     int defaultLevel = 0;
     boolean exclusive = false;
@@ -45,7 +45,7 @@ public class Upgrade implements IRegisterable
         return this;
     }
 
-    public Upgrade setCost(Cost cost)
+    public Upgrade setCost(int cost)
     {
         this.cost = cost;
 

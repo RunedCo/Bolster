@@ -28,15 +28,15 @@ public class CooldownManager extends Manager
     /**
      * Sets the cooldown for a specific cooldown source for an entity
      *
-     * @param entity the entity
-     * @param source the source
+     * @param entity   the entity
+     * @param source   the source
      * @param cooldown the cooldown in seconds
      */
     public void setCooldown(LivingEntity entity, ICooldownSource source, double cooldown)
     {
         if (cooldown <= 0) return;
 
-        cooldown = cooldown * BolsterEntity.from(entity).getTrait(Traits.COOLDOWN_REDUCTION_MULTIPLIER);
+        cooldown = cooldown * Math.max(0, 1 - BolsterEntity.from(entity).getTrait(Traits.COOLDOWN_REDUCTION_PERCENT));
 
         if (this.getRemainingTime(entity, source) <= 0)
         {

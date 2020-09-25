@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.*;
 
+// TODO WHEN ENTITY THAT IS NOT PLAYER DIES REMOVE FROM TEAM
 public class Team implements Listener
 {
     String name;
@@ -149,6 +150,16 @@ public class Team implements Listener
         {
             this.add(event.getPlayer());
         }
+    }
+
+    @EventHandler
+    private void onEntityDeath(EntityDeathEvent event)
+    {
+        LivingEntity entity = event.getEntity();
+
+        if (entity instanceof Player) return;
+
+        this.remove(entity);
     }
 
     @EventHandler
