@@ -79,7 +79,13 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
             if (ability.getDescription() == null) continue;
 
-            loreWithAbilities.addAll(StringUtil.formatLore(ChatColor.RED + abilityData.trigger.getDisplayName() + ": " + ChatColor.YELLOW + ability.getDescription()));
+            String abilityDesc = ChatColor.RED + abilityData.trigger.getDisplayName() + ": "
+                    + ChatColor.YELLOW + ability.getDescription();
+
+            if (ability.getCooldown() > 0)  abilityDesc += ChatColor.DARK_GRAY + " (" + abilityData.ability.getCooldown() + "s cooldown)";
+            if (ability.getManaCost() > 0)  abilityDesc += ChatColor.BLUE + " (" + abilityData.ability.getManaCost() + " mana)";
+
+            loreWithAbilities.addAll(StringUtil.formatLore(abilityDesc));
         }
 
         if (loreWithAbilities.size() > 0 && this.lore.size() > 0)

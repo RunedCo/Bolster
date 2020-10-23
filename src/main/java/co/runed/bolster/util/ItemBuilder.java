@@ -1,5 +1,6 @@
 package co.runed.bolster.util;
 
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -8,6 +9,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
@@ -45,6 +47,19 @@ public class ItemBuilder
     {
         ItemMeta meta = this.itemStack.getItemMeta();
         meta.setDisplayName(name);
+        this.itemStack.setItemMeta(meta);
+        return new ItemBuilder(this.itemStack);
+    }
+
+    public ItemBuilder setColor(Color color)
+    {
+        ItemMeta itemMeta = this.itemStack.getItemMeta();
+
+        if (itemMeta instanceof PotionMeta) return new ItemBuilder(this.itemStack);
+
+        PotionMeta meta = (PotionMeta)itemMeta;
+
+        meta.setColor(color);
         this.itemStack.setItemMeta(meta);
         return new ItemBuilder(this.itemStack);
     }

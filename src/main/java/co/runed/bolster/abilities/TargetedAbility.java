@@ -14,6 +14,11 @@ public abstract class TargetedAbility<T> extends Ability implements ITargeted<T>
         this.target = target;
     }
 
+    public TargetedAbility()
+    {
+
+    }
+
     @Override
     public Target<T> getTarget()
     {

@@ -59,6 +59,11 @@ public class Registry<T extends IRegisterable>
         return results;
     }
 
+    public Class<T> getClass(String id)
+    {
+        return (Class<T>) this.createInstance(id).getClass();
+    }
+
     public String getId(Class<? extends T> iClass)
     {
         for (Map.Entry<String, Entry<? extends T>> entry : this.entries.entrySet())

@@ -21,7 +21,7 @@ public class Hat extends Item
 
         this.addAbility(AbilityTrigger.RIGHT_CLICK, new EquipHatAbility());
 
-        this.addCategory(Category.HAT);
+        this.addCategory(Category.HATS);
     }
 
     public static class EquipHatAbility extends Ability

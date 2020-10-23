@@ -10,7 +10,7 @@ public class Category
     public static final Category TOOLS = new Category("Tools", null, new ItemStack(Material.IRON_AXE));
     public static final Category MATERIALS = new Category("Materials", null, new ItemStack(Material.COBBLESTONE));
     public static final Category UTILITY = new Category("Utility", null, new ItemStack(Material.FURNACE));
-    public static final Category HAT = new Category("Hat", null, new ItemStack(Material.PLAYER_HEAD));
+    public static final Category HATS = new Category("Hats", null, new ItemStack(Material.PLAYER_HEAD));
     public static final Category ALL = new Category("All", null, new ItemStack(Material.CHEST));
 
     String name;

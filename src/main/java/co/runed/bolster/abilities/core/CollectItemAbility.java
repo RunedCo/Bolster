@@ -13,34 +13,34 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.function.Function;
 
 public class CollectItemAbility extends Ability
 {
     Collection<Material> materials = new ArrayList<>();
-    Class<? extends Item> itemClass;
+    Function<Properties, Class<? extends Item>> itemClassFunc;
     int outputCount = 1;
-
-    public CollectItemAbility(Material material, Class<? extends Item> itemClass)
-    {
-        this(Collections.singletonList(material), itemClass);
-    }
 
     public CollectItemAbility(Collection<Material> materials, Class<? extends Item> itemClass)
     {
         this(materials, itemClass, 1);
     }
 
-    public CollectItemAbility(Material material, Class<? extends Item> itemClass, int outputCount)
+    public CollectItemAbility(Collection<Material> materials, Class<? extends Item> itemClass, int outputCount)
     {
-        this(Collections.singletonList(material), itemClass, outputCount);
+        this(materials, (properties) -> itemClass, outputCount);
     }
 
-    public CollectItemAbility(Collection<Material> materials, Class<? extends Item> itemClass, int outputCount)
+    public CollectItemAbility(Collection<Material> materials, Function<Properties, Class<? extends Item>>itemClassFunc)
+    {
+        this(materials, itemClassFunc, 1);
+    }
+
+    public CollectItemAbility(Collection<Material> materials, Function<Properties, Class<? extends Item>>itemClassFunc, int outputCount)
     {
         super();
 
-        this.itemClass = itemClass;
+        this.itemClassFunc = itemClassFunc;
         this.materials = materials;
         this.outputCount = outputCount;
 
@@ -56,6 +56,6 @@ public class CollectItemAbility extends Ability
     {
         Player player = (Player) properties.get(AbilityProperties.CASTER).getBukkit();
 
-        ItemManager.getInstance().giveItem(player, itemClass, outputCount);
+        ItemManager.getInstance().giveItem(player, itemClassFunc.apply(properties), outputCount);
     }
 }

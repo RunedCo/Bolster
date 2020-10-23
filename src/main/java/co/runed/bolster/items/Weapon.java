@@ -13,14 +13,25 @@ import java.util.List;
 
 public abstract class Weapon extends Item
 {
-    double damage = 32;
+    double damage = 10;
     double attackSpeed = 10;
+    double knockBackResistance = 0;
 
     public Weapon()
     {
         super();
 
         this.addCategory(Category.WEAPONS);
+    }
+
+    public void setDamage(double damage)
+    {
+        this.damage = damage;
+    }
+
+    public void setAttackSpeed(double attackSpeed)
+    {
+        this.attackSpeed = attackSpeed;
     }
 
     @Override
@@ -30,12 +41,17 @@ public abstract class Weapon extends Item
 
         if (this.damage > 0)
         {
-            lore.add(ChatColor.GRAY + "Attack Damage: " + ChatColor.RED + this.damage);
+            lore.add(ChatColor.GRAY + "Attack Damage: " + ChatColor.YELLOW + this.damage);
         }
 
         if (this.attackSpeed > 0)
         {
             lore.add(ChatColor.GRAY + "Attack Speed: " + ChatColor.YELLOW + this.attackSpeed);
+        }
+
+        if (this.knockBackResistance > 0)
+        {
+            lore.add(ChatColor.GRAY + "Knockback Resistance: " + ChatColor.YELLOW + this.knockBackResistance);
         }
 
         if (lore.size() > 0)
@@ -57,6 +73,7 @@ public abstract class Weapon extends Item
 
         builder.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier("attack_damage", this.damage - 1, AttributeModifier.Operation.ADD_NUMBER));
         builder.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier("attack_speed", this.attackSpeed - 1, AttributeModifier.Operation.ADD_NUMBER));
+        builder.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier("knockback_resistance", this.knockBackResistance - 1, AttributeModifier.Operation.ADD_NUMBER));
 
         return builder.build();
     }

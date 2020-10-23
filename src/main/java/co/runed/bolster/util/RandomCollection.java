@@ -38,6 +38,11 @@ public class RandomCollection<E> {
         return this.entries.contains(value);
     }
 
+    public boolean isEmpty()
+    {
+        return this.entries.isEmpty();
+    }
+
     public E next() {
         double value = random.nextDouble() * total;
         return map.higherEntry(value).getValue();
