@@ -27,6 +27,12 @@ public class ItemSkin implements IRegisterable
         return this.id;
     }
 
+    @Override
+    public String getDescription()
+    {
+        return null;
+    }
+
     public String getName()
     {
         return name;

@@ -41,6 +41,7 @@ public class AbilityTrigger
     public static final AbilityTrigger ON_INTERACTED_WITH = new AbilityTrigger("on_interacted_with", "Passive", true);
     public static final AbilityTrigger ON_SPAWN = new AbilityTrigger("on_spawn", "Passive", true);
     public static final AbilityTrigger ON_ENTER_PORTAL = new AbilityTrigger("on_enter_portal", "Passive", true);
+    public static final AbilityTrigger ON_EQUIP = new AbilityTrigger("on_equip", "Passive", true);
 
     // TRIGGERED WHEN YOU BECOME THIS CLASS
     public static final AbilityTrigger BECOME = new AbilityTrigger("become", "Passive", true);

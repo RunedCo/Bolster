@@ -131,6 +131,12 @@ public class Upgrade implements IRegisterable
         return this.id;
     }
 
+    @Override
+    public String getDescription()
+    {
+        return null;
+    }
+
     public int getDefaultLevel()
     {
         return this.defaultLevel;

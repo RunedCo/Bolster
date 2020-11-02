@@ -82,8 +82,10 @@ public abstract class Item extends AbilityProvider implements IRegisterable
             String abilityDesc = ChatColor.RED + abilityData.trigger.getDisplayName() + ": "
                     + ChatColor.YELLOW + ability.getDescription();
 
-            if (ability.getCooldown() > 0)  abilityDesc += ChatColor.DARK_GRAY + " (" + abilityData.ability.getCooldown() + "s cooldown)";
-            if (ability.getManaCost() > 0)  abilityDesc += ChatColor.BLUE + " (" + abilityData.ability.getManaCost() + " mana)";
+            if (ability.getCooldown() > 0)
+                abilityDesc += ChatColor.DARK_GRAY + " (" + abilityData.ability.getCooldown() + "s cooldown)";
+            if (ability.getManaCost() > 0)
+                abilityDesc += ChatColor.BLUE + " (" + abilityData.ability.getManaCost() + " mana)";
 
             loreWithAbilities.addAll(StringUtil.formatLore(abilityDesc));
         }
@@ -96,6 +98,18 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         loreWithAbilities.addAll(this.lore);
 
         return loreWithAbilities;
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return String.join("\n", this.getLore());
+    }
+
+    @Override
+    public ItemStack getIcon()
+    {
+        return this.toItemStack();
     }
 
     protected ItemStack getItemStack()
@@ -144,22 +158,29 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
     public void addAbility(AbilityTrigger trigger, Ability ability, boolean showCooldown)
     {
-        this.abilityCooldowns.put(ability, showCooldown);
-
-        this.addAbility(trigger, ability);
+        this.addAbility(trigger, ability, showCooldown, true);
     }
 
     @Override
     public void addAbility(AbilityTrigger trigger, Ability ability)
     {
-        if (trigger == AbilityTrigger.ON_SELECT_ITEM || trigger == AbilityTrigger.ON_DESELECT_ITEM)
+        this.addAbility(trigger, ability, false, true);
+    }
+
+    public void addAbility(AbilityTrigger trigger, Ability ability, boolean showCooldown, boolean addDefaultConditions)
+    {
+        if (showCooldown) this.abilityCooldowns.put(ability, showCooldown);
+
+        /* if (trigger == AbilityTrigger.ON_SELECT_ITEM || trigger == AbilityTrigger.ON_DESELECT_ITEM)
         {
             ability.addCondition(new ItemStackIsItemCondition(this.getClass()));
         }
         else
         {
-            ability.addCondition(new ItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()));
-        }
+
+        }*/
+
+        if (addDefaultConditions) ability.addCondition(new ItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()));
 
         super.addAbility(trigger, ability);
     }

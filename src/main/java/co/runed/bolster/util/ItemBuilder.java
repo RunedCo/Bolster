@@ -1,5 +1,6 @@
 package co.runed.bolster.util;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -57,7 +59,7 @@ public class ItemBuilder
 
         if (itemMeta instanceof PotionMeta) return new ItemBuilder(this.itemStack);
 
-        PotionMeta meta = (PotionMeta)itemMeta;
+        PotionMeta meta = (PotionMeta) itemMeta;
 
         meta.setColor(color);
         this.itemStack.setItemMeta(meta);
@@ -67,7 +69,16 @@ public class ItemBuilder
     public ItemBuilder addLore(String line)
     {
         ItemMeta meta = this.itemStack.getItemMeta();
-        meta.getLore().add(line);
+        List<String> lore = meta.getLore();
+
+        if (lore == null)
+        {
+            lore = new ArrayList<>();
+        }
+
+        lore.addAll(StringUtil.formatLore(line));
+
+        meta.setLore(lore);
         this.itemStack.setItemMeta(meta);
         return new ItemBuilder(this.itemStack);
     }
@@ -109,6 +120,11 @@ public class ItemBuilder
         meta.setCustomModelData(data);
         this.itemStack.setItemMeta(meta);
         return new ItemBuilder(this.itemStack);
+    }
+
+    public ItemBuilder hideName()
+    {
+        return this.setDisplayName(ChatColor.RESET + "");
     }
 
     public ItemBuilder addUnsafeEnchant(Enchantment ench, int level)

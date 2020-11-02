@@ -113,4 +113,10 @@ public class Quest implements IRegisterable
         return this.id;
     }
 
+    @Override
+    public String getDescription()
+    {
+        return this.getDescription();
+    }
+
 }

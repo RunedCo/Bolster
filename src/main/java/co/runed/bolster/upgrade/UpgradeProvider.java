@@ -20,6 +20,12 @@ public class UpgradeProvider extends AbilityProvider
     }
 
     @Override
+    public String getDescription()
+    {
+        return null;
+    }
+
+    @Override
     public void onCastAbility(Ability ability, Boolean success)
     {
 

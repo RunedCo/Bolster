@@ -167,5 +167,10 @@ public class Registry<T extends IRegisterable>
         {
             return this.categories;
         }
+
+        public String getId()
+        {
+            return id;
+        }
     }
 }

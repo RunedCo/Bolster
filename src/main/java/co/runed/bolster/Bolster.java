@@ -3,6 +3,7 @@ package co.runed.bolster;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.classes.TargetDummyClass;
 import co.runed.bolster.commands.*;
+import co.runed.bolster.events.ArmorListener;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
@@ -96,6 +97,7 @@ public class Bolster extends JavaPlugin
         // REGISTER MENU EVENTS
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new TestListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ArmorListener(), this);
     }
 
     @Override
@@ -118,15 +120,6 @@ public class Bolster extends JavaPlugin
     public GameMode getActiveGameMode()
     {
         return this.activeGameMode;
-    }
-
-    public static void registerAll(JavaPlugin plugin)
-    {
-        // get package
-        // loop through all classes in package
-        // check if class has annotation + check if any static fields have annotation
-        // for class check if has empty constructor
-        // register
     }
 
     // SINGLETON GETTERS

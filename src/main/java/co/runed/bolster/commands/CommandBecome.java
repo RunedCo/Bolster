@@ -63,10 +63,8 @@ public class CommandBecome extends CommandBase
 
         for (BolsterClass clazz : classes)
         {
-            ItemStack icon = new ItemBuilder(clazz.getIcon()).setDisplayName(clazz.getName()).build();
-
             SlotSettings settings = SlotSettings.builder()
-                    .itemTemplate(new StaticItemTemplate(icon))
+                    .itemTemplate(new StaticItemTemplate(clazz.getIcon()))
                     .clickHandler((p, i) -> {
                         BolsterEntity.from(p).setBolsterClass(clazz);
                         p.closeInventory();

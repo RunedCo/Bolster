@@ -16,6 +16,7 @@ public abstract class Weapon extends Item
     double damage = 10;
     double attackSpeed = 10;
     double knockBackResistance = 0;
+    double power = 10;
 
     public Weapon()
     {
@@ -44,6 +45,11 @@ public abstract class Weapon extends Item
             lore.add(ChatColor.GRAY + "Attack Damage: " + ChatColor.YELLOW + this.damage);
         }
 
+        if (this.power > 0)
+        {
+            lore.add(ChatColor.GRAY + "Power: " + ChatColor.YELLOW + this.power);
+        }
+
         if (this.attackSpeed > 0)
         {
             lore.add(ChatColor.GRAY + "Attack Speed: " + ChatColor.YELLOW + this.attackSpeed);
@@ -54,12 +60,14 @@ public abstract class Weapon extends Item
             lore.add(ChatColor.GRAY + "Knockback Resistance: " + ChatColor.YELLOW + this.knockBackResistance);
         }
 
-        if (lore.size() > 0)
+        List<String> baseLore = super.getLore();
+
+        if (baseLore.size() > 0)
         {
             lore.add("");
         }
 
-        lore.addAll(super.getLore());
+        lore.addAll(baseLore);
 
         return lore;
     }

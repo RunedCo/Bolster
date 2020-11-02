@@ -8,6 +8,7 @@ import co.runed.bolster.managers.ClassManager;
 import co.runed.bolster.managers.UpgradeManager;
 import co.runed.bolster.upgrade.Upgrade;
 import co.runed.bolster.util.Category;
+import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -24,6 +25,7 @@ public abstract class BolsterClass extends AbilityProvider
     ItemStack icon = new ItemStack(Material.PLAYER_HEAD);
     List<Category> categories = new ArrayList<>();
     List<Upgrade> upgrades = new ArrayList<>();
+    String description;
 
     public String getName()
     {
@@ -37,9 +39,10 @@ public abstract class BolsterClass extends AbilityProvider
         this.name = name;
     }
 
+    @Override
     public ItemStack getIcon()
     {
-        return icon;
+        return new ItemBuilder(this.icon).setDisplayName(this.getName()).build();
     }
 
     public void setIcon(ItemStack icon)
@@ -57,6 +60,17 @@ public abstract class BolsterClass extends AbilityProvider
     public String getId()
     {
         return this.id;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return this.description;
     }
 
     @Override
