@@ -1,8 +1,10 @@
 package co.runed.bolster.abilities.core;
 
 import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.abilities.conditions.IsMaxHealthCondition;
+import co.runed.bolster.conditions.NotCondition;
 import co.runed.bolster.util.properties.Properties;
-import org.bukkit.attribute.Attribute;
+import co.runed.bolster.util.target.Target;
 
 public class HealAbility extends Ability
 {
@@ -18,6 +20,8 @@ public class HealAbility extends Ability
         super();
 
         this.healAmount = healAmount;
+
+        this.addCondition(new NotCondition(new IsMaxHealthCondition(Target.CASTER)));
     }
 
     @Override
@@ -27,7 +31,7 @@ public class HealAbility extends Ability
 
         double heal = this.healAmount;
 
-        if(heal < 0) heal = maxHealth - this.getCaster().getHealth();
+        if (heal < 0) heal = maxHealth - this.getCaster().getHealth();
 
         this.getCaster().setHealth(Math.min(this.getCaster().getHealth() + heal, maxHealth));
     }

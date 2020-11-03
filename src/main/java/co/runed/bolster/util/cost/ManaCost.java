@@ -20,6 +20,8 @@ public class ManaCost extends Cost
         ManaManager manager = ManaManager.getInstance();
         BolsterEntity caster = properties.get(AbilityProperties.CASTER);
 
+        if (this.cost <= 0) return true;
+
         if (manager.getCurrentMana(caster.getBukkit()) < this.cost)
         {
             return false;

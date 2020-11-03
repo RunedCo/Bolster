@@ -5,6 +5,7 @@ import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -64,6 +65,20 @@ public class StringUtil
         quoteList.add(ChatColor.GRAY + "- " + author);
 
         return quoteList;
+    }
+
+    public static String join(String joiner, Collection<String> items)
+    {
+        StringBuilder out = new StringBuilder();
+
+        for (String item : items)
+        {
+            out.append(item).append(joiner);
+        }
+
+        if (out.length() <= 0) return "YY";
+
+        return out.substring(0, out.length() - joiner.length());
     }
 
     /**

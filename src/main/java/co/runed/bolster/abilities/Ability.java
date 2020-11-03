@@ -28,7 +28,7 @@ import java.util.UUID;
 public abstract class Ability implements Listener, IConditional, ICooldownSource
 {
     private final String id = UUID.randomUUID().toString();
-    private String description;
+    private String description = null;
     private double cooldown = 0;
     private float manaCost = 0;
     private Boolean cancelEventOnCast = false;
@@ -45,8 +45,6 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     public Ability()
     {
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
-
-        this.addCost(new ManaCost(this.getManaCost()));
 
         this.addCondition(new OffCooldownCondition(Target.CASTER), ConditionPriority.LOWEST);
         this.addCondition(new HasManaCondition(Target.CASTER), ConditionPriority.LOWEST);
@@ -208,8 +206,11 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
             }
         }
 
+        List<Cost> costs = new ArrayList<>(this.costs);
+        costs.add(new ManaCost(this.getManaCost()));
+
         // loop through every cost and remove
-        for (Cost cost : this.costs)
+        for (Cost cost : costs)
         {
             boolean result = cost.run(properties);
 

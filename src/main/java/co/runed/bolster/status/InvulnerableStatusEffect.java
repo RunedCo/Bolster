@@ -44,7 +44,9 @@ public class InvulnerableStatusEffect extends StatusEffect
     @EventHandler
     private void onTakeDamage(EntityDamageEvent event)
     {
-        if(this.getEntity().equals(event.getEntity()))
+        if (this.getEntity() == null) return;
+
+        if (this.getEntity().equals(event.getEntity()))
         {
             event.setCancelled(true);
         }

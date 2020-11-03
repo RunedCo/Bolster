@@ -16,7 +16,7 @@ public abstract class Weapon extends Item
     double damage = 10;
     double attackSpeed = 10;
     double knockBackResistance = 0;
-    double power = 10;
+    double power = 0;
 
     public Weapon()
     {
@@ -33,6 +33,16 @@ public abstract class Weapon extends Item
     public void setAttackSpeed(double attackSpeed)
     {
         this.attackSpeed = attackSpeed;
+    }
+
+    public void setPower(double power)
+    {
+        this.power = power;
+    }
+
+    public void setKnockBackResistance(double knockBackResistance)
+    {
+        this.knockBackResistance = knockBackResistance;
     }
 
     @Override

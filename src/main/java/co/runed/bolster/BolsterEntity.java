@@ -113,6 +113,16 @@ public class BolsterEntity extends TraitProvider
         return this._entity.getAbsorptionAmount();
     }
 
+    public double getMaxHealth()
+    {
+        return this._entity.getMaxHealth();
+    }
+
+    public double getHealth()
+    {
+        return this._entity.getHealth();
+    }
+
     public World getWorld()
     {
         return this._entity.getWorld();

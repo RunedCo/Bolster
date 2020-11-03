@@ -2,12 +2,15 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.AbilityManager;
+import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 /**
@@ -79,6 +82,33 @@ public abstract class AbilityProvider implements IRegisterable
     public boolean hasAbility(AbilityTrigger trigger)
     {
         return this.abilities.stream().anyMatch((info) -> info.trigger.equals(trigger));
+    }
+
+    @Override
+    public String getDescription()
+    {
+        List<String> abilityDescriptions = new ArrayList<>();
+
+        for (AbilityData abilityData : this.getAbilities())
+        {
+            Ability ability = abilityData.ability;
+
+            if (ability.getDescription() == null) continue;
+
+            String abilityDesc = ChatColor.RED + abilityData.trigger.getDisplayName() + ": "
+                    + ChatColor.YELLOW + ability.getDescription();
+
+            if (ability.getCooldown() > 0)
+                abilityDesc += ChatColor.DARK_GRAY + " (" + abilityData.ability.getCooldown() + "s cooldown)";
+            if (ability.getManaCost() > 0)
+                abilityDesc += ChatColor.BLUE + " (" + abilityData.ability.getManaCost() + " mana)";
+
+            abilityDescriptions.addAll(StringUtil.formatLore(abilityDesc));
+        }
+
+        if (abilityDescriptions.size() <= 0) return null;
+
+        return StringUtil.join("\n", abilityDescriptions);
     }
 
     public Collection<AbilityData> getAbilities()

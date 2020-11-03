@@ -5,7 +5,6 @@ import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.conditions.ItemEquippedCondition;
-import co.runed.bolster.abilities.conditions.ItemStackIsItemCondition;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
@@ -73,21 +72,11 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     {
         List<String> loreWithAbilities = new ArrayList<>();
 
-        for (AbilityData abilityData : this.getAbilities())
+        String desc = super.getDescription();
+
+        if (desc != null && !desc.isEmpty())
         {
-            Ability ability = abilityData.ability;
-
-            if (ability.getDescription() == null) continue;
-
-            String abilityDesc = ChatColor.RED + abilityData.trigger.getDisplayName() + ": "
-                    + ChatColor.YELLOW + ability.getDescription();
-
-            if (ability.getCooldown() > 0)
-                abilityDesc += ChatColor.DARK_GRAY + " (" + abilityData.ability.getCooldown() + "s cooldown)";
-            if (ability.getManaCost() > 0)
-                abilityDesc += ChatColor.BLUE + " (" + abilityData.ability.getManaCost() + " mana)";
-
-            loreWithAbilities.addAll(StringUtil.formatLore(abilityDesc));
+            loreWithAbilities.addAll(Arrays.asList(desc.split("\n")));
         }
 
         if (loreWithAbilities.size() > 0 && this.lore.size() > 0)
@@ -103,7 +92,9 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     @Override
     public String getDescription()
     {
-        return String.join("\n", this.getLore());
+        if (this.getLore().size() <= 0) return "";
+
+        return StringUtil.join("\n", this.getLore());
     }
 
     @Override
@@ -180,7 +171,8 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
         }*/
 
-        if (addDefaultConditions) ability.addCondition(new ItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()));
+        if (addDefaultConditions)
+            ability.addCondition(new ItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()));
 
         super.addAbility(trigger, ability);
     }
