@@ -4,6 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 public class BlindStatusEffect extends StatusEffect
 {
     public BlindStatusEffect(double duration)
@@ -21,6 +24,12 @@ public class BlindStatusEffect extends StatusEffect
     public ChatColor getColor()
     {
         return ChatColor.DARK_GRAY;
+    }
+
+    @Override
+    public Collection<PotionEffectType> getPotionEffects()
+    {
+        return Arrays.asList(PotionEffectType.BLINDNESS);
     }
 
     @Override

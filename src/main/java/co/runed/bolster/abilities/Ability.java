@@ -28,6 +28,7 @@ import java.util.UUID;
 public abstract class Ability implements Listener, IConditional, ICooldownSource
 {
     private final String id = UUID.randomUUID().toString();
+    private String name = null;
     private String description = null;
     private double cooldown = 0;
     private float manaCost = 0;
@@ -48,6 +49,16 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
 
         this.addCondition(new OffCooldownCondition(Target.CASTER), ConditionPriority.LOWEST);
         this.addCondition(new HasManaCondition(Target.CASTER), ConditionPriority.LOWEST);
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
     }
 
     public String getId()

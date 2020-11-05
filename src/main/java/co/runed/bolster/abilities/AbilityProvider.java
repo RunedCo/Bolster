@@ -95,8 +95,9 @@ public abstract class AbilityProvider implements IRegisterable
 
             if (ability.getDescription() == null) continue;
 
-            String abilityDesc = ChatColor.RED + abilityData.trigger.getDisplayName() + ": "
-                    + ChatColor.YELLOW + ability.getDescription();
+            String abilityName = ChatColor.RED + abilityData.trigger.getDisplayName() + (ability.getName() != null ? " - " + ability.getName() : "");
+
+            String abilityDesc = abilityName + ": " + ChatColor.YELLOW + ability.getDescription();
 
             if (ability.getCooldown() > 0)
                 abilityDesc += ChatColor.DARK_GRAY + " (" + abilityData.ability.getCooldown() + "s cooldown)";

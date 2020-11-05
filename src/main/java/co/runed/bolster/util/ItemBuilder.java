@@ -57,7 +57,7 @@ public class ItemBuilder
     {
         ItemMeta itemMeta = this.itemStack.getItemMeta();
 
-        if (itemMeta instanceof PotionMeta) return new ItemBuilder(this.itemStack);
+        if (!(itemMeta instanceof PotionMeta)) return new ItemBuilder(this.itemStack);
 
         PotionMeta meta = (PotionMeta) itemMeta;
 

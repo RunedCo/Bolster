@@ -1,38 +1,36 @@
 package co.runed.bolster.abilities.core;
 
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.abilities.TargetedAbility;
 import co.runed.bolster.abilities.conditions.IsMaxHealthCondition;
 import co.runed.bolster.conditions.NotCondition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 
-public class HealAbility extends Ability
+public class HealAbility extends TargetedAbility<BolsterEntity>
 {
     double healAmount;
 
-    public HealAbility()
+    public HealAbility(Target<BolsterEntity> target)
     {
-        this(-1);
+        this(target, -1);
     }
 
-    public HealAbility(double healAmount)
+    public HealAbility(Target<BolsterEntity> target, double healAmount)
     {
-        super();
+        super(target);
 
         this.healAmount = healAmount;
 
-        this.addCondition(new NotCondition(new IsMaxHealthCondition(Target.CASTER)));
+        this.addCondition(new NotCondition(new IsMaxHealthCondition(target)));
     }
 
     @Override
     public void onActivate(Properties properties)
     {
-        double maxHealth = this.getCaster().getMaxHealth();
+        BolsterEntity bolsterEntity = BolsterEntity.from(this.getCaster());
 
-        double heal = this.healAmount;
-
-        if (heal < 0) heal = maxHealth - this.getCaster().getHealth();
-
-        this.getCaster().setHealth(Math.min(this.getCaster().getHealth() + heal, maxHealth));
+        bolsterEntity.addHealth(this.healAmount);
     }
 }

@@ -4,6 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 public class GroundedStatusEffect extends StatusEffect
 {
     public GroundedStatusEffect(double duration)
@@ -21,6 +24,12 @@ public class GroundedStatusEffect extends StatusEffect
     public ChatColor getColor()
     {
         return ChatColor.GRAY;
+    }
+
+    @Override
+    public Collection<PotionEffectType> getPotionEffects()
+    {
+        return Arrays.asList(PotionEffectType.JUMP);
     }
 
     @Override

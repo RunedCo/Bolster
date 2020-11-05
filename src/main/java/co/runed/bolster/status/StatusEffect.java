@@ -9,10 +9,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 public abstract class StatusEffect implements Listener
 {
@@ -91,6 +93,12 @@ public abstract class StatusEffect implements Listener
 
     public void end()
     {
+        // TODO CHECK IF OTHER STATUS EFFECTS THAT ARE ACTIVE ARE USING EFFECTS AND IF SO DO NOT CANCEL
+        for (PotionEffectType potionEffect : this.getPotionEffects())
+        {
+            this.getEntity().removePotionEffect(potionEffect);
+        }
+
         StatusEffectManager.getInstance().removeStatusEffect(this.getEntity(), this);
 
         HandlerList.unregisterAll(this);
@@ -106,6 +114,8 @@ public abstract class StatusEffect implements Listener
 
         this.end();
     }
+
+    public abstract Collection<PotionEffectType> getPotionEffects();
 
     public abstract void onStart();
 

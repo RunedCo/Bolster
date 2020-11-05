@@ -123,6 +123,16 @@ public class BolsterEntity extends TraitProvider
         return this._entity.getHealth();
     }
 
+    public void addHealth(double amount)
+    {
+        double maxHealth = this.getMaxHealth();
+
+        if (amount < 0) amount = maxHealth - this.getHealth();
+
+        this.setHealth(Math.min(this.getHealth() + amount, maxHealth));
+    }
+
+
     public World getWorld()
     {
         return this._entity.getWorld();

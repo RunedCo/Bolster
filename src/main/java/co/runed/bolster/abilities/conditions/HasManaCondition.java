@@ -12,6 +12,15 @@ import org.bukkit.entity.EntityType;
 
 public class HasManaCondition extends TargetedCondition<BolsterEntity>
 {
+    float amount = -1;
+
+    public HasManaCondition(Target<BolsterEntity> target, float amount)
+    {
+        this(target);
+
+        this.amount = amount;
+    }
+
     public HasManaCondition(Target<BolsterEntity> target)
     {
         super(target);
@@ -24,7 +33,9 @@ public class HasManaCondition extends TargetedCondition<BolsterEntity>
 
         BolsterEntity entity = this.getTarget().get(properties);
 
-        return ManaManager.getInstance().hasEnoughMana(entity.getBukkit(), ((Ability) conditional).getManaCost());
+        float reqAmount = amount > 0 ? amount : ((Ability) conditional).getManaCost();
+
+        return ManaManager.getInstance().hasEnoughMana(entity.getBukkit(), reqAmount);
     }
 
     @Override

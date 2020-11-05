@@ -198,7 +198,12 @@ public class ItemManager extends Manager
         ItemStack stack = item.toItemStack();
         stack.setAmount(count);
 
-        if (!inv.containsAtLeast(stack, count)) return false;
+        if (!inv.containsAtLeast(stack, count))
+        {
+            if (!inv.containsAtLeast(stack, 1)) this.clearItem(player, item);
+
+            return false;
+        }
 
         ItemStack mainHand = inv.getItemInMainHand();
         String itemId = this.getItemIdFromStack(mainHand);
@@ -222,7 +227,6 @@ public class ItemManager extends Manager
 
         if (remaining > 0) inv.removeItem(stack);
 
-        if (!inv.containsAtLeast(stack, 1)) this.clearItem(player, item);
 
         return true;
     }
@@ -304,7 +308,7 @@ public class ItemManager extends Manager
      *
      * @param entity the entity
      * @param item   the item
-     * @param slot the slot
+     * @param slot   the slot
      * @return
      */
     public boolean isItemEquipped(LivingEntity entity, Item item, EquipmentSlot slot)
@@ -325,7 +329,7 @@ public class ItemManager extends Manager
      *
      * @param entity the entity
      * @param item   the item class
-     * @param slot the slot
+     * @param slot   the slot
      * @return
      */
     public boolean isItemEquipped(LivingEntity entity, Class<? extends Item> item, EquipmentSlot slot)

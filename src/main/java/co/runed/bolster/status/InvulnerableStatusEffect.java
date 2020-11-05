@@ -3,6 +3,10 @@ package co.runed.bolster.status;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class InvulnerableStatusEffect extends StatusEffect
 {
@@ -21,6 +25,12 @@ public class InvulnerableStatusEffect extends StatusEffect
     public ChatColor getColor()
     {
         return ChatColor.GOLD;
+    }
+
+    @Override
+    public Collection<PotionEffectType> getPotionEffects()
+    {
+        return new ArrayList<>();
     }
 
     @Override
