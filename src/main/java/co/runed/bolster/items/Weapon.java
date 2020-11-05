@@ -13,9 +13,10 @@ import java.util.List;
 
 public abstract class Weapon extends Item
 {
-    double damage = 10;
+    double attackDamage = 10;
     double attackSpeed = 10;
     double knockBackResistance = 0;
+    double knockBack = 0;
     double power = 0;
 
     public Weapon()
@@ -25,9 +26,14 @@ public abstract class Weapon extends Item
         this.addCategory(Category.WEAPONS);
     }
 
-    public void setDamage(double damage)
+    public void setAttackDamage(double attackDamage)
     {
-        this.damage = damage;
+        this.attackDamage = attackDamage;
+    }
+
+    public double getAttackDamage()
+    {
+        return attackDamage;
     }
 
     public void setAttackSpeed(double attackSpeed)
@@ -35,9 +41,19 @@ public abstract class Weapon extends Item
         this.attackSpeed = attackSpeed;
     }
 
+    public double getAttackSpeed()
+    {
+        return attackSpeed;
+    }
+
     public void setPower(double power)
     {
         this.power = power;
+    }
+
+    public double getPower()
+    {
+        return power;
     }
 
     public void setKnockBackResistance(double knockBackResistance)
@@ -45,14 +61,19 @@ public abstract class Weapon extends Item
         this.knockBackResistance = knockBackResistance;
     }
 
+    public double getKnockBackResistance()
+    {
+        return knockBackResistance;
+    }
+
     @Override
     public List<String> getLore()
     {
         List<String> lore = new ArrayList<>();
 
-        if (this.damage > 0)
+        if (this.attackDamage > 0)
         {
-            lore.add(ChatColor.GRAY + "Attack Damage: " + ChatColor.YELLOW + this.damage);
+            lore.add(ChatColor.GRAY + "Attack Damage: " + ChatColor.YELLOW + this.attackDamage);
         }
 
         if (this.power > 0)
@@ -63,6 +84,11 @@ public abstract class Weapon extends Item
         if (this.attackSpeed > 0)
         {
             lore.add(ChatColor.GRAY + "Attack Speed: " + ChatColor.YELLOW + this.attackSpeed);
+        }
+
+        if (this.knockBack > 0)
+        {
+            lore.add(ChatColor.GRAY + "Knockback: " + ChatColor.YELLOW + this.knockBack);
         }
 
         if (this.knockBackResistance > 0)
@@ -88,10 +114,14 @@ public abstract class Weapon extends Item
         ItemBuilder builder = new ItemBuilder(super.toItemStack());
 
         builder.addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
+        builder.addItemFlag(ItemFlag.HIDE_UNBREAKABLE);
 
-        builder.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier("attack_damage", this.damage - 1, AttributeModifier.Operation.ADD_NUMBER));
+        builder.setUnbreakable(true);
+
+        builder.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier("attack_damage", this.attackDamage - 1, AttributeModifier.Operation.ADD_NUMBER));
         builder.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier("attack_speed", this.attackSpeed - 1, AttributeModifier.Operation.ADD_NUMBER));
-        builder.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier("knockback_resistance", this.knockBackResistance - 1, AttributeModifier.Operation.ADD_NUMBER));
+        builder.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier("knockback_resistance", this.knockBackResistance, AttributeModifier.Operation.ADD_NUMBER));
+        builder.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK, new AttributeModifier("knockback", this.knockBack, AttributeModifier.Operation.ADD_NUMBER));
 
         return builder.build();
     }

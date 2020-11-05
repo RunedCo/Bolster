@@ -109,7 +109,7 @@ public class StatusEffectManager extends Manager
         {
             if (effect.getName() == null) continue;
 
-            display.append(effect.getColor()).append(effect.getName().toUpperCase()).append(" (10s)").append(", ");
+            display.append(effect.getColor()).append(effect.getName().toUpperCase()).append(" (").append(effect.getDuration()).append(")").append(", ");
         }
 
         display = new StringBuilder(display.substring(0, display.length() - 2));

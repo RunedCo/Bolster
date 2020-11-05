@@ -104,7 +104,7 @@ public abstract class AbilityProvider implements IRegisterable
             if (ability.getManaCost() > 0)
                 abilityDesc += ChatColor.BLUE + " (" + abilityData.ability.getManaCost() + " mana)";
 
-            abilityDescriptions.addAll(StringUtil.formatLore(abilityDesc));
+            abilityDescriptions.add(abilityDesc + ChatColor.RESET);
         }
 
         if (abilityDescriptions.size() <= 0) return null;

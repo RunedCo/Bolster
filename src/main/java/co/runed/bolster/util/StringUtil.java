@@ -37,8 +37,8 @@ public class StringUtil
 
         int length = lineLength + (text.length() - ChatColor.stripColor(text).length());
 
-        String wrapped = WordUtils.wrap(text, length);
-        String[] wrappedArray = wrapped.split("\r\n");
+        String wrapped = WordUtils.wrap(text, length, "\n", false);
+        String[] wrappedArray = wrapped.split("\n");
 
         String previousLine = null;
         for (String line : wrappedArray)

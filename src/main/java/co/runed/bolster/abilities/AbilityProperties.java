@@ -1,5 +1,6 @@
 package co.runed.bolster.abilities;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Property;
@@ -55,6 +56,8 @@ public class AbilityProperties
 
     // CHARGE PROPERTIES
     public static final Property<Long> CHARGE_TIME = new Property<>("charge_time");
+
+    public static final Property<AbilityProvider> ABILITY_PROVIDER = new Property<>("ability_provider");
 
     public static final Property<AbilityTrigger> TRIGGER = new Property<>("trigger", AbilityTrigger.ALL);
 }

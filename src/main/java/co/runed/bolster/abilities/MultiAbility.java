@@ -69,9 +69,15 @@ public class MultiAbility extends Ability
 
         for (Ability ability : this.abilities)
         {
-            if (isSequence) ticks += TimeUtil.toTicks(ability.getDuration());
-
-            Bukkit.getServer().getScheduler().runTaskLater(Bolster.getInstance(), () -> ability.activate(properties), ticks);
+            if (isSequence)
+            {
+                ticks += TimeUtil.toTicks(ability.getDuration());
+                Bukkit.getServer().getScheduler().runTaskLater(Bolster.getInstance(), () -> ability.activate(properties), ticks);
+            }
+            else
+            {
+                ability.activate(properties);
+            }
         }
     }
 }

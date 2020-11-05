@@ -76,7 +76,9 @@ public class ItemBuilder
             lore = new ArrayList<>();
         }
 
-        lore.addAll(StringUtil.formatLore(line));
+        List<String> formatted = StringUtil.formatLore(line);
+
+        lore.addAll(formatted);
 
         meta.setLore(lore);
         this.itemStack.setItemMeta(meta);

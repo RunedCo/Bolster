@@ -76,7 +76,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
         if (desc != null && !desc.isEmpty())
         {
-            loreWithAbilities.addAll(Arrays.asList(desc.split("\n")));
+            loreWithAbilities.addAll(StringUtil.formatLore(desc));
         }
 
         if (loreWithAbilities.size() > 0 && this.lore.size() > 0)

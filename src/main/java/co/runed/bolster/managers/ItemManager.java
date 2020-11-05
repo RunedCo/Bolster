@@ -370,10 +370,24 @@ public class ItemManager extends Manager
     {
         AbilityProvider abilitySource = event.getAbility().getAbilityProvider();
 
+        Item item = null;
+
         if (abilitySource instanceof Item)
         {
-            event.getProperties().set(AbilityProperties.ITEM, (Item) abilitySource);
+            item = (Item) abilitySource;
         }
+        else if (event.getProperties().get(AbilityProperties.ITEM_STACK) != null)
+        {
+            String itemId = this.getItemIdFromStack(event.getProperties().get(AbilityProperties.ITEM_STACK));
+
+            if (itemId != null)
+            {
+                item = this.createItem(event.getEntity(), itemId);
+            }
+        }
+
+        event.getProperties().set(AbilityProperties.ITEM, item);
+
     }
 
     @EventHandler

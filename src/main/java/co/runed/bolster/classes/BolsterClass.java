@@ -42,7 +42,7 @@ public abstract class BolsterClass extends AbilityProvider
     @Override
     public ItemStack getIcon()
     {
-        return new ItemBuilder(this.icon).setDisplayName(this.getName()).build();
+        return new ItemBuilder(this.icon).setDisplayName(this.getName()).setLore(this.getDescription()).build();
     }
 
     public void setIcon(ItemStack icon)
@@ -70,7 +70,14 @@ public abstract class BolsterClass extends AbilityProvider
     @Override
     public String getDescription()
     {
-        return this.description;
+        String out = super.getDescription();
+
+        if (out != null && !out.isEmpty() && this.description != null && !this.description.isEmpty())
+        {
+            out += "\n\n" + this.description;
+        }
+
+        return out;
     }
 
     @Override
