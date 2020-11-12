@@ -3,9 +3,8 @@ package co.runed.bolster.commands;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.classes.BolsterClass;
-import co.runed.bolster.util.ItemBuilder;
+import dev.jorel.commandapi.CommandAPICommand;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.ipvp.canvas.Menu;
@@ -23,16 +22,17 @@ public class CommandBecome extends CommandBase
 {
     public CommandBecome()
     {
-        super("become", "bolster.commands.become");
+        super("become");
     }
 
     @Override
-    public void run(CommandSender sender, Object[] args)
+    public CommandAPICommand build()
     {
-        if (sender instanceof Player)
-        {
-            this.openMenu((Player) sender);
-        }
+        return new CommandAPICommand(this.command)
+                .withPermission("bolster.commands.become")
+                .executesPlayer(((sender, args) -> {
+                    this.openMenu(sender);
+                }));
     }
 
     private void openMenu(Player player)

@@ -10,6 +10,7 @@ import co.runed.bolster.items.ItemSkin;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.particles.ParticleSet;
 import co.runed.bolster.upgrade.Upgrade;
+import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registry;
 import co.runed.bolster.wip.TestListener;
 import de.slikey.effectlib.EffectManager;
@@ -29,6 +30,7 @@ public class Bolster extends JavaPlugin
     private Registry<ItemSkin> itemSkinRegistry;
     private Registry<ParticleSet> particleSetRegistry;
     private Registry<Upgrade> upgradeRegistry;
+    private Registry<Property> gamePropertiesRegistry;
 
     private CommandManager commandManager;
     private CooldownManager cooldownManager;
@@ -61,6 +63,7 @@ public class Bolster extends JavaPlugin
         this.itemSkinRegistry = new Registry<>(this);
         this.particleSetRegistry = new Registry<>(this);
         this.upgradeRegistry = new Registry<>(this);
+        this.gamePropertiesRegistry = new Registry<>(this);
 
         this.particleSetRegistry.register("bruce_test", ParticleSet::new);
 
@@ -86,7 +89,6 @@ public class Bolster extends JavaPlugin
         this.commandManager.add(new CommandItems());
         this.commandManager.add(new CommandBecome());
         this.commandManager.add(new CommandMana());
-        this.commandManager.add(new CommandModelData());
         this.commandManager.add(new CommandSummonDummy());
 
         // REGISTER BUNGEECORD PLUGIN CHANNEL

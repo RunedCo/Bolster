@@ -1,12 +1,13 @@
 package co.runed.bolster.util.properties;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.NamespacedKey;
 
 /**
  * A property passed to an ability when cast
  */
-public class Property<T>
+public class Property<T> implements IRegisterable
 {
     private NamespacedKey key;
     private T defaultValue;
@@ -52,5 +53,23 @@ public class Property<T>
     public T getDefault()
     {
         return this.defaultValue;
+    }
+
+    @Override
+    public void setId(String id)
+    {
+        this.key = new NamespacedKey(Bolster.getInstance(), id);
+    }
+
+    @Override
+    public String getId()
+    {
+        return this.getKey().toString();
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package co.runed.bolster.commands;
 
 import co.runed.bolster.managers.ManaManager;
+import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.FloatArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
@@ -19,26 +20,9 @@ public class CommandMana extends CommandBase
 
     public CommandMana()
     {
-        super("mana", "bolster.commands.item");
-
-        operations.add("set");
-        operations.add("add");
-        operations.add("subtract");
-        operations.add("get");
-
-        types.add("current");
-        types.add("max");
-
-        List<Argument> arguments = new ArrayList<>();
-        arguments.add(new PlayerArgument("player"));
-        arguments.add(new StringArgument("operation").overrideSuggestions(operations.toArray(new String[0])));
-        arguments.add(new StringArgument("type").overrideSuggestions(types.toArray(new String[0])));
-        arguments.add(new FloatArgument("amount"));
-
-        this.arguments = arguments;
+        super("mana");
     }
 
-    @Override
     public void run(CommandSender sender, Object[] args)
     {
         Player player = (Player) args[0];
@@ -81,5 +65,32 @@ public class CommandMana extends CommandBase
 
             ManaManager.getInstance().setCurrentMana(player, amount);
         }
+    }
+
+    @Override
+    public CommandAPICommand build()
+    {
+        operations.add("set");
+        operations.add("add");
+        operations.add("subtract");
+        operations.add("get");
+
+        types.add("current");
+        types.add("max");
+
+        List<Argument> arguments = new ArrayList<>();
+        arguments.add(new PlayerArgument("player"));
+        arguments.add(new StringArgument("operation").overrideSuggestions(operations.toArray(new String[0])));
+        arguments.add(new StringArgument("type").overrideSuggestions(types.toArray(new String[0])));
+        arguments.add(new FloatArgument("amount"));
+
+        return new CommandAPICommand(this.command)
+                .withPermission("bolster.commands.mana")
+                .withArguments(arguments)
+                .executes(this::run);
+
+        /* return new CommandAPICommand(this.command)
+                .withPermission("bolster.commands.mana")
+                .withSubcommand(new CommandAPICommand("set")); */
     }
 }

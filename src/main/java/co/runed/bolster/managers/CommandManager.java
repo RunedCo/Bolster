@@ -28,7 +28,7 @@ public class CommandManager
     {
         this.commands.add(command);
 
-        command.register();
+        command.build().register();
     }
 
     /**

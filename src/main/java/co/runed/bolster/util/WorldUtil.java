@@ -1,5 +1,6 @@
 package co.runed.bolster.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -81,5 +82,19 @@ public class WorldUtil
         }
 
         return blocks;
+    }
+
+    public static Location stringToLocation(String locString)
+    {
+        String[] coords = locString.split(",");
+
+        double x = Double.parseDouble(coords[0]);
+        double y = Double.parseDouble(coords[1]);
+        double z = Double.parseDouble(coords[2]);
+
+        float yaw = coords.length > 3 ? Float.parseFloat(coords[3]) : 0;
+        float pitch = coords.length > 4 ? Float.parseFloat(coords[4]) : 0;
+
+        return new Location(Bukkit.getWorlds().get(0), x, y, z, yaw, pitch);
     }
 }

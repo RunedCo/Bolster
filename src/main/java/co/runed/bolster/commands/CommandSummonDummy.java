@@ -1,28 +1,27 @@
 package co.runed.bolster.commands;
 
 import co.runed.bolster.classes.TargetDummyClass;
-import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
+import dev.jorel.commandapi.CommandAPICommand;
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class CommandSummonDummy extends CommandBase
 {
     public CommandSummonDummy()
     {
-        super("dummy", "bolster.commands.dummy");
+        super("dummy");
     }
 
     @Override
-    public void run(CommandSender sender, Object[] args) throws WrapperCommandSyntaxException
+    public CommandAPICommand build()
     {
-        if(sender instanceof Player)
-        {
-            Location loc = ((Player) sender).getLocation();
+        return new CommandAPICommand(this.command)
+                .withPermission("bolster.commands.dummy")
+                .executesPlayer((sender, args) -> {
+                    Location loc = sender.getLocation();
 
-            TargetDummyClass.summon(loc);
+                    TargetDummyClass.summon(loc);
 
-            sender.sendMessage("Summoned Target Dummy.");
-        }
+                    sender.sendMessage("Summoned Target Dummy");
+                });
     }
 }

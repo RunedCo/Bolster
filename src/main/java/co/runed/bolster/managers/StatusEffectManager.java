@@ -64,7 +64,11 @@ public class StatusEffectManager extends Manager
             }
         }
 
-        entityEffects.remove(effectToRemove);
+        if (effectToRemove != null)
+        {
+            effectToRemove.clear();
+            entityEffects.remove(effectToRemove);
+        }
     }
 
     public void removeStatusEffect(LivingEntity entity, StatusEffect statusEffect)
