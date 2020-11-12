@@ -6,14 +6,16 @@ import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public abstract class CommandBase
 {
     public String command;
     public String[] aliases = new String[0];
     public CommandPermission permission = CommandPermission.NONE;
-    public LinkedHashMap<String, Argument> arguments = new LinkedHashMap<>();
+    public List<Argument> arguments = new ArrayList<>();
 
     private CommandAPICommand commandAPICommand;
 

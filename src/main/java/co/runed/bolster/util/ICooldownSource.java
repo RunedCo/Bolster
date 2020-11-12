@@ -2,6 +2,8 @@ package co.runed.bolster.util;
 
 public interface ICooldownSource
 {
+    String getCooldownId();
+
     double getCooldown();
 
     void setCooldown(double cooldown);

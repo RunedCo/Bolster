@@ -4,7 +4,6 @@ import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.util.RandomCollection;
 import co.runed.bolster.util.WorldUtil;
 import co.runed.bolster.util.properties.Properties;
-import net.minecraft.server.v1_16_R2.BlockUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

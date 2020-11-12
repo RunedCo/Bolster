@@ -27,7 +27,7 @@ public class CommandItems extends CommandBase
 {
     public CommandItems()
     {
-        super("items", "bolster.admin");
+        super("items", "bolster.commands.items");
     }
 
     @Override

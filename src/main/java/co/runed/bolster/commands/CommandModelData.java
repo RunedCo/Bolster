@@ -9,7 +9,7 @@ public class CommandModelData extends CommandBase
 {
     public CommandModelData()
     {
-        super("custommodeldata", "bolster.cmd");
+        super("custommodeldata", "bolster.commands.custommodeldata");
 
         this.aliases = new String[]{"cmd"};
     }

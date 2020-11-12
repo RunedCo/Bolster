@@ -30,7 +30,7 @@ public class EntityKillListener implements Listener
         Properties properties = new Properties();
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
-        properties.set(AbilityProperties.TARGETS, new ArrayList<>(Collections.singletonList(event.getEntity())));
+        properties.set(AbilityProperties.TARGET, event.getEntity());
         properties.set(AbilityProperties.DROPS, event.getDrops());
 
         AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_KILL_ENTITY, properties);

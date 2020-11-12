@@ -63,7 +63,7 @@ public class CooldownManager extends Manager
      */
     public void clearCooldown(LivingEntity entity, ICooldownSource source)
     {
-        this.cooldowns.removeIf(cd -> cd.source.equals(source) && cd.caster.equals(entity));
+        this.cooldowns.removeIf(cd -> cd.source.getCooldownId().equals(source.getCooldownId()) && cd.caster.equals(entity));
     }
 
     /**
@@ -77,7 +77,7 @@ public class CooldownManager extends Manager
     {
         for (CooldownData cd : this.cooldowns)
         {
-            if (cd.caster.equals(entity) && cd.source.equals(source))
+            if (cd.caster.equals(entity) && cd.source.getCooldownId().equals(source.getCooldownId()))
             {
                 return cd.getRemainingTime() / 1000d;
             }

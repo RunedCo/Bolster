@@ -1,5 +1,7 @@
 package co.runed.bolster.util;
 
+import co.runed.bolster.Bolster;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -88,6 +90,25 @@ public class TaskUtil
         };
 
         return run.runTaskTimer(plugin, initialDelay, period);
+    }
+
+    public static TaskSeries series()
+    {
+        return new TaskSeries();
+    }
+
+    public static class TaskSeries
+    {
+        int duration = 0;
+
+        public TaskSeries add(Runnable task, int durationTicks)
+        {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Bolster.getInstance(), task, this.duration);
+
+            this.duration += durationTicks;
+
+            return this;
+        }
     }
 
     public static abstract class BolsterRunnable extends BukkitRunnable

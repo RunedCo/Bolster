@@ -12,8 +12,6 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collections;
-
 public class PlayerInteractAtEntityListener implements Listener
 {
     @EventHandler
@@ -26,9 +24,9 @@ public class PlayerInteractAtEntityListener implements Listener
         Properties properties = new Properties();
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.TARGETS, Collections.singletonList(event.getRightClicked()));
+        properties.set(AbilityProperties.TARGET, event.getRightClicked());
 
-        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_INTERACT_ENTITY, properties);
+        AbilityManager.getInstance().trigger(player, AbilityTrigger.RIGHT_CLICK_ENTITY, properties);
     }
 
     @EventHandler
@@ -43,7 +41,7 @@ public class PlayerInteractAtEntityListener implements Listener
         Properties properties = new Properties();
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.TARGETS, Collections.singletonList(event.getPlayer()));
+        properties.set(AbilityProperties.TARGET, event.getPlayer());
 
         AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_INTERACTED_WITH, properties);
     }

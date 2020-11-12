@@ -27,7 +27,8 @@ import java.util.UUID;
 
 public abstract class Ability implements Listener, IConditional, ICooldownSource
 {
-    private final String id = UUID.randomUUID().toString();
+    private String parentId = UUID.randomUUID().toString();
+    private String id = UUID.randomUUID().toString();
     private String name = null;
     private String description = null;
     private double cooldown = 0;
@@ -61,9 +62,15 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         this.name = name;
     }
 
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
     public String getId()
     {
-        return this.getAbilityProvider().getId() + "." + this.id;
+        return this.getAbilityProvider() == null ? this.parentId : this.getAbilityProvider().getId()
+                + "." + this.id;
     }
 
     public String getDescription()
@@ -147,6 +154,12 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     public boolean shouldShowErrorMessages()
     {
         return this.showErrors;
+    }
+
+    @Override
+    public String getCooldownId()
+    {
+        return this.getId();
     }
 
     @Override
@@ -269,7 +282,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     {
         HandlerList.unregisterAll(this);
 
-        CooldownManager.getInstance().clearCooldown(this.getCaster(), this);
+        //CooldownManager.getInstance().clearCooldown(this.getCaster(), this);
     }
 }
 

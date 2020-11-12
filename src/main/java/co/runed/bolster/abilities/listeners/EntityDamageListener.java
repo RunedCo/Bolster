@@ -5,15 +5,13 @@ import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Event that triggers casting an ability when an entity is damaged
@@ -30,12 +28,31 @@ public class EntityDamageListener implements Listener
         ItemStack stack = inv.getItemInMainHand();
 
         Properties properties = new Properties();
-        properties.set(AbilityProperties.TARGETS, new ArrayList<>(Collections.singletonList((LivingEntity) event.getEntity())));
+        properties.set(AbilityProperties.TARGET, event.getEntity());
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.DAMAGE, event.getFinalDamage());
 
         AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_DAMAGE_ENTITY, properties);
+    }
+
+    @EventHandler
+    private void onLeftClickEntity(EntityDamageByEntityEvent event)
+    {
+        if (!(event.getDamager() instanceof Player)) return;
+        if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;
+
+        Player player = (Player) event.getDamager();
+        EntityEquipment inv = player.getEquipment();
+        ItemStack stack = inv.getItemInMainHand();
+
+        Properties properties = new Properties();
+        properties.set(AbilityProperties.TARGET, event.getEntity());
+        properties.set(AbilityProperties.ITEM_STACK, stack);
+        properties.set(AbilityProperties.EVENT, event);
+        properties.set(AbilityProperties.DAMAGE, event.getFinalDamage());
+
+        AbilityManager.getInstance().trigger(player, AbilityTrigger.LEFT_CLICK_ENTITY, properties);
     }
 
     @EventHandler

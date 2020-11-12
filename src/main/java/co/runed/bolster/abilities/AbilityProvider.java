@@ -9,7 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -19,7 +18,7 @@ import java.util.function.BiConsumer;
  */
 public abstract class AbilityProvider implements IRegisterable
 {
-    private final Collection<AbilityData> abilities = new ArrayList<>();
+    private final List<AbilityData> abilities = new ArrayList<>();
     private LivingEntity entity;
     LivingEntity parent;
 
@@ -77,6 +76,8 @@ public abstract class AbilityProvider implements IRegisterable
         AbilityData data = new AbilityData(trigger, ability);
 
         this.abilities.add(data);
+
+        ability.setId(this.abilities.size() + "");
     }
 
     public boolean hasAbility(AbilityTrigger trigger)
@@ -112,7 +113,7 @@ public abstract class AbilityProvider implements IRegisterable
         return StringUtil.join("\n", abilityDescriptions);
     }
 
-    public Collection<AbilityData> getAbilities()
+    public List<AbilityData> getAbilities()
     {
         return this.abilities;
     }
@@ -120,7 +121,9 @@ public abstract class AbilityProvider implements IRegisterable
     public void destroy()
     {
         if (this.getEntity() != null)
+        {
             AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.REMOVE, new Properties());
+        }
 
         for (AbilityData abilityData : this.abilities)
         {

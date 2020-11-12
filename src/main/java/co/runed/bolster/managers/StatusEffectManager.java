@@ -40,19 +40,31 @@ public class StatusEffectManager extends Manager
         }
     }
 
+    public void clearStatusEffects(LivingEntity entity)
+    {
+        List<StatusEffect> effects = new ArrayList<>(this.getStatusEffects(entity));
+
+        for (StatusEffect effect : effects)
+        {
+            this.clearStatusEffect(entity, effect.getClass());
+        }
+    }
+
     public void clearStatusEffect(LivingEntity entity, Class<? extends StatusEffect> statusEffect)
     {
         List<StatusEffect> entityEffects = this.getStatusEffects(entity);
 
+        StatusEffect effectToRemove = null;
         for (StatusEffect effect : entityEffects)
         {
             if (effect.getClass() == statusEffect)
             {
-                effect.clear();
-                entityEffects.remove(effect);
-                return;
+                effectToRemove = effect;
+                break;
             }
         }
+
+        entityEffects.remove(effectToRemove);
     }
 
     public void removeStatusEffect(LivingEntity entity, StatusEffect statusEffect)
@@ -91,14 +103,6 @@ public class StatusEffectManager extends Manager
         }
 
         return false;
-    }
-
-    public void clearStatusEffects(LivingEntity entity)
-    {
-        for (StatusEffect effect : this.getStatusEffects(entity))
-        {
-            this.clearStatusEffect(entity, effect.getClass());
-        }
     }
 
     public void updateTitleDisplay(Player player)

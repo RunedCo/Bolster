@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class CommandMana extends CommandBase
@@ -20,7 +19,7 @@ public class CommandMana extends CommandBase
 
     public CommandMana()
     {
-        super("mana", "bolster.admin");
+        super("mana", "bolster.commands.item");
 
         operations.add("set");
         operations.add("add");
@@ -30,11 +29,11 @@ public class CommandMana extends CommandBase
         types.add("current");
         types.add("max");
 
-        LinkedHashMap<String, Argument> arguments = new LinkedHashMap<>();
-        arguments.put("player", new PlayerArgument());
-        arguments.put("operation", new StringArgument().overrideSuggestions(operations.toArray(new String[0])));
-        arguments.put("type", new StringArgument().overrideSuggestions(types.toArray(new String[0])));
-        arguments.put("amount", new FloatArgument());
+        List<Argument> arguments = new ArrayList<>();
+        arguments.add(new PlayerArgument("player"));
+        arguments.add(new StringArgument("operation").overrideSuggestions(operations.toArray(new String[0])));
+        arguments.add(new StringArgument("type").overrideSuggestions(types.toArray(new String[0])));
+        arguments.add(new FloatArgument("amount"));
 
         this.arguments = arguments;
     }

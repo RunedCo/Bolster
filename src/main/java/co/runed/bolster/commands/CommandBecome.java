@@ -23,7 +23,7 @@ public class CommandBecome extends CommandBase
 {
     public CommandBecome()
     {
-        super("become", "bolster.admin");
+        super("become", "bolster.commands.become");
     }
 
     @Override

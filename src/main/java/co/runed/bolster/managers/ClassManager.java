@@ -41,7 +41,7 @@ public class ClassManager extends Manager
         {
             BolsterClass existingClass = this.bolsterClasses.get(uuid);
 
-            if(existingClass != bolsterClass) existingClass.destroy();
+            if(existingClass != bolsterClass && existingClass != null) existingClass.destroy();
         }
 
         this.bolsterClasses.put(uuid, bolsterClass);

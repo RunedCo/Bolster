@@ -10,12 +10,14 @@ public class AbilityTrigger
     public static final AbilityTrigger LEFT_CLICK = new AbilityTrigger("left_click", "L-Click", false);
     public static final AbilityTrigger LEFT_CLICK_BLOCK = new AbilityTrigger("left_click_block", "L-Click", false);
     public static final AbilityTrigger LEFT_CLICK_AIR = new AbilityTrigger("left_click_air", "L-Click", false);
+    public static final AbilityTrigger LEFT_CLICK_ENTITY = new AbilityTrigger("left_click_entity", "L-Click", false);
     public static final AbilityTrigger SHIFT_LEFT_CLICK = new AbilityTrigger("shift_left_click", "Shift + L-Click", false);
 
     // RIGHT CLICK VARIANTS
     public static final AbilityTrigger RIGHT_CLICK = new AbilityTrigger("right_click", "R-Click", false);
     public static final AbilityTrigger RIGHT_CLICK_BLOCK = new AbilityTrigger("right_click_block", "R-Click", false);
     public static final AbilityTrigger RIGHT_CLICK_AIR = new AbilityTrigger("right_click_air", "R-Click", false);
+    public static final AbilityTrigger RIGHT_CLICK_ENTITY = new AbilityTrigger("right_click_entity", "R-Click", false);
     public static final AbilityTrigger SHIFT_RIGHT_CLICK = new AbilityTrigger("shift_right_click", "Shift + R-Click", false);
 
     // ACTIVE ACTIONS
@@ -37,7 +39,6 @@ public class AbilityTrigger
     public static final AbilityTrigger ON_KILL_ENTITY = new AbilityTrigger("on_kill_entity", "Passive", true);
     public static final AbilityTrigger ON_SELECT_ITEM = new AbilityTrigger("on_select_item", "Passive", true);
     public static final AbilityTrigger ON_DESELECT_ITEM = new AbilityTrigger("on_deselect_item", "Passive", true);
-    public static final AbilityTrigger ON_INTERACT_ENTITY = new AbilityTrigger("on_interact_entity", "Passive", true);
     public static final AbilityTrigger ON_INTERACTED_WITH = new AbilityTrigger("on_interacted_with", "Passive", true);
     public static final AbilityTrigger ON_SPAWN = new AbilityTrigger("on_spawn", "Passive", true);
     public static final AbilityTrigger ON_ENTER_PORTAL = new AbilityTrigger("on_enter_portal", "Passive", true);

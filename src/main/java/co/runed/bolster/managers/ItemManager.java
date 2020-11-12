@@ -7,6 +7,7 @@ import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.Manager;
+import com.google.gson.Gson;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -31,8 +32,6 @@ import java.util.UUID;
 
 public class ItemManager extends Manager
 {
-    Plugin plugin;
-
     private final HashMap<UUID, List<Item>> entityItems = new HashMap<>();
 
     private static ItemManager _instance;
@@ -200,7 +199,7 @@ public class ItemManager extends Manager
 
         if (!inv.containsAtLeast(stack, count))
         {
-            if (!inv.containsAtLeast(stack, 1)) this.clearItem(player, item);
+            if (!this.inventoryContainsAtLeast(player, item.getId(), 1)) this.clearItem(player, item);
 
             return false;
         }
@@ -227,8 +226,65 @@ public class ItemManager extends Manager
 
         if (remaining > 0) inv.removeItem(stack);
 
-
         return true;
+    }
+
+    public boolean inventoryContainsAtLeast(Player player, Class<? extends Item> item, int count)
+    {
+        return this.inventoryContainsAtLeast(player, Bolster.getItemRegistry().getId(item), count);
+    }
+
+    public boolean inventoryContainsAtLeast(Player player, String itemId, int count)
+    {
+        PlayerInventory playerInventory = player.getInventory();
+
+        int numberFound = 0;
+
+        for (ItemStack stack : playerInventory)
+        {
+            String stackItemId = this.getItemIdFromStack(stack);
+
+            if (stackItemId == null) continue;
+
+            if (stackItemId.equals(itemId)) numberFound++;
+
+            if (numberFound >= count) return true;
+        }
+
+        return false;
+    }
+
+    public void rebuildAllItemStacks(Player player)
+    {
+        for (Item item : this.getItems(player))
+        {
+            this.rebuildItemStack(player, item.getId());
+        }
+    }
+
+    public void rebuildItemStack(Player player, Class<? extends Item> item)
+    {
+        this.rebuildItemStack(player, Bolster.getItemRegistry().getId(item));
+    }
+
+    public void rebuildItemStack(Player player, String itemId)
+    {
+        Item item = this.createItem(player, itemId);
+        PlayerInventory playerInventory = player.getInventory();
+        for (int i = 0; i < playerInventory.getSize(); i++)
+        {
+            ItemStack stack = playerInventory.getItem(i);
+
+            String stackItemId = this.getItemIdFromStack(stack);
+
+            if (stackItemId == null || !stackItemId.equals(itemId)) continue;
+
+            ItemStack newStack = item.toItemStack().clone();
+            newStack.setAmount(stack.getAmount());
+
+            if (!stack.equals(newStack))
+                playerInventory.setItem(i, newStack);
+        }
     }
 
     /**
@@ -395,20 +451,16 @@ public class ItemManager extends Manager
     {
         Player player = event.getPlayer();
 
-        for (ItemStack stack : player.getInventory())
+        for (ItemStack item : player.getInventory())
         {
-            String itemId = this.getItemIdFromStack(stack);
+            String itemId = this.getItemIdFromStack(item);
 
-            if (itemId == null) return;
+            if (itemId == null) continue;
 
-            Item item = this.createItem(player, itemId);
-
-            int slot = player.getInventory().first(stack);
-            ItemStack updatedStack = item.toItemStack();
-            updatedStack.setAmount(stack.getAmount());
-
-            player.getInventory().setItem(slot, updatedStack);
+            this.createItem(player, itemId);
         }
+
+        this.rebuildAllItemStacks(player);
     }
 
     // TODO: WOULD BE GOOD FOR OPTIMIZATION TO REMOVE ALL ITEM INSTANCES BUT MAY CAUSE ISSUES WITH PLAYERS DCING MID GAME
