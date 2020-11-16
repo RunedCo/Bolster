@@ -5,6 +5,13 @@ import org.ipvp.canvas.Menu;
 
 public abstract class Gui
 {
+    public Gui previousGui;
+
+    public Gui(Gui previousGui)
+    {
+        this.previousGui = previousGui;
+    }
+
     public abstract String getTitle(Player player);
 
     protected abstract Menu draw(Player player);

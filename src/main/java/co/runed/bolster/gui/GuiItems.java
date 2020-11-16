@@ -23,6 +23,11 @@ import java.util.*;
 
 public class GuiItems extends Gui
 {
+    public GuiItems(Gui previousGui)
+    {
+        super(previousGui);
+    }
+
     @Override
     public String getTitle(Player player)
     {

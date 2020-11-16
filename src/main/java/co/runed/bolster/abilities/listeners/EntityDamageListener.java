@@ -54,6 +54,7 @@ public class EntityDamageListener implements Listener
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.DAMAGE, event.getDamage());
+        properties.set(AbilityProperties.FINAL_DAMAGE, event.getFinalDamage());
 
         AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_DAMAGE_ENTITY, properties);
     }
@@ -73,6 +74,7 @@ public class EntityDamageListener implements Listener
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.DAMAGE, event.getDamage());
+        properties.set(AbilityProperties.FINAL_DAMAGE, event.getFinalDamage());
 
         AbilityManager.getInstance().trigger(player, AbilityTrigger.LEFT_CLICK_ENTITY, properties);
     }
@@ -85,12 +87,13 @@ public class EntityDamageListener implements Listener
         LivingEntity entity = (LivingEntity) event.getEntity();
         EntityEquipment inv = entity.getEquipment();
         ItemStack stack = inv.getItemInMainHand();
-        double damage = event.getFinalDamage();
+        double damage = event.getDamage();
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.DAMAGE, damage);
+        properties.set(AbilityProperties.FINAL_DAMAGE, event.getFinalDamage());
 
         if (event instanceof EntityDamageByEntityEvent)
         {

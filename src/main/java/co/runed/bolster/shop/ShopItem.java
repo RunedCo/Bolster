@@ -15,6 +15,11 @@ public abstract class ShopItem
         this.premiumCost = premiumCost;
     }
 
+    public String getName()
+    {
+        return "Shop Item";
+    }
+
     public String getId()
     {
         return id;

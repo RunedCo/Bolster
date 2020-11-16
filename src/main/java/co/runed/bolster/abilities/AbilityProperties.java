@@ -54,7 +54,8 @@ public class AbilityProperties
     public static final Property<PlayerFishEvent.State> FISH_STATE = new Property<>("fish_state");
 
     // DAMAGE PROPERTIES
-    public static final Property<Double> DAMAGE = new Property<>("double", 0.0d);
+    public static final Property<Double> DAMAGE = new Property<>("damage", 0.0d);
+    public static final Property<Double> FINAL_DAMAGE = new Property<>("final_damage", 0.0d);
     public static final Property<Entity> DAMAGER = new Property<>("damager");
 
     // KILL PROPERTIES

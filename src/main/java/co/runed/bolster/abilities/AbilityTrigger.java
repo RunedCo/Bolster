@@ -53,7 +53,11 @@ public class AbilityTrigger
 
     // PASSIVE ACTIONS
     public static final AbilityTrigger TICK = new AbilityTrigger("tick", "Passive", true);
-    public static final AbilityTrigger DUMMY = new AbilityTrigger("dummy", "Passive", true);
+
+    // DUMMY ACTIONS
+    public static final AbilityTrigger DUMMY_LEFT = new AbilityTrigger("dummy_left", "L-Click", true);
+    public static final AbilityTrigger DUMMY_RIGHT = new AbilityTrigger("dummy_right", "R-Click", true);
+    public static final AbilityTrigger DUMMY_PASSIVE = new AbilityTrigger("dummy", "Passive", true);
 
     // ALWAYS TRIGGERED
     public static final AbilityTrigger ALL = new AbilityTrigger("all", "Passive", true);

@@ -182,7 +182,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
     public void setAttackDamage(double attackDamage)
     {
-        this.attackDamage = attackDamage - 1;
+        this.attackDamage = attackDamage;
     }
 
     public double getAttackDamage()
@@ -192,7 +192,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
     public void setAttackSpeed(double attackSpeed)
     {
-        this.attackSpeed = attackSpeed - 1;
+        this.attackSpeed = attackSpeed;
     }
 
     public double getAttackSpeed()
@@ -313,13 +313,13 @@ public abstract class Item extends AbilityProvider implements IRegisterable
                 .setLore(this.getLore())
                 .setPersistentData(Item.ITEM_ID_KEY, PersistentDataType.STRING, this.getId());
 
-        if (this.attackDamage > 0)
-            builder.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(attackDamageUuid, "attack_damage", this.attackDamage, AttributeModifier.Operation.ADD_NUMBER));
-        if (this.attackSpeed > 0)
-            builder.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(attackSpeedUuid, "attack_speed", this.attackSpeed, AttributeModifier.Operation.ADD_NUMBER));
-        if (this.knockBackResistance > 0)
+        if (this.attackDamage > 1)
+            builder.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(attackDamageUuid, "attack_damage", this.attackDamage - 1, AttributeModifier.Operation.ADD_NUMBER));
+        if (this.attackSpeed > 1)
+            builder.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(attackSpeedUuid, "attack_speed", this.attackSpeed - 1, AttributeModifier.Operation.ADD_NUMBER));
+        if (this.knockBackResistance > 1)
             builder.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier(knockbackResistanceUuid, "knockback_resistance", this.knockBackResistance, AttributeModifier.Operation.ADD_NUMBER));
-        if (this.knockBack > 0)
+        if (this.knockBack > 1)
             builder.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK, new AttributeModifier(knockBackUuid, "knockback", this.knockBack, AttributeModifier.Operation.ADD_NUMBER));
 
         if (this.hasSkin())

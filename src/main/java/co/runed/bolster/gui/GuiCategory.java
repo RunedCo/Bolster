@@ -4,7 +4,6 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.PlayerUtil;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
@@ -21,13 +20,14 @@ import java.util.List;
 
 public class GuiCategory extends Gui
 {
-    Gui parent;
     Category category;
     List<ItemStack> items;
 
-    public GuiCategory(Gui parent, Category category, List<ItemStack> items)
+    public GuiCategory(Gui previousGui, Category category, List<ItemStack> items)
     {
-        this.parent = parent;
+        super(previousGui);
+
+        this.previousGui = previousGui;
         this.category = category;
         this.items = items;
     }
@@ -37,9 +37,9 @@ public class GuiCategory extends Gui
     {
         String title = this.category.getName();
 
-        if(this.parent != null)
+        if (this.previousGui != null)
         {
-            title = this.parent.getTitle(player) + " - " + title;
+            title = this.previousGui.getTitle(player) + " - " + title;
         }
 
         return title;
