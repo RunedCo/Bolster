@@ -39,6 +39,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     private String name;
     private List<String> lore = new ArrayList<>();
     private ItemStack itemStack = new ItemStack(Material.STICK);
+    private boolean droppable = true;
 
     // attributes
     double attackDamage = 0;
@@ -181,7 +182,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
     public void setAttackDamage(double attackDamage)
     {
-        this.attackDamage = attackDamage;
+        this.attackDamage = attackDamage - 1;
     }
 
     public double getAttackDamage()
@@ -191,7 +192,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
     public void setAttackSpeed(double attackSpeed)
     {
-        this.attackSpeed = attackSpeed;
+        this.attackSpeed = attackSpeed - 1;
     }
 
     public double getAttackSpeed()
@@ -217,6 +218,16 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     public double getKnockBackResistance()
     {
         return knockBackResistance;
+    }
+
+    public void setDroppable(boolean droppable)
+    {
+        this.droppable = droppable;
+    }
+
+    public boolean isDroppable()
+    {
+        return droppable;
     }
 
     @Override
@@ -263,6 +274,11 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         }
 
         super.addAbility(trigger, ability);
+
+        if (this.getEntity() != null && this.getEntity() instanceof Player)
+        {
+            ItemManager.getInstance().rebuildItemStack((Player) this.getEntity(), this.getId());
+        }
     }
 
     @Override
@@ -297,10 +313,14 @@ public abstract class Item extends AbilityProvider implements IRegisterable
                 .setLore(this.getLore())
                 .setPersistentData(Item.ITEM_ID_KEY, PersistentDataType.STRING, this.getId());
 
-        builder.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(attackDamageUuid, "attack_damage", this.attackDamage - 1, AttributeModifier.Operation.ADD_NUMBER));
-        builder.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(attackSpeedUuid, "attack_speed", this.attackSpeed - 1, AttributeModifier.Operation.ADD_NUMBER));
-        builder.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier(knockbackResistanceUuid, "knockback_resistance", this.knockBackResistance, AttributeModifier.Operation.ADD_NUMBER));
-        builder.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK, new AttributeModifier(knockBackUuid, "knockback", this.knockBack, AttributeModifier.Operation.ADD_NUMBER));
+        if (this.attackDamage > 0)
+            builder.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(attackDamageUuid, "attack_damage", this.attackDamage, AttributeModifier.Operation.ADD_NUMBER));
+        if (this.attackSpeed > 0)
+            builder.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(attackSpeedUuid, "attack_speed", this.attackSpeed, AttributeModifier.Operation.ADD_NUMBER));
+        if (this.knockBackResistance > 0)
+            builder.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier(knockbackResistanceUuid, "knockback_resistance", this.knockBackResistance, AttributeModifier.Operation.ADD_NUMBER));
+        if (this.knockBack > 0)
+            builder.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK, new AttributeModifier(knockBackUuid, "knockback", this.knockBack, AttributeModifier.Operation.ADD_NUMBER));
 
         if (this.hasSkin())
         {

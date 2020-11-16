@@ -90,6 +90,7 @@ public class Bolster extends JavaPlugin
         this.commandManager.add(new CommandBecome());
         this.commandManager.add(new CommandMana());
         this.commandManager.add(new CommandSummonDummy());
+        this.commandManager.add(new CommandConfirm());
 
         // REGISTER BUNGEECORD PLUGIN CHANNEL
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -99,7 +100,7 @@ public class Bolster extends JavaPlugin
         // REGISTER MENU EVENTS
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new TestListener(), this);
-        Bukkit.getPluginManager().registerEvents(new ArmorListener(), this);
+        //Bukkit.getPluginManager().registerEvents(new ArmorListener(), this);
     }
 
     @Override
@@ -110,10 +111,15 @@ public class Bolster extends JavaPlugin
 
     public void setActiveGameMode(GameMode gameMode)
     {
-        HandlerList.unregisterAll(this.activeGameMode);
+        if(this.activeGameMode != null)
+        {
+            HandlerList.unregisterAll(this.activeGameMode.getProperties());
+            HandlerList.unregisterAll(this.activeGameMode);
+        }
 
         this.activeGameMode = gameMode;
 
+        Bukkit.getPluginManager().registerEvents(this.activeGameMode.getProperties(), this);
         Bukkit.getPluginManager().registerEvents(this.activeGameMode, this);
 
         this.activeGameMode.start();

@@ -35,9 +35,23 @@ public class StringUtil
 
         if (text == null) return lore;
 
+        String[] lines = text.split("\n");
+
+        for (String line : lines)
+        {
+            lore.addAll(formatLine(line, lineLength));
+        }
+
+        return lore;
+    }
+
+    private static List<String> formatLine(String text, int lineLength)
+    {
+        List<String> lore = new ArrayList<>();
+
         int length = lineLength + (text.length() - ChatColor.stripColor(text).length());
 
-        String wrapped = WordUtils.wrap(text, length, "\n", false);
+        String wrapped = WordUtils.wrap(text, length, "\n", true);
         String[] wrappedArray = wrapped.split("\n");
 
         String previousLine = null;
@@ -57,6 +71,7 @@ public class StringUtil
 
         return lore;
     }
+
 
     public static List<String> formatQuote(String quote, String author)
     {

@@ -27,6 +27,7 @@ public class Team implements Listener
     Map<UUID, Integer> kills = new HashMap<>();
     int totalKills = 0;
     boolean allowFriendlyFire;
+    boolean removePlayersOnDeath = true;
 
     public Team(String name, ChatColor color)
     {
@@ -138,6 +139,16 @@ public class Team implements Listener
         this.allowFriendlyFire = allow;
     }
 
+    public void setRemovePlayersOnDeath(boolean removePlayersOnDeath)
+    {
+        this.removePlayersOnDeath = removePlayersOnDeath;
+    }
+
+    public boolean shouldRemovePlayersOnDeath()
+    {
+        return removePlayersOnDeath;
+    }
+
     /**
      * Player join event that handles adding players to the team
      *
@@ -159,7 +170,7 @@ public class Team implements Listener
 
         if (entity instanceof Player) return;
 
-        this.remove(entity);
+        if (this.shouldRemovePlayersOnDeath()) this.remove(entity);
     }
 
     @EventHandler

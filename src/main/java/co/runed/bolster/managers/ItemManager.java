@@ -7,7 +7,6 @@ import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.Manager;
-import com.google.gson.Gson;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -162,7 +161,8 @@ public class ItemManager extends Manager
 
         PlayerInventory inv = player.getInventory();
 
-        if (inv.getItemInMainHand().getType() == Material.AIR)
+        // TODO PRIORITISE EXISTING STACK, THEN EMPTY HAND, THEN NEW STACK
+        if (inv.getItemInMainHand().getType() == Material.AIR && !inv.containsAtLeast(stack, 1))
         {
             inv.setItemInMainHand(stack);
             return item;
@@ -495,6 +495,11 @@ public class ItemManager extends Manager
 
         if (item == null) return;
         if (item.getEntity() == null || player != item.getEntity()) return;
+        if (!item.isDroppable())
+        {
+            event.setCancelled(true);
+            return;
+        }
 
         this.removeItem(player, item);
     }

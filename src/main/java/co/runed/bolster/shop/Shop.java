@@ -25,8 +25,8 @@ public class Shop
         this.items.add(item);
     }
 
-    public void isUnlocked(Player player, String id)
+    public boolean isUnlocked(Player player, String id)
     {
-
+        return true;
     }
 }

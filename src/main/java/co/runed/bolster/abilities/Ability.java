@@ -7,23 +7,29 @@ import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.managers.CooldownManager;
+import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.ICooldownSource;
+import co.runed.bolster.util.TaskUtil;
+import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.cost.Cost;
 import co.runed.bolster.util.cost.ManaCost;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Ability implements Listener, IConditional, ICooldownSource
 {
@@ -32,12 +38,17 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private String name = null;
     private String description = null;
     private double cooldown = 0;
+    private double castTime = 0;
     private float manaCost = 0;
     private Boolean cancelEventOnCast = false;
     private LivingEntity caster;
     private AbilityProvider abilityProvider;
     private AbilityTrigger trigger;
     private boolean showErrors = true;
+    private boolean casting = false;
+    private boolean cancelled = false;
+
+    BukkitTask castingTask;
 
     private Duration duration = Duration.ofSeconds(0);
 
@@ -156,6 +167,16 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return this.showErrors;
     }
 
+    public void setCastTime(double castTime)
+    {
+        this.castTime = castTime;
+    }
+
+    public double getCastTime()
+    {
+        return castTime;
+    }
+
     @Override
     public String getCooldownId()
     {
@@ -251,9 +272,44 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     {
         if (this.canActivate(properties))
         {
-            this.onActivate(properties);
+            if (this.getCastTime() > 0)
+            {
+                this.casting = true;
 
-            this.onPostActivate(properties);
+                long updatePeriod = 10L;
+                long castTimeTicks = (long) (this.getCastTime() * 20L);
+                AtomicLong repeats = new AtomicLong();
+
+                if (this.getCaster() instanceof Player)
+                {
+                    Player player = (Player) this.getCaster();
+
+                    this.castingTask = TaskUtil.runDurationTaskTimer(Bolster.getInstance(),
+                            () -> {
+                                repeats.addAndGet(updatePeriod);
+
+                                float xpPercent = (repeats.floatValue() / (float) castTimeTicks);
+
+                                player.setExp(Math.min(xpPercent, 0.999f));
+                                player.setLevel(0);
+                            },
+                            TimeUtil.fromSeconds(this.getCastTime()), 0L, updatePeriod,
+                            () -> {
+                                if (!this.cancelled)
+                                {
+                                    this.onActivate(properties);
+                                    this.onPostActivate(properties);
+                                }
+                                ManaManager.getInstance().updateManaDisplay(player);
+                            });
+                }
+            }
+            else
+            {
+                this.onActivate(properties);
+
+                this.onPostActivate(properties);
+            }
 
             return true;
         }
@@ -266,6 +322,10 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     public void onPostActivate(Properties properties)
     {
         this.setOnCooldown(true);
+
+        this.casting = false;
+        this.cancelled = false;
+        this.castingTask = null;
 
         if (properties.get(AbilityProperties.EVENT) != null)
         {

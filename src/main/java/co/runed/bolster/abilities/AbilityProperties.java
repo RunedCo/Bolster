@@ -13,7 +13,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -32,6 +36,8 @@ public class AbilityProperties
     public static final Property<Event> EVENT = new Property<>("event");
     public static final Property<ItemStack> ITEM_STACK = new Property<>("item_stack");
     public static final Property<Item> ITEM = new Property<>("item");
+    public static final Property<AbilityTrigger> TRIGGER = new Property<>("trigger", AbilityTrigger.ALL);
+    public static final Property<AbilityProvider> ABILITY_PROVIDER = new Property<>("ability_provider");
 
     // BLOCK PROPERTIES
     public static final Property<Block> BLOCK = new Property<>("block");
@@ -57,7 +63,12 @@ public class AbilityProperties
     // CHARGE PROPERTIES
     public static final Property<Long> CHARGE_TIME = new Property<>("charge_time");
 
-    public static final Property<AbilityProvider> ABILITY_PROVIDER = new Property<>("ability_provider");
-
-    public static final Property<AbilityTrigger> TRIGGER = new Property<>("trigger", AbilityTrigger.ALL);
+    // CLICK PROPERTIES
+    public static final Property<ItemStack> CURRENT_ITEM_STACK = new Property<>("current_item_stack");
+    public static final Property<Integer> SLOT = new Property<>("slot");
+    public static final Property<Integer> RAW_SLOT = new Property<>("raw_slot");
+    public static final Property<InventoryType.SlotType> SLOT_TYPE = new Property<>("slot_type");
+    public static final Property<ClickType> CLICK_TYPE = new Property<>("click_type");
+    public static final Property<InventoryAction> INVENTORY_ACTION = new Property<>("inventory_action");
+    public static final Property<Inventory> INVENTORY = new Property<>("inventory");
 }

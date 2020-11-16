@@ -49,6 +49,8 @@ public class AbilityManager extends Manager
         Bukkit.getPluginManager().registerEvents(new PlayerInteractAtEntityListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerSelectListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerPortalListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new PlayerInventoryClickListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new PlayerConnectListener(), plugin);
     }
 
     public Ability add(LivingEntity entity, AbilityTrigger trigger, Ability ability)
@@ -57,7 +59,9 @@ public class AbilityManager extends Manager
 
         AbilityData abilityData = new AbilityData(trigger, ability);
 
-        this.abilities.get(entity.getUniqueId()).add(abilityData);
+        List<AbilityData> datas = this.abilities.get(entity.getUniqueId());
+
+        if (!datas.contains(abilityData)) datas.add(abilityData);
 
         ability.setTrigger(trigger);
 
@@ -224,6 +228,19 @@ public class AbilityManager extends Manager
             {
                 this.task.cancel();
             }
+        }
+
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (obj instanceof AbilityData)
+            {
+                AbilityData data = (AbilityData) obj;
+
+                return data.ability.equals(this.ability) && data.trigger.equals(this.trigger);
+            }
+
+            return super.equals(obj);
         }
     }
 

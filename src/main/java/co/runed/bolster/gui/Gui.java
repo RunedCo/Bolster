@@ -7,7 +7,7 @@ public abstract class Gui
 {
     public abstract String getTitle(Player player);
 
-    public abstract Menu draw(Player player);
+    protected abstract Menu draw(Player player);
 
     public Menu show(Player player)
     {

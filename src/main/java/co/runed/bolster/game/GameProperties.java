@@ -20,6 +20,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
@@ -42,7 +44,9 @@ public class GameProperties extends Properties implements Listener
     public static final Property<Boolean> DISABLE_ALL_DAMAGE = new Property<>("disable_all_damage", false);
 
     public static final Property<Boolean> ENABLE_HUNGER = new Property<>("enable_hunger", true);
+    // TODO INVENTORY CLICK EVENT FOR OFFHAND SLOT
     public static final Property<Boolean> ENABLE_OFFHAND = new Property<>("enable_offhand", true);
+    public static final Property<Boolean> ENABLE_ITEM_DROPS = new Property<>("enable_item_drops", true);
 
     public static final Property<Boolean> ENABLE_XP = new Property<>("enable_xp", true);
 
@@ -108,34 +112,46 @@ public class GameProperties extends Properties implements Listener
     }
 
     @EventHandler
-    private void onPlayerHunger(FoodLevelChangeEvent event)
+    private void onInventoryClick(InventoryClickEvent event)
     {
-        if (!this.get(GameProperties.ENABLE_HUNGER))
+        if (!this.get(GameProperties.ENABLE_OFFHAND))
         {
-            event.setCancelled(true);
+            if (event.getRawSlot() == 45 || event.getClick() == ClickType.SWAP_OFFHAND)
+            {
+                event.setCancelled(true);
+            }
         }
     }
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent e)
+    private void onPlayerHunger(FoodLevelChangeEvent event)
     {
-        if (!this.get(GameProperties.ENABLE_XP)) e.setDroppedExp(0);
+        if (!this.get(GameProperties.ENABLE_HUNGER))
+            event.setCancelled(true);
     }
 
     @EventHandler
-    public void onBreakBlock(BlockBreakEvent e)
+    private void onPlayerDeath(PlayerDeathEvent e)
+    {
+        if (!this.get(GameProperties.ENABLE_XP)) e.setDroppedExp(0);
+
+        if (!this.get(GameProperties.ENABLE_ITEM_DROPS)) e.getDrops().clear();
+    }
+
+    @EventHandler
+    private void onBreakBlock(BlockBreakEvent e)
     {
         if (!this.get(GameProperties.ENABLE_XP)) e.setExpToDrop(0);
     }
 
     @EventHandler
-    public void onExpChange(PlayerExpChangeEvent event)
+    private void onExpChange(PlayerExpChangeEvent event)
     {
         if (!this.get(GameProperties.ENABLE_XP)) event.setAmount(0);
     }
 
     @EventHandler
-    public void onInteractStrip(PlayerInteractEvent e)
+    private void onInteractStrip(PlayerInteractEvent e)
     {
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
         {

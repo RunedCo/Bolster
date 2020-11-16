@@ -12,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
@@ -55,14 +57,18 @@ public class TargetDummyClass extends BolsterClass
         Instant startInstant;
         double totalDamage = 0;
 
-        public TargetDummyAbility()
-        {
-            this.setShouldCancelEvent(true);
-        }
-
         @Override
         public void onActivate(Properties properties)
         {
+            Event event = properties.get(AbilityProperties.EVENT);
+
+            if (event instanceof EntityDamageEvent)
+            {
+                EntityDamageEvent damageEvent = (EntityDamageEvent)event;
+
+                damageEvent.setDamage(0);
+            }
+
             if (properties.contains(AbilityProperties.DAMAGER) && properties.get(AbilityProperties.DAMAGER) instanceof Player)
             {
                 if (this.startInstant == null || this.startInstant.plusSeconds(10).isBefore(Instant.now()))

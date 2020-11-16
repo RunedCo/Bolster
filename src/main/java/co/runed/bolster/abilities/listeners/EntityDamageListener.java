@@ -4,14 +4,14 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 
 /**
  * Event that triggers casting an ability when an entity is damaged
@@ -21,9 +21,31 @@ public class EntityDamageListener implements Listener
     @EventHandler
     private void onDamageEntity(EntityDamageByEntityEvent event)
     {
-        if (!(event.getDamager() instanceof LivingEntity)) return;
+        Entity damager = event.getDamager();
+        LivingEntity entity = null;
 
-        LivingEntity entity = (LivingEntity) event.getDamager();
+        if (damager instanceof LivingEntity)
+        {
+            entity = (LivingEntity) damager;
+        }
+        else if (damager instanceof Projectile)
+        {
+            ProjectileSource shooter = ((Projectile) damager).getShooter();
+
+            if (!(shooter instanceof LivingEntity)) return;
+
+            entity = (LivingEntity) shooter;
+        }
+        else if (damager instanceof TNTPrimed)
+        {
+            Entity source = ((TNTPrimed) damager).getSource();
+
+            if (!(source instanceof LivingEntity)) return;
+
+            entity = (LivingEntity) source;
+        }
+
+        if (entity == null) return;
         EntityEquipment inv = entity.getEquipment();
         ItemStack stack = inv.getItemInMainHand();
 
@@ -31,7 +53,7 @@ public class EntityDamageListener implements Listener
         properties.set(AbilityProperties.TARGET, event.getEntity());
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
-        properties.set(AbilityProperties.DAMAGE, event.getFinalDamage());
+        properties.set(AbilityProperties.DAMAGE, event.getDamage());
 
         AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_DAMAGE_ENTITY, properties);
     }
@@ -50,7 +72,7 @@ public class EntityDamageListener implements Listener
         properties.set(AbilityProperties.TARGET, event.getEntity());
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
-        properties.set(AbilityProperties.DAMAGE, event.getFinalDamage());
+        properties.set(AbilityProperties.DAMAGE, event.getDamage());
 
         AbilityManager.getInstance().trigger(player, AbilityTrigger.LEFT_CLICK_ENTITY, properties);
     }
