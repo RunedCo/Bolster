@@ -16,6 +16,7 @@ import co.runed.bolster.util.cost.ManaCost;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -206,7 +207,14 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     {
         if (onCooldown && this.getAbilityProvider() != null) this.getAbilityProvider().onToggleCooldown(this);
 
-        CooldownManager.getInstance().setCooldown(this.getCaster(), this, this.getCooldown());
+        if (onCooldown)
+        {
+            CooldownManager.getInstance().setCooldown(this.getCaster(), this, this.getCooldown());
+        }
+        else
+        {
+            CooldownManager.getInstance().clearCooldown(this.getCaster(), this);
+        }
     }
 
     @Override
@@ -234,6 +242,8 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     public boolean canActivate(Properties properties)
     {
         if (!properties.contains(AbilityProperties.CASTER)) return false;
+
+        if (this.casting) return false;
 
         Collections.sort(this.conditions);
 

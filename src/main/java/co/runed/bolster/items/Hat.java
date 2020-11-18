@@ -7,6 +7,7 @@ import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -15,12 +16,12 @@ public class Hat extends Item
 {
     public static final ItemStack HAT_BASE = new ItemStack(Material.MINECART);
 
-    public Hat()
+    @Override
+    public void create(ConfigurationSection config)
     {
-        super();
+        super.create(config);
 
         this.addAbility(AbilityTrigger.RIGHT_CLICK, new EquipHatAbility());
-
         this.addCategory(Category.HATS);
     }
 

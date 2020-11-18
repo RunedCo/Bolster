@@ -6,6 +6,7 @@ import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.ArrayList;
@@ -28,6 +29,12 @@ public abstract class AbilityProvider implements IRegisterable
     public abstract void onCastAbility(Ability ability, Boolean success);
 
     public abstract void onToggleCooldown(Ability ability);
+
+    @Override
+    public void create(ConfigurationSection config)
+    {
+        
+    }
 
     public LivingEntity getEntity()
     {

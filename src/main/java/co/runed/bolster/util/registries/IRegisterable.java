@@ -2,6 +2,7 @@ package co.runed.bolster.util.registries;
 
 import co.runed.bolster.util.Category;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ public interface IRegisterable
     String getId();
 
     String getDescription();
+
+    void create(ConfigurationSection config);
 
     default void addCategory(Category category)
     {

@@ -45,6 +45,13 @@ public class ItemBuilder
         return new ItemBuilder(this.itemStack);
     }
 
+    public ItemBuilder setMaterial(Material material)
+    {
+        this.itemStack.setType(material);
+
+        return new ItemBuilder(this.itemStack);
+    }
+
     public ItemBuilder setDisplayName(String name)
     {
         ItemMeta meta = this.itemStack.getItemMeta();

@@ -16,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -28,6 +29,13 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     public static final NamespacedKey ITEM_ID_KEY = new NamespacedKey(Bolster.getInstance(), "item-id");
     public static final NamespacedKey ITEM_SKIN_KEY = new NamespacedKey(Bolster.getInstance(), "item-skin");
     public static final NamespacedKey ITEM_OWNER_KEY = new NamespacedKey(Bolster.getInstance(), "item-owner");
+
+    public static final String ATTACK_DAMAGE_KEY = "attack-damage";
+    public static final String ATTACK_SPEED_KEY = "attack-speed";
+    public static final String KNOCKBACK_RESISTANCE_KEY = "knockback-resistance";
+    public static final String KNOCKBACK_KEY = "knockback";
+    public static final String POWER_KEY = "power";
+    public static final String DROPPABLE_KEY = "droppable";
 
     private static final UUID attackDamageUuid = new UUID(1234, 1234);
     private static final UUID attackSpeedUuid = new UUID(1235, 1235);
@@ -52,6 +60,19 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     private final List<Category> categories = new ArrayList<>(Collections.singletonList(Category.ALL));
 
     private final Map<Ability, Boolean> abilityCooldowns = new HashMap<>();
+
+    @Override
+    public void create(ConfigurationSection config)
+    {
+        super.create(config);
+
+        this.setAttackDamage(config.getDouble(ATTACK_DAMAGE_KEY, 0));
+        this.setAttackSpeed(config.getDouble(ATTACK_SPEED_KEY, 0));
+        this.setKnockBackResistance(config.getDouble(KNOCKBACK_RESISTANCE_KEY, 0));
+        this.setKnockBack(config.getDouble(KNOCKBACK_KEY, 0));
+        this.setPower(config.getDouble(POWER_KEY, 0));
+        this.setDroppable(config.getBoolean(DROPPABLE_KEY, true));
+    }
 
     @Override
     public void setId(String id)
@@ -218,6 +239,16 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     public double getKnockBackResistance()
     {
         return knockBackResistance;
+    }
+
+    public void setKnockBack(double knockBack)
+    {
+        this.knockBack = knockBack;
+    }
+
+    public double getKnockBack()
+    {
+        return knockBack;
     }
 
     public void setDroppable(boolean droppable)

@@ -1,6 +1,7 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.util.Category;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
@@ -10,11 +11,24 @@ import java.util.concurrent.Callable;
 public class Registry<T extends IRegisterable>
 {
     public Plugin plugin;
+    private String folderName;
+    private HashMap<String, ConfigurationSection> configs = new HashMap<>();
     private final HashMap<String, Entry<? extends T>> entries = new HashMap<>();
 
     public Registry(Plugin plugin)
     {
+        this(plugin, null);
+    }
+
+    public Registry(Plugin plugin, String folderName)
+    {
         this.plugin = plugin;
+        this.folderName = folderName;
+
+        if (folderName != null)
+        {
+
+        }
     }
 
     public void register(String id, Class<? extends T> itemClass)
@@ -118,6 +132,11 @@ public class Registry<T extends IRegisterable>
             T value = this.entries.get(id).create();
 
             value.setId(id);
+
+            if (this.configs.containsKey(id))
+            {
+
+            }
 
             return value;
         }

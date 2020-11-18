@@ -2,17 +2,19 @@ package co.runed.bolster.items;
 
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class Weapon extends Item
 {
-    public Weapon()
+    @Override
+    public void create(ConfigurationSection config)
     {
-        super();
+        super.create(config);
 
-        this.setAttackDamage(10);
-        this.setAttackSpeed(10);
+        this.setAttackDamage(config.getDouble(Item.ATTACK_DAMAGE_KEY, 10d));
+        this.setAttackSpeed(config.getDouble(Item.ATTACK_SPEED_KEY, 10d));
 
         this.addCategory(Category.WEAPONS);
     }

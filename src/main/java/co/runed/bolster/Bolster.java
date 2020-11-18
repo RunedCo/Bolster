@@ -58,8 +58,8 @@ public class Bolster extends JavaPlugin
         super.onEnable();
 
         // CREATE REGISTRIES
-        this.itemRegistry = new Registry<>(this);
-        this.classRegistry = new Registry<>(this);
+        this.itemRegistry = new Registry<>(this, "items");
+        this.classRegistry = new Registry<>(this, "classes");
         this.itemSkinRegistry = new Registry<>(this);
         this.particleSetRegistry = new Registry<>(this);
         this.upgradeRegistry = new Registry<>(this);

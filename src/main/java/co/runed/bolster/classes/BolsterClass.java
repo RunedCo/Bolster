@@ -10,6 +10,7 @@ import co.runed.bolster.upgrade.Upgrade;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.properties.Properties;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -74,7 +75,7 @@ public abstract class BolsterClass extends AbilityProvider
 
         if (out != null && !out.isEmpty() && this.description != null && !this.description.isEmpty())
         {
-            out += "\n\n" + this.description;
+            out += "\n\n" + ChatColor.WHITE + this.description;
         }
 
         return out;
