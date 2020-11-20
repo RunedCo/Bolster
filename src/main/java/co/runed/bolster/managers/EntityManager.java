@@ -2,6 +2,7 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.Manager;
+import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -84,6 +85,12 @@ public class EntityManager extends Manager
     private void onPlayerJoin(PlayerJoinEvent event)
     {
         this.from(event.getPlayer());
+    }
+
+    @EventHandler
+    private void onEntityAdded(EntityAddToWorldEvent event)
+    {
+        event.getEntity().getPersistentDataContainer();
     }
 
     @EventHandler
