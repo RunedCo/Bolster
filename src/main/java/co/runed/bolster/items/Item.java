@@ -340,6 +340,15 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
     }
 
+    @Override
+    public void rebuild()
+    {
+        super.rebuild();
+
+        if (this.getEntity() instanceof Player)
+            ItemManager.getInstance().rebuildItemStack((Player) this.getEntity(), this.getId());
+    }
+
     public ItemStack toItemStack()
     {
         ItemBuilder builder = new ItemBuilder(this.getItemStack())
