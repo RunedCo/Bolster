@@ -22,6 +22,7 @@ public abstract class AbilityProvider implements IRegisterable
     private final List<AbilityData> abilities = new ArrayList<>();
     private LivingEntity entity;
     LivingEntity parent;
+    private ConfigurationSection config;
 
     @Override
     public abstract String getId();
@@ -33,7 +34,7 @@ public abstract class AbilityProvider implements IRegisterable
     @Override
     public void create(ConfigurationSection config)
     {
-        
+        this.config = config;
     }
 
     public LivingEntity getEntity()
@@ -43,7 +44,18 @@ public abstract class AbilityProvider implements IRegisterable
 
     public void setEntity(LivingEntity entity)
     {
-        this.entity = entity;
+        if (this.getEntity() != null && this.getEntity().getUniqueId() != entity.getUniqueId())
+        {
+            this.destroy();
+
+            this.entity = entity;
+
+            this.create(this.config);
+        }
+        else
+        {
+            this.entity = entity;
+        }
 
         for (AbilityData abilityData : this.abilities)
         {
@@ -123,6 +135,13 @@ public abstract class AbilityProvider implements IRegisterable
     public List<AbilityData> getAbilities()
     {
         return this.abilities;
+    }
+
+    public void rebuild()
+    {
+        this.destroy();
+
+        this.create(this.config);
     }
 
     public void destroy()

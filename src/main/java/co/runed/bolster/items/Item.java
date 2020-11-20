@@ -66,6 +66,9 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     {
         super.create(config);
 
+        this.setName(ChatColor.translateAlternateColorCodes('&', config.getString("name", "")));
+        // TODO SET ITEM STACK this.setItemStack();
+
         this.setAttackDamage(config.getDouble(ATTACK_DAMAGE_KEY, 0));
         this.setAttackSpeed(config.getDouble(ATTACK_SPEED_KEY, 0));
         this.setKnockBackResistance(config.getDouble(KNOCKBACK_RESISTANCE_KEY, 0));
@@ -375,5 +378,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         super.destroy();
 
         this.abilityCooldowns.clear();
+        this.lore.clear();
+        this.categories.clear();
     }
 }

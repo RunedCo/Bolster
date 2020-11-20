@@ -17,6 +17,7 @@ public class AbilityBuilder
     List<Condition.Data> conditions = new ArrayList<>();
     List<Cost> costs = new ArrayList<>();
 
+    String name = null;
     String description = null;
     double cooldown = 0;
     int manaCost = 0;
@@ -25,6 +26,13 @@ public class AbilityBuilder
     public AbilityBuilder setDescription(String description)
     {
         this.description = description;
+
+        return this;
+    }
+
+    public AbilityBuilder setName(String name)
+    {
+        this.name = name;
 
         return this;
     }
@@ -102,6 +110,7 @@ public class AbilityBuilder
         ability.setCooldown(cooldown);
         ability.setManaCost(manaCost);
         ability.setDuration(duration);
+        ability.setName(name);
 
         return ability;
     }

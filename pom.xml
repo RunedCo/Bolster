@@ -95,6 +95,13 @@
             <version>6.3</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -123,6 +130,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>org.ipvp:canvas</include>
+                                    <include>commons-io:commons-io</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

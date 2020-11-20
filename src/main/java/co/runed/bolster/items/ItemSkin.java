@@ -1,6 +1,7 @@
 package co.runed.bolster.items;
 
 import co.runed.bolster.util.registries.IRegisterable;
+import org.bukkit.configuration.ConfigurationSection;
 
 public class ItemSkin implements IRegisterable
 {
@@ -33,6 +34,13 @@ public class ItemSkin implements IRegisterable
     public String getDescription()
     {
         return null;
+    }
+
+    @Override
+    public void create(ConfigurationSection config)
+    {
+        this.name = config.getString("name", "");
+        this.showName = config.getBoolean("show-name", false);
     }
 
     public String getName()

@@ -19,7 +19,7 @@ public class StringUtil
      */
     public static List<String> formatLore(String text)
     {
-        return formatLore(text, 45);
+        return formatLore(text, 50);
     }
 
     /**
@@ -57,12 +57,14 @@ public class StringUtil
         String previousLine = null;
         for (String line : wrappedArray)
         {
+            line = ChatColor.translateAlternateColorCodes('&', line);
+
             if (previousLine != null)
             {
                 line = ChatColor.getLastColors(previousLine) + line;
             }
 
-            line = line.trim();
+            line = ChatColor.translateAlternateColorCodes('&', line.trim());
 
             lore.add(line);
 

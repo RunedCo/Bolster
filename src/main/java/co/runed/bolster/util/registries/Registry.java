@@ -1,9 +1,15 @@
 package co.runed.bolster.util.registries;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.util.Category;
+import org.apache.commons.io.FileUtils;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -25,9 +31,34 @@ public class Registry<T extends IRegisterable>
         this.plugin = plugin;
         this.folderName = folderName;
 
+        this.loadFiles(plugin, folderName);
+    }
+
+    public void loadFiles(Plugin plugin, String folderName)
+    {
         if (folderName != null)
         {
+            File pluginDir = plugin.getDataFolder();
 
+            File specificFolder = new File(pluginDir, folderName);
+
+            if (!specificFolder.exists() && !specificFolder.isDirectory()) return;
+
+            for (File file : FileUtils.listFiles(specificFolder, new String[]{"yml", "yaml"}, true))
+            {
+                Configuration config = YamlConfiguration.loadConfiguration(file);
+
+                for (String key : config.getKeys(false))
+                {
+                    if (!config.isConfigurationSection(key)) continue;
+
+                    ConfigurationSection configSection = config.getConfigurationSection(key);
+
+                    Bolster.getInstance().getLogger().info("Loaded config for " + key);
+
+                    this.configs.put(key, configSection);
+                }
+            }
         }
     }
 
@@ -48,7 +79,13 @@ public class Registry<T extends IRegisterable>
 
     public void register(String id, Callable<? extends T> func)
     {
-        this.entries.putIfAbsent(id, new Entry<>(id, func));
+        ConfigurationSection config = new MemoryConfiguration();
+        if (this.configs.containsKey(id))
+        {
+            config = this.configs.get(id);
+        }
+
+        this.entries.putIfAbsent(id, new Entry<>(id, func, config));
     }
 
     public boolean contains(String id)
@@ -133,11 +170,6 @@ public class Registry<T extends IRegisterable>
 
             value.setId(id);
 
-            if (this.configs.containsKey(id))
-            {
-
-            }
-
             return value;
         }
         catch (Exception e)
@@ -153,11 +185,13 @@ public class Registry<T extends IRegisterable>
         String id;
         Collection<Category> categories;
         Callable<? extends T> function;
+        ConfigurationSection config;
 
-        public Entry(String id, Callable<? extends T> function)
+        public Entry(String id, Callable<? extends T> function, ConfigurationSection config)
         {
             this.id = id;
             this.function = function;
+            this.config = config;
 
             T value = this.create();
 
@@ -171,6 +205,15 @@ public class Registry<T extends IRegisterable>
                 T value = this.function.call();
 
                 value.setId(this.id);
+
+                ConfigurationSection config = new MemoryConfiguration();
+
+                if (this.config != null)
+                {
+                    config = this.config;
+                }
+
+                value.create(config);
 
                 return value;
             }

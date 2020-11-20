@@ -5,6 +5,7 @@ import co.runed.bolster.game.state.StateSeries;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.IRegisterable;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
 public abstract class GameMode extends Manager implements IRegisterable
@@ -80,5 +81,11 @@ public abstract class GameMode extends Manager implements IRegisterable
     public String getDescription()
     {
         return null;
+    }
+
+    @Override
+    public void create(ConfigurationSection config)
+    {
+        
     }
 }

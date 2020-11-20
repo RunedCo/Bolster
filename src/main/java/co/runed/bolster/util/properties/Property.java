@@ -3,6 +3,7 @@ package co.runed.bolster.util.properties;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * A property passed to an ability when cast
@@ -71,5 +72,11 @@ public class Property<T> implements IRegisterable
     public String getDescription()
     {
         return null;
+    }
+
+    @Override
+    public void create(ConfigurationSection config)
+    {
+
     }
 }

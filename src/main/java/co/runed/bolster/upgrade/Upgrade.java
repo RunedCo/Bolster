@@ -8,6 +8,7 @@ import co.runed.bolster.util.cost.Cost;
 import co.runed.bolster.util.cost.ManaCost;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -135,6 +136,12 @@ public class Upgrade implements IRegisterable
     public String getDescription()
     {
         return null;
+    }
+
+    @Override
+    public void create(ConfigurationSection config)
+    {
+
     }
 
     public int getDefaultLevel()

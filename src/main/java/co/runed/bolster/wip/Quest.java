@@ -3,6 +3,7 @@ package co.runed.bolster.wip;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
@@ -117,6 +118,12 @@ public class Quest implements IRegisterable
     public String getDescription()
     {
         return this.getDescription();
+    }
+
+    @Override
+    public void create(ConfigurationSection config)
+    {
+
     }
 
 }
