@@ -19,6 +19,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -354,7 +355,8 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         ItemBuilder builder = new ItemBuilder(this.getItemStack())
                 .setDisplayName(this.getName())
                 .setLore(this.getLore())
-                .setPersistentData(Item.ITEM_ID_KEY, PersistentDataType.STRING, this.getId());
+                .setPersistentData(Item.ITEM_ID_KEY, PersistentDataType.STRING, this.getId())
+                .addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
 
         if (this.attackDamage > 1)
             builder.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(attackDamageUuid, "attack_damage", this.attackDamage - 1, AttributeModifier.Operation.ADD_NUMBER));
