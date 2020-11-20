@@ -1,8 +1,10 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.util.Category;
+import co.runed.bolster.util.ConfigUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -15,6 +17,17 @@ public interface IRegisterable
     String getId();
 
     String getDescription();
+
+    // TODO RENAME?
+    default void setConfig(ConfigurationSection config)
+    {
+
+    }
+
+    default ConfigurationSection getConfig()
+    {
+        return new MemoryConfiguration();
+    }
 
     void create(ConfigurationSection config);
 

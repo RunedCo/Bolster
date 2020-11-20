@@ -309,11 +309,6 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         }
 
         super.addAbility(trigger, ability);
-
-        if (this.getEntity() != null && this.getEntity() instanceof Player)
-        {
-            ItemManager.getInstance().rebuildItemStack((Player) this.getEntity(), this.getId());
-        }
     }
 
     @Override
@@ -342,12 +337,18 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     }
 
     @Override
-    public void rebuild()
+    public boolean rebuild()
     {
+        if (!this.isDirty()) return false;
+
         super.rebuild();
 
-        if (this.getEntity() instanceof Player)
+        if (this.getEntity() != null && this.getEntity() instanceof Player)
+        {
             ItemManager.getInstance().rebuildItemStack((Player) this.getEntity(), this.getId());
+        }
+
+        return true;
     }
 
     public ItemStack toItemStack()

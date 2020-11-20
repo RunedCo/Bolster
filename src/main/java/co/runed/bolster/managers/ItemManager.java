@@ -101,6 +101,7 @@ public class ItemManager extends Manager
         if (item != null)
         {
             item.setEntity(entity);
+            item.rebuild();
             return item;
         }
 
@@ -109,9 +110,10 @@ public class ItemManager extends Manager
 
         if (item == null) return null;
 
-        item.setEntity(entity);
-
         items.add(item);
+
+        item.setEntity(entity);
+        item.rebuild();
 
         return item;
     }
@@ -269,7 +271,10 @@ public class ItemManager extends Manager
 
     public void rebuildItemStack(Player player, String itemId)
     {
-        Item item = this.createItem(player, itemId);
+        Item item = this.getItem(player, itemId);
+
+        if (item == null) return;
+
         PlayerInventory playerInventory = player.getInventory();
         for (int i = 0; i < playerInventory.getSize(); i++)
         {
@@ -390,13 +395,18 @@ public class ItemManager extends Manager
      */
     public boolean isItemEquipped(LivingEntity entity, Class<? extends Item> item, EquipmentSlot slot)
     {
+        return this.getEquippedItem(entity, slot).getId().equals(Bolster.getItemRegistry().getId(item));
+    }
+
+    public Item getEquippedItem(LivingEntity entity, EquipmentSlot slot)
+    {
         EntityEquipment inv = entity.getEquipment();
         ItemStack stack = inv.getItem(slot);
         String itemId = this.getItemIdFromStack(stack);
 
-        if (itemId == null) return false;
+        if (itemId == null) return null;
 
-        return itemId.equals(Bolster.getItemRegistry().getId(item));
+        return this.createItem(entity, itemId);
     }
 
     /**

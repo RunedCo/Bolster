@@ -2,6 +2,7 @@ package co.runed.bolster.util.registries;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.util.Category;
+import co.runed.bolster.util.ConfigUtil;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -191,6 +192,7 @@ public class Registry<T extends IRegisterable>
         {
             this.id = id;
             this.function = function;
+            // HACKY CLONE
             this.config = config;
 
             T value = this.create();
@@ -212,6 +214,11 @@ public class Registry<T extends IRegisterable>
                 {
                     config = this.config;
                 }
+
+                // HACKY CLONE
+                config = ConfigUtil.cloneSection(config);
+
+                value.setConfig(config);
 
                 value.create(config);
 

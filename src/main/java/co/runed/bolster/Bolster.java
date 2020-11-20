@@ -91,6 +91,7 @@ public class Bolster extends JavaPlugin
         this.commandManager.add(new CommandMana());
         this.commandManager.add(new CommandSummonDummy());
         this.commandManager.add(new CommandConfirm());
+        this.commandManager.add(new CommandItemLevel());
 
         // REGISTER BUNGEECORD PLUGIN CHANNEL
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");

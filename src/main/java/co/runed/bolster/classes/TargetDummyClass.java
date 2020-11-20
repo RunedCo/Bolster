@@ -9,6 +9,7 @@ import co.runed.bolster.util.properties.Properties;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -23,9 +24,10 @@ import java.time.Instant;
 
 public class TargetDummyClass extends BolsterClass
 {
-    public TargetDummyClass()
+    @Override
+    public void create(ConfigurationSection config)
     {
-        super();
+        super.create(config);
 
         this.setName(ChatColor.WHITE + "Target Dummy");
 
@@ -64,7 +66,7 @@ public class TargetDummyClass extends BolsterClass
 
             if (event instanceof EntityDamageEvent)
             {
-                EntityDamageEvent damageEvent = (EntityDamageEvent)event;
+                EntityDamageEvent damageEvent = (EntityDamageEvent) event;
 
                 damageEvent.setDamage(0);
             }

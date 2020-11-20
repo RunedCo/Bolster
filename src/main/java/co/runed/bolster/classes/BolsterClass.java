@@ -101,20 +101,11 @@ public abstract class BolsterClass extends AbilityProvider
     @Override
     public void setEntity(LivingEntity entity)
     {
+        if (entity.equals(this.getEntity())) return;
+
         super.setEntity(entity);
 
         ClassManager.getInstance().setClass(entity, this);
-
-        if (!(entity instanceof Player))
-        {
-            PersistentDataContainer data = entity.getPersistentDataContainer();
-            data.set(ClassManager.CLASS_KEY, PersistentDataType.STRING, this.getId());
-        }
-
-        for (Upgrade upgrade : this.upgrades)
-        {
-            UpgradeManager.getInstance().addUpgrade(this.getEntity(), upgrade);
-        }
 
         // TODO: MOVE OUTSIDE OF CLASS SPECIFIC IMPLEMENTATION
         AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.BECOME, new Properties());
@@ -150,6 +141,27 @@ public abstract class BolsterClass extends AbilityProvider
         {
             UpgradeManager.getInstance().removeUpgrade(this.getEntity(), upgrade);
         }
+    }
+
+    @Override
+    public boolean rebuild()
+    {
+        if (!this.isDirty()) return false;
+
+        super.rebuild();
+
+        if (this.getEntity() != null && !(this.getEntity() instanceof Player))
+        {
+            PersistentDataContainer data = this.getEntity().getPersistentDataContainer();
+            data.set(ClassManager.CLASS_KEY, PersistentDataType.STRING, this.getId());
+        }
+
+        for (Upgrade upgrade : this.upgrades)
+        {
+            UpgradeManager.getInstance().addUpgrade(this.getEntity(), upgrade);
+        }
+
+        return true;
     }
 
     @Override

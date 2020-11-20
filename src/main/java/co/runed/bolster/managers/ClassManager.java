@@ -65,6 +65,7 @@ public class ClassManager extends Manager
             }
 
             bolsterClass.setEntity(entity);
+            bolsterClass.rebuild();
         }
     }
 

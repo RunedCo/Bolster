@@ -2,6 +2,7 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.AbilityManager;
+import co.runed.bolster.util.ConfigUtil;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
@@ -23,6 +24,7 @@ public abstract class AbilityProvider implements IRegisterable
     private LivingEntity entity;
     LivingEntity parent;
     private ConfigurationSection config;
+    private boolean dirty;
 
     @Override
     public abstract String getId();
@@ -32,9 +34,21 @@ public abstract class AbilityProvider implements IRegisterable
     public abstract void onToggleCooldown(Ability ability);
 
     @Override
+    public void setConfig(ConfigurationSection config)
+    {
+        this.config = ConfigUtil.cloneSection(config);
+    }
+
+    @Override
+    public ConfigurationSection getConfig()
+    {
+        return this.config;
+    }
+
+    @Override
     public void create(ConfigurationSection config)
     {
-        this.config = config;
+
     }
 
     public LivingEntity getEntity()
@@ -44,28 +58,10 @@ public abstract class AbilityProvider implements IRegisterable
 
     public void setEntity(LivingEntity entity)
     {
-        if (this.getEntity() != null && this.getEntity().getUniqueId() != entity.getUniqueId())
-        {
-            this.destroy();
+        if (entity.equals(this.getEntity())) return;
 
-            this.entity = entity;
-
-            this.create(this.config);
-        }
-        else
-        {
-            this.entity = entity;
-        }
-
-        for (AbilityData abilityData : this.abilities)
-        {
-            Ability ability = abilityData.ability;
-
-            if (ability.getCaster() == entity) continue;
-
-            ability.setCaster(entity);
-            AbilityManager.getInstance().add(entity, abilityData.trigger, ability);
-        }
+        this.entity = entity;
+        this.markDirty();
     }
 
     public LivingEntity getParent()
@@ -76,6 +72,8 @@ public abstract class AbilityProvider implements IRegisterable
     public void setParent(LivingEntity parent)
     {
         this.parent = parent;
+
+        this.markDirty();
     }
 
     public void addAbility(AbilityTrigger trigger, BiConsumer<LivingEntity, Properties> lambda)
@@ -102,6 +100,16 @@ public abstract class AbilityProvider implements IRegisterable
     public boolean hasAbility(AbilityTrigger trigger)
     {
         return this.abilities.stream().anyMatch((info) -> info.trigger.equals(trigger));
+    }
+
+    public boolean isDirty()
+    {
+        return this.dirty;
+    }
+
+    public void markDirty()
+    {
+        this.dirty = true;
     }
 
     @Override
@@ -137,16 +145,39 @@ public abstract class AbilityProvider implements IRegisterable
         return this.abilities;
     }
 
-    public void rebuild()
+    public boolean rebuild()
     {
-        this.destroy();
+        if (!this.isDirty()) return false;
 
+        this.dirty = false;
+
+        this.destroy(false);
         this.create(this.config);
+
+        if (this.getEntity() != null)
+        {
+            for (AbilityData abilityData : this.abilities)
+            {
+                Ability ability = abilityData.ability;
+
+                if (ability.getCaster() == entity) continue;
+
+                ability.setCaster(entity);
+                AbilityManager.getInstance().add(entity, abilityData.trigger, ability);
+            }
+        }
+
+        return true;
     }
 
     public void destroy()
     {
-        if (this.getEntity() != null)
+        this.destroy(true);
+    }
+
+    public void destroy(boolean trigger)
+    {
+        if (this.getEntity() != null && trigger)
         {
             AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.REMOVE, new Properties());
         }
