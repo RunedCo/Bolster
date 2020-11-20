@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities.conditions;
+package co.runed.bolster.conditions;
 
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
@@ -6,6 +6,7 @@ import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.conditions.TargetedCondition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 
 import java.text.DecimalFormat;
@@ -55,7 +56,7 @@ public class OffCooldownCondition extends TargetedCondition<BolsterEntity>
                 formattedCooldown = decimalFormatter.format(cooldown);
             }
 
-            entity.sendActionBar("Ability on cooldown (" + formattedCooldown + " seconds remaining)");
+            entity.sendActionBar(ChatColor.RED + "Ability on cooldown (" + formattedCooldown + " seconds remaining)");
         }
     }
 }

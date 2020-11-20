@@ -88,12 +88,6 @@ public class EntityManager extends Manager
     }
 
     @EventHandler
-    private void onEntityAdded(EntityAddToWorldEvent event)
-    {
-        event.getEntity().getPersistentDataContainer();
-    }
-
-    @EventHandler
     private void onEntityRemoved(EntityRemoveFromWorldEvent event)
     {
         if (!(event.getEntity() instanceof LivingEntity)) return;

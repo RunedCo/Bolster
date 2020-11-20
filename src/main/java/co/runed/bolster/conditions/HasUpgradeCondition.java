@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities.conditions;
+package co.runed.bolster.conditions;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.conditions.IConditional;

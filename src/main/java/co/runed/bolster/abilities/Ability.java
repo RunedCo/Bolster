@@ -1,8 +1,8 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.abilities.conditions.HasManaCondition;
-import co.runed.bolster.abilities.conditions.OffCooldownCondition;
+import co.runed.bolster.conditions.HasManaCondition;
+import co.runed.bolster.conditions.OffCooldownCondition;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.conditions.IConditional;
@@ -16,7 +16,6 @@ import co.runed.bolster.util.cost.ManaCost;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

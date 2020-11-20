@@ -1,26 +1,27 @@
-package co.runed.bolster.abilities.conditions;
+package co.runed.bolster.conditions;
 
 import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.conditions.TargetedCondition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.potion.PotionEffectType;
 
-public class HasPermissionCondition extends TargetedCondition<LivingEntity>
+public class HasPotionEffect extends TargetedCondition<LivingEntity>
 {
-    String permission;
+    PotionEffectType potionEffect;
 
-    public HasPermissionCondition(Target<LivingEntity> target, String permission)
+    public HasPotionEffect(Target<LivingEntity> target, PotionEffectType potionEffect)
     {
         super(target);
 
-        this.permission = permission;
+        this.potionEffect = potionEffect;
     }
 
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        return this.getTarget().get(properties).hasPermission(this.permission);
+        return this.getTarget().get(properties).hasPotionEffect(potionEffect);
     }
 
     @Override

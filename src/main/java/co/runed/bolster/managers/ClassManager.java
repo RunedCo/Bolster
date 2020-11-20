@@ -1,13 +1,22 @@
 package co.runed.bolster.managers;
 
+import co.runed.bolster.Bolster;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.util.Manager;
+import org.bukkit.Chunk;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
@@ -17,6 +26,8 @@ import java.util.UUID;
 public class ClassManager extends Manager
 {
     private final Map<UUID, BolsterClass> bolsterClasses = new HashMap<>();
+
+    public static final NamespacedKey CLASS_KEY = new NamespacedKey("bolster", "class");
 
     private static ClassManager _instance;
 
@@ -41,12 +52,20 @@ public class ClassManager extends Manager
         {
             BolsterClass existingClass = this.bolsterClasses.get(uuid);
 
-            if(existingClass != bolsterClass && existingClass != null) existingClass.destroy();
+            if (existingClass != bolsterClass && existingClass != null) existingClass.destroy();
         }
 
         this.bolsterClasses.put(uuid, bolsterClass);
 
-        if (bolsterClass != null && bolsterClass.getEntity() != entity) bolsterClass.setEntity(entity);
+        if (bolsterClass != null && bolsterClass.getEntity() != entity)
+        {
+            if (bolsterClass.getId() == null)
+            {
+                bolsterClass.setId(Bolster.getClassRegistry().getId(bolsterClass.getClass()));
+            }
+
+            bolsterClass.setEntity(entity);
+        }
     }
 
     /**
@@ -92,6 +111,47 @@ public class ClassManager extends Manager
         if (entity instanceof Player) return;
 
         this.reset(entity);
+    }
+
+    // TODO MONITOR PERFORMANCE
+    @EventHandler
+    private void onChunkLoaded(ChunkLoadEvent event)
+    {
+        Chunk chunk = event.getChunk();
+
+        this.loadFromChunk(chunk);
+    }
+
+    @EventHandler
+    private void onWorldLoaded(WorldLoadEvent event)
+    {
+        for (Chunk chunk : event.getWorld().getLoadedChunks())
+        {
+            this.loadFromChunk(chunk);
+        }
+    }
+
+    private void loadFromChunk(Chunk chunk)
+    {
+        //if (chunk.isLoaded()) return;
+
+        for (Entity entity : chunk.getEntities())
+        {
+            if (!(entity instanceof LivingEntity)) continue;
+            if (entity instanceof Player) continue;
+
+            PersistentDataContainer data = entity.getPersistentDataContainer();
+
+            if (data.has(CLASS_KEY, PersistentDataType.STRING))
+            {
+                String classKey = data.get(CLASS_KEY, PersistentDataType.STRING);
+                BolsterClass bolsterClass = Bolster.getClassRegistry().createInstance(classKey);
+
+                if (bolsterClass == null || BolsterEntity.from((LivingEntity) entity).getBolsterClass() != null) continue;
+
+                BolsterEntity.from((LivingEntity) entity).setBolsterClass(bolsterClass);
+            }
+        }
     }
 
     public static ClassManager getInstance()

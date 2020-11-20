@@ -4,7 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.abilities.conditions.ItemEquippedCondition;
+import co.runed.bolster.conditions.ItemEquippedCondition;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
@@ -124,10 +124,10 @@ public abstract class Item extends AbilityProvider implements IRegisterable
             loreWithAbilities.add(ChatColor.GRAY + "Power: " + ChatColor.YELLOW + this.power);
         }
 
-        if (this.attackSpeed > 0)
-        {
-            loreWithAbilities.add(ChatColor.GRAY + "Attack Speed: " + ChatColor.YELLOW + this.attackSpeed);
-        }
+//        if (this.attackSpeed > 0)
+//        {
+//            loreWithAbilities.add(ChatColor.GRAY + "Attack Speed: " + ChatColor.YELLOW + this.attackSpeed);
+//        }
 
         if (this.knockBack > 0)
         {

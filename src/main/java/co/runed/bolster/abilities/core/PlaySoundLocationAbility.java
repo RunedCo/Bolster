@@ -1,15 +1,13 @@
 package co.runed.bolster.abilities.core;
 
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.TargetedAbility;
-import co.runed.bolster.abilities.conditions.IsEntityTypeCondition;
+import co.runed.bolster.conditions.IsEntityTypeCondition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
 public class PlaySoundLocationAbility extends TargetedAbility<Location>
 {

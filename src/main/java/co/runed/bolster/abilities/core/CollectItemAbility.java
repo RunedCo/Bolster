@@ -2,8 +2,8 @@ package co.runed.bolster.abilities.core;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.abilities.conditions.BlockIsMaterialCondition;
-import co.runed.bolster.abilities.conditions.IsEntityTypeCondition;
+import co.runed.bolster.conditions.BlockIsMaterialCondition;
+import co.runed.bolster.conditions.IsEntityTypeCondition;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;

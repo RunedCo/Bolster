@@ -13,7 +13,10 @@ import co.runed.bolster.util.properties.Properties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -102,6 +105,12 @@ public abstract class BolsterClass extends AbilityProvider
 
         ClassManager.getInstance().setClass(entity, this);
 
+        if (!(entity instanceof Player))
+        {
+            PersistentDataContainer data = entity.getPersistentDataContainer();
+            data.set(ClassManager.CLASS_KEY, PersistentDataType.STRING, this.getId());
+        }
+
         for (Upgrade upgrade : this.upgrades)
         {
             UpgradeManager.getInstance().addUpgrade(this.getEntity(), upgrade);
@@ -147,6 +156,11 @@ public abstract class BolsterClass extends AbilityProvider
     public void destroy()
     {
         super.destroy();
+
+        if (!(this.getEntity() instanceof Player))
+        {
+            this.getEntity().getPersistentDataContainer().remove(ClassManager.CLASS_KEY);
+        }
 
         for (Upgrade upgrade : this.upgrades)
         {

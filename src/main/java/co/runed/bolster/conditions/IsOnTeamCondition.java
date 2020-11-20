@@ -1,27 +1,28 @@
-package co.runed.bolster.abilities.conditions;
+package co.runed.bolster.conditions;
 
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.conditions.TargetedCondition;
+import co.runed.bolster.game.Team;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.potion.PotionEffectType;
 
-public class HasPotionEffect extends TargetedCondition<LivingEntity>
+public class IsOnTeamCondition extends TargetedCondition<BolsterEntity>
 {
-    PotionEffectType potionEffect;
+    Team team;
 
-    public HasPotionEffect(Target<LivingEntity> target, PotionEffectType potionEffect)
+    public IsOnTeamCondition(Target<BolsterEntity> target, Team team)
     {
         super(target);
-
-        this.potionEffect = potionEffect;
+        this.team = team;
     }
 
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        return this.getTarget().get(properties).hasPotionEffect(potionEffect);
+        BolsterEntity entity = this.getTarget().get(properties);
+
+        return this.team.isInTeam(entity.getBukkit());
     }
 
     @Override
