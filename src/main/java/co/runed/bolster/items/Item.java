@@ -116,27 +116,27 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
         if (this.attackDamage > 0)
         {
-            loreWithAbilities.add(ChatColor.GRAY + "Attack Damage: " + ChatColor.YELLOW + this.attackDamage);
+            loreWithAbilities.add(ChatColor.GRAY + "Attack Damage: " + ChatColor.AQUA + this.attackDamage);
         }
 
         if (this.power > 0)
         {
-            loreWithAbilities.add(ChatColor.GRAY + "Power: " + ChatColor.YELLOW + this.power);
+            loreWithAbilities.add(ChatColor.GRAY + "Power: " + ChatColor.AQUA + this.power);
         }
 
 //        if (this.attackSpeed > 0)
 //        {
-//            loreWithAbilities.add(ChatColor.GRAY + "Attack Speed: " + ChatColor.YELLOW + this.attackSpeed);
+//            loreWithAbilities.add(ChatColor.GRAY + "Attack Speed: " + ChatColor.AQUA + this.attackSpeed);
 //        }
 
         if (this.knockBack > 0)
         {
-            loreWithAbilities.add(ChatColor.GRAY + "Knockback: " + ChatColor.YELLOW + this.knockBack);
+            loreWithAbilities.add(ChatColor.GRAY + "Knockback: " + ChatColor.AQUA + this.knockBack);
         }
 
         if (this.knockBackResistance > 0)
         {
-            loreWithAbilities.add(ChatColor.GRAY + "Knockback Resistance: " + ChatColor.YELLOW + this.knockBackResistance);
+            loreWithAbilities.add(ChatColor.GRAY + "Knockback Resistance: " + ChatColor.AQUA + this.knockBackResistance);
         }
 
         String desc = super.getDescription();

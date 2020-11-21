@@ -14,6 +14,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.regex.Pattern;
 
 public class Registry<T extends IRegisterable>
 {

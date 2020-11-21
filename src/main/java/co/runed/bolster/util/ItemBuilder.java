@@ -14,6 +14,8 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -73,6 +75,23 @@ public class ItemBuilder
         return new ItemBuilder(this.itemStack);
     }
 
+    public ItemBuilder addBullet(String line)
+    {
+        return this.addBullet(Collections.singletonList(line));
+    }
+
+    public ItemBuilder addBullet(Collection<String> lore)
+    {
+        ItemBuilder builder = new ItemBuilder(this.itemStack);
+
+        for (String line : lore)
+        {
+            builder = builder.addLore(StringUtil.formatBullet(line));
+        }
+
+        return builder;
+    }
+
     public ItemBuilder addLore(String line)
     {
         ItemMeta meta = this.itemStack.getItemMeta();
@@ -90,6 +109,18 @@ public class ItemBuilder
         meta.setLore(lore);
         this.itemStack.setItemMeta(meta);
         return new ItemBuilder(this.itemStack);
+    }
+
+    public ItemBuilder addLore(Collection<String> lore)
+    {
+        ItemBuilder builder = new ItemBuilder(this.itemStack);
+
+        for (String line : lore)
+        {
+            builder = builder.addLore(line);
+        }
+
+        return builder;
     }
 
     public ItemBuilder setLore(List<String> lore)

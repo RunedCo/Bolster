@@ -16,6 +16,7 @@ public class PlayerInventoryClickListener implements Listener
     private void onPlayerClickInventory(InventoryClickEvent event)
     {
         if (!(event.getWhoClicked() instanceof Player)) return;
+        if (event.getClickedInventory() == null) return;
 
         Player player = (Player) event.getWhoClicked();
         ItemStack stack = event.getClickedInventory()

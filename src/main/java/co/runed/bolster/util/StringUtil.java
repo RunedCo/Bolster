@@ -11,6 +11,8 @@ import java.util.TreeMap;
 
 public class StringUtil
 {
+    public static final int LINE_LENGTH = 50;
+
     /**
      * Format a string to the default length, keeping {@link ChatColor} between lines
      *
@@ -19,7 +21,7 @@ public class StringUtil
      */
     public static List<String> formatLore(String text)
     {
-        return formatLore(text, 50);
+        return formatLore(text, LINE_LENGTH);
     }
 
     /**
@@ -64,14 +66,40 @@ public class StringUtil
                 line = ChatColor.getLastColors(previousLine) + line;
             }
 
-            line = ChatColor.translateAlternateColorCodes('&', line.trim());
-
             lore.add(line);
 
             previousLine = line;
         }
 
         return lore;
+    }
+
+    public static List<String> formatBullet(String text)
+    {
+        return formatBullet(text, LINE_LENGTH);
+    }
+
+    public static List<String> formatBullet(String text, int lineLength)
+    {
+        String bullet = "  " + '\u2022' + " ";
+
+        List<String> lore = StringUtil.formatLore(text, lineLength - 4);
+        List<String> out = new ArrayList<>();
+
+        boolean firstLine = true;
+        for (String line : lore)
+        {
+            String start = firstLine ? bullet : "    ";
+
+            if (line.startsWith(String.valueOf(ChatColor.COLOR_CHAR)))
+                start = ChatColor.COLOR_CHAR + "" + line.charAt(1) + start;
+
+            out.add(start + line);
+
+            firstLine = false;
+        }
+
+        return out;
     }
 
 
@@ -113,6 +141,16 @@ public class StringUtil
     public static int countMatches(String source, String find)
     {
         return StringUtils.countMatches(source, find);
+    }
+
+    public static boolean isInt(String s)  // assuming integer is in decimal number system
+    {
+        for (int a = 0; a < s.length(); a++)
+        {
+            if (a == 0 && s.charAt(a) == '-') continue;
+            if (!Character.isDigit(s.charAt(a))) return false;
+        }
+        return true;
     }
 
     private final static TreeMap<Integer, String> romanNumeralMap = new TreeMap<Integer, String>();

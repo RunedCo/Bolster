@@ -395,7 +395,8 @@ public class ItemManager extends Manager
      */
     public boolean isItemEquipped(LivingEntity entity, Class<? extends Item> item, EquipmentSlot slot)
     {
-        return this.getEquippedItem(entity, slot).getId().equals(Bolster.getItemRegistry().getId(item));
+        Item itemInHand = this.getEquippedItem(entity, slot);
+        return itemInHand != null && itemInHand.getId().equals(Bolster.getItemRegistry().getId(item));
     }
 
     public Item getEquippedItem(LivingEntity entity, EquipmentSlot slot)

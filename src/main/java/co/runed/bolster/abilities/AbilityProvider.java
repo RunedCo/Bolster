@@ -48,7 +48,7 @@ public abstract class AbilityProvider implements IRegisterable
     @Override
     public void create(ConfigurationSection config)
     {
-
+        ConfigUtil.parseVariables(config);
     }
 
     public LivingEntity getEntity()

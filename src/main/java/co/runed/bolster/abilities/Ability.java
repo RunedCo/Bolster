@@ -1,11 +1,7 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.conditions.HasManaCondition;
-import co.runed.bolster.conditions.OffCooldownCondition;
-import co.runed.bolster.conditions.Condition;
-import co.runed.bolster.conditions.ConditionPriority;
-import co.runed.bolster.conditions.IConditional;
+import co.runed.bolster.conditions.*;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.ICooldownSource;
@@ -30,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BiFunction;
 
 public abstract class Ability implements Listener, IConditional, ICooldownSource
 {
