@@ -100,9 +100,19 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         this.name = name;
     }
 
+    public void setLore(String lore)
+    {
+        this.setLore(StringUtil.formatLore(lore));
+    }
+
+    public void setLore(List<String> lore)
+    {
+        this.lore = new ArrayList<>(lore);
+    }
+
     public void addLore(String lore)
     {
-        this.lore.addAll(StringUtil.formatLore(lore));
+        this.addLore(StringUtil.formatLore(lore));
     }
 
     public void addLore(List<String> lore)
