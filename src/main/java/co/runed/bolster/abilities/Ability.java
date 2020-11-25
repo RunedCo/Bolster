@@ -7,10 +7,10 @@ import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.ICooldownSource;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.TimeUtil;
-import co.runed.bolster.util.cost.Cost;
-import co.runed.bolster.util.cost.ManaCost;
+import co.runed.bolster.wip.cost.Cost;
+import co.runed.bolster.wip.cost.ManaCost;
 import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.util.target.Target;
+import co.runed.bolster.wip.target.Target;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.BiFunction;
 
 public abstract class Ability implements Listener, IConditional, ICooldownSource
 {

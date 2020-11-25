@@ -1,11 +1,10 @@
-package co.runed.bolster.upgrade;
+package co.runed.bolster.wip.upgrade;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.Registries;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.util.StringUtil;
-import co.runed.bolster.util.cost.Cost;
-import co.runed.bolster.util.cost.ManaCost;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -83,7 +82,7 @@ public class Upgrade implements IRegisterable
 
     public Upgrade register()
     {
-        Bolster.getUpgradeRegistry().register(this.getId(), this);
+        Registries.UPGRADES.register(this.getId(), this);
 
         return this;
     }

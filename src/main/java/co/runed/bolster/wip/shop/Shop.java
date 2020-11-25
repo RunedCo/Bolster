@@ -1,4 +1,4 @@
-package co.runed.bolster.shop;
+package co.runed.bolster.wip.shop;
 
 import org.bukkit.entity.Player;
 

@@ -3,13 +3,13 @@ package co.runed.bolster;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.classes.TargetDummyClass;
 import co.runed.bolster.commands.*;
-import co.runed.bolster.events.ArmorListener;
+import co.runed.bolster.events.DisguiseListener;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
 import co.runed.bolster.managers.*;
-import co.runed.bolster.particles.ParticleSet;
-import co.runed.bolster.upgrade.Upgrade;
+import co.runed.bolster.wip.particles.ParticleSet;
+import co.runed.bolster.wip.upgrade.Upgrade;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registry;
 import co.runed.bolster.wip.TestListener;
@@ -24,14 +24,6 @@ public class Bolster extends JavaPlugin
     // SINGLETON INSTANCE
     private static Bolster instance;
 
-    // GLOBAL REGISTRIES FOR SERIALIZATION
-    private Registry<Item> itemRegistry;
-    private Registry<BolsterClass> classRegistry;
-    private Registry<ItemSkin> itemSkinRegistry;
-    private Registry<ParticleSet> particleSetRegistry;
-    private Registry<Upgrade> upgradeRegistry;
-    private Registry<Property> gamePropertiesRegistry;
-
     private CommandManager commandManager;
     private CooldownManager cooldownManager;
     private ItemManager itemManager;
@@ -41,6 +33,7 @@ public class Bolster extends JavaPlugin
     private ClassManager classManager;
     private StatusEffectManager statusEffectManager;
     private EntityManager entityManager;
+    private PlayerManager playerManager;
 
     private EffectManager effectManager;
 
@@ -58,14 +51,7 @@ public class Bolster extends JavaPlugin
         super.onEnable();
 
         // CREATE REGISTRIES
-        this.itemRegistry = new Registry<>(this, "items");
-        this.classRegistry = new Registry<>(this, "classes");
-        this.itemSkinRegistry = new Registry<>(this);
-        this.particleSetRegistry = new Registry<>(this);
-        this.upgradeRegistry = new Registry<>(this);
-        this.gamePropertiesRegistry = new Registry<>(this);
-
-        this.particleSetRegistry.register("bruce_test", ParticleSet::new);
+        Registries.PARTICLE_SETS.register("bruce_test", ParticleSet::new);
 
         // CREATE MANAGERS
         this.commandManager = new CommandManager();
@@ -76,6 +62,7 @@ public class Bolster extends JavaPlugin
         this.classManager = new ClassManager(this);
         this.manaManager = new ManaManager(this);
         this.statusEffectManager = new StatusEffectManager(this);
+        this.playerManager = new PlayerManager(this);
 
         this.entityManager = new EntityManager(this);
 
@@ -96,12 +83,16 @@ public class Bolster extends JavaPlugin
 
         // REGISTER BUNGEECORD PLUGIN CHANNEL
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:disguise");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:undisguise");
 
-        this.classRegistry.register("target_dummy", TargetDummyClass::new);
+        Registries.CLASSES.register("target_dummy", TargetDummyClass::new);
 
         // REGISTER MENU EVENTS
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new TestListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisguiseListener(), this);
+
         //Bukkit.getPluginManager().registerEvents(new ArmorListener(), this);
     }
 
@@ -113,7 +104,7 @@ public class Bolster extends JavaPlugin
 
     public void setActiveGameMode(GameMode gameMode)
     {
-        if(this.activeGameMode != null)
+        if (this.activeGameMode != null)
         {
             HandlerList.unregisterAll(this.activeGameMode.getProperties());
             HandlerList.unregisterAll(this.activeGameMode);
@@ -136,31 +127,6 @@ public class Bolster extends JavaPlugin
     public static Bolster getInstance()
     {
         return instance;
-    }
-
-    public static Registry<Item> getItemRegistry()
-    {
-        return Bolster.getInstance().itemRegistry;
-    }
-
-    public static Registry<BolsterClass> getClassRegistry()
-    {
-        return Bolster.getInstance().classRegistry;
-    }
-
-    public static Registry<ItemSkin> getItemSkinRegistry()
-    {
-        return Bolster.getInstance().itemSkinRegistry;
-    }
-
-    public static Registry<ParticleSet> getParticleSetRegistry()
-    {
-        return Bolster.getInstance().particleSetRegistry;
-    }
-
-    public static Registry<Upgrade> getUpgradeRegistry()
-    {
-        return Bolster.getInstance().upgradeRegistry;
     }
 
     public static EffectManager getEffectManager()

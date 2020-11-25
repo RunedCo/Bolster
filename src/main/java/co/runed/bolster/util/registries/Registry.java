@@ -209,7 +209,7 @@ public class Registry<T extends IRegisterable>
 
                 value.setId(this.id);
 
-                ConfigurationSection config = new MemoryConfiguration();
+                ConfigurationSection config = new MemoryConfiguration().createSection("config");
 
                 if (this.config != null)
                 {

@@ -1,4 +1,4 @@
-package co.runed.bolster.util.cost;
+package co.runed.bolster.wip.cost;
 
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.AbilityProperties;

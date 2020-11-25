@@ -1,11 +1,8 @@
 package co.runed.bolster.abilities;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Property;
-import co.runed.bolster.util.target.Target;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

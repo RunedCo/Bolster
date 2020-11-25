@@ -25,7 +25,7 @@
 
 package co.runed.bolster.util.scoreboard;
 
-import co.runed.bolster.util.ProtocolUtil;
+import co.runed.bolster.util.NetworkUtil;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.utility.MinecraftReflection;
@@ -157,7 +157,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         }
 
         this.displayName = displayName;
-        ProtocolUtil.broadcastPacket(this.subscribed, newUpdatePacket());
+        NetworkUtil.broadcastPacket(this.subscribed, newUpdatePacket());
     }
 
     @Override
@@ -177,7 +177,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         }
 
         this.prefix = prefix;
-        ProtocolUtil.broadcastPacket(this.subscribed, newUpdatePacket());
+        NetworkUtil.broadcastPacket(this.subscribed, newUpdatePacket());
     }
 
     @Override
@@ -197,7 +197,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         }
 
         this.suffix = suffix;
-        ProtocolUtil.broadcastPacket(this.subscribed, newUpdatePacket());
+        NetworkUtil.broadcastPacket(this.subscribed, newUpdatePacket());
     }
 
     @Override
@@ -215,7 +215,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         }
 
         this.allowFriendlyFire = allowFriendlyFire;
-        ProtocolUtil.broadcastPacket(this.subscribed, newUpdatePacket());
+        NetworkUtil.broadcastPacket(this.subscribed, newUpdatePacket());
     }
 
     @Override
@@ -233,7 +233,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         }
 
         this.canSeeFriendlyInvisibles = canSeeFriendlyInvisibles;
-        ProtocolUtil.broadcastPacket(this.subscribed, newUpdatePacket());
+        NetworkUtil.broadcastPacket(this.subscribed, newUpdatePacket());
     }
 
     @Override
@@ -252,7 +252,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         }
 
         this.nameTagVisibility = nameTagVisibility;
-        ProtocolUtil.broadcastPacket(this.subscribed, newUpdatePacket());
+        NetworkUtil.broadcastPacket(this.subscribed, newUpdatePacket());
     }
 
     @Override
@@ -271,7 +271,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         }
 
         this.collisionRule = collisionRule;
-        ProtocolUtil.broadcastPacket(this.subscribed, newUpdatePacket());
+        NetworkUtil.broadcastPacket(this.subscribed, newUpdatePacket());
     }
 
     @Override
@@ -290,7 +290,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         }
 
         this.color = color;
-        ProtocolUtil.broadcastPacket(this.subscribed, newUpdatePacket());
+        NetworkUtil.broadcastPacket(this.subscribed, newUpdatePacket());
     }
 
     @Override
@@ -303,7 +303,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
             return false;
         }
 
-        ProtocolUtil.broadcastPacket(this.subscribed, newTeamMemberUpdatePacket(player, MemberAction.ADD));
+        NetworkUtil.broadcastPacket(this.subscribed, newTeamMemberUpdatePacket(player, MemberAction.ADD));
         return true;
     }
 
@@ -317,7 +317,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
             return false;
         }
 
-        ProtocolUtil.broadcastPacket(this.subscribed, newTeamMemberUpdatePacket(player, MemberAction.REMOVE));
+        NetworkUtil.broadcastPacket(this.subscribed, newTeamMemberUpdatePacket(player, MemberAction.REMOVE));
         return true;
     }
 
@@ -337,7 +337,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     @Override
     public void subscribe(Player player)
     {
-        ProtocolUtil.sendPacket(player, newCreatePacket());
+        NetworkUtil.sendPacket(player, newCreatePacket());
         this.subscribed.add(player);
     }
 
@@ -355,13 +355,13 @@ public class PacketScoreboardTeam implements ScoreboardTeam
             return;
         }
 
-        ProtocolUtil.sendPacket(player, newRemovePacket());
+        NetworkUtil.sendPacket(player, newRemovePacket());
     }
 
     @Override
     public void unsubscribeAll()
     {
-        ProtocolUtil.broadcastPacket(this.subscribed, newRemovePacket());
+        NetworkUtil.broadcastPacket(this.subscribed, newRemovePacket());
         this.subscribed.clear();
     }
 

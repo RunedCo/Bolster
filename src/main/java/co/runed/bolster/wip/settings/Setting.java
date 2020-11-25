@@ -1,4 +1,4 @@
-package co.runed.bolster.settings;
+package co.runed.bolster.wip.settings;
 
 public abstract class Setting<T>
 {

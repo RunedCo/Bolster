@@ -1,4 +1,4 @@
-package co.runed.bolster.upgrade;
+package co.runed.bolster.wip.upgrade;
 
 import java.util.ArrayList;
 import java.util.List;

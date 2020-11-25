@@ -1,6 +1,7 @@
 package co.runed.bolster.gui;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.Registries;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
@@ -59,7 +60,7 @@ public class GuiItems extends Gui
                 .previousButton(GuiConstants.GUI_ARROW_LEFT)
                 .previousButtonSlot(47);
 
-        Map<String, Registry.Entry<? extends Item>> items = Bolster.getItemRegistry().getEntries();
+        Map<String, Registry.Entry<? extends Item>> items = Registries.ITEMS.getEntries();
 
         for (Registry.Entry<? extends Item> entry : items.values())
         {

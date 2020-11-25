@@ -1,4 +1,4 @@
-package co.runed.bolster.util.cost;
+package co.runed.bolster.wip.cost;
 
 import co.runed.bolster.util.properties.Properties;
 

@@ -2,6 +2,7 @@ package co.runed.bolster.commands;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.Registries;
 import co.runed.bolster.classes.BolsterClass;
 import dev.jorel.commandapi.CommandAPICommand;
 import org.bukkit.Material;
@@ -39,9 +40,9 @@ public class CommandBecome extends CommandBase
     {
         List<BolsterClass> classes = new ArrayList<>();
 
-        for (String id : Bolster.getClassRegistry().getEntries().keySet())
+        for (String id : Registries.CLASSES.getEntries().keySet())
         {
-            classes.add(Bolster.getClassRegistry().createInstance(id));
+            classes.add(Registries.CLASSES.createInstance(id));
         }
 
         ChestMenu.Builder pageTemplate = ChestMenu.builder(6).title("Classes").redraw(true);

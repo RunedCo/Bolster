@@ -1,6 +1,7 @@
 package co.runed.bolster.conditions;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.Registries;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.IConditional;
@@ -24,7 +25,7 @@ public class ItemStackIsItemCondition extends Condition
         if (!properties.contains(AbilityProperties.ITEM_STACK)) return false;
 
         ItemStack stack = properties.get(AbilityProperties.ITEM_STACK);
-        String id = Bolster.getItemRegistry().getId(item);
+        String id = Registries.ITEMS.getId(item);
 
         if (id == null) return false;
 

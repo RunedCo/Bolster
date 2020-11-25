@@ -6,7 +6,7 @@ import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.managers.ClassManager;
 import co.runed.bolster.managers.UpgradeManager;
-import co.runed.bolster.upgrade.Upgrade;
+import co.runed.bolster.wip.upgrade.Upgrade;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.properties.Properties;

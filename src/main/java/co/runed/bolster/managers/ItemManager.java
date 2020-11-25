@@ -1,6 +1,7 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.Registries;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.events.EntityCastAbilityEvent;
@@ -47,7 +48,7 @@ public class ItemManager extends Manager
      */
     public Item getItem(LivingEntity entity, Class<? extends Item> itemClass)
     {
-        return this.getItem(entity, Bolster.getItemRegistry().getId(itemClass));
+        return this.getItem(entity, Registries.ITEMS.getId(itemClass));
     }
 
     /**
@@ -77,7 +78,7 @@ public class ItemManager extends Manager
      */
     public Item createItem(LivingEntity entity, Class<? extends Item> itemClass)
     {
-        return this.createItem(entity, Bolster.getItemRegistry().getId(itemClass));
+        return this.createItem(entity, Registries.ITEMS.getId(itemClass));
     }
 
     /**
@@ -106,7 +107,7 @@ public class ItemManager extends Manager
         }
 
         // IF NOT CREATE NEW ONE
-        item = Bolster.getItemRegistry().createInstance(id);
+        item = Registries.ITEMS.createInstance(id);
 
         if (item == null) return null;
 
@@ -133,7 +134,7 @@ public class ItemManager extends Manager
      */
     public Item giveItem(Player player, Class<? extends Item> itemClass, int amount)
     {
-        return this.giveItem(player, Bolster.getItemRegistry().getId(itemClass), amount);
+        return this.giveItem(player, Registries.ITEMS.getId(itemClass), amount);
     }
 
     /**
@@ -233,7 +234,7 @@ public class ItemManager extends Manager
 
     public boolean inventoryContainsAtLeast(Player player, Class<? extends Item> item, int count)
     {
-        return this.inventoryContainsAtLeast(player, Bolster.getItemRegistry().getId(item), count);
+        return this.inventoryContainsAtLeast(player, Registries.ITEMS.getId(item), count);
     }
 
     public boolean inventoryContainsAtLeast(Player player, String itemId, int count)
@@ -266,7 +267,7 @@ public class ItemManager extends Manager
 
     public void rebuildItemStack(Player player, Class<? extends Item> item)
     {
-        this.rebuildItemStack(player, Bolster.getItemRegistry().getId(item));
+        this.rebuildItemStack(player, Registries.ITEMS.getId(item));
     }
 
     public void rebuildItemStack(Player player, String itemId)
@@ -396,7 +397,7 @@ public class ItemManager extends Manager
     public boolean isItemEquipped(LivingEntity entity, Class<? extends Item> item, EquipmentSlot slot)
     {
         Item itemInHand = this.getEquippedItem(entity, slot);
-        return itemInHand != null && itemInHand.getId().equals(Bolster.getItemRegistry().getId(item));
+        return itemInHand != null && itemInHand.getId().equals(Registries.ITEMS.getId(item));
     }
 
     public Item getEquippedItem(LivingEntity entity, EquipmentSlot slot)

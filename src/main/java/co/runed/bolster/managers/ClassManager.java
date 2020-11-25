@@ -2,6 +2,7 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.Registries;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.util.Manager;
 import org.bukkit.Chunk;
@@ -61,7 +62,7 @@ public class ClassManager extends Manager
         {
             if (bolsterClass.getId() == null)
             {
-                bolsterClass.setId(Bolster.getClassRegistry().getId(bolsterClass.getClass()));
+                bolsterClass.setId(Registries.CLASSES.getId(bolsterClass.getClass()));
             }
 
             bolsterClass.setEntity(entity);
@@ -146,7 +147,7 @@ public class ClassManager extends Manager
             if (data.has(CLASS_KEY, PersistentDataType.STRING))
             {
                 String classKey = data.get(CLASS_KEY, PersistentDataType.STRING);
-                BolsterClass bolsterClass = Bolster.getClassRegistry().createInstance(classKey);
+                BolsterClass bolsterClass = Registries.CLASSES.createInstance(classKey);
 
                 if (bolsterClass == null || BolsterEntity.from((LivingEntity) entity).getBolsterClass() != null) continue;
 

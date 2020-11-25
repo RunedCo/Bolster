@@ -2,12 +2,15 @@ package co.runed.bolster.util;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.EncoderException;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 
-public final class ProtocolUtil
+public final class NetworkUtil
 {
     /**
      * Sends a packet to the given player.
@@ -48,6 +51,36 @@ public final class ProtocolUtil
         for (Player player : players)
         {
             sendPacket(player, packet);
+        }
+    }
+
+    public static void writeVarInt(ByteBuf buf, int i)
+    {
+        while ((i & -128) != 0)
+        {
+            buf.writeByte(i & 127 | 128);
+            i >>>= 7;
+        }
+
+        buf.writeByte(i);
+    }
+
+    public static void writeString(ByteBuf buf, String string)
+    {
+        writeString(buf, string, 32767);
+    }
+
+    public static void writeString(ByteBuf buf, String string, int i)
+    {
+        byte[] bs = string.getBytes(StandardCharsets.UTF_8);
+        if (bs.length > i)
+        {
+            throw new EncoderException("String too big (was " + bs.length + " bytes encoded, max " + i + ")");
+        }
+        else
+        {
+            writeVarInt(buf, bs.length);
+            buf.writeBytes(bs);
         }
     }
 }

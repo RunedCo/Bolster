@@ -10,6 +10,8 @@ public class ConfigUtil
 {
     public static ConfigurationSection cloneSection(ConfigurationSection config)
     {
+        if (config == null) return new MemoryConfiguration().createSection("clone");
+
         return new MemoryConfiguration().createSection("clone", config.getValues(false));
     }
 
@@ -32,6 +34,7 @@ public class ConfigUtil
 
     public static ConfigurationSection parseVariables(ConfigurationSection outConfig, ConfigurationSection... otherSources)
     {
+        if (outConfig == null) outConfig = new MemoryConfiguration();
         ConfigurationSection sourceConfig = ConfigUtil.cloneSection(outConfig);
 
         for (ConfigurationSection source : otherSources)

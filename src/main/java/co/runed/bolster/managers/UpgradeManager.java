@@ -1,8 +1,8 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.abilities.AbilityProvider;
-import co.runed.bolster.upgrade.Upgrade;
-import co.runed.bolster.upgrade.UpgradeProvider;
+import co.runed.bolster.wip.upgrade.Upgrade;
+import co.runed.bolster.wip.upgrade.UpgradeProvider;
 import co.runed.bolster.util.Manager;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;

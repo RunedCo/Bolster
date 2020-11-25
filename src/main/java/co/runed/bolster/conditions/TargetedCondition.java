@@ -1,7 +1,7 @@
 package co.runed.bolster.conditions;
 
-import co.runed.bolster.util.target.ITargeted;
-import co.runed.bolster.util.target.Target;
+import co.runed.bolster.wip.target.ITargeted;
+import co.runed.bolster.wip.target.Target;
 
 public abstract class TargetedCondition<T> extends Condition implements ITargeted<T>
 {

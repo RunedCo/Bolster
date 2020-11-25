@@ -1,6 +1,6 @@
 package co.runed.bolster.util.scoreboard;
 
-import co.runed.bolster.util.ProtocolUtil;
+import co.runed.bolster.util.NetworkUtil;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
@@ -114,7 +114,7 @@ public class PacketScoreboardObjective implements ScoreboardObjective
         }
 
         this.displayName = displayName;
-        ProtocolUtil.broadcastPacket(this.subscribed, newObjectivePacket(UpdateType.UPDATE));
+        NetworkUtil.broadcastPacket(this.subscribed, newObjectivePacket(UpdateType.UPDATE));
     }
 
     @Override
@@ -134,7 +134,7 @@ public class PacketScoreboardObjective implements ScoreboardObjective
 
         this.displaySlot = displaySlot;
 
-        ProtocolUtil.broadcastPacket(this.subscribed, newDisplaySlotPacket(displaySlot));
+        NetworkUtil.broadcastPacket(this.subscribed, newDisplaySlotPacket(displaySlot));
     }
 
     @Override
@@ -170,7 +170,7 @@ public class PacketScoreboardObjective implements ScoreboardObjective
             return;
         }
 
-        ProtocolUtil.broadcastPacket(this.subscribed, newScorePacket(name, value, ScoreboardAction.CHANGE));
+        NetworkUtil.broadcastPacket(this.subscribed, newScorePacket(name, value, ScoreboardAction.CHANGE));
     }
 
     @Override
@@ -184,7 +184,7 @@ public class PacketScoreboardObjective implements ScoreboardObjective
             return false;
         }
 
-        ProtocolUtil.broadcastPacket(this.subscribed, newScorePacket(name, 0, ScoreboardAction.REMOVE));
+        NetworkUtil.broadcastPacket(this.subscribed, newScorePacket(name, 0, ScoreboardAction.REMOVE));
         return true;
     }
 
@@ -193,7 +193,7 @@ public class PacketScoreboardObjective implements ScoreboardObjective
     {
         this.scores.clear();
 
-        ProtocolUtil.broadcastPacket(this.subscribed, newObjectivePacket(UpdateType.REMOVE));
+        NetworkUtil.broadcastPacket(this.subscribed, newObjectivePacket(UpdateType.REMOVE));
         for (Player player : this.subscribed)
         {
             subscribe(player);
@@ -245,12 +245,12 @@ public class PacketScoreboardObjective implements ScoreboardObjective
     public void subscribe(Player player)
     {
         Objects.requireNonNull(player, "player");
-        ProtocolUtil.sendPacket(player, newObjectivePacket(UpdateType.CREATE));
-        ProtocolUtil.sendPacket(player, newDisplaySlotPacket(getDisplaySlot()));
+        NetworkUtil.sendPacket(player, newObjectivePacket(UpdateType.CREATE));
+        NetworkUtil.sendPacket(player, newDisplaySlotPacket(getDisplaySlot()));
 
         for (Map.Entry<String, Integer> score : getScores().entrySet())
         {
-            ProtocolUtil.sendPacket(player, newScorePacket(score.getKey(), score.getValue(), ScoreboardAction.CHANGE));
+            NetworkUtil.sendPacket(player, newScorePacket(score.getKey(), score.getValue(), ScoreboardAction.CHANGE));
         }
 
         this.subscribed.add(player);
@@ -271,13 +271,13 @@ public class PacketScoreboardObjective implements ScoreboardObjective
             return;
         }
 
-        ProtocolUtil.sendPacket(player, newObjectivePacket(UpdateType.REMOVE));
+        NetworkUtil.sendPacket(player, newObjectivePacket(UpdateType.REMOVE));
     }
 
     @Override
     public void unsubscribeAll()
     {
-        ProtocolUtil.broadcastPacket(this.subscribed, newObjectivePacket(UpdateType.REMOVE));
+        NetworkUtil.broadcastPacket(this.subscribed, newObjectivePacket(UpdateType.REMOVE));
         this.subscribed.clear();
     }
 

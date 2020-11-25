@@ -1,4 +1,4 @@
-package co.runed.bolster.particles;
+package co.runed.bolster.wip.particles;
 
 import co.runed.bolster.util.properties.Property;
 
