@@ -2,7 +2,6 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.Manager;
-import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;

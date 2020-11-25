@@ -1,8 +1,8 @@
 package co.runed.bolster.abilities.core;
 
 import co.runed.bolster.abilities.Ability;
-import co.runed.bolster.util.collection.RandomCollection;
 import co.runed.bolster.util.WorldUtil;
+import co.runed.bolster.util.collection.RandomCollection;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Location;
 import org.bukkit.Material;

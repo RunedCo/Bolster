@@ -1,12 +1,12 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.Manager;
+import co.runed.bolster.util.registries.Registries;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

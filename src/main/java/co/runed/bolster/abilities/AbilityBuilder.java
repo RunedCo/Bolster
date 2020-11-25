@@ -2,8 +2,8 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.ConditionPriority;
-import co.runed.bolster.wip.cost.Cost;
 import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.wip.cost.Cost;
 import org.bukkit.entity.LivingEntity;
 
 import java.time.Duration;

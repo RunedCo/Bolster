@@ -1,7 +1,7 @@
 package co.runed.bolster.gui;
 
-import co.runed.bolster.wip.shop.ShopItem;
 import co.runed.bolster.util.ItemBuilder;
+import co.runed.bolster.wip.shop.ShopItem;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

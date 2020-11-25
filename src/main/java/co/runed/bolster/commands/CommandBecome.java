@@ -1,8 +1,8 @@
 package co.runed.bolster.commands;
 
 import co.runed.bolster.BolsterEntity;
-import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.util.registries.Registries;
 import dev.jorel.commandapi.CommandAPICommand;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -1,10 +1,10 @@
 package co.runed.bolster.wip.upgrade;
 
-import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.registries.IRegisterable;
+import co.runed.bolster.util.registries.Registries;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;

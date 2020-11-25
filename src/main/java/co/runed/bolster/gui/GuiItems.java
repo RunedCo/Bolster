@@ -1,8 +1,8 @@
 package co.runed.bolster.gui;
 
-import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.Category;
+import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

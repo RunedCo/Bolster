@@ -22,8 +22,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.PrintWriter;
-
 public class DisguiseListener implements Listener
 {
     private static Gson gson;

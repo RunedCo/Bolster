@@ -1,7 +1,6 @@
 package co.runed.bolster.items;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
@@ -11,6 +10,7 @@ import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.registries.IRegisterable;
+import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.wip.target.Target;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

@@ -10,9 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 /**
  * Event that triggers casting an ability when an entity kills an entity
  */

@@ -1,9 +1,9 @@
 package co.runed.bolster.conditions;
 
 import co.runed.bolster.managers.UpgradeManager;
-import co.runed.bolster.wip.upgrade.Upgrade;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.wip.target.Target;
+import co.runed.bolster.wip.upgrade.Upgrade;
 import org.bukkit.entity.LivingEntity;
 
 public class HasUpgradeCondition extends TargetedCondition<LivingEntity>
