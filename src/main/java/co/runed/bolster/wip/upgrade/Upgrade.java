@@ -1,7 +1,6 @@
 package co.runed.bolster.wip.upgrade;
 
-import co.runed.bolster.Bolster;
-import co.runed.bolster.Registries;
+import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.util.StringUtil;
@@ -119,7 +118,6 @@ public class Upgrade implements IRegisterable
         return abilities;
     }
 
-    @Override
     public void setId(String id)
     {
         this.id = id;

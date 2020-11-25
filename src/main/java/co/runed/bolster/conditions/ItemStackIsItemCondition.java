@@ -1,10 +1,7 @@
 package co.runed.bolster.conditions;
 
-import co.runed.bolster.Bolster;
-import co.runed.bolster.Registries;
+import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.conditions.Condition;
-import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;

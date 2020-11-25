@@ -7,7 +7,6 @@ public class UpgradeProvider extends AbilityProvider
 {
     String id;
 
-    @Override
     public void setId(String id)
     {
         this.id = id;

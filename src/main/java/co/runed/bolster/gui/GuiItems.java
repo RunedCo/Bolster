@@ -1,17 +1,11 @@
 package co.runed.bolster.gui;
 
-import co.runed.bolster.Bolster;
-import co.runed.bolster.Registries;
+import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.items.Item;
-import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
-import co.runed.bolster.util.PlayerUtil;
 import co.runed.bolster.util.registries.Registry;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
-import org.ipvp.canvas.ClickInformation;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.mask.BinaryMask;
 import org.ipvp.canvas.mask.Mask;

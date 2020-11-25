@@ -6,6 +6,7 @@ import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.managers.ClassManager;
 import co.runed.bolster.managers.UpgradeManager;
+import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.wip.upgrade.Upgrade;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
@@ -24,7 +25,6 @@ import java.util.List;
 
 public abstract class BolsterClass extends AbilityProvider
 {
-    String id;
     String name = null;
     ItemStack icon = new ItemStack(Material.PLAYER_HEAD);
     List<Category> categories = new ArrayList<>();
@@ -55,15 +55,9 @@ public abstract class BolsterClass extends AbilityProvider
     }
 
     @Override
-    public void setId(String id)
-    {
-        this.id = id;
-    }
-
-    @Override
     public String getId()
     {
-        return this.id;
+        return Registries.CLASSES.getId(this);
     }
 
     public void setDescription(String description)

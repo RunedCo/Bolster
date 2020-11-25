@@ -1,7 +1,7 @@
 package co.runed.bolster.items;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.Registries;
+import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
@@ -63,13 +63,6 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
     private final Map<Ability, Boolean> abilityCooldowns = new HashMap<>();
 
-    public Item()
-    {
-        super();
-
-        this.setConfig(Registries.ITEMS.getConfig(this.getId()));
-    }
-
     @Override
     public void create(ConfigurationSection config)
     {
@@ -87,15 +80,9 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     }
 
     @Override
-    public void setId(String id)
-    {
-        this.id = id;
-    }
-
-    @Override
     public String getId()
     {
-        return this.id;
+        return Registries.ITEMS.getId(this);
     }
 
     public String getName()

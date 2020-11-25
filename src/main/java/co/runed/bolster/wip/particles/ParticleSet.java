@@ -2,23 +2,17 @@ package co.runed.bolster.wip.particles;
 
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
+import co.runed.bolster.util.registries.Registries;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class ParticleSet extends Properties implements IRegisterable
 {
     String name;
-    String id;
-
-    @Override
-    public void setId(String id)
-    {
-        this.id = id;
-    }
 
     @Override
     public String getId()
     {
-        return this.id;
+        return Registries.PARTICLE_SETS.getId(this);
     }
 
     @Override

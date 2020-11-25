@@ -22,6 +22,9 @@ public class Registry<T extends IRegisterable>
     private HashMap<String, ConfigurationSection> configs = new HashMap<>();
     private final HashMap<String, Entry<? extends T>> entries = new HashMap<>();
 
+    private final HashMap<Class<? extends T>, String> classKeys = new HashMap<>();
+    private final HashMap<T, String> objKeys = new HashMap<>();
+
     public Registry(Plugin plugin)
     {
         this(plugin, null);
@@ -63,22 +66,39 @@ public class Registry<T extends IRegisterable>
         }
     }
 
-    public void register(String id, Class<? extends T> itemClass)
+    public void register(String id, Class<? extends T> entryClass)
     {
-        this.register(id, () -> this.createFromClass(itemClass));
+        this.classKeys.put(entryClass, id);
+
+        this.doRegister(id, () -> this.createFromClass(entryClass));
     }
 
     public void register(String id, T obj)
     {
-        this.register(id, () -> obj);
-    }
+        this.objKeys.put(obj, id);
 
-    public void register(T obj)
-    {
-        this.register(obj.getId(), () -> obj);
+        this.doRegister(id, () -> obj);
     }
 
     public void register(String id, Callable<? extends T> func)
+    {
+        Class<? extends T> entryClass = null;
+
+        try
+        {
+            entryClass = (Class<? extends T>) func.call().getClass();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        this.classKeys.put(entryClass, id);
+
+        this.doRegister(id, func);
+    }
+
+    private void doRegister(String id, Callable<? extends T> func)
     {
         this.entries.putIfAbsent(id, new Entry<>(id, func, this.getConfig(id)));
     }
@@ -110,17 +130,17 @@ public class Registry<T extends IRegisterable>
         return (Class<T>) this.get(id).getClass();
     }
 
-    public String getId(Class<? extends T> iClass)
+    public String getId(Class<? extends T> entryClass)
     {
-        for (Map.Entry<String, Entry<? extends T>> entry : this.entries.entrySet())
-        {
-            T instance = this.get(entry.getKey());
+        if (this.classKeys.containsKey(entryClass)) return this.classKeys.get(entryClass);
 
-            if (instance.getClass() == iClass)
-            {
-                return entry.getKey();
-            }
-        }
+        return null;
+    }
+
+    public String getId(T obj)
+    {
+        if (this.objKeys.containsKey(obj)) return this.objKeys.get(obj);
+        if (this.classKeys.containsKey(obj.getClass())) return this.classKeys.get(obj.getClass());
 
         return null;
     }
@@ -155,19 +175,11 @@ public class Registry<T extends IRegisterable>
         return null;
     }
 
-    public T get(Class<? extends T> iClass)
+    public T get(Class<? extends T> entryClass)
     {
-        for (Map.Entry<String, Entry<? extends T>> entry : this.entries.entrySet())
-        {
-            T instance = this.get(entry.getKey());
+        if (!this.classKeys.containsKey(entryClass)) return null;
 
-            if (instance.getClass() == iClass)
-            {
-                return instance;
-            }
-        }
-
-        return null;
+        return this.get(this.classKeys.get(entryClass));
     }
 
     public T get(String id)
@@ -178,7 +190,8 @@ public class Registry<T extends IRegisterable>
         {
             T value = this.entries.get(id).create();
 
-            value.setId(id);
+            // TODO make sure id works without this set
+            //value.setId(id);
 
             return value;
         }
@@ -215,7 +228,8 @@ public class Registry<T extends IRegisterable>
             {
                 T value = this.function.call();
 
-                value.setId(this.id);
+                // TODO make sure works without manually setting id
+                //value.setId(this.id);
 
                 ConfigurationSection config = new MemoryConfiguration().createSection("config");
 

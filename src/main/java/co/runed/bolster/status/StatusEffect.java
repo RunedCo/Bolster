@@ -4,8 +4,11 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.TimeUtil;
+import co.runed.bolster.util.registries.IRegisterable;
+import co.runed.bolster.util.registries.Registries;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -16,8 +19,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-public abstract class StatusEffect implements Listener
+public abstract class StatusEffect implements Listener, IRegisterable
 {
+    String id;
     double duration;
     LivingEntity entity;
     BukkitTask task;
@@ -113,6 +117,24 @@ public abstract class StatusEffect implements Listener
         this.task.cancel();
 
         this.end();
+    }
+
+    @Override
+    public String getId()
+    {
+        return Registries.STATUS_EFFECTS.getId(this);
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return this.getName();
+    }
+
+    @Override
+    public void create(ConfigurationSection config)
+    {
+
     }
 
     public abstract Collection<PotionEffectType> getPotionEffects();

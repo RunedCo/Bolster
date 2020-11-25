@@ -1,17 +1,12 @@
 package co.runed.bolster;
 
-import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.classes.TargetDummyClass;
 import co.runed.bolster.commands.*;
 import co.runed.bolster.events.DisguiseListener;
 import co.runed.bolster.game.GameMode;
-import co.runed.bolster.items.Item;
-import co.runed.bolster.items.ItemSkin;
 import co.runed.bolster.managers.*;
+import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.wip.particles.ParticleSet;
-import co.runed.bolster.wip.upgrade.Upgrade;
-import co.runed.bolster.util.properties.Property;
-import co.runed.bolster.util.registries.Registry;
 import co.runed.bolster.wip.TestListener;
 import de.slikey.effectlib.EffectManager;
 import org.bukkit.Bukkit;
@@ -81,10 +76,12 @@ public class Bolster extends JavaPlugin
         this.commandManager.add(new CommandItemLevel());
         this.commandManager.add(new CommandMilestones());
 
-        // REGISTER BUNGEECORD PLUGIN CHANNEL
+        // REGISTER PLUGIN CHANNELS
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:disguise");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:undisguise");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:add_status_effect");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:remove_status_effect");
 
         Registries.CLASSES.register("target_dummy", TargetDummyClass::new);
 

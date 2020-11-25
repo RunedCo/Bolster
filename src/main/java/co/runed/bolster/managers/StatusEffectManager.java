@@ -1,8 +1,11 @@
 package co.runed.bolster.managers;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.Manager;
-import org.bukkit.entity.EntityType;
+import co.runed.bolster.util.NetworkUtil;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,11 +35,18 @@ public class StatusEffectManager extends Manager
         List<StatusEffect> entityEffects = this.getStatusEffects(entity);
 
         entityEffects.add(statusEffect);
+
         statusEffect.start(entity);
 
-        if (entity.getType() == EntityType.PLAYER)
+        if (entity instanceof Player)
         {
-            this.updateTitleDisplay((Player) entity);
+            Player player = (Player) entity;
+            ByteBuf byteBuf = Unpooled.buffer();
+            NetworkUtil.writeString(byteBuf, statusEffect.getName());
+
+            player.sendPluginMessage(Bolster.getInstance(), "bolster:add_status_effect", byteBuf.array());
+
+            this.updateTitleDisplay(player);
         }
     }
 
@@ -78,6 +88,16 @@ public class StatusEffectManager extends Manager
         if (!this.statusEffects.containsKey(uuid)) return;
 
         statusEffect.clear();
+
+        if (entity instanceof Player)
+        {
+            Player player = (Player) entity;
+            ByteBuf byteBuf = Unpooled.buffer();
+            NetworkUtil.writeString(byteBuf, statusEffect.getName());
+            byteBuf.writeDouble(statusEffect.getDuration());
+
+            player.sendPluginMessage(Bolster.getInstance(), "bolster:remove_status_effect", byteBuf.array());
+        }
 
         this.statusEffects.get(uuid).remove(statusEffect);
     }

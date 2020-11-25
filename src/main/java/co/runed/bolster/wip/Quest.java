@@ -102,7 +102,6 @@ public class Quest implements IRegisterable
         return tooltip;
     }
 
-    @Override
     public void setId(String id)
     {
         this.id = id;

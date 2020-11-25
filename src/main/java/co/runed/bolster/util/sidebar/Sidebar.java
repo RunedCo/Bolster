@@ -1,4 +1,4 @@
-package co.runed.bolster.util.scoreboard.sidebar;
+package co.runed.bolster.util.sidebar;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.managers.SidebarManager;

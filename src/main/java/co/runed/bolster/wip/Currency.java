@@ -1,6 +1,7 @@
 package co.runed.bolster.wip;
 
 import co.runed.bolster.util.registries.IRegisterable;
+import co.runed.bolster.util.registries.Registries;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -50,12 +51,6 @@ public class Currency implements IRegisterable
         this.shortName = shortName;
     }
 
-    @Override
-    public void setId(String id)
-    {
-        this.id = id;
-    }
-
     public boolean shouldPluralize()
     {
         return pluralize;
@@ -64,7 +59,7 @@ public class Currency implements IRegisterable
     @Override
     public String getId()
     {
-        return this.id;
+        return Registries.CURRENCIES.getId(this);
     }
 
     public void setIcon(ItemStack icon)

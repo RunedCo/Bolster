@@ -56,7 +56,6 @@ public class Property<T> implements IRegisterable
         return this.defaultValue;
     }
 
-    @Override
     public void setId(String id)
     {
         this.key = new NamespacedKey(Bolster.getInstance(), id);

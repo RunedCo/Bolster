@@ -1,6 +1,7 @@
 package co.runed.bolster.items;
 
 import co.runed.bolster.util.registries.IRegisterable;
+import co.runed.bolster.util.registries.Registries;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class ItemSkin implements IRegisterable
@@ -19,15 +20,9 @@ public class ItemSkin implements IRegisterable
     }
 
     @Override
-    public void setId(String id)
-    {
-        this.id = id;
-    }
-
-    @Override
     public String getId()
     {
-        return this.id;
+        return Registries.ITEM_SKINS.getId(this);
     }
 
     @Override

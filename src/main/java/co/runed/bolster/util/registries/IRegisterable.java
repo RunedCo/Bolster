@@ -1,7 +1,6 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.util.Category;
-import co.runed.bolster.util.ConfigUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -12,8 +11,6 @@ import java.util.Collection;
 
 public interface IRegisterable
 {
-    void setId(String id);
-
     String getId();
 
     String getDescription();

@@ -1,18 +1,16 @@
 package co.runed.bolster.abilities.core;
 
 import co.runed.bolster.abilities.Ability;
-import co.runed.bolster.util.RandomCollection;
+import co.runed.bolster.util.collection.RandomCollection;
 import co.runed.bolster.util.WorldUtil;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.type.Wall;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 

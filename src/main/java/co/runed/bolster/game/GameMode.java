@@ -66,12 +66,6 @@ public abstract class GameMode extends Manager implements IRegisterable
     }
 
     @Override
-    public void setId(String id)
-    {
-        this.id = id;
-    }
-
-    @Override
     public String getId()
     {
         return this.id;

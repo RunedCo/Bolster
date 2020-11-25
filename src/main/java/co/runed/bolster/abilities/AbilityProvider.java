@@ -26,9 +26,6 @@ public abstract class AbilityProvider implements IRegisterable
     private ConfigurationSection config;
     private boolean dirty;
 
-    @Override
-    public abstract String getId();
-
     public abstract void onCastAbility(Ability ability, Boolean success);
 
     public abstract void onToggleCooldown(Ability ability);

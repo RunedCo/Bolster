@@ -1,9 +1,9 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.BolsterEntity;
-import co.runed.bolster.Registries;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.util.Manager;
+import co.runed.bolster.util.registries.Registries;
 import org.bukkit.Chunk;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
@@ -59,11 +59,6 @@ public class ClassManager extends Manager
 
         if (bolsterClass != null && bolsterClass.getEntity() != entity)
         {
-            if (bolsterClass.getId() == null)
-            {
-                bolsterClass.setId(Registries.CLASSES.getId(bolsterClass.getClass()));
-            }
-
             if (!bolsterClass.isConfigSet())
             {
                 bolsterClass.setConfig(Registries.CLASSES.getConfig(bolsterClass.getId()));
