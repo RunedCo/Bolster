@@ -42,7 +42,7 @@ public class StatusEffectManager extends Manager
         {
             Player player = (Player) entity;
             ByteBuf byteBuf = Unpooled.buffer();
-            NetworkUtil.writeString(byteBuf, statusEffect.getName());
+            NetworkUtil.writeString(byteBuf, statusEffect.getId());
 
             player.sendPluginMessage(Bolster.getInstance(), "bolster:add_status_effect", byteBuf.array());
 
@@ -93,7 +93,7 @@ public class StatusEffectManager extends Manager
         {
             Player player = (Player) entity;
             ByteBuf byteBuf = Unpooled.buffer();
-            NetworkUtil.writeString(byteBuf, statusEffect.getName());
+            NetworkUtil.writeString(byteBuf, statusEffect.getId());
             byteBuf.writeDouble(statusEffect.getDuration());
 
             player.sendPluginMessage(Bolster.getInstance(), "bolster:remove_status_effect", byteBuf.array());

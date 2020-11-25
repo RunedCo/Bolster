@@ -5,9 +5,11 @@ import co.runed.bolster.commands.*;
 import co.runed.bolster.events.DisguiseListener;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.managers.*;
+import co.runed.bolster.status.*;
 import co.runed.bolster.util.registries.Registries;
-import co.runed.bolster.wip.particles.ParticleSet;
+import co.runed.bolster.util.registries.Registry;
 import co.runed.bolster.wip.TestListener;
+import co.runed.bolster.wip.particles.ParticleSet;
 import de.slikey.effectlib.EffectManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -90,7 +92,19 @@ public class Bolster extends JavaPlugin
         Bukkit.getPluginManager().registerEvents(new TestListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisguiseListener(), this);
 
-        //Bukkit.getPluginManager().registerEvents(new ArmorListener(), this);
+        this.registerStatusEffects();
+    }
+
+    private void registerStatusEffects()
+    {
+        Registry<StatusEffect> statusEffectRegistry = Registries.STATUS_EFFECTS;
+
+        statusEffectRegistry.register("blind", BlindStatusEffect.class);
+        statusEffectRegistry.register("grounded", GroundedStatusEffect.class);
+        statusEffectRegistry.register("invulnerable", InvulnerableStatusEffect.class);
+        statusEffectRegistry.register("root", RootStatusEffect.class);
+        statusEffectRegistry.register("stun", StunStatusEffect.class);
+        statusEffectRegistry.register("untargetable", UntargetableStatusEffect.class);
     }
 
     @Override

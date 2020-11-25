@@ -17,7 +17,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 
 public abstract class StatusEffect implements Listener, IRegisterable
 {
@@ -27,6 +26,11 @@ public abstract class StatusEffect implements Listener, IRegisterable
     BukkitTask task;
 
     boolean active;
+
+    public StatusEffect()
+    {
+        this(0);
+    }
 
     public StatusEffect(double duration)
     {
