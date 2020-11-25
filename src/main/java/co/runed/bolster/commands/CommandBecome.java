@@ -1,6 +1,5 @@
 package co.runed.bolster.commands;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.Registries;
 import co.runed.bolster.classes.BolsterClass;
@@ -42,7 +41,7 @@ public class CommandBecome extends CommandBase
 
         for (String id : Registries.CLASSES.getEntries().keySet())
         {
-            classes.add(Registries.CLASSES.createInstance(id));
+            classes.add(Registries.CLASSES.get(id));
         }
 
         ChestMenu.Builder pageTemplate = ChestMenu.builder(6).title("Classes").redraw(true);

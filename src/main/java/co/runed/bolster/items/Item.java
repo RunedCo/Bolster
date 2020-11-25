@@ -1,6 +1,7 @@
 package co.runed.bolster.items;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.Registries;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
@@ -61,6 +62,13 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     private final List<Category> categories = new ArrayList<>(Collections.singletonList(Category.ALL));
 
     private final Map<Ability, Boolean> abilityCooldowns = new HashMap<>();
+
+    public Item()
+    {
+        super();
+
+        this.setConfig(Registries.ITEMS.getConfig(this.getId()));
+    }
 
     @Override
     public void create(ConfigurationSection config)

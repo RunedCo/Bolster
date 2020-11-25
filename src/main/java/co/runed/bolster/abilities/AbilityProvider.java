@@ -112,6 +112,11 @@ public abstract class AbilityProvider implements IRegisterable
         this.dirty = true;
     }
 
+    public boolean isConfigSet()
+    {
+        return this.config != null;
+    }
+
     @Override
     public String getDescription()
     {

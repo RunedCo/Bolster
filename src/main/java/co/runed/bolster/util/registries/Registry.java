@@ -14,7 +14,6 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.regex.Pattern;
 
 public class Registry<T extends IRegisterable>
 {
@@ -81,13 +80,7 @@ public class Registry<T extends IRegisterable>
 
     public void register(String id, Callable<? extends T> func)
     {
-        ConfigurationSection config = new MemoryConfiguration();
-        if (this.configs.containsKey(id))
-        {
-            config = this.configs.get(id);
-        }
-
-        this.entries.putIfAbsent(id, new Entry<>(id, func, config));
+        this.entries.putIfAbsent(id, new Entry<>(id, func, this.getConfig(id)));
     }
 
     public boolean contains(String id)
@@ -114,14 +107,14 @@ public class Registry<T extends IRegisterable>
 
     public Class<T> getClass(String id)
     {
-        return (Class<T>) this.createInstance(id).getClass();
+        return (Class<T>) this.get(id).getClass();
     }
 
     public String getId(Class<? extends T> iClass)
     {
         for (Map.Entry<String, Entry<? extends T>> entry : this.entries.entrySet())
         {
-            T instance = this.createInstance(entry.getKey());
+            T instance = this.get(entry.getKey());
 
             if (instance.getClass() == iClass)
             {
@@ -130,6 +123,21 @@ public class Registry<T extends IRegisterable>
         }
 
         return null;
+    }
+
+    public ConfigurationSection getConfig(String id)
+    {
+        ConfigurationSection config = new MemoryConfiguration().createSection("config");
+
+        if (this.configs.containsKey(id))
+        {
+            config = this.configs.get(id);
+        }
+
+        // HACKY CLONE
+        config = ConfigUtil.cloneSection(config);
+
+        return config;
     }
 
     private T createFromClass(Class<? extends T> iClass)
@@ -147,11 +155,11 @@ public class Registry<T extends IRegisterable>
         return null;
     }
 
-    public T createInstance(Class<? extends T> iClass)
+    public T get(Class<? extends T> iClass)
     {
         for (Map.Entry<String, Entry<? extends T>> entry : this.entries.entrySet())
         {
-            T instance = this.createInstance(entry.getKey());
+            T instance = this.get(entry.getKey());
 
             if (instance.getClass() == iClass)
             {
@@ -162,7 +170,7 @@ public class Registry<T extends IRegisterable>
         return null;
     }
 
-    public T createInstance(String id)
+    public T get(String id)
     {
         if (!this.entries.containsKey(id)) return null;
 

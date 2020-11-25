@@ -1,6 +1,5 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.Registries;
 import co.runed.bolster.classes.BolsterClass;
@@ -63,6 +62,11 @@ public class ClassManager extends Manager
             if (bolsterClass.getId() == null)
             {
                 bolsterClass.setId(Registries.CLASSES.getId(bolsterClass.getClass()));
+            }
+
+            if (!bolsterClass.isConfigSet())
+            {
+                bolsterClass.setConfig(Registries.CLASSES.getConfig(bolsterClass.getId()));
             }
 
             bolsterClass.setEntity(entity);
@@ -147,9 +151,10 @@ public class ClassManager extends Manager
             if (data.has(CLASS_KEY, PersistentDataType.STRING))
             {
                 String classKey = data.get(CLASS_KEY, PersistentDataType.STRING);
-                BolsterClass bolsterClass = Registries.CLASSES.createInstance(classKey);
+                BolsterClass bolsterClass = Registries.CLASSES.get(classKey);
 
-                if (bolsterClass == null || BolsterEntity.from((LivingEntity) entity).getBolsterClass() != null) continue;
+                if (bolsterClass == null || BolsterEntity.from((LivingEntity) entity).getBolsterClass() != null)
+                    continue;
 
                 BolsterEntity.from((LivingEntity) entity).setBolsterClass(bolsterClass);
             }

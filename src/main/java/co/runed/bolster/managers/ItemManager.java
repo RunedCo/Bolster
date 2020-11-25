@@ -1,6 +1,5 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.Registries;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
@@ -107,7 +106,7 @@ public class ItemManager extends Manager
         }
 
         // IF NOT CREATE NEW ONE
-        item = Registries.ITEMS.createInstance(id);
+        item = Registries.ITEMS.get(id);
 
         if (item == null) return null;
 
