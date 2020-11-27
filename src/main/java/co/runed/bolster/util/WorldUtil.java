@@ -27,9 +27,14 @@ public class WorldUtil
         return entity.getTargetBlock(EnumSet.of(Material.AIR, Material.CAVE_AIR, Material.VOID_AIR), range);
     }
 
+    public static Collection<Entity> getEntitiesRadius(Location location, double radius)
+    {
+        return location.getWorld().getNearbyEntities(location, radius, radius, radius);
+    }
+
     public static Collection<Entity> getEntitiesRadiusCircle(Location location, double radius)
     {
-        Collection<Entity> entities = location.getWorld().getNearbyEntities(location, radius, radius, radius);
+        Collection<Entity> entities = getEntitiesRadius(location, radius);
 
         // Remove the entities that are within the box above but not actually in the sphere we defined with the radius and location
         // This code below could probably be replaced in Java 8 with a stream -> filter

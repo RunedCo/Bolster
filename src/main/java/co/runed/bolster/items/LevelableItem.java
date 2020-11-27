@@ -1,11 +1,14 @@
 package co.runed.bolster.items;
 
+import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.ConfigUtil;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -127,6 +130,13 @@ public abstract class LevelableItem extends Item
             }
         }
 
+        if (this.getEntity() instanceof Player)
+        {
+            Player player = (Player) this.getEntity();
+
+            PlayerManager.getInstance().getPlayerData(player).setItemLevel(this.getId(), this.level);
+        }
+
         if (this.level != previousLevel) this.markDirty();
     }
 
@@ -185,6 +195,19 @@ public abstract class LevelableItem extends Item
     public HashMap<Integer, MilestoneData> getMilestones()
     {
         return this.milestones;
+    }
+
+    @Override
+    public void setEntity(LivingEntity entity)
+    {
+        if (entity instanceof Player)
+        {
+            Player player = (Player) entity;
+
+            this.setLevel(PlayerManager.getInstance().getPlayerData(player).getItemLevel(this.getId()));
+        }
+
+        super.setEntity(entity);
     }
 
     public static class MilestoneData

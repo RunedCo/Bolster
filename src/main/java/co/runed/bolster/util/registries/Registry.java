@@ -73,6 +73,13 @@ public class Registry<T extends IRegisterable>
         this.doRegister(id, () -> this.createFromClass(entryClass));
     }
 
+    public void register(T obj)
+    {
+        if (obj.getId() == null) return;
+
+        this.register(obj.getId(), obj);
+    }
+
     public void register(String id, T obj)
     {
         this.objKeys.put(obj, id);
@@ -249,7 +256,6 @@ public class Registry<T extends IRegisterable>
             }
             catch (Exception e)
             {
-                e.printStackTrace();
             }
 
             return null;

@@ -102,6 +102,27 @@
             <version>2.6</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.1.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>bson</artifactId>
+            <version>4.1.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-core</artifactId>
+            <version>4.1.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -131,6 +152,9 @@
                                 <includes>
                                     <include>org.ipvp:canvas</include>
                                     <include>commons-io:commons-io</include>
+                                    <include>org.mongodb:mongodb-driver-sync</include>
+                                    <include>org.mongodb:mongodb-driver-core</include>
+                                    <include>org.mongodb:bson</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

@@ -53,6 +53,7 @@ public class EntityDamageListener implements Listener
         properties.set(AbilityProperties.TARGET, event.getEntity());
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
+        properties.set(AbilityProperties.DAMAGE_CAUSE, event.getCause());
         properties.set(AbilityProperties.DAMAGE, event.getDamage());
         properties.set(AbilityProperties.FINAL_DAMAGE, event.getFinalDamage());
 
@@ -73,6 +74,7 @@ public class EntityDamageListener implements Listener
         properties.set(AbilityProperties.TARGET, event.getEntity());
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
+        properties.set(AbilityProperties.DAMAGE_CAUSE, event.getCause());
         properties.set(AbilityProperties.DAMAGE, event.getDamage());
         properties.set(AbilityProperties.FINAL_DAMAGE, event.getFinalDamage());
 
@@ -92,6 +94,7 @@ public class EntityDamageListener implements Listener
         Properties properties = new Properties();
         properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.ITEM_STACK, stack);
+        properties.set(AbilityProperties.DAMAGE_CAUSE, event.getCause());
         properties.set(AbilityProperties.DAMAGE, damage);
         properties.set(AbilityProperties.FINAL_DAMAGE, event.getFinalDamage());
 

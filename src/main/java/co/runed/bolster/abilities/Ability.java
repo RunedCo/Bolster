@@ -43,6 +43,16 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private boolean showErrors = true;
     private boolean casting = false;
     private boolean cancelled = false;
+    private boolean enabled = true;
+    private int priority = 0;
+    private boolean inProgress = false;
+
+    private int availableCharges = 1;
+    private int charges = 1;
+    private boolean cancelledByMovement;
+    private boolean cancelledByDamage;
+    private boolean cancelledByCast;
+    private boolean cancelledByDealingDamage;
 
     BukkitTask castingTask;
 
@@ -76,8 +86,9 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
 
     public String getId()
     {
-        return this.getAbilityProvider() == null ? this.parentId : this.getAbilityProvider().getId()
-                + "." + this.id;
+        int chargeId = this.getCharges() - this.getAvailableCharges();
+
+        return (this.getAbilityProvider() == null ? this.parentId : this.getAbilityProvider().getId()) + "." + this.id + (this.getCharges() > 1 ? "." + chargeId : "");
     }
 
     public String getDescription()
@@ -163,6 +174,26 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return this.showErrors;
     }
 
+    public boolean isEnabled()
+    {
+        return this.enabled;
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
+    }
+
+    public boolean isInProgress()
+    {
+        return this.inProgress;
+    }
+
+    public void setInProgress(boolean inProgress)
+    {
+        this.inProgress = inProgress;
+    }
+
     public void setCastTime(double castTime)
     {
         this.castTime = castTime;
@@ -171,6 +202,76 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     public double getCastTime()
     {
         return castTime;
+    }
+
+    public void setPriority(int priority)
+    {
+        this.priority = priority;
+    }
+
+    public int getPriority()
+    {
+        return priority;
+    }
+
+    public void setCharges(int charges)
+    {
+        this.charges = charges;
+    }
+
+    public int getCharges()
+    {
+        return charges;
+    }
+
+    public void setAvailableCharges(int availableCharges)
+    {
+        this.availableCharges = availableCharges;
+    }
+
+    public int getAvailableCharges()
+    {
+        return availableCharges;
+    }
+
+    public void setCancelledByMovement(boolean cancelledByMovement)
+    {
+        this.cancelledByMovement = cancelledByMovement;
+    }
+
+    public boolean isCancelledByMovement()
+    {
+        return cancelledByMovement;
+    }
+
+    public void setCancelledByDamage(boolean cancelledByDamage)
+    {
+        this.cancelledByDamage = cancelledByDamage;
+    }
+
+    public boolean isCancelledByDamage()
+    {
+        return cancelledByDamage;
+    }
+
+    public void setCancelledByDealingDamage(boolean cancelledByDealingDamage)
+    {
+        this.cancelledByDealingDamage = cancelledByDealingDamage;
+    }
+
+    public boolean isCancelledByDealingDamage()
+    {
+        return cancelledByDealingDamage;
+    }
+
+    public void setCancelledByCast(boolean cancelledByCast)
+    {
+        this.cancelledByCast = cancelledByCast;
+    }
+
+    public boolean isCancelledByCast()
+    {
+        return cancelledByCast;
     }
 
     @Override
@@ -197,19 +298,18 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return CooldownManager.getInstance().getRemainingTime(this.getCaster(), this);
     }
 
+    public void setRemainingCooldown(double cooldown)
+    {
+        CooldownManager.getInstance().setCooldown(this.getCaster(), this, cooldown);
+
+        if (this.isOnCooldown() && this.getAbilityProvider() != null) this.getAbilityProvider().onToggleCooldown(this);
+    }
+
+
     @Override
     public void setOnCooldown(boolean onCooldown)
     {
-        if (onCooldown && this.getAbilityProvider() != null) this.getAbilityProvider().onToggleCooldown(this);
-
-        if (onCooldown)
-        {
-            CooldownManager.getInstance().setCooldown(this.getCaster(), this, this.getCooldown());
-        }
-        else
-        {
-            CooldownManager.getInstance().clearCooldown(this.getCaster(), this);
-        }
+        this.setRemainingCooldown(onCooldown ? this.getCooldown() : 0);
     }
 
     @Override
@@ -302,6 +402,8 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
                             () -> {
                                 if (!this.cancelled)
                                 {
+                                    this.setInProgress(true);
+
                                     this.onActivate(properties);
                                     this.onPostActivate(properties);
                                 }
@@ -311,8 +413,9 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
             }
             else
             {
-                this.onActivate(properties);
+                this.setInProgress(true);
 
+                this.onActivate(properties);
                 this.onPostActivate(properties);
             }
 
@@ -331,6 +434,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         this.casting = false;
         this.cancelled = false;
         this.castingTask = null;
+        this.setInProgress(false);
 
         if (properties.get(AbilityProperties.EVENT) != null)
         {

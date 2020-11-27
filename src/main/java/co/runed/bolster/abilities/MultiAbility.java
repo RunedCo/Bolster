@@ -63,6 +63,23 @@ public class MultiAbility extends Ability
     }
 
     @Override
+    public boolean isInProgress()
+    {
+        boolean inProgress = false;
+
+        for (Ability ability : this.abilities)
+        {
+            if (ability.isInProgress())
+            {
+                inProgress = true;
+                break;
+            }
+        }
+
+        return inProgress;
+    }
+
+    @Override
     public void onActivate(Properties properties)
     {
         long ticks = 0;

@@ -59,7 +59,7 @@ public class Currency implements IRegisterable
     @Override
     public String getId()
     {
-        return Registries.CURRENCIES.getId(this);
+        return this.id != null ? this.id : Registries.CURRENCIES.getId(this);
     }
 
     public void setIcon(ItemStack icon)

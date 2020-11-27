@@ -12,9 +12,11 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.util.Vector;
 
@@ -183,6 +185,11 @@ public class BolsterEntity extends TraitProvider
     public void setMaxHealth(double health)
     {
         this._entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
+    }
+
+    public void damage(double damage, Entity source, EntityDamageEvent.DamageCause damageCause)
+    {
+        this.getBukkit().damage(damage, source);
     }
 
     public void setVelocity(Vector vector)

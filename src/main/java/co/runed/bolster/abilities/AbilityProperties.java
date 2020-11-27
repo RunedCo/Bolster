@@ -10,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
@@ -52,6 +53,7 @@ public class AbilityProperties
 
     // DAMAGE PROPERTIES
     public static final Property<Double> DAMAGE = new Property<>("damage", 0.0d);
+    public static final Property<EntityDamageEvent.DamageCause> DAMAGE_CAUSE = new Property<>("damage_cause", EntityDamageEvent.DamageCause.CUSTOM);
     public static final Property<Double> FINAL_DAMAGE = new Property<>("final_damage", 0.0d);
     public static final Property<Entity> DAMAGER = new Property<>("damager");
 

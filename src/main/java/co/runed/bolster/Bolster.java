@@ -8,13 +8,29 @@ import co.runed.bolster.managers.*;
 import co.runed.bolster.status.*;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
+import co.runed.bolster.wip.Currencies;
+import co.runed.bolster.wip.Currency;
 import co.runed.bolster.wip.TestListener;
 import co.runed.bolster.wip.particles.ParticleSet;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import de.slikey.effectlib.EffectManager;
+import org.bson.UuidRepresentation;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.Convention;
+import org.bson.codecs.pojo.Conventions;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Bolster extends JavaPlugin
 {
@@ -31,10 +47,13 @@ public class Bolster extends JavaPlugin
     private StatusEffectManager statusEffectManager;
     private EntityManager entityManager;
     private PlayerManager playerManager;
-
     private EffectManager effectManager;
 
+    private Config config;
+
     private GameMode activeGameMode;
+
+    private MongoClient mongoClient;
 
     @Override
     public void onLoad()
@@ -47,8 +66,32 @@ public class Bolster extends JavaPlugin
     {
         super.onEnable();
 
-        // CREATE REGISTRIES
-        Registries.PARTICLE_SETS.register("bruce_test", ParticleSet::new);
+        try
+        {
+            this.config = new Config();
+        }
+        catch (Exception e)
+        {
+            this.getLogger().severe("FAILED TO LOAD CONFIG FILE");
+            e.printStackTrace();
+            this.setEnabled(false);
+            return;
+        }
+
+        MongoCredential credential = MongoCredential.createCredential(this.config.databaseUsername, "admin", this.config.databasePassword.toCharArray());
+        ConnectionString connectionString = new ConnectionString("mongodb://" + this.config.databaseUrl + ":" + this.config.databasePort);
+        CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build());
+        CodecRegistry codecRegistry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+                pojoCodecRegistry);
+
+        MongoClientSettings clientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .credential(credential)
+                .codecRegistry(codecRegistry)
+                .uuidRepresentation(UuidRepresentation.STANDARD)
+                .build();
+
+        this.mongoClient = MongoClients.create(clientSettings);
 
         // CREATE MANAGERS
         this.commandManager = new CommandManager();
@@ -87,12 +130,16 @@ public class Bolster extends JavaPlugin
 
         Registries.CLASSES.register("target_dummy", TargetDummyClass::new);
 
-        // REGISTER MENU EVENTS
+        // CREATE REGISTRIES
+        Registries.PARTICLE_SETS.register("bruce_test", ParticleSet::new);
+
+        // REGISTER EVENTS
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new TestListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisguiseListener(), this);
 
         this.registerStatusEffects();
+        this.registerCurrencies();
     }
 
     private void registerStatusEffects()
@@ -105,6 +152,14 @@ public class Bolster extends JavaPlugin
         statusEffectRegistry.register("root", RootStatusEffect.class);
         statusEffectRegistry.register("stun", StunStatusEffect.class);
         statusEffectRegistry.register("untargetable", UntargetableStatusEffect.class);
+    }
+
+    private void registerCurrencies()
+    {
+        Registry<Currency> currencyRegistry = Registries.CURRENCIES;
+        currencyRegistry.register(Currencies.DIAMOND);
+        currencyRegistry.register(Currencies.EMERALD);
+        currencyRegistry.register(Currencies.GOLD);
     }
 
     @Override
@@ -140,8 +195,18 @@ public class Bolster extends JavaPlugin
         return instance;
     }
 
+    public static Config getBolsterConfig()
+    {
+        return Bolster.getInstance().config;
+    }
+
     public static EffectManager getEffectManager()
     {
         return Bolster.getInstance().effectManager;
+    }
+
+    public static MongoClient getMongoClient()
+    {
+        return Bolster.getInstance().mongoClient;
     }
 }

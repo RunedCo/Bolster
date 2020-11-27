@@ -284,6 +284,18 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         this.categories.add(category);
     }
 
+    public void addAbility(AbilityTrigger trigger, Ability ability, boolean showCooldown, boolean addDefaultConditions)
+    {
+        if (showCooldown) this.abilityCooldowns.put(ability, showCooldown);
+
+        if (addDefaultConditions)
+        {
+            ability.addCondition(new ItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()));
+        }
+
+        super.addAbility(trigger, ability);
+    }
+
     public void addAbility(AbilityTrigger trigger, Ability ability, boolean showCooldown)
     {
         this.addAbility(trigger, ability, showCooldown, true);
@@ -295,38 +307,12 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         this.addAbility(trigger, ability, false, true);
     }
 
-    public void addAbility(AbilityTrigger trigger, Ability ability, boolean showCooldown, boolean addDefaultConditions)
-    {
-        if (showCooldown) this.abilityCooldowns.put(ability, showCooldown);
-
-        /* if (trigger == AbilityTrigger.ON_SELECT_ITEM || trigger == AbilityTrigger.ON_DESELECT_ITEM)
-        {
-            ability.addCondition(new ItemStackIsItemCondition(this.getClass()));
-        }
-        else
-        {
-
-        }*/
-
-        if (addDefaultConditions)
-        {
-            ability.addCondition(new ItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()));
-        }
-
-        super.addAbility(trigger, ability);
-    }
-
     @Override
     public void onCastAbility(Ability ability, Boolean success)
     {
         Optional<AbilityData> filtered = this.getAbilities().stream().filter((info) -> info.ability == ability).findFirst();
 
         if (!filtered.isPresent()) return;
-
-        if (this.abilityCooldowns.containsKey(ability) && this.abilityCooldowns.get(ability) && success)
-        {
-            ((Player) this.getEntity()).setCooldown(this.getItemStack().getType(), (int) (ability.getCooldown() * 20));
-        }
 
         // TODO CHECK PERFORMANCE IMPACT OF THIS ESPECIALLY FOR TICKING ABILITIES
         if (this.getEntity() instanceof Player && this.getId() != null)// && this.isDirty())
@@ -338,7 +324,10 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     @Override
     public void onToggleCooldown(Ability ability)
     {
-
+        if (this.abilityCooldowns.containsKey(ability) && this.abilityCooldowns.get(ability))
+        {
+            ((Player) this.getEntity()).setCooldown(this.getItemStack().getType(), (int) (ability.getRemainingCooldown() * 20));
+        }
     }
 
     @Override

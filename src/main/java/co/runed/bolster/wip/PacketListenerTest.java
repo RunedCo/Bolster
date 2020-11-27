@@ -1,4 +1,4 @@
-package co.runed.bolster;
+package co.runed.bolster.wip;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;

@@ -38,7 +38,7 @@ public class StatusEffectManager extends Manager
 
         statusEffect.start(entity);
 
-        if (entity instanceof Player)
+        if (entity instanceof Player && statusEffect.getId() != null)
         {
             Player player = (Player) entity;
             ByteBuf byteBuf = Unpooled.buffer();
@@ -89,7 +89,7 @@ public class StatusEffectManager extends Manager
 
         statusEffect.clear();
 
-        if (entity instanceof Player)
+        if (entity instanceof Player && statusEffect.getId() != null)
         {
             Player player = (Player) entity;
             ByteBuf byteBuf = Unpooled.buffer();

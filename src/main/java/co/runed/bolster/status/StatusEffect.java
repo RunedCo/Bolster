@@ -123,10 +123,15 @@ public abstract class StatusEffect implements Listener, IRegisterable
         this.end();
     }
 
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
     @Override
     public String getId()
     {
-        return Registries.STATUS_EFFECTS.getId(this);
+        return this.id != null ? this.id : Registries.STATUS_EFFECTS.getId(this);
     }
 
     @Override

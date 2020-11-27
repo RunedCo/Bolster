@@ -17,6 +17,7 @@ public class LeapAbility extends Ability
 
     boolean ignoreNext = false;
     boolean delayedIgnoreTriggered = false;
+    boolean touchedGround = false;
 
     public LeapAbility(float upwardVelocity, float forwardVelocity)
     {
@@ -36,9 +37,17 @@ public class LeapAbility extends Ability
         Vector v = this.getCaster().getLocation().getDirection();
         v.setY(0).normalize().multiply(forwardVelocity).setY(upwardVelocity);
 
+        this.touchedGround = false;
+
         if (this.ignoreFallDamage) this.ignoreNext = true;
 
         this.getCaster().setVelocity(v);
+    }
+
+    @Override
+    public boolean isInProgress()
+    {
+        return !this.touchedGround;
     }
 
     public void setIgnoreFallDamage(boolean ignoreFallDamage)
@@ -54,7 +63,7 @@ public class LeapAbility extends Ability
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event)
     {
-        if (!ignoreNext || this.delayedIgnoreTriggered) return;
+        if (this.delayedIgnoreTriggered) return;
         if (event.getPlayer() != this.getCaster()) return;
         if (!event.getPlayer().isOnGround()) return;
 
@@ -63,6 +72,7 @@ public class LeapAbility extends Ability
         Bukkit.getScheduler().scheduleSyncDelayedTask(Bolster.getInstance(), () -> {
             this.ignoreNext = false;
             this.delayedIgnoreTriggered = false;
+            this.touchedGround = true;
         }, 10L);
     }
 

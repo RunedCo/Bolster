@@ -85,6 +85,11 @@ public abstract class AbilityProvider implements IRegisterable
 
     public void addAbility(AbilityTrigger trigger, Ability ability)
     {
+        this.addAbility(trigger, ability, 0);
+    }
+
+    public void addAbility(AbilityTrigger trigger, Ability ability, int priority)
+    {
         ability.setAbilityProvider(this);
 
         AbilityData data = new AbilityData(trigger, ability);

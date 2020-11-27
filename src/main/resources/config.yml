@@ -1,0 +1,6 @@
+database:
+  url: localhost
+  port: 27017
+  username: admin
+  password: password
+  database: bolster

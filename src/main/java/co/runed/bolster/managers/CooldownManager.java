@@ -34,13 +34,14 @@ public class CooldownManager extends Manager
      */
     public void setCooldown(LivingEntity entity, ICooldownSource source, double cooldown)
     {
-        if (cooldown <= 0) return;
+        cooldown = Math.max(cooldown, 0);
 
         cooldown = cooldown * Math.max(0, 1 - BolsterEntity.from(entity).getTrait(Traits.COOLDOWN_REDUCTION_PERCENT));
 
+        this.clearCooldown(entity, source);
+
         if (this.getRemainingTime(entity, source) <= 0)
         {
-            this.clearCooldown(entity, source);
             this.cooldowns.add(new CooldownData(entity, source, Instant.now(), (long) (cooldown * 1000)));
         }
     }

@@ -163,6 +163,7 @@ public class AbilityManager extends Manager
         if (preCastEvent.isCancelled()) return;
 
         List<Ability> abilities = new ArrayList<>(this.getAbilities(entity, trigger));
+        abilities.sort((a1, a2) -> a2.getPriority() - a1.getPriority());
 
         properties.set(AbilityProperties.CASTER, BolsterEntity.from(entity));
         properties.set(AbilityProperties.WORLD, entity.getWorld());
@@ -172,6 +173,7 @@ public class AbilityManager extends Manager
         {
             if (ability == null) continue;
             if (provider != null && provider != ability.getAbilityProvider()) continue;
+            if (!ability.isEnabled()) continue;
 
             AbilityProvider abilityProvider = provider != null ? provider : ability.getAbilityProvider();
 
