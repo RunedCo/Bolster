@@ -72,7 +72,7 @@ public class GuiMilestones extends Gui
             if (this.item.getLevel() < milestone.getLevel())
             {
                 milestoneIcon = new ItemBuilder(GuiConstants.GUI_LOCK)
-                        .setDisplayName(milestone.getName())
+                        .setDisplayName(ChatColor.GOLD + milestone.getName())
                         .setLore(milestone.getIcon().getItemMeta().getLore())
                         .addLore("")
                         .addLore(ChatColor.RED + "" + ChatColor.BOLD + "Unlocks at Level " + milestone.getLevel());

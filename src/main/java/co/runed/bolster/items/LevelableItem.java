@@ -25,7 +25,7 @@ public abstract class LevelableItem extends Item
 
     private static final String MERGE_LEVELS_KEY = "merge-levels";
     private static final String LEVELS_KEY = "levels";
-    private static final String MILESTONE_LEVELS_KEY = "milestone-levels";
+    private static final String MILESTONE_LEVELS_KEY = "milestones";
 
     @Override
     public List<String> getLore()
@@ -231,7 +231,7 @@ public abstract class LevelableItem extends Item
             this.config = config;
 
             this.name = config.getString("name", "Level " + this.level);
-            this.icon = config.getItemStack("icon", new ItemStack(Material.STICK));
+            this.icon = ConfigUtil.parseItemStack(this.config.getConfigurationSection("icon"));
 
             List<String> tooltip = new ArrayList<>();
 
@@ -269,8 +269,11 @@ public abstract class LevelableItem extends Item
 
         public ItemStack getIcon()
         {
+            ItemStack icon = this.icon.getType() == Material.AIR ? new ItemStack(Material.STICK) : this.icon;
+
             ItemBuilder builder = new ItemBuilder(icon)
-                    .setDisplayName(name);
+                    .setDisplayName(ChatColor.GOLD + name)
+                    .addAllItemFlags();
 
             if (this.tooltip.size() > 0) builder = builder.addLore(this.tooltip);
 

@@ -80,6 +80,17 @@ public class MultiAbility extends Ability
     }
 
     @Override
+    public void setTrigger(AbilityTrigger trigger)
+    {
+        super.setTrigger(trigger);
+
+        for (Ability ability : this.abilities)
+        {
+            ability.setTrigger(trigger);
+        }
+    }
+
+    @Override
     public void onActivate(Properties properties)
     {
         long ticks = 0;

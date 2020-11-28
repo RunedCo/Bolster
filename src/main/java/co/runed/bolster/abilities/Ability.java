@@ -381,7 +381,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
             {
                 this.casting = true;
 
-                long updatePeriod = 10L;
+                long updatePeriod = 5L;
                 long castTimeTicks = (long) (this.getCastTime() * 20L);
                 AtomicLong repeats = new AtomicLong();
 

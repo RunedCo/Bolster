@@ -166,6 +166,8 @@ public class Bolster extends JavaPlugin
     public void onDisable()
     {
         super.onDisable();
+
+        PlayerManager.getInstance().saveAllPlayers();
     }
 
     public void setActiveGameMode(GameMode gameMode)

@@ -1,8 +1,10 @@
 package co.runed.bolster.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
@@ -30,6 +32,21 @@ public class ConfigUtil
         }
 
         return config1;
+    }
+
+    public static ItemStack parseItemStack(ConfigurationSection config)
+    {
+        if (config == null || !config.isString("type")) return new ItemStack(Material.AIR);
+
+        Material material = Material.matchMaterial(config.getString("type", "air"));
+
+        ItemBuilder builder = new ItemBuilder(material);
+
+        if (config.isString("name")) builder = builder.setDisplayName(config.getString("name"));
+        if (config.isInt("custom-model-data")) builder = builder.setCustomModelData(config.getInt("custom-model-data"));
+        if (config.isList("lore")) builder = builder.addLore(config.getStringList("lore"));
+
+        return builder.build();
     }
 
     public static ConfigurationSection parseVariables(ConfigurationSection outConfig, ConfigurationSection... otherSources)

@@ -127,7 +127,9 @@ public class GameProperties extends Properties implements Listener
     private void onPlayerHunger(FoodLevelChangeEvent event)
     {
         if (!this.get(GameProperties.ENABLE_HUNGER))
+        {
             event.setCancelled(true);
+        }
     }
 
     @EventHandler

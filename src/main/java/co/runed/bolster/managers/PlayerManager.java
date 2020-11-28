@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
@@ -175,6 +176,12 @@ public class PlayerManager extends Manager
         Player player = event.getPlayer();
 
         this.save(player);
+    }
+
+    @EventHandler
+    private void onWorldSave(WorldSaveEvent event)
+    {
+        this.saveAllPlayers();
     }
 
     public static PlayerManager getInstance()
