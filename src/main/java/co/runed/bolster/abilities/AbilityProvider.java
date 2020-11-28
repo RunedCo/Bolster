@@ -55,10 +55,17 @@ public abstract class AbilityProvider implements IRegisterable
 
     public void setEntity(LivingEntity entity)
     {
+        boolean firstTime = this.getEntity() == null;
+
         if (entity.equals(this.getEntity())) return;
 
         this.entity = entity;
         this.markDirty();
+
+        if (firstTime)
+        {
+            this.rebuild();
+        }
     }
 
     public LivingEntity getParent()
