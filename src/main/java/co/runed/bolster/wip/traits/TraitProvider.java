@@ -1,7 +1,6 @@
-package co.runed.bolster.wip;
+package co.runed.bolster.wip.traits;
 
 import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.util.properties.Property;
 
 public class TraitProvider
 {
@@ -12,12 +11,12 @@ public class TraitProvider
         return traits;
     }
 
-    public <T> void setTrait(Property<T> key, T value)
+    public <T> void setTrait(Trait<T> key, T value)
     {
         this.traits.set(key, value);
     }
 
-    public <T> T getTrait(Property<T> key)
+    public <T> T getTrait(Trait<T> key)
     {
         return this.traits.get(key);
     }

@@ -15,22 +15,12 @@ public class Property<T> implements IRegisterable
 
     public Property(String id)
     {
-        this(new NamespacedKey(Bolster.getInstance(), id), null);
-    }
-
-    public Property(NamespacedKey id)
-    {
         this(id, null);
     }
 
     public Property(String id, T defaultValue)
     {
-        this(new NamespacedKey(Bolster.getInstance(), id), defaultValue);
-    }
-
-    public Property(NamespacedKey id, T defaultValue)
-    {
-        this.key = id;
+        this.key = new NamespacedKey(Bolster.getInstance(), id);
         this.defaultValue = defaultValue;
     }
 

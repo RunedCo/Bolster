@@ -5,8 +5,12 @@ import co.runed.bolster.managers.ClassManager;
 import co.runed.bolster.managers.EntityManager;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.status.StatusEffect;
+import co.runed.bolster.util.NumberUtil;
 import co.runed.bolster.util.PlayerUtil;
-import co.runed.bolster.wip.TraitProvider;
+import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.util.properties.Property;
+import co.runed.bolster.wip.traits.Trait;
+import co.runed.bolster.wip.traits.TraitProvider;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -54,25 +58,64 @@ public class BolsterEntity extends TraitProvider
         this._entity = entity;
     }
 
-    /* public Properties getTraits()
+    public Properties getTraits()
     {
         Properties traits = new Properties();
 
         for (TraitProvider traitProvider : this.traitProviders)
         {
-            Properties existing = traitProvider.getTraits();
+            Properties next = traitProvider.getTraits();
 
-            for (Property exProp : existing.getAll().keySet())
+            for (Property exProp : next.getAll().keySet())
             {
+                if (!(exProp instanceof Trait)) continue;
+
+                Trait trait = (Trait) exProp;
+                Object exValue = traits.get(trait);
+                Object nextValue = next.get(trait);
+
                 if (traits.contains(exProp))
                 {
-                    Object exValue = traits.get(exProp);
-
-                    if (exValue instanceof Number)
+                    if (exValue instanceof Number && trait.getOperation() != Trait.Operation.SET)
                     {
-                        //traits.set(exProp, );
+                        Number exNumber = (Number) exValue;
+
+                        switch (trait.getOperation())
+                        {
+                            case ADD:
+                            {
+                                exValue = NumberUtil.addNumbers(exNumber, (Number) nextValue);
+                                break;
+                            }
+                            case SUBTRACT:
+                            {
+                                exValue = NumberUtil.subtractNumbers(exNumber, (Number) nextValue);
+                                break;
+                            }
+                            case MULTIPLY:
+                            {
+                                exValue = NumberUtil.multiplyNumbers(exNumber, (Number) nextValue);
+                                break;
+                            }
+                            case DIVIDE:
+                            {
+                                exValue = NumberUtil.divideNumbers(exNumber, (Number) nextValue);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (trait.getOperation() == Trait.Operation.SET && nextValue != trait.getDefault())
+                    {
+                        exValue = nextValue;
                     }
                 }
+                else
+                {
+                    exValue = nextValue;
+                }
+
+                traits.set(trait, exValue);
             }
         }
 
@@ -80,14 +123,14 @@ public class BolsterEntity extends TraitProvider
     }
 
     @Override
-    public <T> void setTrait(Property<T> key, T value)
+    public <T> void setTrait(Trait<T> key, T value)
     {
         super.setTrait(key, value);
 
         if (!this.traitProviders.contains(this)) this.traitProviders.add(this);
     }
 
-    public <T> void setTrait(TraitProvider provider, Property<T> key, T value)
+    public <T> void setTrait(TraitProvider provider, Trait<T> key, T value)
     {
         provider.setTrait(key, value);
 
@@ -95,15 +138,27 @@ public class BolsterEntity extends TraitProvider
     }
 
     @Override
-    public <T> T getTrait(Property<T> key)
+    public <T> T getTrait(Trait<T> key)
     {
         return this.getTraits().get(key);
     }
 
-    public <T> T getTrait(TraitProvider provider, Property<T> key)
+    public <T> T getTrait(TraitProvider provider, Trait<T> key)
     {
         return this.getTraits().get(key);
-    } */
+    }
+
+    public void addTraitProvider(TraitProvider provider)
+    {
+        if (this.traitProviders.contains(provider)) return;
+
+        this.traitProviders.add(provider);
+    }
+
+    public void removeTraitProvider(TraitProvider provider)
+    {
+        this.traitProviders.remove(provider);
+    }
 
     public void setAbsorption(double health)
     {
@@ -127,13 +182,21 @@ public class BolsterEntity extends TraitProvider
 
     public void addHealth(double amount)
     {
+        this.addHealth(amount, false);
+    }
+
+    public void addHealth(double amount, boolean overheal)
+    {
         double maxHealth = this.getMaxHealth();
 
         if (amount < 0) amount = maxHealth - this.getHealth();
 
+        double overhealAmount = Math.max(0, amount - maxHealth);
+
+        if (overheal) this._entity.setAbsorptionAmount(this._entity.getAbsorptionAmount() + overhealAmount);
+
         this.setHealth(Math.min(this.getHealth() + amount, maxHealth));
     }
-
 
     public World getWorld()
     {

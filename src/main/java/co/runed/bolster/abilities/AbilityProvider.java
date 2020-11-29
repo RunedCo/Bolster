@@ -1,11 +1,13 @@
 package co.runed.bolster.abilities;
 
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.ConfigUtil;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
+import co.runed.bolster.wip.traits.TraitProvider;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
@@ -18,7 +20,7 @@ import java.util.function.BiConsumer;
  * Class that handles common functionality for prociding abilities
  * Used by {@link BolsterClass} and {@link co.runed.bolster.items.Item}
  */
-public abstract class AbilityProvider implements IRegisterable
+public abstract class AbilityProvider extends TraitProvider implements IRegisterable
 {
     private final List<AbilityData> abilities = new ArrayList<>();
     private LivingEntity entity;
@@ -46,6 +48,11 @@ public abstract class AbilityProvider implements IRegisterable
     public void create(ConfigurationSection config)
     {
         ConfigUtil.parseVariables(config);
+
+        if (this.getEntity() != null)
+        {
+            BolsterEntity.from(this.getEntity()).addTraitProvider(this);
+        }
     }
 
     public LivingEntity getEntity()
@@ -60,6 +67,10 @@ public abstract class AbilityProvider implements IRegisterable
         if (entity.equals(this.getEntity())) return;
 
         this.entity = entity;
+
+        // TODO: MOVE OUTSIDE OF CLASS SPECIFIC IMPLEMENTATION
+        AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.BECOME, new Properties());
+
         this.markDirty();
 
         if (firstTime)
@@ -191,9 +202,12 @@ public abstract class AbilityProvider implements IRegisterable
 
     public void destroy(boolean trigger)
     {
-        if (this.getEntity() != null && trigger)
+        if (this.getEntity() != null)
         {
-            AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.REMOVE, new Properties());
+            if (trigger)
+                AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.REMOVE, new Properties());
+
+            BolsterEntity.from(this.getEntity()).removeTraitProvider(this);
         }
 
         for (AbilityData abilityData : this.abilities)

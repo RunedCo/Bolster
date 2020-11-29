@@ -38,12 +38,14 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     public static final String KNOCKBACK_KEY = "knockback";
     public static final String POWER_KEY = "power";
     public static final String DROPPABLE_KEY = "droppable";
+    public static final String HEALTH_KEY = "health";
 
     private static final UUID attackDamageUuid = new UUID(1234, 1234);
     private static final UUID attackSpeedUuid = new UUID(1235, 1235);
     private static final UUID knockbackResistanceUuid = new UUID(1236, 1236);
     private static final UUID knockBackUuid = new UUID(1237, 1237);
     private static final UUID powerUuid = new UUID(1238, 1238);
+    private static final UUID healthUuid = new UUID(1239, 1239);
 
     private String id;
     private String name;
@@ -57,6 +59,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     double knockBackResistance = 0;
     double knockBack = 0;
     double power = 0;
+    double health = 0;
 
     private ItemSkin skin;
     private final List<Category> categories = new ArrayList<>(Collections.singletonList(Category.ALL));
@@ -76,6 +79,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         this.setKnockBackResistance(config.getDouble(KNOCKBACK_RESISTANCE_KEY, 0));
         this.setKnockBack(config.getDouble(KNOCKBACK_KEY, 0));
         this.setPower(config.getDouble(POWER_KEY, 0));
+        this.setHealth(config.getDouble(HEALTH_KEY, 0));
         this.setDroppable(config.getBoolean(DROPPABLE_KEY, true));
     }
 
@@ -142,6 +146,11 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         if (this.knockBackResistance > 0)
         {
             loreWithAbilities.add(ChatColor.GRAY + "Knockback Resistance: " + ChatColor.AQUA + this.knockBackResistance);
+        }
+
+        if (this.health > 0)
+        {
+            loreWithAbilities.add(ChatColor.GRAY + "Health: " + ChatColor.AQUA + this.health);
         }
 
         String desc = super.getDescription();
@@ -260,6 +269,16 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         return knockBack;
     }
 
+    public double getHealth()
+    {
+        return health;
+    }
+
+    public void setHealth(double health)
+    {
+        this.health = health;
+    }
+
     public void setDroppable(boolean droppable)
     {
         this.droppable = droppable;
@@ -361,6 +380,8 @@ public abstract class Item extends AbilityProvider implements IRegisterable
             builder.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier(knockbackResistanceUuid, "knockback_resistance", this.knockBackResistance, AttributeModifier.Operation.ADD_NUMBER));
         if (this.knockBack > 1)
             builder.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK, new AttributeModifier(knockBackUuid, "knockback", this.knockBack, AttributeModifier.Operation.ADD_NUMBER));
+        if (this.health > 0)
+            builder.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, new AttributeModifier(healthUuid, "health", this.knockBack, AttributeModifier.Operation.ADD_NUMBER));
 
         if (this.hasSkin())
         {

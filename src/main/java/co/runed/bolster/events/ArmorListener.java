@@ -37,12 +37,6 @@ public class ArmorListener implements Listener
         int slot = e.getSlot();
         int rawSlot = e.getRawSlot();
 
-        player.sendMessage(cursor + " "
-                + currentItem + " "
-                + slot + " "
-                + rawSlot + " "
-                + cursor.equals(currentItem));
-
         //PlayerInventoryChangedEvent inventoryChangedEvent = new PlayerInventoryChangedEvent(player, slot, )
 
         //if (!shift && newArmorType != null && e.getRawSlot() != newArmorType.getSlot())
