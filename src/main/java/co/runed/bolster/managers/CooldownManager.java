@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CooldownManager extends Manager
 {
@@ -38,12 +39,14 @@ public class CooldownManager extends Manager
 
         cooldown = cooldown * Math.max(0, 1 - BolsterEntity.from(entity).getTrait(Traits.COOLDOWN_REDUCTION_PERCENT));
 
-        this.clearCooldown(entity, source);
+        this.cooldowns.removeIf(cd -> cd.source.getCooldownId().equals(source.getCooldownId()) && cd.caster.equals(entity));
 
         if (this.getRemainingTime(entity, source) <= 0)
         {
             this.cooldowns.add(new CooldownData(entity, source, Instant.now(), (long) (cooldown * 1000)));
         }
+
+        source.onToggleCooldown();
     }
 
     /**
@@ -53,7 +56,12 @@ public class CooldownManager extends Manager
      */
     public void clearAllFrom(LivingEntity entity)
     {
-        this.cooldowns.removeIf(cd -> cd.caster.equals(entity));
+        List<CooldownData> cds = this.cooldowns.stream().filter(cd -> cd.caster.equals(entity)).collect(Collectors.toList());
+
+        for (CooldownData data : cds)
+        {
+            this.clearCooldown(entity, data.source);
+        }
     }
 
     /**
@@ -64,7 +72,7 @@ public class CooldownManager extends Manager
      */
     public void clearCooldown(LivingEntity entity, ICooldownSource source)
     {
-        this.cooldowns.removeIf(cd -> cd.source.getCooldownId().equals(source.getCooldownId()) && cd.caster.equals(entity));
+        this.setCooldown(entity, source, 0);
     }
 
     /**

@@ -1,9 +1,11 @@
 package co.runed.bolster.wip.traits;
 
+import co.runed.bolster.util.json.JsonExclude;
 import co.runed.bolster.util.properties.Properties;
 
 public class TraitProvider
 {
+    @JsonExclude
     private final Properties traits = new Properties();
 
     public Properties getTraits()

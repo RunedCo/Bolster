@@ -119,50 +119,54 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         this.lore.addAll(lore);
     }
 
-    public List<String> getLore()
+    public List<String> getStatsLore()
     {
-        List<String> loreWithAbilities = new ArrayList<>();
+        List<String> out = new ArrayList<>();
 
         if (this.attackDamage > 0)
         {
-            loreWithAbilities.add(ChatColor.GRAY + "Attack Damage: " + ChatColor.AQUA + this.attackDamage);
+            out.add(ChatColor.GRAY + "Attack Damage: " + ChatColor.AQUA + this.attackDamage);
         }
 
         if (this.power > 0)
         {
-            loreWithAbilities.add(ChatColor.GRAY + "Power: " + ChatColor.AQUA + this.power);
+            out.add(ChatColor.GRAY + "Power: " + ChatColor.AQUA + this.power);
         }
-
-//        if (this.attackSpeed > 0)
-//        {
-//            loreWithAbilities.add(ChatColor.GRAY + "Attack Speed: " + ChatColor.AQUA + this.attackSpeed);
-//        }
 
         if (this.knockBack > 0)
         {
-            loreWithAbilities.add(ChatColor.GRAY + "Knockback: " + ChatColor.AQUA + this.knockBack);
+            out.add(ChatColor.GRAY + "Knockback: " + ChatColor.AQUA + this.knockBack);
         }
 
         if (this.knockBackResistance > 0)
         {
-            loreWithAbilities.add(ChatColor.GRAY + "Knockback Resistance: " + ChatColor.AQUA + this.knockBackResistance);
+            out.add(ChatColor.GRAY + "Knockback Resistance: " + ChatColor.AQUA + this.knockBackResistance);
         }
 
         if (this.health > 0)
         {
-            loreWithAbilities.add(ChatColor.GRAY + "Health: " + ChatColor.AQUA + this.health);
+            out.add(ChatColor.GRAY + "Health: " + ChatColor.AQUA + this.health);
         }
 
-        String desc = super.getDescription();
+        return out;
+    }
 
-        if (((desc != null && !desc.isEmpty()) || this.lore.size() > 0) && loreWithAbilities.size() > 0)
+    public List<String> getLore()
+    {
+        List<String> loreWithAbilities = new ArrayList<>();
+
+        loreWithAbilities.addAll(this.getStatsLore());
+
+        String abilityDescriptions = super.getDescription();
+
+        if (((abilityDescriptions != null && !abilityDescriptions.isEmpty()) || this.lore.size() > 0) && loreWithAbilities.size() > 0)
         {
             loreWithAbilities.add("");
         }
 
-        if (desc != null && !desc.isEmpty())
+        if (abilityDescriptions != null && !abilityDescriptions.isEmpty())
         {
-            loreWithAbilities.addAll(StringUtil.formatLore(desc));
+            loreWithAbilities.addAll(StringUtil.formatLore(abilityDescriptions));
         }
 
         if (loreWithAbilities.size() > 0 && this.lore.size() > 0)
@@ -343,9 +347,18 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     @Override
     public void onToggleCooldown(Ability ability)
     {
-        if (this.abilityCooldowns.containsKey(ability) && this.abilityCooldowns.get(ability))
+        if (this.abilityCooldowns.containsKey(ability) && this.abilityCooldowns.get(ability) && this.getEntity() instanceof Player)
         {
-            ((Player) this.getEntity()).setCooldown(this.getItemStack().getType(), (int) (ability.getRemainingCooldown() * 20));
+            Player player = (Player) this.getEntity();
+
+            if (ability.isOnCooldown())
+            {
+                player.setCooldown(this.getItemStack().getType(), (int) (ability.getRemainingCooldown() * 20));
+            }
+            else
+            {
+                player.setCooldown(this.getItemStack().getType(), 0);
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.ConfigUtil;
 import co.runed.bolster.util.StringUtil;
+import co.runed.bolster.util.json.JsonExclude;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.wip.traits.TraitProvider;
@@ -26,6 +27,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     private LivingEntity entity;
     LivingEntity parent;
     private ConfigurationSection config;
+    @JsonExclude
     private boolean dirty;
 
     public abstract void onCastAbility(Ability ability, Boolean success);

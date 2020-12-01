@@ -7,6 +7,8 @@ import co.runed.bolster.util.PlayerData;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.wip.Currency;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.mask.BinaryMask;
@@ -154,6 +156,8 @@ public class GuiMilestones extends Gui
                     {
                         this.item.setLevel(this.item.getLevel() + 1);
                         this.item.rebuild();
+
+                        p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1, 1);
 
                         this.show(p);
                     }

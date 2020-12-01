@@ -298,13 +298,11 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return CooldownManager.getInstance().getRemainingTime(this.getCaster(), this);
     }
 
+    @Override
     public void setRemainingCooldown(double cooldown)
     {
         CooldownManager.getInstance().setCooldown(this.getCaster(), this, cooldown);
-
-        if (this.isOnCooldown() && this.getAbilityProvider() != null) this.getAbilityProvider().onToggleCooldown(this);
     }
-
 
     @Override
     public void setOnCooldown(boolean onCooldown)
@@ -322,6 +320,12 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     public void clearCooldown()
     {
         CooldownManager.getInstance().clearCooldown(this.getCaster(), this);
+    }
+
+    @Override
+    public void onToggleCooldown()
+    {
+        if (this.getAbilityProvider() != null) this.getAbilityProvider().onToggleCooldown(this);
     }
 
     public AbilityProvider getAbilityProvider()

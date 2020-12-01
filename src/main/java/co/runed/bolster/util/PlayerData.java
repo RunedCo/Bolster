@@ -2,9 +2,6 @@ package co.runed.bolster.util;
 
 import co.runed.bolster.wip.Currency;
 import co.runed.bolster.wip.settings.Setting;
-import org.bson.codecs.pojo.annotations.BsonIgnore;
-import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -19,6 +16,16 @@ public class PlayerData
     HashMap<String, Integer> currencies = new HashMap<>();
     HashMap<String, Integer> itemLevels = new HashMap<>();
     HashMap<String, Object> settings = new HashMap<>();
+
+    public void onSave()
+    {
+
+    }
+
+    public void onLoad()
+    {
+
+    }
 
     public void setUuid(UUID uuid)
     {

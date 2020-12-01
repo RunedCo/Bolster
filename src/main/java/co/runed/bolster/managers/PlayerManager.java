@@ -3,7 +3,7 @@ package co.runed.bolster.managers;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.PlayerData;
-import co.runed.bolster.util.json.Exclude;
+import co.runed.bolster.util.json.JsonExclude;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -48,7 +48,7 @@ public class PlayerManager extends Manager
             @Override
             public boolean shouldSkipField(FieldAttributes field)
             {
-                return field.getAnnotation(Exclude.class) != null;
+                return field.getAnnotation(JsonExclude.class) != null;
             }
         };
 
@@ -126,6 +126,8 @@ public class PlayerManager extends Manager
 
         data.setUuid(uuid);
 
+        data.onLoad();
+
         this.playerData.put(uuid, data);
 
         return data;
@@ -138,6 +140,8 @@ public class PlayerManager extends Manager
 
     public void save(PlayerData data)
     {
+        data.onSave();
+
         MongoClient mongoClient = Bolster.getMongoClient();
         MongoDatabase db = mongoClient.getDatabase(Bolster.getBolsterConfig().databaseName);
         MongoCollection<Document> collection = db.getCollection("players");

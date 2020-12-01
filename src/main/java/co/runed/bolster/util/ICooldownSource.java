@@ -8,6 +8,8 @@ public interface ICooldownSource
 
     void setCooldown(double cooldown);
 
+    void setRemainingCooldown(double cooldown);
+
     double getRemainingCooldown();
 
     void setOnCooldown(boolean onCooldown);
@@ -15,4 +17,6 @@ public interface ICooldownSource
     boolean isOnCooldown();
 
     void clearCooldown();
+
+    void onToggleCooldown();
 }
