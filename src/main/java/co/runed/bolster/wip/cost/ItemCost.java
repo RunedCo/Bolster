@@ -13,11 +13,6 @@ public class ItemCost extends Cost
     Class<? extends Item> itemClass;
     int count;
 
-    public ItemCost()
-    {
-        this(1);
-    }
-
     public ItemCost(int count)
     {
         this(null, count);

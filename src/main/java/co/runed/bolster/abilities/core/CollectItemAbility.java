@@ -7,6 +7,7 @@ import co.runed.bolster.conditions.IsEntityTypeCondition;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.wip.target.Target;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -47,7 +48,7 @@ public class CollectItemAbility extends Ability
         // SET DEFAULT COOLDOWN
         this.setCooldown(10);
 
-        this.addCondition(new IsEntityTypeCondition(EntityType.PLAYER));
+        this.addCondition(new IsEntityTypeCondition(Target.CASTER, EntityType.PLAYER));
         this.addCondition(new BlockIsMaterialCondition(this.materials));
     }
 

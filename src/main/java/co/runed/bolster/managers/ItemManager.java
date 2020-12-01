@@ -208,7 +208,7 @@ public class ItemManager extends Manager
 
         ItemStack mainHand = inv.getItemInMainHand();
         String itemId = this.getItemIdFromStack(mainHand);
-        int remaining = 0;
+        int remaining = count;
 
         if (itemId != null && itemId.equals(item.getId()))
         {

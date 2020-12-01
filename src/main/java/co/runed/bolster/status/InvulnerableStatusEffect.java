@@ -2,6 +2,7 @@ package co.runed.bolster.status;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffectType;
 
@@ -51,14 +52,14 @@ public class InvulnerableStatusEffect extends StatusEffect
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     private void onTakeDamage(EntityDamageEvent event)
     {
         if (this.getEntity() == null) return;
 
         if (this.getEntity().equals(event.getEntity()))
         {
-            event.setCancelled(true);
+            event.setDamage(0);
         }
     }
 }

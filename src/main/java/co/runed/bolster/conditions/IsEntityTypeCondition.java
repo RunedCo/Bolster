@@ -1,22 +1,25 @@
 package co.runed.bolster.conditions;
 
-import co.runed.bolster.abilities.AbilityProperties;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.wip.target.Target;
 import org.bukkit.entity.EntityType;
 
-public class IsEntityTypeCondition extends Condition
+public class IsEntityTypeCondition extends TargetedCondition<BolsterEntity>
 {
     EntityType type;
 
-    public IsEntityTypeCondition(EntityType type)
+    public IsEntityTypeCondition(Target<BolsterEntity> target, EntityType type)
     {
+        super(target);
+
         this.type = type;
     }
 
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        return properties.get(AbilityProperties.CASTER).getType() == EntityType.PLAYER;
+        return this.getTarget().get(properties).getType() == EntityType.PLAYER;
     }
 
     @Override

@@ -37,6 +37,7 @@ public class AbilityManager extends Manager
         Bukkit.getPluginManager().registerEvents(new EntityShootBowListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntitySpawnListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new EntityDeathListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new EntityArmorEquipListener(), plugin);
 
         Bukkit.getPluginManager().registerEvents(new PlayerBreakBlockListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerDropItemListener(), plugin);

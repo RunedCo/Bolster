@@ -6,11 +6,14 @@ import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.wip.target.Target;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 public class AddStatusEffectAbility extends TargetedAbility<BolsterEntity>
 {
-    StatusEffect statusEffect;
+    Supplier<StatusEffect> statusEffect;
 
-    public AddStatusEffectAbility(Target<BolsterEntity> target, StatusEffect statusEffect)
+    public AddStatusEffectAbility(Target<BolsterEntity> target, Supplier<StatusEffect> statusEffect)
     {
         super(target);
 
@@ -20,6 +23,6 @@ public class AddStatusEffectAbility extends TargetedAbility<BolsterEntity>
     @Override
     public void onActivate(Properties properties)
     {
-        BolsterEntity.from(this.getCaster()).addStatusEffect(this.statusEffect);
+        BolsterEntity.from(this.getCaster()).addStatusEffect(this.statusEffect.get());
     }
 }

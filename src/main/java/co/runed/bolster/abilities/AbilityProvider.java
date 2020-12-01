@@ -153,9 +153,11 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
             String abilityDesc = abilityName + ": " + ChatColor.YELLOW + ability.getDescription();
 
             if (ability.getCooldown() > 0)
-                abilityDesc += ChatColor.DARK_GRAY + " (" + abilityData.ability.getCooldown() + "s cooldown)";
+                abilityDesc += ChatColor.DARK_GRAY + " (" + ability.getCooldown() + "s cooldown)";
             if (ability.getManaCost() > 0)
-                abilityDesc += ChatColor.BLUE + " (" + abilityData.ability.getManaCost() + " mana)";
+                abilityDesc += ChatColor.BLUE + " (" + ability.getManaCost() + " mana)";
+            if (ability.getCastTime() > 0)
+                abilityDesc += ChatColor.BLUE + " (" + ability.getCastTime() + "s cast time)";
 
             abilityDescriptions.add(abilityDesc + ChatColor.RESET);
         }

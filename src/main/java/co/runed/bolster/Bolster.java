@@ -152,6 +152,7 @@ public class Bolster extends JavaPlugin
         statusEffectRegistry.register("root", RootStatusEffect.class);
         statusEffectRegistry.register("stun", StunStatusEffect.class);
         statusEffectRegistry.register("untargetable", UntargetableStatusEffect.class);
+        statusEffectRegistry.register("knockback_resistance", KnockbackResistanceStatusEffect.class);
     }
 
     private void registerCurrencies()

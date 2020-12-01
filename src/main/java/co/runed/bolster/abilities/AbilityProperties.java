@@ -3,6 +3,7 @@ package co.runed.bolster.abilities;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Property;
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -71,4 +72,7 @@ public class AbilityProperties
     public static final Property<ClickType> CLICK_TYPE = new Property<>("click_type");
     public static final Property<InventoryAction> INVENTORY_ACTION = new Property<>("inventory_action");
     public static final Property<Inventory> INVENTORY = new Property<>("inventory");
+
+    // ARMOR EQUIP PROPERTIES
+    public static final Property<PlayerArmorChangeEvent.SlotType> ARMOR_SLOT = new Property<>("armor_slot");
 }

@@ -65,18 +65,15 @@ public class MultiAbility extends Ability
     @Override
     public boolean isInProgress()
     {
-        boolean inProgress = false;
-
         for (Ability ability : this.abilities)
         {
             if (ability.isInProgress())
             {
-                inProgress = true;
-                break;
+                return true;
             }
         }
 
-        return inProgress;
+        return false;
     }
 
     @Override
@@ -89,6 +86,24 @@ public class MultiAbility extends Ability
             ability.setTrigger(trigger);
         }
     }
+
+//    @Override
+//    public boolean canActivate(Properties properties)
+//    {
+//        if (!super.canActivate(properties)) return false;
+//
+//        for (Ability ability : this.abilities)
+//        {
+//            boolean activate = ability.canActivate(properties);
+//
+//            if (!activate)
+//            {
+//                return false;
+//            }
+//        }
+//
+//        return true;
+//    }
 
     @Override
     public void onActivate(Properties properties)

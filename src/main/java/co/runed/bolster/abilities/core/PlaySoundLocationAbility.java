@@ -35,7 +35,7 @@ public class PlaySoundLocationAbility extends TargetedAbility<Location>
     {
         super(target);
 
-        this.addCondition(new IsEntityTypeCondition(EntityType.PLAYER));
+        this.addCondition(new IsEntityTypeCondition(Target.CASTER, EntityType.PLAYER));
 
         this.soundCategory = soundCategory;
         this.volume = volume;

@@ -7,6 +7,7 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.wip.cost.ItemCost;
+import co.runed.bolster.wip.target.Target;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -26,7 +27,7 @@ public class ConvertItemAbility extends Ability
         this.outputCount = outputItemCount;
 
         this.addCost(new ItemCost(inputCost));
-        this.addCondition(new IsEntityTypeCondition(EntityType.PLAYER));
+        this.addCondition(new IsEntityTypeCondition(Target.CASTER, EntityType.PLAYER));
     }
 
     @Override
