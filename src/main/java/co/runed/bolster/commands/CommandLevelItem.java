@@ -7,18 +7,18 @@ import co.runed.bolster.managers.ItemManager;
 import dev.jorel.commandapi.CommandAPICommand;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class CommandMilestones extends CommandBase
+public class CommandLevelItem extends CommandBase
 {
-    public CommandMilestones()
+    public CommandLevelItem()
     {
-        super("milestones");
+        super("levelitem");
     }
 
     @Override
     public CommandAPICommand build()
     {
         return new CommandAPICommand(this.command)
-                .withPermission("bolster.commands.milestones")
+                .withPermission("bolster.commands.levelitem")
                 .executesPlayer(((sender, args) -> {
 
                     Item item = ItemManager.getInstance().getEquippedItem(sender, EquipmentSlot.HAND);

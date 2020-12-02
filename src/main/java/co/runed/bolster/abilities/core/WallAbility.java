@@ -1,9 +1,12 @@
 package co.runed.bolster.abilities.core;
 
-import co.runed.bolster.abilities.Ability;
-import co.runed.bolster.util.WorldUtil;
+import co.runed.bolster.abilities.TargetedAbility;
+import co.runed.bolster.conditions.CanPlaceBlockCondition;
+import co.runed.bolster.events.AbilityPlaceBlockEvent;
 import co.runed.bolster.util.collection.RandomCollection;
 import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.wip.target.Target;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,35 +17,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class WallAbility extends Ability
+public class WallAbility extends TargetedAbility<Location>
 {
-    int range;
     int width;
     int height;
     int depth;
     RandomCollection<Material> blocks;
     Set<Material> materialsToReplace;
 
-    public WallAbility(int range, int width, int height, int depth, RandomCollection<Material> blocks, Set<Material> materialsToReplace) {
-        super();
+    public WallAbility(Target<Location> target, int width, int height, int depth, RandomCollection<Material> blocks, Set<Material> materialsToReplace)
+    {
+        super(target);
 
-        this.range = range;
         this.width = width;
         this.height = height;
         this.depth = depth;
         this.blocks = blocks;
         this.materialsToReplace = materialsToReplace;
+
+        this.addCondition(new CanPlaceBlockCondition(target));
     }
 
     @Override
     public void onActivate(Properties properties)
     {
-        Block block = WorldUtil.getTargetBlock(this.getCaster(), this.range);
+        Block block = this.getTarget().get(properties).getBlock();
 
         this.makeWall(this.getCaster(), block.getLocation(), this.getCaster().getLocation().getDirection());
     }
 
-    private void makeWall(LivingEntity livingEntity, Location location, Vector direction) {
+    private void makeWall(LivingEntity livingEntity, Location location, Vector direction)
+    {
         if (blocks == null || blocks.isEmpty()) return;
         if (location == null || direction == null) return;
 
@@ -56,20 +61,29 @@ public class WallAbility extends Ability
 
         List<Block> blockList = new ArrayList<>();
 
-        if (Math.abs(dir.getX()) > Math.abs(dir.getZ())) {
+        if (Math.abs(dir.getX()) > Math.abs(dir.getZ()))
+        {
             int depthDir = dir.getX() > 0 ? 1 : -1;
-            for (int z = loc.getBlockZ() - (wallWidth / 2); z <= loc.getBlockZ() + (wallWidth / 2); z++) {
-                for (int y = loc.getBlockY() + yOffset; y < loc.getBlockY() + wallHeight + yOffset; y++) {
-                    for (int x = target.getX(); x < target.getX() + depth && x > target.getX() - depth; x += depthDir) {
+            for (int z = loc.getBlockZ() - (wallWidth / 2); z <= loc.getBlockZ() + (wallWidth / 2); z++)
+            {
+                for (int y = loc.getBlockY() + yOffset; y < loc.getBlockY() + wallHeight + yOffset; y++)
+                {
+                    for (int x = target.getX(); x < target.getX() + depth && x > target.getX() - depth; x += depthDir)
+                    {
                         blockList.add(livingEntity.getWorld().getBlockAt(x, y, z));
                     }
                 }
             }
-        } else {
+        }
+        else
+        {
             int depthDir = dir.getZ() > 0 ? 1 : -1;
-            for (int x = loc.getBlockX() - (wallWidth / 2); x <= loc.getBlockX() + (wallWidth / 2); x++) {
-                for (int y = loc.getBlockY() + yOffset; y < loc.getBlockY() + wallHeight + yOffset; y++) {
-                    for (int z = target.getZ(); z < target.getZ() + depth && z > target.getZ() - depth; z += depthDir) {
+            for (int x = loc.getBlockX() - (wallWidth / 2); x <= loc.getBlockX() + (wallWidth / 2); x++)
+            {
+                for (int y = loc.getBlockY() + yOffset; y < loc.getBlockY() + wallHeight + yOffset; y++)
+                {
+                    for (int z = target.getZ(); z < target.getZ() + depth && z > target.getZ() - depth; z += depthDir)
+                    {
                         blockList.add(livingEntity.getWorld().getBlockAt(x, y, z));
                     }
                 }
@@ -78,6 +92,11 @@ public class WallAbility extends Ability
 
         for (Block block : blockList)
         {
+            AbilityPlaceBlockEvent event = new AbilityPlaceBlockEvent(this, block, block.getState(), block, this.getCaster().getEquipment().getItemInMainHand(), this.getCaster(), true);
+            Bukkit.getServer().getPluginManager().callEvent(event);
+
+            if (event.isCancelled()) continue;
+
             if (materialsToReplace.contains(block.getType())) block.setType(this.blocks.next());
         }
     }

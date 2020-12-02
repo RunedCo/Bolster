@@ -1,6 +1,6 @@
 package co.runed.bolster.abilities;
 
-import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.ConfigUtil;

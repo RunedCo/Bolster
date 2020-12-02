@@ -1,4 +1,4 @@
-package co.runed.bolster;
+package co.runed.bolster.entity;
 
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.ClassManager;
@@ -273,6 +273,16 @@ public class BolsterEntity extends TraitProvider
     public boolean hasStatusEffect(Class<? extends StatusEffect> statusEffect)
     {
         return StatusEffectManager.getInstance().hasStatusEffect(this._entity, statusEffect);
+    }
+
+    public StatusEffect getStatusEffect(Class<? extends StatusEffect> statusEffect)
+    {
+        if (!this.hasStatusEffect(statusEffect)) return null;
+
+        return StatusEffectManager.getInstance().getStatusEffects(this._entity).stream()
+                .filter(e -> e.getClass() == statusEffect)
+                .findFirst()
+                .get();
     }
 
     public EntityEquipment getEquipment()

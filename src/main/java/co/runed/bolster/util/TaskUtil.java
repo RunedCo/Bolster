@@ -8,6 +8,8 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskUtil
 {
@@ -75,14 +77,18 @@ public class TaskUtil
     {
         BukkitRunnable run = new BolsterRunnable(onFinish)
         {
-            Instant startTime = Instant.now();
+            long runningTicks = 0L;
 
             @Override
             public void run()
             {
+                if (this.isCancelled()) return;
+
                 task.run();
 
-                if (startTime.plus(duration).isBefore(Instant.now()))
+                runningTicks += period;
+
+                if (runningTicks >= TimeUtil.toTicks(duration))
                 {
                     this.cancel();
                 }
@@ -99,15 +105,42 @@ public class TaskUtil
 
     public static class TaskSeries
     {
-        int duration = 0;
+        List<BukkitTask> tasks = new ArrayList<>();
+        long duration = 0;
 
-        public TaskSeries add(Runnable task, int durationTicks)
+        public TaskSeries add(Runnable task)
         {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Bolster.getInstance(), task, this.duration);
+            return this.add(task, 0);
+        }
 
-            this.duration += durationTicks;
+        public TaskSeries add(Runnable task, long duration)
+        {
+            BukkitTask bukkitTask = Bukkit.getScheduler().runTaskLater(Bolster.getInstance(), task, this.duration);
+
+            this.tasks.add(bukkitTask);
+
+            this.duration += duration;
 
             return this;
+        }
+
+        public TaskSeries addRepeating(Runnable task, long duration, long period)
+        {
+            BukkitTask bukkitTask = runDurationTaskTimer(Bolster.getInstance(), task, TimeUtil.fromSeconds(duration / 20d), this.duration, period);
+
+            this.tasks.add(bukkitTask);
+
+            this.duration += duration;
+
+            return this;
+        }
+
+        public void cancel()
+        {
+            for (BukkitTask task : this.tasks)
+            {
+                task.cancel();
+            }
         }
     }
 

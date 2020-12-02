@@ -1,6 +1,6 @@
 package co.runed.bolster.conditions;
 
-import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.properties.Properties;

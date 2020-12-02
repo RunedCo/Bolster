@@ -30,6 +30,34 @@ public class ItemCost extends Cost
     }
 
     @Override
+    public boolean evaluate(Properties properties)
+    {
+        LivingEntity caster = properties.get(AbilityProperties.CASTER).getBukkit();
+
+        if (!(caster instanceof Player)) return false;
+
+        Player player = (Player) caster;
+
+        // If player is in creative don't remove items
+        if (player.getGameMode().equals(GameMode.CREATIVE)) return true;
+
+        Item item;
+
+        if (this.itemClass == null)
+        {
+            item = properties.get(AbilityProperties.ITEM);
+
+            if (item == null) return false;
+        }
+        else
+        {
+            item = ItemManager.getInstance().createItem(player, this.itemClass);
+        }
+
+        return ItemManager.getInstance().inventoryContainsAtLeast(player, item.getId(), count);
+    }
+
+    @Override
     public boolean run(Properties properties)
     {
         LivingEntity caster = properties.get(AbilityProperties.CASTER).getBukkit();

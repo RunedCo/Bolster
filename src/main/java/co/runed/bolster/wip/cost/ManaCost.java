@@ -1,17 +1,23 @@
 package co.runed.bolster.wip.cost;
 
-import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.properties.Properties;
 
 public class ManaCost extends Cost
 {
-    float cost;
+    float cost = 0;
 
     public ManaCost(float cost)
     {
         this.cost = cost;
+    }
+
+    @Override
+    public boolean evaluate(Properties properties)
+    {
+        return ManaManager.getInstance().hasEnoughMana(properties.get(AbilityProperties.CASTER).getBukkit(), this.cost);
     }
 
     @Override

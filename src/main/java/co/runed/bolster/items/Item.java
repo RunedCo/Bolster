@@ -4,6 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.conditions.ItemEquippedCondition;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
@@ -313,7 +314,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
         if (addDefaultConditions)
         {
-            ability.addCondition(new ItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()));
+            ability.addCondition(new ItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()), ConditionPriority.HIGHEST);
         }
 
         super.addAbility(trigger, ability);

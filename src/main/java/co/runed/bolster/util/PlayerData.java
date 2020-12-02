@@ -93,7 +93,7 @@ public class PlayerData
         }
         catch (Exception e)
         {
-            value = setting.getDefaultValue();
+            value = setting.getDefault();
         }
 
         return value;

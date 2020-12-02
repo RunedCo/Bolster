@@ -1,6 +1,6 @@
 package co.runed.bolster.abilities.core;
 
-import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.abilities.TargetedAbility;
 import co.runed.bolster.conditions.IsMaxHealthCondition;
 import co.runed.bolster.conditions.NotCondition;

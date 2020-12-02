@@ -6,7 +6,6 @@ import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.ICooldownSource;
 import co.runed.bolster.util.TaskUtil;
-import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.wip.cost.Cost;
 import co.runed.bolster.wip.cost.ManaCost;
@@ -18,7 +17,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -29,6 +27,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Ability implements Listener, IConditional, ICooldownSource
 {
+    private static final long CAST_BAR_UPDATE_TICKS = 5L;
+
     private String parentId = UUID.randomUUID().toString();
     private String id = UUID.randomUUID().toString();
     private String name = null;
@@ -54,7 +54,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private boolean cancelledByCast;
     private boolean cancelledByDealingDamage;
 
-    BukkitTask castingTask;
+    TaskUtil.TaskSeries castingTask;
 
     private Duration duration = Duration.ofSeconds(0);
 
@@ -366,7 +366,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         // loop through every cost and remove
         for (Cost cost : costs)
         {
-            boolean result = cost.run(properties);
+            boolean result = cost.evaluate(properties);
 
             if (!result)
             {
@@ -381,11 +381,27 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     {
         if (this.canActivate(properties))
         {
+            List<Cost> costs = new ArrayList<>(this.costs);
+            costs.add(new ManaCost(this.getManaCost()));
+
+            // loop through every cost and remove
+            for (Cost cost : costs)
+            {
+                boolean result = cost.run(properties);
+
+                if (!result)
+                {
+                    return false;
+                }
+            }
+
+            this.getCaster().sendMessage("Activating ability: " + this.toString());
+
             if (this.getCastTime() > 0)
             {
                 this.casting = true;
+                this.setInProgress(true);
 
-                long updatePeriod = 5L;
                 long castTimeTicks = (long) (this.getCastTime() * 20L);
                 AtomicLong repeats = new AtomicLong();
 
@@ -393,40 +409,43 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
                 {
                     Player player = (Player) this.getCaster();
 
-                    this.castingTask = TaskUtil.runDurationTaskTimer(Bolster.getInstance(),
-                            () -> {
-                                repeats.addAndGet(updatePeriod);
+                    this.castingTask = new TaskUtil.TaskSeries()
+                            .addRepeating(
+                                    () -> {
+                                        repeats.addAndGet(CAST_BAR_UPDATE_TICKS);
 
-                                float xpPercent = (repeats.floatValue() / (float) castTimeTicks);
+                                        float xpPercent = (repeats.floatValue() / (float) castTimeTicks);
 
-                                player.setExp(Math.min(xpPercent, 0.999f));
-                                player.setLevel(0);
-                            },
-                            TimeUtil.fromSeconds(this.getCastTime()), 0L, updatePeriod,
-                            () -> {
-                                if (!this.cancelled)
-                                {
-                                    this.setInProgress(true);
-
-                                    this.onActivate(properties);
-                                    this.onPostActivate(properties);
-                                }
-                                ManaManager.getInstance().updateManaDisplay(player);
-                            });
+                                        player.setExp(Math.min(xpPercent, 0.999f));
+                                        player.setLevel(0);
+                                    }, castTimeTicks, CAST_BAR_UPDATE_TICKS)
+                            .add(() -> this.doActivate(properties));
                 }
-            }
-            else
-            {
-                this.setInProgress(true);
 
-                this.onActivate(properties);
-                this.onPostActivate(properties);
+                return true;
             }
 
+            this.doActivate(properties);
             return true;
         }
 
         return false;
+    }
+
+    private void doActivate(Properties properties)
+    {
+        if (this.getCaster() instanceof Player)
+        {
+            ManaManager.getInstance().updateManaDisplay((Player) this.getCaster());
+        }
+
+        if (!this.cancelled)
+        {
+            this.setInProgress(true);
+
+            this.onActivate(properties);
+            this.onPostActivate(properties);
+        }
     }
 
     public abstract void onActivate(Properties properties);
@@ -449,6 +468,12 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
                 ((Cancellable) event).setCancelled(true);
             }
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.getClass() + " (id: " + this.getId() + ", cooldown id: " + this.getCooldownId() + ", " + this.getName() + ")";
     }
 
     public void destroy()

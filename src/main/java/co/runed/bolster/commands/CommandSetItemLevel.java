@@ -9,18 +9,18 @@ import dev.jorel.commandapi.arguments.PlayerArgument;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class CommandItemLevel extends CommandBase
+public class CommandSetItemLevel extends CommandBase
 {
-    public CommandItemLevel()
+    public CommandSetItemLevel()
     {
-        super("itemlevel");
+        super("setitemlevel");
     }
 
     @Override
     public CommandAPICommand build()
     {
         return new CommandAPICommand(this.command)
-                .withPermission("bolster.commands.itemlevel")
+                .withPermission("bolster.commands.setitemlevel")
                 .withArguments(
                         new PlayerArgument("player"),
                         new IntegerArgument("level")

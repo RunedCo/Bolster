@@ -21,16 +21,11 @@ import de.slikey.effectlib.EffectManager;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.Convention;
-import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class Bolster extends JavaPlugin
 {
@@ -118,8 +113,8 @@ public class Bolster extends JavaPlugin
         this.commandManager.add(new CommandMana());
         this.commandManager.add(new CommandSummonDummy());
         this.commandManager.add(new CommandConfirm());
-        this.commandManager.add(new CommandItemLevel());
-        this.commandManager.add(new CommandMilestones());
+        this.commandManager.add(new CommandSetItemLevel());
+        this.commandManager.add(new CommandLevelItem());
 
         // REGISTER PLUGIN CHANNELS
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
