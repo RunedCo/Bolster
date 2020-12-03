@@ -145,7 +145,7 @@ public class BolsterEntity extends TraitProvider
 
     public <T> T getTrait(TraitProvider provider, Trait<T> key)
     {
-        return this.getTraits().get(key);
+        return this.traitProviders.stream().filter(p -> p == provider).findFirst().get().getTrait(key);
     }
 
     public void addTraitProvider(TraitProvider provider)
@@ -158,6 +158,11 @@ public class BolsterEntity extends TraitProvider
     public void removeTraitProvider(TraitProvider provider)
     {
         this.traitProviders.remove(provider);
+    }
+
+    public List<TraitProvider> getTraitProviders()
+    {
+        return this.traitProviders;
     }
 
     public void setAbsorption(double health)

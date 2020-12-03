@@ -1,26 +1,21 @@
 package co.runed.bolster.conditions;
 
+import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.wip.target.Target;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.potion.PotionEffectType;
 
-public class HasPotionEffect extends TargetedCondition<BolsterEntity>
+public class IsCasterCondition extends TargetedCondition<BolsterEntity>
 {
-    PotionEffectType potionEffect;
-
-    public HasPotionEffect(Target<BolsterEntity> target, PotionEffectType potionEffect)
+    public IsCasterCondition(Target<BolsterEntity> target)
     {
         super(target);
-
-        this.potionEffect = potionEffect;
     }
 
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        return this.getTarget().get(properties).getBukkit().hasPotionEffect(potionEffect);
+        return target.get(properties).equals(properties.get(AbilityProperties.CASTER));
     }
 
     @Override

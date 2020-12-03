@@ -1,6 +1,5 @@
 package co.runed.bolster.conditions;
 
-import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.wip.target.Target;
 import org.bukkit.Material;
@@ -35,7 +34,7 @@ public class BlockIsMaterialCondition extends TargetedCondition<Block>
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        Block block = properties.get(AbilityProperties.BLOCK);
+        Block block = this.getTarget().get(properties);
 
         if (block == null) return false;
 

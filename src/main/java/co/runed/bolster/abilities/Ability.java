@@ -164,11 +164,13 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         this.cancelEventOnCast = cancelEventOnCast;
     }
 
+    @Override
     public void setShouldShowErrorMessages(boolean showErrors)
     {
         this.showErrors = showErrors;
     }
 
+    @Override
     public boolean shouldShowErrorMessages()
     {
         return this.showErrors;
@@ -394,8 +396,6 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
                     return false;
                 }
             }
-
-            this.getCaster().sendMessage("Activating ability: " + this.toString());
 
             if (this.getCastTime() > 0)
             {

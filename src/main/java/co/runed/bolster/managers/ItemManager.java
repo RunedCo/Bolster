@@ -292,6 +292,14 @@ public class ItemManager extends Manager
         }
     }
 
+    public boolean areStacksEqual(ItemStack stack1, ItemStack stack2)
+    {
+        String itemId1 = this.getItemIdFromStack(stack1);
+        String itemId2 = this.getItemIdFromStack(stack2);
+
+        return itemId1 != null && itemId2 != null ? stack1.getAmount() != stack2.getAmount() && itemId1.equals(itemId2) : stack1.equals(stack2);
+    }
+
     /**
      * Clear a specific item instance from an entity
      *

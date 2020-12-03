@@ -1,7 +1,7 @@
 package co.runed.bolster.abilities;
 
-import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.ConfigUtil;
 import co.runed.bolster.util.StringUtil;
@@ -50,11 +50,6 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     public void create(ConfigurationSection config)
     {
         ConfigUtil.parseVariables(config);
-
-        if (this.getEntity() != null)
-        {
-            BolsterEntity.from(this.getEntity()).addTraitProvider(this);
-        }
     }
 
     public LivingEntity getEntity()
@@ -64,19 +59,19 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
 
     public void setEntity(LivingEntity entity)
     {
-        boolean firstTime = this.getEntity() == null;
+        boolean firstTime = this.getEntity() != null && !this.getEntity().getUniqueId().equals(entity.getUniqueId());
 
         if (entity.equals(this.getEntity())) return;
 
         this.entity = entity;
 
-        // TODO: MOVE OUTSIDE OF CLASS SPECIFIC IMPLEMENTATION
-        AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.BECOME, new Properties());
-
         this.markDirty();
 
         if (firstTime)
         {
+            // TODO: MOVE OUTSIDE OF CLASS SPECIFIC IMPLEMENTATION
+            AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.BECOME, new Properties());
+
             this.rebuild();
         }
     }
@@ -185,6 +180,8 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
 
         if (this.getEntity() != null)
         {
+            BolsterEntity.from(entity).addTraitProvider(this);
+
             for (AbilityData abilityData : this.abilities)
             {
                 Ability ability = abilityData.ability;

@@ -26,7 +26,7 @@ public class IsMaxHealthCondition extends TargetedCondition<BolsterEntity>
     @Override
     public void onFail(IConditional conditional, Properties properties)
     {
-        if (conditional instanceof Ability && ((Ability) conditional).getTrigger().isPassive()) return;
+        if (!conditional.shouldShowErrorMessages() || (conditional instanceof Ability && ((Ability) conditional).getTrigger().isPassive())) return;
 
         BolsterEntity entity = this.getTarget().get(properties);
 

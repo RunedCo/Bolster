@@ -24,10 +24,10 @@ public abstract class Weapon extends Item
     {
         ItemBuilder builder = new ItemBuilder(super.toItemStack());
 
-        builder.addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
-        builder.addItemFlag(ItemFlag.HIDE_UNBREAKABLE);
+        builder = builder.addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
+        builder = builder.addItemFlag(ItemFlag.HIDE_UNBREAKABLE);
 
-        builder.setUnbreakable(true);
+        builder = builder.setUnbreakable(true);
 
         return builder.build();
     }

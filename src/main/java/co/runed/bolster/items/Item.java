@@ -387,27 +387,27 @@ public abstract class Item extends AbilityProvider implements IRegisterable
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
 
         if (this.attackDamage > 1)
-            builder.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(attackDamageUuid, "attack_damage", this.attackDamage - 1, AttributeModifier.Operation.ADD_NUMBER));
+            builder = builder.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(attackDamageUuid, "attack_damage", this.attackDamage - 1, AttributeModifier.Operation.ADD_NUMBER));
         if (this.attackSpeed > 1)
-            builder.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(attackSpeedUuid, "attack_speed", this.attackSpeed - 1, AttributeModifier.Operation.ADD_NUMBER));
+            builder = builder.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(attackSpeedUuid, "attack_speed", this.attackSpeed - 1, AttributeModifier.Operation.ADD_NUMBER));
         if (this.knockBackResistance > 1)
-            builder.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier(knockbackResistanceUuid, "knockback_resistance", this.knockBackResistance, AttributeModifier.Operation.ADD_NUMBER));
+            builder = builder.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier(knockbackResistanceUuid, "knockback_resistance", this.knockBackResistance, AttributeModifier.Operation.ADD_NUMBER));
         if (this.knockBack > 1)
-            builder.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK, new AttributeModifier(knockBackUuid, "knockback", this.knockBack, AttributeModifier.Operation.ADD_NUMBER));
+            builder = builder.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK, new AttributeModifier(knockBackUuid, "knockback", this.knockBack, AttributeModifier.Operation.ADD_NUMBER));
         if (this.health > 0)
-            builder.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, new AttributeModifier(healthUuid, "health", this.knockBack, AttributeModifier.Operation.ADD_NUMBER));
+            builder = builder.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, new AttributeModifier(healthUuid, "health", this.knockBack, AttributeModifier.Operation.ADD_NUMBER));
 
         if (this.hasSkin())
         {
             ItemSkin skin = this.getSkin();
 
-            builder.setCustomModelData(skin.getCustomModelData())
+            builder = builder.setCustomModelData(skin.getCustomModelData())
                     .setPersistentData(Item.ITEM_SKIN_KEY, PersistentDataType.STRING, skin.getId());
         }
 
         if (this.getEntity() != null)
         {
-            builder.setPersistentData(Item.ITEM_OWNER_KEY, PersistentDataType.STRING, this.getEntity().getUniqueId().toString());
+            builder = builder.setPersistentData(Item.ITEM_OWNER_KEY, PersistentDataType.STRING, this.getEntity().getUniqueId().toString());
         }
 
         return builder.build();

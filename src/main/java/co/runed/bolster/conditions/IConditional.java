@@ -22,4 +22,8 @@ public interface IConditional
     }
 
     void addCondition(Condition condition, ConditionPriority priority);
+
+    void setShouldShowErrorMessages(boolean showErrors);
+
+    boolean shouldShowErrorMessages();
 }
