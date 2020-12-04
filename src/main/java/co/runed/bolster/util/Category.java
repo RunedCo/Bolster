@@ -11,6 +11,7 @@ public class Category
     public static final Category MATERIALS = new Category("Materials", null, new ItemStack(Material.COBBLESTONE));
     public static final Category UTILITY = new Category("Utility", null, new ItemStack(Material.FURNACE));
     public static final Category HATS = new Category("Hats", null, new ItemStack(Material.PLAYER_HEAD));
+    public static final Category LEVELABLE = new Category("Levelable", null, new ItemStack(Material.EXPERIENCE_BOTTLE));
     public static final Category ALL = new Category("All", null, new ItemStack(Material.CHEST));
 
     String name;

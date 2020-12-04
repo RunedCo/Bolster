@@ -47,6 +47,18 @@ public class ItemBuilder
         return new ItemBuilder(this.itemStack);
     }
 
+    public ItemBuilder addItemFlags(Collection<ItemFlag> flags)
+    {
+        ItemBuilder builder = this;
+
+        for (ItemFlag flag : flags)
+        {
+            builder = builder.addItemFlag(flag);
+        }
+
+        return builder;
+    }
+
     public ItemBuilder setMaterial(Material material)
     {
         this.itemStack.setType(material);

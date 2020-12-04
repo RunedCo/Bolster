@@ -384,7 +384,9 @@ public abstract class Item extends AbilityProvider implements IRegisterable
                 .setDisplayName(this.getName())
                 .setLore(this.getLore())
                 .setPersistentData(Item.ITEM_ID_KEY, PersistentDataType.STRING, this.getId())
-                .addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
+                .setUnbreakable(true)
+                .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
+                .addItemFlag(ItemFlag.HIDE_UNBREAKABLE);
 
         if (this.attackDamage > 1)
             builder = builder.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(attackDamageUuid, "attack_damage", this.attackDamage - 1, AttributeModifier.Operation.ADD_NUMBER));

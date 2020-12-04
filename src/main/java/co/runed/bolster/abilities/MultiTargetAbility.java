@@ -23,6 +23,23 @@ public class MultiTargetAbility extends MultiAbility
     }
 
     @Override
+    public String getDescription()
+    {
+        if (super.getDescription() != null) return super.getDescription();
+
+        String desc = "";
+
+        for (Ability ability : this.abilities)
+        {
+            if (ability.getDescription() == null) continue;
+
+            desc += ability.getDescription() + "\n";
+        }
+
+        return desc;
+    }
+
+    @Override
     public void onActivate(Properties properties)
     {
         Collection<Entity> entities = entitySupplier.get();

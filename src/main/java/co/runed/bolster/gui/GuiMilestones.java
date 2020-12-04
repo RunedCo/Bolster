@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.mask.BinaryMask;
 import org.ipvp.canvas.mask.Mask;
@@ -107,7 +108,19 @@ public class GuiMilestones extends Gui
                 .item(GuiConstants.GUI_DIVIDER)
                 .build();
 
-        ItemBuilder builder = new ItemBuilder(this.item.getIcon());
+        ItemStack baseIcon = this.item.getIcon();
+        List<String> stats = this.item.getStatsLore();
+        ItemBuilder builder = new ItemBuilder(baseIcon.getType())
+                .setDisplayName(baseIcon.getItemMeta().getDisplayName())
+                .addItemFlags(baseIcon.getItemMeta().getItemFlags());
+
+        if (stats.size() > 0)
+        {
+            builder = builder.addLore(stats)
+                    .addLore("");
+        }
+
+        builder = builder.addLore(ChatColor.WHITE + this.item.getConfig().getString("unlock-tooltip", ""));
 
         if (this.canUpgrade())
         {

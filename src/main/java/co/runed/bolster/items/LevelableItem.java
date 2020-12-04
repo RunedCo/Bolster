@@ -1,6 +1,7 @@
 package co.runed.bolster.items;
 
 import co.runed.bolster.managers.PlayerManager;
+import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ConfigUtil;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
@@ -28,15 +29,14 @@ public abstract class LevelableItem extends Item
     private static final String MILESTONE_LEVELS_KEY = "milestones";
 
     @Override
-    public List<String> getLore()
+    public List<String> getStatsLore()
     {
-        List<String> lore = new ArrayList<>();
+        List<String> out = new ArrayList<>();
 
-        lore.add(ChatColor.GRAY + "Level " + this.getLevel());
+        out.add(ChatColor.GRAY + "Level " + this.getLevel());
+        out.addAll(super.getStatsLore());
 
-        lore.addAll(super.getLore());
-
-        return lore;
+        return out;
     }
 
     @Override
@@ -64,7 +64,9 @@ public abstract class LevelableItem extends Item
 
             for (int i = 0; i < levels.size(); i++)
             {
-                allLevels.putAll(levels.get(i));
+                ConfigUtil.deepMerge(allLevels, levels.get(i));
+
+                //allLevels.putAll(levels.get(i));
 
                 this.unmergedLevels.put(i + 1, ConfigUtil.fromMap(levels.get(i)));
                 this.levels.put(i + 1, ConfigUtil.fromMap(allLevels));
@@ -107,6 +109,8 @@ public abstract class LevelableItem extends Item
         ConfigurationSection cumulativeLevelConfig = mapToUse.get(Math.max(0, Math.min(this.getLevel(), mapToUse.size())));
 
         ConfigUtil.merge(config, cumulativeLevelConfig);
+
+        this.addCategory(Category.LEVELABLE);
 
         super.create(config);
     }
