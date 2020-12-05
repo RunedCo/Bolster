@@ -7,7 +7,6 @@ public class ForwardTriggerAbility extends Ability
     AbilityTrigger trigger;
     boolean limitToParent = false;
 
-
     public ForwardTriggerAbility(AbilityTrigger trigger)
     {
         this(trigger, false);
@@ -15,6 +14,8 @@ public class ForwardTriggerAbility extends Ability
 
     public ForwardTriggerAbility(AbilityTrigger trigger, boolean limitToParent)
     {
+        super();
+
         this.trigger = trigger;
         this.limitToParent = limitToParent;
     }

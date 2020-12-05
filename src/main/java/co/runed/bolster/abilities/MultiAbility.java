@@ -23,6 +23,8 @@ public class MultiAbility extends Ability
 
     public MultiAbility(boolean isSequence)
     {
+        super();
+
         this.isSequence = isSequence;
     }
 
@@ -65,6 +67,8 @@ public class MultiAbility extends Ability
     @Override
     public boolean isInProgress()
     {
+        if (super.isInProgress()) return true;
+
         for (Ability ability : this.abilities)
         {
             if (ability.isInProgress())

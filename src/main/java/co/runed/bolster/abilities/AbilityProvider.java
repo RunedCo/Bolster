@@ -12,6 +12,7 @@ import co.runed.bolster.wip.traits.TraitProvider;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
 
     public void setEntity(LivingEntity entity)
     {
-        boolean firstTime = this.getEntity() != null && !this.getEntity().getUniqueId().equals(entity.getUniqueId());
+        boolean firstTime = this.getEntity() == null || !this.getEntity().getUniqueId().equals(entity.getUniqueId());
 
         if (entity.equals(this.getEntity())) return;
 
@@ -69,10 +70,9 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
 
         if (firstTime)
         {
-            // TODO: MOVE OUTSIDE OF CLASS SPECIFIC IMPLEMENTATION
-            AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.BECOME, new Properties());
-
             this.rebuild();
+
+            AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.BECOME, new Properties());
         }
     }
 

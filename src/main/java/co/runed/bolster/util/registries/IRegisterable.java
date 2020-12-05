@@ -1,5 +1,6 @@
 package co.runed.bolster.util.registries;
 
+import co.runed.bolster.util.BolsterConfiguration;
 import co.runed.bolster.util.Category;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,7 +24,7 @@ public interface IRegisterable
 
     default ConfigurationSection getConfig()
     {
-        return new MemoryConfiguration();
+        return new BolsterConfiguration();
     }
 
     void create(ConfigurationSection config);

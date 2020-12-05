@@ -1,6 +1,7 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.util.BolsterConfiguration;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ConfigUtil;
 import org.apache.commons.io.FileUtils;
@@ -154,7 +155,7 @@ public class Registry<T extends IRegisterable>
 
     public ConfigurationSection getConfig(String id)
     {
-        ConfigurationSection config = new MemoryConfiguration().createSection("config");
+        ConfigurationSection config = new BolsterConfiguration().createSection("config");
 
         if (this.configs.containsKey(id))
         {
@@ -238,7 +239,7 @@ public class Registry<T extends IRegisterable>
                 // TODO make sure works without manually setting id
                 //value.setId(this.id);
 
-                ConfigurationSection config = new MemoryConfiguration().createSection("config");
+                ConfigurationSection config = new BolsterConfiguration().createSection("config");
 
                 if (this.config != null)
                 {

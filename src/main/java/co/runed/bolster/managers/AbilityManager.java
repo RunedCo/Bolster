@@ -1,20 +1,25 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.abilities.listeners.*;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.Location;
+import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
@@ -168,6 +173,7 @@ public class AbilityManager extends Manager
 
         properties.set(AbilityProperties.CASTER, BolsterEntity.from(entity));
         properties.set(AbilityProperties.WORLD, entity.getWorld());
+        if (properties.contains(AbilityProperties.TARGET)) properties.set(AbilityProperties.INITIAL_TARGET, properties.get(AbilityProperties.TARGET));
         if (trigger != AbilityTrigger.ALL) properties.set(AbilityProperties.TRIGGER, trigger);
 
         for (Ability ability : abilities)
@@ -194,6 +200,98 @@ public class AbilityManager extends Manager
 
         if (trigger != AbilityTrigger.ALL && trigger != AbilityTrigger.TICK)
             this.trigger(entity, provider, AbilityTrigger.ALL, properties);
+    }
+
+    @EventHandler
+    private void onTakeDamage(EntityDamageEvent event)
+    {
+        Entity entity = event.getEntity();
+
+        if (!(entity instanceof LivingEntity)) return;
+
+        for (Ability ability : this.getAbilities((LivingEntity) entity))
+        {
+            if (!entity.equals(ability.getCaster())) continue;
+            if (!ability.isInProgress()) continue;
+
+            if (ability.isCancelledByDamage()) ability.cancel();
+        }
+    }
+
+    @EventHandler
+    private void onDealDamage(EntityDamageByEntityEvent event)
+    {
+        Entity damager = event.getDamager();
+        LivingEntity entity = null;
+
+        if (damager instanceof LivingEntity)
+        {
+            entity = (LivingEntity) damager;
+        }
+        else if (damager instanceof Projectile)
+        {
+            ProjectileSource shooter = ((Projectile) damager).getShooter();
+
+            if (!(shooter instanceof LivingEntity)) return;
+
+            entity = (LivingEntity) shooter;
+        }
+        else if (damager instanceof TNTPrimed)
+        {
+            Entity source = ((TNTPrimed) damager).getSource();
+
+            if (!(source instanceof LivingEntity)) return;
+
+            entity = (LivingEntity) source;
+        }
+
+        if (entity == null) return;
+
+        for (Ability ability : this.getAbilities(entity))
+        {
+            if (!entity.equals(ability.getCaster())) continue;
+            if (!ability.isInProgress()) continue;
+
+            if (ability.isCancelledByDealingDamage()) ability.cancel();
+        }
+    }
+
+    @EventHandler
+    private void onPlayerMove(PlayerMoveEvent event)
+    {
+        Player player = event.getPlayer();
+        Location movedFrom = event.getFrom();
+        Location movedTo = event.getTo();
+
+        if ((movedFrom.getX() == movedTo.getX()) && (movedFrom.getY() == movedTo.getY()) && (movedFrom.getZ() == movedTo.getZ()))
+            return;
+
+        for (Ability ability : this.getAbilities(player))
+        {
+            if (!player.equals(ability.getCaster())) continue;
+            if (!ability.isInProgress()) continue;
+
+            if (ability.isCancelledByMovement()) ability.cancel();
+        }
+    }
+
+    @EventHandler
+    private void onCastAbility(EntityCastAbilityEvent event)
+    {
+        Ability ability = event.getAbility();
+        if (ability.getTrigger() == null || ability.getTrigger().isPassive()) return;
+        if (ability.getCaster() == null) return;
+
+        for (Ability ability2 : this.getAbilities(ability.getCaster()))
+        {
+            if (ability2.getCaster() == null || ability.getCaster().equals(ability2.getCaster()))
+                return;
+
+            if (!ability.getCaster().equals(ability2.getCaster())) continue;
+            if (!ability2.isInProgress()) continue;
+
+            if (ability2.isCancelledByCast()) ability2.cancel();
+        }
     }
 
     public static class AbilityData

@@ -3,7 +3,7 @@ package co.runed.bolster.util;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -13,14 +13,14 @@ public class ConfigUtil
 {
     public static ConfigurationSection cloneSection(ConfigurationSection config)
     {
-        if (config == null) return new MemoryConfiguration().createSection("clone");
+        if (config == null) return new BolsterConfiguration().createSection("clone");
 
-        return new MemoryConfiguration().createSection("clone", config.getValues(false));
+        return new BolsterConfiguration().createSection("clone", config.getValues(false));
     }
 
     public static ConfigurationSection fromMap(Map<String, Object> map)
     {
-        return new MemoryConfiguration().createSection("map", map);
+        return new BolsterConfiguration().createSection("map", map);
     }
 
     public static ConfigurationSection merge(ConfigurationSection config1, ConfigurationSection config2)
@@ -52,7 +52,7 @@ public class ConfigUtil
 
     public static ConfigurationSection parseVariables(ConfigurationSection outConfig, ConfigurationSection... otherSources)
     {
-        if (outConfig == null) outConfig = new MemoryConfiguration();
+        if (outConfig == null) outConfig = new BolsterConfiguration();
         ConfigurationSection sourceConfig = ConfigUtil.cloneSection(outConfig);
 
         for (ConfigurationSection source : otherSources)
@@ -74,6 +74,15 @@ public class ConfigUtil
         }
 
         return outConfig;
+    }
+
+    public static YamlConfiguration toYaml(ConfigurationSection config)
+    {
+        YamlConfiguration out = new YamlConfiguration();
+
+        merge(out, config);
+
+        return out;
     }
 
     private static String iterateVariables(String value, ConfigurationSection config)

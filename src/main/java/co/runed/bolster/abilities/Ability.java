@@ -340,6 +340,13 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         this.abilityProvider = abilityProvider;
     }
 
+    public void cancel()
+    {
+        if (this.castingTask != null) this.castingTask.cancel();
+        this.cancelled = true;
+        this.setInProgress(false);
+    }
+
     public boolean canActivate(Properties properties)
     {
         if (!properties.contains(AbilityProperties.CASTER)) return false;
@@ -419,7 +426,8 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
                                         player.setExp(Math.min(xpPercent, 0.999f));
                                         player.setLevel(0);
                                     }, castTimeTicks, CAST_BAR_UPDATE_TICKS)
-                            .add(() -> this.doActivate(properties));
+                            .add(() -> this.doActivate(properties))
+                            .onCancel(() -> this.doActivate(properties));
                 }
 
                 return true;
@@ -434,7 +442,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
 
     private void doActivate(Properties properties)
     {
-        if (this.getCaster() instanceof Player)
+        if (this.getCastTime() > 0 && this.getCaster() instanceof Player)
         {
             ManaManager.getInstance().updateManaDisplay((Player) this.getCaster());
         }
@@ -442,8 +450,16 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         if (!this.cancelled)
         {
             this.setInProgress(true);
-
             this.onActivate(properties);
+        }
+
+        this.casting = false;
+        this.cancelled = false;
+        this.castingTask = null;
+        this.setInProgress(false);
+
+        if (!this.cancelled)
+        {
             this.onPostActivate(properties);
         }
     }
@@ -453,11 +469,6 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     public void onPostActivate(Properties properties)
     {
         this.setOnCooldown(true);
-
-        this.casting = false;
-        this.cancelled = false;
-        this.castingTask = null;
-        this.setInProgress(false);
 
         if (properties.get(AbilityProperties.EVENT) != null)
         {

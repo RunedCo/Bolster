@@ -7,7 +7,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +104,7 @@ public class TaskUtil
 
     public static class TaskSeries
     {
+        Runnable cancelRunnable = null;
         List<BukkitTask> tasks = new ArrayList<>();
         long duration = 0;
 
@@ -135,11 +135,23 @@ public class TaskUtil
             return this;
         }
 
+        public TaskSeries onCancel(Runnable task)
+        {
+            this.cancelRunnable = task;
+
+            return this;
+        }
+
         public void cancel()
         {
             for (BukkitTask task : this.tasks)
             {
                 task.cancel();
+            }
+
+            if (this.cancelRunnable != null)
+            {
+                this.cancelRunnable.run();
             }
         }
     }

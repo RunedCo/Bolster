@@ -11,6 +11,8 @@ public class LambdaAbility extends Ability
 
     public LambdaAbility(BiConsumer<LivingEntity, Properties> lambda)
     {
+        super();
+
         this.lambda = lambda;
     }
 

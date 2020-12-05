@@ -31,6 +31,7 @@ public class AbilityProperties
     // GENERAL PROPERTIES
     public static final Property<BolsterEntity> CASTER = new Property<>("caster");
     public static final Property<Entity> TARGET = new Property<>("target", null);
+    public static final Property<Entity> INITIAL_TARGET = new Property<>("initial_target", null);
     public static final Property<World> WORLD = new Property<>("world");
     public static final Property<Event> EVENT = new Property<>("event");
     public static final Property<ItemStack> ITEM_STACK = new Property<>("item_stack");

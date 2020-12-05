@@ -26,6 +26,8 @@ public class LeapAbility extends Ability
 
     public LeapAbility(float upwardVelocity, float forwardVelocity, boolean ignoreFallDamage)
     {
+        super();
+
         this.upwardVelocity = upwardVelocity;
         this.forwardVelocity = forwardVelocity;
         this.ignoreFallDamage = ignoreFallDamage;
