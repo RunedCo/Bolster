@@ -173,7 +173,8 @@ public class AbilityManager extends Manager
 
         properties.set(AbilityProperties.CASTER, BolsterEntity.from(entity));
         properties.set(AbilityProperties.WORLD, entity.getWorld());
-        if (properties.contains(AbilityProperties.TARGET)) properties.set(AbilityProperties.INITIAL_TARGET, properties.get(AbilityProperties.TARGET));
+        if (properties.contains(AbilityProperties.TARGET))
+            properties.set(AbilityProperties.INITIAL_TARGET, properties.get(AbilityProperties.TARGET));
         if (trigger != AbilityTrigger.ALL) properties.set(AbilityProperties.TRIGGER, trigger);
 
         for (Ability ability : abilities)
@@ -214,7 +215,7 @@ public class AbilityManager extends Manager
             if (!entity.equals(ability.getCaster())) continue;
             if (!ability.isInProgress()) continue;
 
-            if (ability.isCancelledByDamage()) ability.cancel();
+            if (ability.isCancelledByTakingDamage()) ability.cancel();
         }
     }
 
@@ -246,6 +247,9 @@ public class AbilityManager extends Manager
         }
 
         if (entity == null) return;
+        //TODO CHECKS TO MAKE SURE DAMAGE IS EITHER ACTUAALLY A SWING OR HITTING WITH A BOW. MAYBE ADD MORE EDGE CASES HERE FOR TNT AND POTIONS
+        if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK && event.getCause() != EntityDamageEvent.DamageCause.PROJECTILE)
+            return;
 
         for (Ability ability : this.getAbilities(entity))
         {

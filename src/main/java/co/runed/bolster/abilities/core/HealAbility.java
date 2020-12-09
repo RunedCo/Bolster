@@ -5,7 +5,7 @@ import co.runed.bolster.conditions.IsMaxHealthCondition;
 import co.runed.bolster.conditions.NotCondition;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.wip.target.Target;
+import co.runed.bolster.util.target.Target;
 
 public class HealAbility extends TargetedAbility<BolsterEntity>
 {

@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_16_R3.event.CraftEventFactory;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -54,6 +55,13 @@ public class CraftUtil
         {
             e.printStackTrace();
         }
+    }
+
+    public static void killEntity(LivingEntity entity)
+    {
+        CraftEntity entity1 = (CraftLivingEntity) entity;
+        EntityLiving living = (EntityLiving) entity1.getHandle();
+        living.die(DamageSource.GENERIC);
     }
 
     public static void damageEntity(LivingEntity entity, double damage)

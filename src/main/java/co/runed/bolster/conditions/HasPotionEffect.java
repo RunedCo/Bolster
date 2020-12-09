@@ -2,8 +2,7 @@ package co.runed.bolster.conditions;
 
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.wip.target.Target;
-import org.bukkit.entity.LivingEntity;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.potion.PotionEffectType;
 
 public class HasPotionEffect extends TargetedCondition<BolsterEntity>

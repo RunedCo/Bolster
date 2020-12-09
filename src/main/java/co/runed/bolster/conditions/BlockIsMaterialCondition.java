@@ -1,7 +1,7 @@
 package co.runed.bolster.conditions;
 
 import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.wip.target.Target;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;

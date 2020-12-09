@@ -9,7 +9,7 @@ import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.wip.cost.Cost;
 import co.runed.bolster.wip.cost.ManaCost;
-import co.runed.bolster.wip.target.Target;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -50,7 +50,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     private int availableCharges = 1;
     private int charges = 1;
     private boolean cancelledByMovement;
-    private boolean cancelledByDamage;
+    private boolean cancelledByTakingDamage;
     private boolean cancelledByCast;
     private boolean cancelledByDealingDamage;
 
@@ -246,14 +246,14 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return cancelledByMovement;
     }
 
-    public void setCancelledByDamage(boolean cancelledByDamage)
+    public void setCancelledByTakingDamage(boolean cancelledByDamage)
     {
-        this.cancelledByDamage = cancelledByDamage;
+        this.cancelledByTakingDamage = cancelledByDamage;
     }
 
-    public boolean isCancelledByDamage()
+    public boolean isCancelledByTakingDamage()
     {
-        return cancelledByDamage;
+        return cancelledByTakingDamage;
     }
 
     public void setCancelledByDealingDamage(boolean cancelledByDealingDamage)
@@ -451,17 +451,14 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         {
             this.setInProgress(true);
             this.onActivate(properties);
+
+            this.onPostActivate(properties);
         }
 
         this.casting = false;
         this.cancelled = false;
         this.castingTask = null;
         this.setInProgress(false);
-
-        if (!this.cancelled)
-        {
-            this.onPostActivate(properties);
-        }
     }
 
     public abstract void onActivate(Properties properties);

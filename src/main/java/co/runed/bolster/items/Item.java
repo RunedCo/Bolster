@@ -12,7 +12,7 @@ import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
-import co.runed.bolster.wip.target.Target;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

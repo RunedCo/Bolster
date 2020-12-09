@@ -3,7 +3,7 @@ package co.runed.bolster.conditions;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.game.Team;
 import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.wip.target.Target;
+import co.runed.bolster.util.target.Target;
 
 public class IsOnTeamCondition extends TargetedCondition<BolsterEntity>
 {

@@ -7,7 +7,7 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.wip.cost.ItemCost;
-import co.runed.bolster.wip.target.Target;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 

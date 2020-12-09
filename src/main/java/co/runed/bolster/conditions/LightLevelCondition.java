@@ -1,7 +1,7 @@
 package co.runed.bolster.conditions;
 
 import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.wip.target.Target;
+import co.runed.bolster.util.target.Target;
 import org.bukkit.Location;
 
 public class LightLevelCondition extends TargetedCondition<Location>
