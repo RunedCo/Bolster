@@ -4,7 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.conditions.*;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.ManaManager;
-import co.runed.bolster.util.ICooldownSource;
+import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.wip.cost.Cost;

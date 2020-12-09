@@ -1,4 +1,4 @@
-package co.runed.bolster.util;
+package co.runed.bolster.util.cooldown;
 
 public interface ICooldownSource
 {
