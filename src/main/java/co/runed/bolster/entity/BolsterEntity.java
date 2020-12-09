@@ -6,9 +6,9 @@ import co.runed.bolster.managers.EntityManager;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.NumberUtil;
-import co.runed.bolster.util.PlayerUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
+import co.runed.bolster.v1_16_R3.CraftUtil;
 import co.runed.bolster.wip.traits.Trait;
 import co.runed.bolster.wip.traits.TraitProvider;
 import org.bukkit.Location;
@@ -329,7 +329,7 @@ public class BolsterEntity extends TraitProvider
     {
         if (this._entity.getType() != EntityType.PLAYER) return;
 
-        PlayerUtil.sendActionBar((Player) this._entity, message);
+        CraftUtil.sendActionBar((Player) this._entity, message);
     }
 
     public EntityType getType()

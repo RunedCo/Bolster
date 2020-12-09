@@ -1,11 +1,7 @@
 package co.runed.bolster.status;
 
 import org.bukkit.ChatColor;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 public class BlindStatusEffect extends StatusEffect
 {
@@ -27,15 +23,15 @@ public class BlindStatusEffect extends StatusEffect
     }
 
     @Override
-    public Collection<PotionEffectType> getPotionEffects()
+    public boolean isHard()
     {
-        return Arrays.asList(PotionEffectType.BLINDNESS);
+        return false;
     }
 
     @Override
     public void onStart()
     {
-        this.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 9, true, false, true));
+        this.addPotionEffect(PotionEffectType.BLINDNESS, 9, true, false, true);
     }
 
     @Override

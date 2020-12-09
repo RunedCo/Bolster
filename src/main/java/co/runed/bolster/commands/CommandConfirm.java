@@ -1,6 +1,6 @@
 package co.runed.bolster.commands;
 
-import co.runed.bolster.gui.GuiShopConfirm;
+import co.runed.bolster.gui.GuiConfirm;
 import dev.jorel.commandapi.CommandAPICommand;
 
 public class CommandConfirm extends CommandBase
@@ -16,7 +16,7 @@ public class CommandConfirm extends CommandBase
         return new CommandAPICommand(this.command)
                 .withPermission("bolster.commands.confirm")
                 .executesPlayer((sender, args) -> {
-                    new GuiShopConfirm(null, null).show(sender);
+                    new GuiConfirm(null, null, null).show(sender);
                 });
     }
 }

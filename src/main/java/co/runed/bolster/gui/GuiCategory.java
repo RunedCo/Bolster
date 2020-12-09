@@ -3,7 +3,7 @@ package co.runed.bolster.gui;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
-import co.runed.bolster.util.PlayerUtil;
+import co.runed.bolster.v1_16_R3.CraftUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
@@ -93,7 +93,7 @@ public class GuiCategory extends Gui
             ItemStack itemStack = item.toItemStack();
             itemStack.setAmount(stackAmount);
 
-            PlayerUtil.dropItem(player, itemStack);
+            CraftUtil.dropItem(player, itemStack);
             return;
         }
 

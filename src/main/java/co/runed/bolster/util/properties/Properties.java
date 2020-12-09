@@ -64,6 +64,7 @@ public class Properties
      */
     public <T> T get(Property<T> key)
     {
+        if (key instanceof FunctionProperty) return ((FunctionProperty<T>) key).getFunction.apply(this);
         if (!this.values.containsKey(key)) return key.getDefault();
 
         return (T) this.values.get(key);
@@ -77,6 +78,12 @@ public class Properties
      */
     public <T> void set(Property<T> key, T value)
     {
+        if (key instanceof FunctionProperty)
+        {
+            ((FunctionProperty<T>) key).setFunction.accept(this, value);
+            return;
+        }
+
         this.values.put(key, value);
     }
 

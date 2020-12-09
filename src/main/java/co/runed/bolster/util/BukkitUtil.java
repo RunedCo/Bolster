@@ -1,20 +1,86 @@
 package co.runed.bolster.util;
 
+import co.runed.bolster.Bolster;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.*;
 
-public class WorldUtil
+public class BukkitUtil
 {
+    /**
+     * Get every player that have a specific gamemode
+     *
+     * @param mode the gamemode
+     * @return
+     */
+    public static List<Player> getPlayersWithGameMode(GameMode mode)
+    {
+        List<Player> players = new ArrayList<>();
+
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+            if (player.getGameMode() == mode) players.add(player);
+        }
+
+        return players;
+    }
+
+    public static void setNickName(Player player, String nickname)
+    {
+        player.setDisplayName(nickname);
+    }
+
+    /**
+     * Send a specific player to a server
+     *
+     * @param player the player
+     * @param server the server
+     * @throws IOException
+     */
+    public static void sendPlayerToServer(Player player, String server) throws IOException
+    {
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(b);
+
+        out.writeUTF("Connect");
+        out.writeUTF(server);
+
+        player.sendPluginMessage(Bolster.getInstance(), "BungeeCord", b.toByteArray());
+    }
+
+    /**
+     * Send every online player to a server
+     *
+     * @param server the server
+     */
+    public static void sendAllToServer(String server)
+    {
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+            try
+            {
+                sendPlayerToServer(player, server);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /**
      * Gets the block in front of an entity at a specific range, ignoring air
      *
@@ -101,5 +167,59 @@ public class WorldUtil
         float pitch = coords.length > 4 ? Float.parseFloat(coords[4]) : 0;
 
         return new Location(Bukkit.getWorlds().get(0), x, y, z, yaw, pitch);
+    }
+
+    public static boolean addToInventory(Inventory inventory, ItemStack item, boolean stackExisting, boolean ignoreMaxStack)
+    {
+        int amt = item.getAmount();
+        ItemStack[] items = Arrays.copyOf(inventory.getContents(), inventory.getSize());
+        if (stackExisting)
+        {
+            for (ItemStack itemStack : items)
+            {
+                if (itemStack == null) continue;
+                if (itemStack.getAmount() + amt <= itemStack.getMaxStackSize())
+                {
+                    itemStack.setAmount(itemStack.getAmount() + amt);
+                    amt = 0;
+                    break;
+                }
+                else
+                {
+                    int diff = itemStack.getMaxStackSize() - itemStack.getAmount();
+                    itemStack.setAmount(itemStack.getMaxStackSize());
+                    amt -= diff;
+                }
+            }
+        }
+
+        if (amt > 0)
+        {
+            for (int i = 0; i < items.length; i++)
+            {
+                if (items[i] != null) continue;
+                if (amt > item.getMaxStackSize() && !ignoreMaxStack)
+                {
+                    items[i] = item.clone();
+                    items[i].setAmount(item.getMaxStackSize());
+                    amt -= item.getMaxStackSize();
+                }
+                else
+                {
+                    items[i] = item.clone();
+                    items[i].setAmount(amt);
+                    amt = 0;
+                    break;
+                }
+            }
+        }
+
+        if (amt == 0)
+        {
+            inventory.setContents(items);
+            return true;
+        }
+
+        return false;
     }
 }

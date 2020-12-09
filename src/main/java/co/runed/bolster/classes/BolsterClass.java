@@ -13,6 +13,7 @@ import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.wip.upgrade.Upgrade;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +31,21 @@ public abstract class BolsterClass extends AbilityProvider
     List<Category> categories = new ArrayList<>();
     List<Upgrade> upgrades = new ArrayList<>();
     String description;
+    double maxHealth = 20;
+
+    @Override
+    public void create(ConfigurationSection config)
+    {
+        super.create(config);
+
+        this.addAbility(AbilityTrigger.BECOME, (entity, props) -> {
+            if (this.maxHealth > 0)
+            {
+                entity.setMaxHealth(this.maxHealth);
+                entity.setHealth(this.maxHealth);
+            }
+        });
+    }
 
     public String getName()
     {
@@ -41,6 +57,16 @@ public abstract class BolsterClass extends AbilityProvider
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public void setMaxHealth(double maxHealth)
+    {
+        this.maxHealth = maxHealth;
+    }
+
+    public double getMaxHealth()
+    {
+        return maxHealth;
     }
 
     @Override

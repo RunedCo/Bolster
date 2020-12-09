@@ -35,9 +35,9 @@ public class KnockbackResistanceStatusEffect extends StatusEffect
     }
 
     @Override
-    public Collection<PotionEffectType> getPotionEffects()
+    public boolean isHard()
     {
-        return new ArrayList<>();
+        return false;
     }
 
     @Override

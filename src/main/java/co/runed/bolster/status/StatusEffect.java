@@ -12,13 +12,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public abstract class StatusEffect implements Listener, IRegisterable
+public abstract class StatusEffect implements Listener, IRegisterable, Comparable<StatusEffect>
 {
     String id;
     double duration;
@@ -26,6 +28,8 @@ public abstract class StatusEffect implements Listener, IRegisterable
     BukkitTask task;
 
     boolean active;
+
+    private List<PotionEffectType> potionEffects = new ArrayList<>();
 
     public StatusEffect()
     {
@@ -35,8 +39,6 @@ public abstract class StatusEffect implements Listener, IRegisterable
     public StatusEffect(double duration)
     {
         this.setDuration(duration);
-
-        Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
     }
 
     public abstract String getName();
@@ -86,9 +88,13 @@ public abstract class StatusEffect implements Listener, IRegisterable
         return this.active;
     }
 
+    public abstract boolean isHard();
+
     public void start(LivingEntity entity)
     {
         this.setEntity(entity);
+
+        Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
 
         if (this.canStart())
         {
@@ -98,6 +104,7 @@ public abstract class StatusEffect implements Listener, IRegisterable
         this.task = TaskUtil.runDurationTaskTimer(Bolster.getInstance(), this::onTick,
                 TimeUtil.fromSeconds(this.getDuration()), 0, 1L, this::end);
     }
+
 
     public void end()
     {
@@ -146,11 +153,32 @@ public abstract class StatusEffect implements Listener, IRegisterable
 
     }
 
-    public abstract Collection<PotionEffectType> getPotionEffects();
+    public void addPotionEffect(PotionEffectType type, int amplifier, boolean ambient, boolean particles, boolean icon)
+    {
+        this.addPotionEffect(type, Integer.MAX_VALUE, amplifier, ambient, particles, icon);
+    }
+
+    public void addPotionEffect(PotionEffectType type, int duration, int amplifier, boolean ambient, boolean particles, boolean icon)
+    {
+        this.potionEffects.add(type);
+
+        this.getEntity().addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, amplifier, ambient, particles, icon));
+    }
+
+    public Collection<PotionEffectType> getPotionEffects()
+    {
+        return this.potionEffects;
+    }
 
     public abstract void onStart();
 
     public abstract void onEnd();
 
     public abstract void onTick();
+
+    @Override
+    public int compareTo(StatusEffect o)
+    {
+        return 0;
+    }
 }

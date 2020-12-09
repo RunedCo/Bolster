@@ -29,9 +29,9 @@ public class InvulnerableStatusEffect extends StatusEffect
     }
 
     @Override
-    public Collection<PotionEffectType> getPotionEffects()
+    public boolean isHard()
     {
-        return new ArrayList<>();
+        return false;
     }
 
     @Override

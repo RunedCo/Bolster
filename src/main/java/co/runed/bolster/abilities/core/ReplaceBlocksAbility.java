@@ -1,7 +1,7 @@
 package co.runed.bolster.abilities.core;
 
 import co.runed.bolster.abilities.TargetedAbility;
-import co.runed.bolster.util.WorldUtil;
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.collection.RandomCollection;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
@@ -45,7 +45,7 @@ public class ReplaceBlocksAbility extends TargetedAbility<Location>
         Location target = this.getTarget().get(properties);
         target.add(0, yOffset, 0);
 
-        for (Block block : WorldUtil.getBlocksRadius(target, radiusUp, radiusDown, radiusHorizontal))
+        for (Block block : BukkitUtil.getBlocksRadius(target, radiusUp, radiusDown, radiusHorizontal))
         {
             for (Material material : this.materialsToReplace)
             {

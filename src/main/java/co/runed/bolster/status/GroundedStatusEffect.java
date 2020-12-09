@@ -27,15 +27,15 @@ public class GroundedStatusEffect extends StatusEffect
     }
 
     @Override
-    public Collection<PotionEffectType> getPotionEffects()
+    public boolean isHard()
     {
-        return Arrays.asList(PotionEffectType.JUMP);
+        return true;
     }
 
     @Override
     public void onStart()
     {
-        this.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128, true, false, false));
+        this.addPotionEffect(PotionEffectType.JUMP, 128, true, false, false);
     }
 
     @Override

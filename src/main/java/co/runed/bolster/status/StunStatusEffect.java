@@ -19,9 +19,9 @@ public class StunStatusEffect extends StatusEffect
     }
 
     @Override
-    public Collection<PotionEffectType> getPotionEffects()
+    public boolean isHard()
     {
-        return new ArrayList<>();
+        return true;
     }
 
     @Override

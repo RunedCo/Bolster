@@ -2,7 +2,7 @@ package co.runed.bolster.abilities.core;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.MultiTargetAbility;
-import co.runed.bolster.util.WorldUtil;
+import co.runed.bolster.util.BukkitUtil;
 
 public class AOEAbility extends MultiTargetAbility
 {
@@ -14,6 +14,6 @@ public class AOEAbility extends MultiTargetAbility
 
         this.radius = radius;
 
-        this.setEntitySupplier(() -> WorldUtil.getEntitiesRadius(this.getCaster().getLocation(), radius));
+        this.setEntitySupplier(() -> BukkitUtil.getEntitiesRadius(this.getCaster().getLocation(), radius));
     }
 }

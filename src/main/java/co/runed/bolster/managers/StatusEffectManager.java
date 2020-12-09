@@ -28,6 +28,11 @@ public class StatusEffectManager extends Manager
         _instance = this;
     }
 
+    // TODO:
+    // CHECK IF HARD CC, IF NOT JUST APPLY CC
+    // IF HARD CC CHECK IF HARD CC ALREADY ACTIVE AND CHECK PRIORITY
+    // IF PRIORITY HIGHER APPLY INSTEAD OF OTHER CC
+    // IF NEW CC EXPIRES FIRST THEN REAPPLY REMAINING CC FOR REST OF DURATION
     public void addStatusEffect(LivingEntity entity, StatusEffect statusEffect)
     {
         this.clearStatusEffect(entity, statusEffect.getClass());

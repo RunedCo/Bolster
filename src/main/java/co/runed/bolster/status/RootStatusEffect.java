@@ -3,7 +3,6 @@ package co.runed.bolster.status;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
@@ -31,6 +30,12 @@ public class RootStatusEffect extends StatusEffect
     }
 
     @Override
+    public boolean isHard()
+    {
+        return true;
+    }
+
+    @Override
     public Collection<PotionEffectType> getPotionEffects()
     {
         return Arrays.asList(PotionEffectType.JUMP, PotionEffectType.SLOW);
@@ -43,11 +48,11 @@ public class RootStatusEffect extends StatusEffect
         {
             Player player = (Player) this.getEntity();
             player.setWalkSpeed(0);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128, true, false, false));
+            this.addPotionEffect(PotionEffectType.JUMP, 128, true, false, false);
         }
         else
         {
-            this.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 128, true, false, false));
+            this.addPotionEffect(PotionEffectType.SLOW, 128, true, false, false);
         }
     }
 
@@ -58,11 +63,6 @@ public class RootStatusEffect extends StatusEffect
         {
             Player player = (Player) this.getEntity();
             player.setWalkSpeed(DEFAULT_WALK_SPEED);
-            player.removePotionEffect(PotionEffectType.JUMP);
-        }
-        else
-        {
-            this.getEntity().removePotionEffect(PotionEffectType.SLOW);
         }
     }
 

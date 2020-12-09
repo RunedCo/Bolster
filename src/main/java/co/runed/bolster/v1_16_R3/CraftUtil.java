@@ -1,19 +1,26 @@
 package co.runed.bolster.v1_16_R3;
 
 import net.minecraft.server.v1_16_R3.*;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R3.event.CraftEventFactory;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
+import java.util.Random;
 
 public class CraftUtil
 {
@@ -39,6 +46,74 @@ public class CraftUtil
         // it's already been added to the world at this point
 
         return nmsEntity == null ? null : nmsEntity.getBukkitEntity(); // convert to a Bukkit entity
+    }
+
+    /**
+     * Set the actionbar display for a player
+     *
+     * @param player the player
+     * @param message the text to display
+     */
+    public static void sendActionBar(Player player, String message)
+    {
+        message = message.replaceAll("%player%", player.getDisplayName());
+        message = ChatColor.translateAlternateColorCodes('&', message);
+        IChatBaseComponent chatComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + message + "\"}");
+
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+
+        PacketPlayOutChat packet = new PacketPlayOutChat(chatComponent, ChatMessageType.GAME_INFO, player.getUniqueId());
+        craftPlayer.getHandle().playerConnection.sendPacket(packet);
+    }
+
+    /**
+     * Shake the players screen
+     *
+     * @param player the player
+     */
+    public static void showScreenShake(Player player)
+    {
+        PacketPlayOutAnimation packet = new PacketPlayOutAnimation(((CraftPlayer) player).getHandle(), 3);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+    }
+
+    public static void swingArm(Player player)
+    {
+        PacketPlayOutAnimation packet = new PacketPlayOutAnimation(((CraftPlayer) player).getHandle(), 0);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+    }
+
+    /**
+     * Drop an item from a player in a realistic manner
+     *
+     * @param player the player
+     * @param itemStack the item stack
+     */
+    public static void dropItem(Player player, ItemStack itemStack)
+    {
+        Random random = new Random();
+        World world = player.getWorld();
+
+        Location spawnLoc = player.getLocation().clone();
+        spawnLoc.setY(player.getEyeLocation().getY() - 0.30000001192092896D);
+
+        org.bukkit.entity.Item item = (org.bukkit.entity.Item) world.spawnEntity(spawnLoc, EntityType.DROPPED_ITEM);
+        item.setItemStack(itemStack);
+        item.setPickupDelay(40);
+
+        float pitch = player.getEyeLocation().getPitch();
+        float yaw = player.getEyeLocation().getYaw();
+
+        float f1 = MathHelper.sin(pitch * 0.017453292F);
+        float f2 = MathHelper.cos(pitch * 0.017453292F);
+        float f3 = MathHelper.sin(yaw * 0.017453292F);
+        float f4 = MathHelper.cos(yaw * 0.017453292F);
+        float f5 = random.nextFloat() * 6.2831855F;
+        float f6 = 0.02F * random.nextFloat();
+
+        item.setVelocity(new Vector((double) (-f3 * f2 * 0.3F) + Math.cos(f5) * (double) f6,
+                (-f1 * 0.3F + 0.1F + (random.nextFloat() - random.nextFloat()) * 0.1F),
+                (double) (f4 * f2 * 0.3F) + Math.sin(f5) * (double) f6));
     }
 
     public static void setMaxStack(Material material, int max)

@@ -2,6 +2,7 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.items.Item;
+import co.runed.bolster.util.properties.FunctionProperty;
 import co.runed.bolster.util.properties.Property;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import org.bukkit.World;
@@ -9,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -76,4 +78,11 @@ public class AbilityProperties
 
     // ARMOR EQUIP PROPERTIES
     public static final Property<PlayerArmorChangeEvent.SlotType> ARMOR_SLOT = new Property<>("armor_slot");
+
+    // EVENT PROPERTIES
+    public static final Property<Boolean> IS_CANCELLED = new FunctionProperty<>("is_cancelled",
+            (p) -> p.get(EVENT) instanceof Cancellable && ((Cancellable) p.get(EVENT)).isCancelled(),
+            (p, c) -> {
+                if (p.get(EVENT) instanceof Cancellable) ((Cancellable) p.get(EVENT)).setCancelled(c);
+            });
 }

@@ -173,6 +173,7 @@ public class AbilityManager extends Manager
 
         properties.set(AbilityProperties.CASTER, BolsterEntity.from(entity));
         properties.set(AbilityProperties.WORLD, entity.getWorld());
+        properties.set(AbilityProperties.ABILITY_PROVIDER, provider);
         if (properties.contains(AbilityProperties.TARGET))
             properties.set(AbilityProperties.INITIAL_TARGET, properties.get(AbilityProperties.TARGET));
         if (trigger != AbilityTrigger.ALL) properties.set(AbilityProperties.TRIGGER, trigger);
