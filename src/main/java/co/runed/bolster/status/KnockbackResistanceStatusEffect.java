@@ -4,10 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.potion.PotionEffectType;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class KnockbackResistanceStatusEffect extends StatusEffect
 {
@@ -32,12 +28,6 @@ public class KnockbackResistanceStatusEffect extends StatusEffect
     public ChatColor getColor()
     {
         return ChatColor.GOLD;
-    }
-
-    @Override
-    public boolean isHard()
-    {
-        return false;
     }
 
     @Override

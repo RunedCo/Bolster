@@ -1,11 +1,7 @@
 package co.runed.bolster.status;
 
 import org.bukkit.ChatColor;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 public class GroundedStatusEffect extends StatusEffect
 {
@@ -24,12 +20,6 @@ public class GroundedStatusEffect extends StatusEffect
     public ChatColor getColor()
     {
         return ChatColor.GRAY;
-    }
-
-    @Override
-    public boolean isHard()
-    {
-        return true;
     }
 
     @Override

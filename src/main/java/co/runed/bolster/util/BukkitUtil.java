@@ -1,6 +1,7 @@
 package co.runed.bolster.util;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.events.EntityTargetedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -95,7 +96,16 @@ public class BukkitUtil
 
     public static Collection<Entity> getEntitiesRadius(Location location, double radius)
     {
-        return location.getWorld().getNearbyEntities(location, radius, radius, radius);
+        Collection<Entity> entities = location.getWorld().getNearbyEntities(location, radius, radius, radius);
+
+        entities.removeIf(entity -> {
+            EntityTargetedEvent event = new EntityTargetedEvent(entity);
+            Bukkit.getServer().getPluginManager().callEvent(event);
+            
+            return event.isCancelled();
+        });
+
+        return entities;
     }
 
     public static Collection<Entity> getEntitiesRadiusCircle(Location location, double radius)

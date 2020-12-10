@@ -30,12 +30,6 @@ public class RootStatusEffect extends StatusEffect
     }
 
     @Override
-    public boolean isHard()
-    {
-        return true;
-    }
-
-    @Override
     public Collection<PotionEffectType> getPotionEffects()
     {
         return Arrays.asList(PotionEffectType.JUMP, PotionEffectType.SLOW);

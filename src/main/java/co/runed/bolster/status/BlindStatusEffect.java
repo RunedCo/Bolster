@@ -23,12 +23,6 @@ public class BlindStatusEffect extends StatusEffect
     }
 
     @Override
-    public boolean isHard()
-    {
-        return false;
-    }
-
-    @Override
     public void onStart()
     {
         this.addPotionEffect(PotionEffectType.BLINDNESS, 9, true, false, true);
@@ -37,7 +31,6 @@ public class BlindStatusEffect extends StatusEffect
     @Override
     public void onEnd()
     {
-        this.getEntity().removePotionEffect(PotionEffectType.BLINDNESS);
     }
 
     @Override

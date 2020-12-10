@@ -17,19 +17,22 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 public abstract class StatusEffect implements Listener, IRegisterable, Comparable<StatusEffect>
 {
+    private static Collection<PotionEffectType> MAX_DURATION_EFFECTS = Arrays.asList(PotionEffectType.BLINDNESS, PotionEffectType.CONFUSION, PotionEffectType.NIGHT_VISION);
+
     String id;
     double duration;
     LivingEntity entity;
     BukkitTask task;
 
     boolean active;
-
     private List<PotionEffectType> potionEffects = new ArrayList<>();
+    private List<PotionEffect> existingPotionEffects = new ArrayList<>();
 
     public StatusEffect()
     {
@@ -88,13 +91,16 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
         return this.active;
     }
 
-    public abstract boolean isHard();
-
     public void start(LivingEntity entity)
     {
         this.setEntity(entity);
 
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
+
+        for (PotionEffect effect : entity.getActivePotionEffects())
+        {
+            entity.sendMessage("Effect " + effect.toString());
+        }
 
         if (this.canStart())
         {
@@ -111,7 +117,10 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
         // TODO CHECK IF OTHER STATUS EFFECTS THAT ARE ACTIVE ARE USING EFFECTS AND IF SO DO NOT CANCEL
         for (PotionEffectType potionEffect : this.getPotionEffects())
         {
-            this.getEntity().removePotionEffect(potionEffect);
+            if (MAX_DURATION_EFFECTS.contains(potionEffect))
+            {
+                this.getEntity().removePotionEffect(potionEffect);
+            }
         }
 
         StatusEffectManager.getInstance().removeStatusEffect(this.getEntity(), this);
@@ -155,14 +164,18 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
     public void addPotionEffect(PotionEffectType type, int amplifier, boolean ambient, boolean particles, boolean icon)
     {
-        this.addPotionEffect(type, Integer.MAX_VALUE, amplifier, ambient, particles, icon);
+        this.addPotionEffect(type, (int) (this.getDuration() * 20), amplifier, ambient, particles, icon);
     }
 
     public void addPotionEffect(PotionEffectType type, int duration, int amplifier, boolean ambient, boolean particles, boolean icon)
     {
         this.potionEffects.add(type);
 
-        this.getEntity().addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, amplifier, ambient, particles, icon));
+        if (MAX_DURATION_EFFECTS.contains(type)) duration = Integer.MAX_VALUE;
+
+        this.existingPotionEffects.addAll(this.getEntity().getActivePotionEffects());
+
+        this.getEntity().addPotionEffect(new PotionEffect(type, duration, amplifier, ambient, particles, icon));
     }
 
     public Collection<PotionEffectType> getPotionEffects()
