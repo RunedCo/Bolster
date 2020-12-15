@@ -5,7 +5,7 @@ import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.PlayerData;
 import co.runed.bolster.util.registries.Registries;
-import co.runed.bolster.wip.Currency;
+import co.runed.bolster.util.currency.Currency;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;

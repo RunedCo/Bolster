@@ -1,7 +1,7 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.classes.BolsterClass;
-import co.runed.bolster.entity.BolsterEntity;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.ConfigUtil;
 import co.runed.bolster.util.StringUtil;
@@ -12,7 +12,6 @@ import co.runed.bolster.wip.traits.TraitProvider;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.List;

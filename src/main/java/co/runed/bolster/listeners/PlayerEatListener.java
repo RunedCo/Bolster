@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities.listeners;
+package co.runed.bolster.listeners;
 
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
@@ -7,26 +7,24 @@ import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Event that triggers casting an ability on swapping offhand (pushing F)
+ * Event that triggers casting an ability when an item is consumed (food, potions)
  */
-public class PlayerOffhandListener implements Listener
+public class PlayerEatListener implements Listener
 {
     @EventHandler
-    private void onPlayerOffhand(PlayerSwapHandItemsEvent event)
+    private void onPlayerEat(PlayerItemConsumeEvent event)
     {
         Player player = event.getPlayer();
-        ItemStack stack = event.getOffHandItem();
+        ItemStack stack = event.getItem();
 
         Properties properties = new Properties();
-        properties.set(AbilityProperties.EVENT, event);
         properties.set(AbilityProperties.ITEM_STACK, stack);
+        properties.set(AbilityProperties.EVENT, event);
 
-        event.setCancelled(true);
-
-        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_SWAP_OFFHAND, properties);
+        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_CONSUME_ITEM, properties);
     }
 }

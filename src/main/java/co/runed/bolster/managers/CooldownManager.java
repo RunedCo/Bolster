@@ -1,6 +1,6 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.entity.BolsterEntity;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.game.Traits;
 import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.Manager;

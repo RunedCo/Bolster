@@ -1,6 +1,6 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.entity.BolsterEntity;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.Manager;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import org.bukkit.entity.EntityType;

@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities.listeners;
+package co.runed.bolster.listeners;
 
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
@@ -7,23 +7,24 @@ import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class EntityDeathListener implements Listener
+/**
+ * Event that triggers casting an ability when an item is picked up
+ */
+public class EntityPickupItemListener implements Listener
 {
     @EventHandler
-    private void onEntityDeath(EntityDeathEvent event)
+    private void onPickupItem(EntityPickupItemEvent event)
     {
         LivingEntity entity = event.getEntity();
-        EntityEquipment inv = entity.getEquipment();
-        ItemStack stack = inv.getItemInMainHand();
+        ItemStack stack = event.getItem().getItemStack();
 
         Properties properties = new Properties();
-        properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
+        properties.set(AbilityProperties.ITEM_STACK, stack);
 
-        AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_DEATH, properties);
+        AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_PICKUP_ITEM, properties);
     }
 }

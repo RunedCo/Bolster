@@ -57,7 +57,7 @@ public class ManaManager extends Manager
      */
     public void setEnableXpManaBar(boolean enabled)
     {
-        this.enableXpBarDisplay = true;
+        this.enableXpBarDisplay = enabled;
     }
 
     /**

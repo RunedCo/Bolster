@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities.listeners;
+package co.runed.bolster.listeners;
 
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
@@ -7,25 +7,25 @@ import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerEggThrowEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Event that triggers casting an ability on throwing an egg
+ * Event that triggers casting ability on shooting a bow
  */
-public class PlayerThrowEggListener implements Listener
+public class EntityShootBowListener implements Listener
 {
     @EventHandler
-    private void onPlayerThrowEgg(PlayerEggThrowEvent event)
+    private void onLivingEntityShootBow(EntityShootBowEvent event)
     {
-        LivingEntity entity = event.getPlayer();
-        ItemStack stack = event.getEgg().getItem();
+        LivingEntity entity = event.getEntity();
+        ItemStack stack = event.getBow();
 
         Properties properties = new Properties();
-        properties.set(AbilityProperties.ITEM_STACK, stack);
-        properties.set(AbilityProperties.FORCE, 1.0f);
-        properties.set(AbilityProperties.VELOCITY, event.getEgg().getVelocity());
         properties.set(AbilityProperties.EVENT, event);
+        properties.set(AbilityProperties.ITEM_STACK, stack);
+        properties.set(AbilityProperties.FORCE, event.getForce());
+        properties.set(AbilityProperties.VELOCITY, event.getProjectile().getVelocity());
 
         AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_SHOOT, properties);
     }

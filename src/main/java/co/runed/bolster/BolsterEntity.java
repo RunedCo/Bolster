@@ -1,4 +1,4 @@
-package co.runed.bolster.entity;
+package co.runed.bolster;
 
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.ClassManager;

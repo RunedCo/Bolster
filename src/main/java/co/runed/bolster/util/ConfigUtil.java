@@ -3,6 +3,7 @@ package co.runed.bolster.util;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,6 +34,11 @@ public class ConfigUtil
         }
 
         return config1;
+    }
+
+    public static ConfigurationSection create()
+    {
+        return new BolsterConfiguration().createSection("config");
     }
 
     public static ItemStack parseItemStack(ConfigurationSection config)
@@ -134,5 +140,18 @@ public class ConfigUtil
             }
         }
         return original;
+    }
+
+    public static class BolsterConfiguration extends MemoryConfiguration
+    {
+        @Override
+        public Object get(String path, Object def)
+        {
+            Object value = super.get(path, def);
+
+            this.set(path, value);
+
+            return value;
+        }
     }
 }

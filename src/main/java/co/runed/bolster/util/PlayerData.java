@@ -1,6 +1,6 @@
 package co.runed.bolster.util;
 
-import co.runed.bolster.wip.Currency;
+import co.runed.bolster.util.currency.Currency;
 import co.runed.bolster.wip.settings.Setting;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

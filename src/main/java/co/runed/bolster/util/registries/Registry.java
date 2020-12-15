@@ -1,13 +1,11 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.util.BolsterConfiguration;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ConfigUtil;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -155,7 +153,7 @@ public class Registry<T extends IRegisterable>
 
     public ConfigurationSection getConfig(String id)
     {
-        ConfigurationSection config = new BolsterConfiguration().createSection("config");
+        ConfigurationSection config = ConfigUtil.create();
 
         if (this.configs.containsKey(id))
         {
@@ -239,7 +237,7 @@ public class Registry<T extends IRegisterable>
                 // TODO make sure works without manually setting id
                 //value.setId(this.id);
 
-                ConfigurationSection config = new BolsterConfiguration().createSection("config");
+                ConfigurationSection config = ConfigUtil.create();
 
                 if (this.config != null)
                 {

@@ -1,10 +1,9 @@
 package co.runed.bolster.util.registries;
 
-import co.runed.bolster.util.BolsterConfiguration;
 import co.runed.bolster.util.Category;
+import co.runed.bolster.util.ConfigUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public interface IRegisterable
 
     default ConfigurationSection getConfig()
     {
-        return new BolsterConfiguration();
+        return ConfigUtil.create();
     }
 
     void create(ConfigurationSection config);

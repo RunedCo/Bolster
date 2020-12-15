@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities.listeners;
+package co.runed.bolster.listeners;
 
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;

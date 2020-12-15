@@ -1,4 +1,4 @@
-package co.runed.bolster.wip;
+package co.runed.bolster.util.currency;
 
 import co.runed.bolster.util.Glyphs;
 

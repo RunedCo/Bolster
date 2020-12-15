@@ -1,6 +1,6 @@
 package co.runed.bolster.wip.cost;
 
-import co.runed.bolster.entity.BolsterEntity;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.properties.Properties;
