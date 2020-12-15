@@ -49,8 +49,12 @@ public class AbilityTrigger
     public static final AbilityTrigger ON_DISCONNECT = new AbilityTrigger("on_disconnect", "Passive", true);
 
     // TRIGGERED WHEN YOU BECOME THIS CLASS
-    public static final AbilityTrigger BECOME = new AbilityTrigger("become", "Passive", true);
-    public static final AbilityTrigger REMOVE = new AbilityTrigger("remove", "Passive", true);
+    public static final AbilityTrigger SET_CLASS = new AbilityTrigger("become_class", "Passive", true);
+    public static final AbilityTrigger REMOVE_CLASS = new AbilityTrigger("remove_class", "Passive", true);
+    public static final AbilityTrigger CREATE = new AbilityTrigger("create", "Passive", true);
+    public static final AbilityTrigger DESTROY = new AbilityTrigger("destroy", "Passive", true);
+    public static final AbilityTrigger CREATE_ITEM = new AbilityTrigger("create_item", "Passive", true);
+    public static final AbilityTrigger GIVE_ITEM = new AbilityTrigger("give_item", "Passive", true);
 
     // PASSIVE ACTIONS
     public static final AbilityTrigger TICK = new AbilityTrigger("tick", "Passive", true);

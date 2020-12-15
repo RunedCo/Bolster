@@ -2,10 +2,12 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
+import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.Manager;
+import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -115,6 +117,8 @@ public class ItemManager extends Manager
         item.setEntity(entity);
         item.rebuild();
 
+        AbilityManager.getInstance().trigger(entity, item, AbilityTrigger.CREATE_ITEM, new Properties());
+
         return item;
     }
 
@@ -162,6 +166,12 @@ public class ItemManager extends Manager
         stack.setAmount(amount);
 
         PlayerInventory inv = player.getInventory();
+
+        Properties properties = new Properties();
+        properties.set(AbilityProperties.ITEM_STACK, stack);
+        properties.set(AbilityProperties.ITEM, item);
+        properties.set(AbilityProperties.INVENTORY, inv);
+        AbilityManager.getInstance().trigger(player, item, AbilityTrigger.GIVE_ITEM, properties);
 
         // TODO PRIORITISE EXISTING STACK, THEN EMPTY HAND, THEN NEW STACK
         if (inv.getItemInMainHand().getType() == Material.AIR && !inv.containsAtLeast(stack, 1))

@@ -72,7 +72,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         {
             this.rebuild();
 
-            AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.BECOME, new Properties());
+            AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.CREATE, new Properties());
         }
     }
 
@@ -206,7 +206,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         if (this.getEntity() != null)
         {
             if (trigger)
-                AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.REMOVE, new Properties());
+                AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.DESTROY, new Properties());
 
             BolsterEntity.from(this.getEntity()).removeTraitProvider(this);
         }

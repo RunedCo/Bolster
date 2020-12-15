@@ -38,7 +38,7 @@ public abstract class BolsterClass extends AbilityProvider
     {
         super.create(config);
 
-        this.addAbility(AbilityTrigger.BECOME, (entity, props) -> {
+        this.addAbility(AbilityTrigger.SET_CLASS, (entity, props) -> {
             if (this.maxHealth > 0)
             {
                 entity.setMaxHealth(this.maxHealth);
@@ -121,9 +121,16 @@ public abstract class BolsterClass extends AbilityProvider
     @Override
     public void setEntity(LivingEntity entity)
     {
+        boolean firstTime = this.getEntity() == null || !this.getEntity().getUniqueId().equals(entity.getUniqueId());
+
         if (entity.equals(this.getEntity())) return;
 
         super.setEntity(entity);
+
+        if (firstTime)
+        {
+            AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.SET_CLASS, new Properties());
+        }
 
         ClassManager.getInstance().setClass(entity, this);
     }
@@ -182,9 +189,15 @@ public abstract class BolsterClass extends AbilityProvider
     }
 
     @Override
-    public void destroy()
+    public void destroy(boolean trigger)
     {
         super.destroy();
+
+        if (this.getEntity() != null)
+        {
+            if (trigger)
+                AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.REMOVE_CLASS, new Properties());
+        }
 
         if (!(this.getEntity() instanceof Player))
         {

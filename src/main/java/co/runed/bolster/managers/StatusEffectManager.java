@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class StatusEffectManager extends Manager
 {
     Map<UUID, List<StatusEffect>> currentStatusEffects = new HashMap<>();
-    Map<UUID, HashMap<PotionEffectType, List<PotionEffectData>>> potionEffects = new HashMap<>();
 
     private static StatusEffectManager _instance;
 
@@ -177,115 +176,6 @@ public class StatusEffectManager extends Manager
     private void onEntityDeath(EntityDeathEvent event)
     {
         this.clearStatusEffects(event.getEntity());
-    }
-
-    // TODO MAKE SURE WORKS
-    // TODO DOES NOT WORK IF YOU ALREADY HAVE STATUS EFFECT SET (try setting speed 1 for 100 seconds and then speed 9 for 10 seconds)
-    @EventHandler
-    private void onPotionAdded(EntityPotionEffectEvent event)
-    {
-        if (!(event.getEntity() instanceof LivingEntity)) return;
-
-        EntityPotionEffectEvent.Cause cause = event.getCause();
-        EntityPotionEffectEvent.Action action = event.getAction();
-        LivingEntity entity = (LivingEntity) event.getEntity();
-
-        PotionEffect oldEffect = event.getOldEffect();
-        PotionEffect newEffect = event.getNewEffect();
-        PotionEffectType type = oldEffect == null ? newEffect.getType() : oldEffect.getType();
-
-        this.potionEffects.putIfAbsent(entity.getUniqueId(), new HashMap<>());
-        this.potionEffects.get(entity.getUniqueId()).putIfAbsent(type, new ArrayList<>());
-
-        List<PotionEffectData> effects = this.potionEffects.get(entity.getUniqueId()).get(type);
-
-        if (action == EntityPotionEffectEvent.Action.ADDED)
-        {
-            PotionEffectData wrappedNewEffect = effects.stream().filter(e -> e.getEffect() == newEffect).findFirst().orElse(null);
-            effects.remove(wrappedNewEffect);
-
-            List<PotionEffectData> toRemove = effects.stream().filter(e -> e.isFinished() || (e.getEffect().getDuration() <= newEffect.getDuration() && e.getEffect().getAmplifier() <= newEffect.getAmplifier())).collect(Collectors.toList());
-            effects.removeAll(toRemove);
-        }
-        else if (action == EntityPotionEffectEvent.Action.CHANGED)
-        {
-            if (oldEffect == null) return;
-            if (effects.stream().anyMatch(e -> e.getEffect() == newEffect)) return;
-
-            if (newEffect.getDuration() > oldEffect.getDuration() && newEffect.getAmplifier() <= oldEffect.getAmplifier())
-            {
-                PotionEffectData data = new PotionEffectData(newEffect);
-                effects.add(data);
-
-                effects.sort((e1, e2) -> e2.getEffect().getDuration() - e1.getEffect().getDuration());
-                effects.sort((e1, e2) -> e2.getEffect().getAmplifier() - e1.getEffect().getAmplifier());
-
-                int index = effects.indexOf(data);
-                PotionEffectData oldData = index == 0 ? new PotionEffectData(oldEffect) : effects.get(index - 1);
-
-                data.duration = newEffect.getDuration() - oldData.getEffect().getDuration();
-            }
-
-//            if (newEffect.getDuration() < oldEffect.getDuration() && newEffect.getAmplifier() >= oldEffect.getAmplifier())
-//            {
-//                PotionEffectData data = new PotionEffectData(newEffect);
-//                effects.add(data);
-//
-//                PotionEffectData oldData = new PotionEffectData(oldEffect);
-//                oldData.duration = oldData.duration - data.duration;
-//                effects.add(oldData);
-//
-//                //entity.removePotionEffect(oldEffect.getType());
-//
-//                data.getEffect().apply(entity);
-//            }
-        }
-        else
-        {
-            if (effects.size() <= 0) return;
-
-            PotionEffectData wrappedOldEffect = effects.stream().filter(e -> e.getEffect() == oldEffect).findFirst().orElse(null);
-            effects.remove(wrappedOldEffect);
-
-            PotionEffectData effectData = effects.stream().min((e1, e2) -> e2.getEffect().getAmplifier() - e1.getEffect().getAmplifier()).orElse(null);
-
-            if (effectData == null) return;
-
-            PotionEffect effect = effectData.getEffect();
-            effectData.effect = new PotionEffect(effect.getType(), effectData.duration, effect.getAmplifier(), effect.isAmbient(), effect.hasParticles(), effect.hasIcon());
-            effectData.effect.apply(entity);
-        }
-
-        ChatColor color = ChatColor.values()[9 + action.ordinal()];
-        entity.sendMessage(color + "Potion effect " + action + ". New effect is " + newEffect + ". Old effect is " + oldEffect);
-    }
-
-    private static class PotionEffectData
-    {
-        PotionEffect effect;
-        Instant startTime = Instant.now();
-        int duration;
-
-        private PotionEffectData(PotionEffect effect)
-        {
-            this.effect = effect;
-        }
-
-        public PotionEffect getEffect()
-        {
-            return effect;
-        }
-
-        private boolean isFinished()
-        {
-            return Instant.now().isAfter(TimeUtil.addSeconds(this.startTime, effect.getDuration() / 20f));
-        }
-
-        @Override
-        public String toString()
-        {
-            return this.effect.toString() + " (st: " + this.startTime + ")";
-        }
     }
 
     public static StatusEffectManager getInstance()
