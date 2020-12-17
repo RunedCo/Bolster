@@ -191,7 +191,7 @@ public abstract class BolsterClass extends AbilityProvider
     @Override
     public void destroy(boolean trigger)
     {
-        super.destroy();
+        super.destroy(trigger);
 
         if (this.getEntity() != null)
         {
