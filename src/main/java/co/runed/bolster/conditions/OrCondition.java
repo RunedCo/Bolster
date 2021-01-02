@@ -33,11 +33,11 @@ public class OrCondition extends Condition
     }
 
     @Override
-    public void onFail(IConditional conditional, Properties properties)
+    public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
         for (Condition condition : this.conditions)
         {
-            condition.onFail(conditional, properties);
+            condition.onFail(conditional, properties, inverted);
         }
     }
 }

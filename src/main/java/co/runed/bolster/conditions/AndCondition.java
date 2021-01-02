@@ -25,7 +25,7 @@ public class AndCondition extends Condition
         {
             if (!condition.evaluate(conditional, properties))
             {
-                condition.onFail(conditional, properties);
+                condition.onFail(conditional, properties, false);
                 return false;
             }
         }
@@ -34,7 +34,7 @@ public class AndCondition extends Condition
     }
 
     @Override
-    public void onFail(IConditional conditional, Properties properties)
+    public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
     }
 }

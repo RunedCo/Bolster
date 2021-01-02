@@ -191,13 +191,13 @@ public abstract class BolsterClass extends AbilityProvider
     @Override
     public void destroy(boolean trigger)
     {
-        super.destroy(trigger);
-
         if (this.getEntity() != null)
         {
             if (trigger)
                 AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.REMOVE_CLASS, new Properties());
         }
+
+        super.destroy(trigger);
 
         if (!(this.getEntity() instanceof Player))
         {

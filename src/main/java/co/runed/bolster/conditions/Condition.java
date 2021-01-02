@@ -15,11 +15,11 @@ public abstract class Condition
 
     /**
      * Callback for when a condition fails
-     *
-     * @param conditional the conditional
+     *  @param conditional the conditional
      * @param properties  the conditional properties
+     * @param inverted
      */
-    public abstract void onFail(IConditional conditional, Properties properties);
+    public abstract void onFail(IConditional conditional, Properties properties, boolean inverted);
 
     public static class Data implements Comparable<Data>
     {

@@ -4,12 +4,12 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.conditions.*;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.ManaManager;
-import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.TaskUtil;
+import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.util.target.Target;
 import co.runed.bolster.wip.cost.Cost;
 import co.runed.bolster.wip.cost.ManaCost;
-import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -173,7 +173,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     @Override
     public boolean shouldShowErrorMessages()
     {
-        return this.showErrors;
+        return this.showErrors && !this.getTrigger().isPassive();
     }
 
     public boolean isEnabled()
@@ -363,7 +363,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
 
             if (!result)
             {
-                condition.onFail(this, properties);
+                condition.onFail(this, properties, false);
 
                 return false;
             }

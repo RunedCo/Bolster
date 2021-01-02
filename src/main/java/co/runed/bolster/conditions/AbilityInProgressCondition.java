@@ -21,7 +21,7 @@ public class AbilityInProgressCondition extends Condition
     }
 
     @Override
-    public void onFail(IConditional conditional, Properties properties)
+    public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
 
     }

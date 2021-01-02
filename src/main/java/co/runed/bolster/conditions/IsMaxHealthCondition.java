@@ -1,7 +1,6 @@
 package co.runed.bolster.conditions;
 
 import co.runed.bolster.BolsterEntity;
-import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.ChatColor;
@@ -24,9 +23,9 @@ public class IsMaxHealthCondition extends TargetedCondition<BolsterEntity>
     }
 
     @Override
-    public void onFail(IConditional conditional, Properties properties)
+    public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
-        if (!conditional.shouldShowErrorMessages() || (conditional instanceof Ability && ((Ability) conditional).getTrigger().isPassive())) return;
+        if (!conditional.shouldShowErrorMessages()) return;
 
         BolsterEntity entity = this.getTarget().get(properties);
 

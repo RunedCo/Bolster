@@ -1,8 +1,6 @@
 package co.runed.bolster.conditions;
 
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.conditions.Condition;
-import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -17,7 +15,7 @@ public class DamageCancelledCondition extends Condition
     }
 
     @Override
-    public void onFail(IConditional conditional, Properties properties)
+    public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
 
     }

@@ -18,8 +18,8 @@ public class NotCondition extends Condition
     }
 
     @Override
-    public void onFail(IConditional conditional, Properties properties)
+    public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
-        this.condition.onFail(conditional, properties);
+        this.condition.onFail(conditional, properties, !inverted);
     }
 }

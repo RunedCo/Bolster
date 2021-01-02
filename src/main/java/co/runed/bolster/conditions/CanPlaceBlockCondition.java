@@ -32,7 +32,7 @@ public class CanPlaceBlockCondition extends TargetedCondition<Location>
     }
 
     @Override
-    public void onFail(IConditional conditional, Properties properties)
+    public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
 
     }

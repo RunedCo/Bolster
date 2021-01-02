@@ -37,7 +37,7 @@ public class HasItemCondition extends TargetedCondition<BolsterEntity>
     }
 
     @Override
-    public void onFail(IConditional conditional, Properties properties)
+    public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
 
     }

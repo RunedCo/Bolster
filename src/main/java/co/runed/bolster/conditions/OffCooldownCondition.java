@@ -32,9 +32,9 @@ public class OffCooldownCondition extends TargetedCondition<BolsterEntity>
 
     //TODO: REMOVE HARDCODED MESSAGE
     @Override
-    public void onFail(IConditional conditional, Properties properties)
+    public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
-        if (!conditional.shouldShowErrorMessages() || (conditional instanceof Ability && ((Ability) conditional).getTrigger().isPassive())) return;
+        if (!conditional.shouldShowErrorMessages()) return;
         if (!(conditional instanceof ICooldownSource)) return;
 
         BolsterEntity entity = this.getTarget().get(properties);
