@@ -54,6 +54,13 @@ public class ItemCost extends Cost
             item = ItemManager.getInstance().createItem(player, this.itemClass);
         }
 
+        int count = this.count;
+
+        if (count == -1 && properties.contains(AbilityProperties.ITEM_STACK))
+        {
+            count = properties.get(AbilityProperties.ITEM_STACK).getAmount();
+        }
+
         return ItemManager.getInstance().inventoryContainsAtLeast(player, item.getId(), count);
     }
 
@@ -82,6 +89,13 @@ public class ItemCost extends Cost
             item = ItemManager.getInstance().createItem(player, this.itemClass);
         }
 
-        return ItemManager.getInstance().removeItem(player, item, this.count);
+        int count = this.count;
+
+        if (count == -1 && properties.contains(AbilityProperties.ITEM_STACK))
+        {
+            count = properties.get(AbilityProperties.ITEM_STACK).getAmount();
+        }
+
+        return ItemManager.getInstance().removeItem(player, item, count);
     }
 }

@@ -89,6 +89,8 @@ public class PlayerData
 
         try
         {
+            if (!this.settings.containsKey(setting.getId())) throw new Exception();
+
             value = (T) this.settings.get(setting.getId());
         }
         catch (Exception e)

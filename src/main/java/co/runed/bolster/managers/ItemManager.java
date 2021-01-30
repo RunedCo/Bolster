@@ -258,7 +258,7 @@ public class ItemManager extends Manager
 
             if (stackItemId == null) continue;
 
-            if (stackItemId.equals(itemId)) numberFound++;
+            if (stackItemId.equals(itemId)) numberFound += stack.getAmount();
 
             if (numberFound >= count) return true;
         }

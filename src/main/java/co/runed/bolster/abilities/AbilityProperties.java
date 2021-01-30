@@ -40,6 +40,7 @@ public class AbilityProperties
     public static final Property<Item> ITEM = new Property<>("item");
     public static final Property<AbilityTrigger> TRIGGER = new Property<>("trigger", AbilityTrigger.ALL);
     public static final Property<AbilityProvider> ABILITY_PROVIDER = new Property<>("ability_provider");
+    public static final Property<Ability> ABILITY = new Property<>("ability");
 
     // BLOCK PROPERTIES
     public static final Property<Block> BLOCK = new Property<>("block");

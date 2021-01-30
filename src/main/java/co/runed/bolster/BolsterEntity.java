@@ -64,7 +64,7 @@ public class BolsterEntity extends TraitProvider
 
         for (TraitProvider traitProvider : this.traitProviders)
         {
-            Properties next = traitProvider.getTraits();
+            Properties next = traitProvider == this ? super.getTraits() : traitProvider.getTraits();
 
             for (Property exProp : next.getAll().keySet())
             {

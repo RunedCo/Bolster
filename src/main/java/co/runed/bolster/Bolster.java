@@ -23,11 +23,15 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
 
-public class Bolster extends JavaPlugin
+public class Bolster extends JavaPlugin implements Listener
 {
     // SINGLETON INSTANCE
     private static Bolster instance;
@@ -43,6 +47,8 @@ public class Bolster extends JavaPlugin
     private EntityManager entityManager;
     private PlayerManager playerManager;
     private EffectManager effectManager;
+
+    private MenuFunctionListener menuListener;
 
     private Config config;
 
@@ -115,6 +121,7 @@ public class Bolster extends JavaPlugin
         this.commandManager.add(new CommandConfirm());
         this.commandManager.add(new CommandSetItemLevel());
         this.commandManager.add(new CommandLevelItem());
+        this.commandManager.add(new CommandPause());
 
         // REGISTER PLUGIN CHANNELS
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -128,13 +135,25 @@ public class Bolster extends JavaPlugin
         // CREATE REGISTRIES
         Registries.PARTICLE_SETS.register("bruce_test", ParticleSet::new);
 
+        this.menuListener = new MenuFunctionListener();
+
         // REGISTER EVENTS
-        Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
+        Bukkit.getPluginManager().registerEvents(this, this);
+        Bukkit.getPluginManager().registerEvents(menuListener, this);
         Bukkit.getPluginManager().registerEvents(new TestListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisguiseListener(), this);
 
         this.registerStatusEffects();
         this.registerCurrencies();
+    }
+
+    // NOTE: SHIT WORKAROUND FOR CANVAS NOT TRIGERRING EVENT WHEN IN SPECTATOR
+    @EventHandler(priority = EventPriority.HIGH)
+    private void onInventoryClick(InventoryClickEvent event)
+    {
+        if(!event.isCancelled()) return;
+
+        this.menuListener.handleGuiClick(event);
     }
 
     private void registerStatusEffects()

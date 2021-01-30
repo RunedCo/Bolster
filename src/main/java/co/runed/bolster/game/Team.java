@@ -1,18 +1,18 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.util.BukkitUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.*;
 
@@ -23,6 +23,7 @@ public class Team implements Listener
     ChatColor color;
     boolean autoAddPlayers = false;
     List<UUID> members = new ArrayList<>();
+    List<UUID> onlineMembers = new ArrayList<>();
     List<UUID> players = new ArrayList<>();
     Map<UUID, Integer> kills = new HashMap<>();
     int totalKills = 0;
@@ -46,6 +47,11 @@ public class Team implements Listener
 
         this.members.add(entity.getUniqueId());
         this.kills.put(entity.getUniqueId(), 0);
+
+        if ((entity.isValid() && !entity.isDead()) || (entity instanceof Player && ((Player) entity).isOnline()))
+        {
+            onlineMembers.add(entity.getUniqueId());
+        }
     }
 
     /**
@@ -58,6 +64,7 @@ public class Team implements Listener
         if (entity.getType() == EntityType.PLAYER) this.players.remove(entity.getUniqueId());
 
         this.members.remove(entity.getUniqueId());
+        this.onlineMembers.remove(entity.getUniqueId());
     }
 
     public boolean isInTeam(LivingEntity entity)
@@ -67,19 +74,12 @@ public class Team implements Listener
 
     public List<LivingEntity> getMembers()
     {
-        List<LivingEntity> entities = new ArrayList<>();
+        return BukkitUtil.getLivingEntitiesFromUUIDs(this.members);
+    }
 
-        for (UUID uuid : this.members)
-        {
-            Entity entity = Bukkit.getEntity(uuid);
-
-            if (entity instanceof LivingEntity)
-            {
-                entities.add((LivingEntity) entity);
-            }
-        }
-
-        return entities;
+    public List<LivingEntity> getOnlineMembers()
+    {
+        return BukkitUtil.getLivingEntitiesFromUUIDs(this.onlineMembers);
     }
 
     public int getEntityKills(LivingEntity entity)
@@ -121,10 +121,10 @@ public class Team implements Listener
             Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
         }
 
-        if (!shouldAdd)
-        {
-            HandlerList.unregisterAll(this);
-        }
+//        if (!shouldAdd)
+//        {
+//            HandlerList.unregisterAll(this);
+//        }
 
         this.autoAddPlayers = shouldAdd;
     }
@@ -161,6 +161,18 @@ public class Team implements Listener
         {
             this.add(event.getPlayer());
         }
+
+        Player player = event.getPlayer();
+        if (this.isInTeam(event.getPlayer()) && !this.onlineMembers.contains(player.getUniqueId()))
+        {
+            this.onlineMembers.add(player.getUniqueId());
+        }
+    }
+
+    @EventHandler
+    private void onPlayerLeave(PlayerQuitEvent event)
+    {
+        this.onlineMembers.remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
@@ -168,9 +180,7 @@ public class Team implements Listener
     {
         LivingEntity entity = event.getEntity();
 
-        if (entity instanceof Player) return;
-
-        if (this.shouldRemovePlayersOnDeath()) this.remove(entity);
+        if (!(entity instanceof Player) || shouldRemovePlayersOnDeath()) this.remove(entity);
     }
 
     @EventHandler
@@ -188,13 +198,51 @@ public class Team implements Listener
     @EventHandler
     private void onDamageEntity(EntityDamageByEntityEvent event)
     {
-        if (!(event.getDamager() instanceof LivingEntity)) return;
+        Entity damager = event.getDamager();
+        LivingEntity entity = null;
+
+        if (damager instanceof LivingEntity)
+        {
+            entity = (LivingEntity) damager;
+        }
+        else if (damager instanceof Projectile)
+        {
+            ProjectileSource shooter = ((Projectile) damager).getShooter();
+
+            if (!(shooter instanceof LivingEntity)) return;
+
+            entity = (LivingEntity) shooter;
+        }
+        else if (damager instanceof TNTPrimed)
+        {
+            Entity source = ((TNTPrimed) damager).getSource();
+
+            if (!(source instanceof LivingEntity)) return;
+
+            entity = (LivingEntity) source;
+        }
+
+        if (entity == null) return;
         if (!(event.getEntity() instanceof LivingEntity)) return;
 
         LivingEntity damagee = (LivingEntity) event.getEntity();
-        LivingEntity damager = (LivingEntity) event.getDamager();
 
-        if (this.isInTeam(damagee) && this.isInTeam(damager) && !this.allowFriendlyFire())
+        if (this.isInTeam(damagee) && this.isInTeam(entity) && !this.allowFriendlyFire())
+        {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    private void onEntityTarget(EntityTargetLivingEntityEvent event)
+    {
+        if (!(event.getEntity() instanceof LivingEntity)) return;
+        if (event.getTarget() == null) return;
+
+        LivingEntity targeter = (LivingEntity) event.getEntity();
+        LivingEntity targeted = (LivingEntity) event.getTarget();
+
+        if (this.isInTeam(targeter) && this.isInTeam(targeted) && !this.allowFriendlyFire())
         {
             event.setCancelled(true);
         }

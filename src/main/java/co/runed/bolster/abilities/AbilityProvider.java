@@ -1,7 +1,7 @@
 package co.runed.bolster.abilities;
 
-import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.ConfigUtil;
 import co.runed.bolster.util.StringUtil;
@@ -27,6 +27,8 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     private LivingEntity entity;
     LivingEntity parent;
     private ConfigurationSection config;
+    private boolean enabled = true;
+    private boolean persistent;
     @JsonExclude
     private boolean dirty;
 
@@ -50,6 +52,26 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     public void create(ConfigurationSection config)
     {
         ConfigUtil.parseVariables(config);
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    public void setPersistent(boolean persistent)
+    {
+        this.persistent = persistent;
+    }
+
+    public boolean isPersistent()
+    {
+        return persistent;
     }
 
     public LivingEntity getEntity()
@@ -142,6 +164,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         {
             Ability ability = abilityData.ability;
 
+            if (!ability.isEnabled()) continue;
             if (ability.getDescription() == null) continue;
 
             String abilityName = ChatColor.RED + abilityData.trigger.getDisplayName() + (ability.getName() != null ? " - " + ability.getName() : "");

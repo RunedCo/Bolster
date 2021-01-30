@@ -1,14 +1,14 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.listeners.*;
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
+import co.runed.bolster.listeners.*;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;
@@ -187,12 +187,18 @@ public class AbilityManager extends Manager
             AbilityProvider abilityProvider = provider != null ? provider : ability.getAbilityProvider();
 
             EntityCastAbilityEvent castEvent = new EntityCastAbilityEvent(entity, ability, trigger, properties);
-
             Bukkit.getServer().getPluginManager().callEvent(castEvent);
 
             if (castEvent.isCancelled()) continue;
 
             boolean success = ability.activate(properties);
+
+            if (ability.getTrigger() != AbilityTrigger.TICK && ability.getTrigger() != AbilityTrigger.ON_CAST_ABILITY)
+            {
+                Properties onCastProperties = new Properties(properties);
+                onCastProperties.set(AbilityProperties.ABILITY, ability);
+                this.trigger(entity, provider, AbilityTrigger.ON_CAST_ABILITY, onCastProperties);
+            }
 
             if (abilityProvider != null)
             {

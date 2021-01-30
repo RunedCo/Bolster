@@ -11,6 +11,7 @@ import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R3.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -77,10 +78,28 @@ public class CraftUtil
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
-    public static void swingArm(Player player)
+    public static void playDeath(Player player)
     {
-        PacketPlayOutAnimation packet = new PacketPlayOutAnimation(((CraftPlayer) player).getHandle(), 0);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+        net.minecraft.server.v1_16_R3.PacketPlayOutEntityStatus packet = new net.minecraft.server.v1_16_R3.PacketPlayOutEntityStatus(((CraftPlayer) player).getHandle(), (byte) 3);
+
+        for (Player p : org.bukkit.Bukkit.getOnlinePlayers())
+        {
+            if (!p.equals(player) && p.getLocation().distanceSquared(player.getLocation()) < 900.0D)
+            {
+                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+            }
+        }
+    }
+    
+    public static void sendFakeSlotUpdate(Player player, int slot, ItemStack item) {
+        net.minecraft.server.v1_16_R3.ItemStack nmsItem;
+        if (item != null) {
+            nmsItem = CraftItemStack.asNMSCopy(item);
+        } else {
+            nmsItem = null;
+        }
+        PacketPlayOutSetSlot packet = new PacketPlayOutSetSlot(0, (short)slot+36, nmsItem);
+        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
     }
 
     /**

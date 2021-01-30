@@ -1,10 +1,12 @@
 package co.runed.bolster.game;
 
+import co.runed.bolster.events.GameModePausedEvent;
 import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.IRegisterable;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
@@ -20,7 +22,8 @@ public abstract class GameMode extends Manager implements IRegisterable
 
     GameProperties properties;
 
-    public boolean hasStarted = false;
+    boolean hasStarted = false;
+    boolean paused = false;
 
     public GameMode(String id, Plugin plugin)
     {
@@ -60,6 +63,24 @@ public abstract class GameMode extends Manager implements IRegisterable
         this.mainState.start();
     }
 
+    public boolean isPaused()
+    {
+        return paused;
+    }
+
+    public void setPaused(boolean paused)
+    {
+        this.paused = paused;
+
+        GameModePausedEvent event = new GameModePausedEvent(paused);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+    }
+
+    public boolean hasStarted()
+    {
+        return hasStarted;
+    }
+
     public GameProperties getProperties()
     {
         return this.properties;
@@ -80,6 +101,6 @@ public abstract class GameMode extends Manager implements IRegisterable
     @Override
     public void create(ConfigurationSection config)
     {
-        
+
     }
 }

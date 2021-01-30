@@ -350,6 +350,8 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     public boolean canActivate(Properties properties)
     {
         if (!properties.contains(AbilityProperties.CASTER)) return false;
+        if (this.getAbilityProvider() != null && !this.getAbilityProvider().isEnabled()) return false;
+        if (!this.isEnabled()) return false;
 
         if (this.casting) return false;
 

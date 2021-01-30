@@ -65,6 +65,11 @@ public class AbilityBuilder
         return this;
     }
 
+    public AbilityBuilder addCondition(Condition condition)
+    {
+        return this.addCondition(condition, ConditionPriority.NORMAL);
+    }
+
     public AbilityBuilder addCondition(Condition condition, ConditionPriority conditionPriority)
     {
         this.conditions.add(new Condition.Data(condition, conditionPriority));

@@ -55,6 +55,7 @@ public class AbilityTrigger
     public static final AbilityTrigger DESTROY = new AbilityTrigger("destroy", "Passive", true);
     public static final AbilityTrigger CREATE_ITEM = new AbilityTrigger("create_item", "Passive", true);
     public static final AbilityTrigger GIVE_ITEM = new AbilityTrigger("give_item", "Passive", true);
+    public static final AbilityTrigger ON_CAST_ABILITY = new AbilityTrigger("on_cast_ability", "Passive", true);
 
     // PASSIVE ACTIONS
     public static final AbilityTrigger TICK = new AbilityTrigger("tick", "Passive", true);

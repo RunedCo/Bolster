@@ -175,7 +175,10 @@ public class Registry<T extends IRegisterable>
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            if (!(e instanceof NoSuchMethodException))
+            {
+                e.printStackTrace();
+            }
         }
 
         return null;

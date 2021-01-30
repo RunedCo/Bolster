@@ -232,4 +232,21 @@ public class BukkitUtil
 
         return false;
     }
+
+    public static List<LivingEntity> getLivingEntitiesFromUUIDs(Collection<UUID> uuids)
+    {
+        List<LivingEntity> entities = new ArrayList<>();
+
+        for (UUID uuid : uuids)
+        {
+            Entity entity = Bukkit.getEntity(uuid);
+
+            if (entity instanceof LivingEntity)
+            {
+                entities.add((LivingEntity) entity);
+            }
+        }
+
+        return entities;
+    }
 }
