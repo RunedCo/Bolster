@@ -2,6 +2,7 @@ package co.runed.bolster.conditions;
 
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 
 public class HasPermissionCondition extends TargetedCondition<LivingEntity>
@@ -25,5 +26,11 @@ public class HasPermissionCondition extends TargetedCondition<LivingEntity>
     public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
 
+    }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        return ChatColor.RED + "You do not have permission to do that!";
     }
 }

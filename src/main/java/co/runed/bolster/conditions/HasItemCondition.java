@@ -41,4 +41,10 @@ public class HasItemCondition extends TargetedCondition<BolsterEntity>
     {
 
     }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        return null;
+    }
 }

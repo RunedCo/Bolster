@@ -58,6 +58,8 @@ public class AbilityManager extends Manager
 
     public AbilityProvider addProvider(LivingEntity entity, AbilityProvider provider)
     {
+        if (provider == null) return null;
+
         AbilityProviderType type = provider.getType();
         UUID uuid = entity.getUniqueId();
 
@@ -117,6 +119,8 @@ public class AbilityManager extends Manager
 
     public boolean hasProvider(LivingEntity entity, AbilityProvider provider)
     {
+        if (provider == null) return false;
+
         return this.getProviders(entity).stream().anyMatch((prov) -> prov.getClass().equals(provider.getClass()));
     }
 

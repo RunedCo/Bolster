@@ -2,6 +2,7 @@ package co.runed.bolster.conditions;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.util.properties.Properties;
+import org.bukkit.ChatColor;
 
 public class AbilityInProgressCondition extends Condition
 {
@@ -24,5 +25,11 @@ public class AbilityInProgressCondition extends Condition
     public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
 
+    }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        return null;
     }
 }

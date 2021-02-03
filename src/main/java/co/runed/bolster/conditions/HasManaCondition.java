@@ -6,7 +6,6 @@ import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.EntityType;
 
 public class HasManaCondition extends TargetedCondition<BolsterEntity>
 {
@@ -39,13 +38,14 @@ public class HasManaCondition extends TargetedCondition<BolsterEntity>
     @Override
     public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
-        if (conditional instanceof Ability && ((Ability) conditional).getTrigger().isPassive()) return;
 
-        BolsterEntity entity = this.getTarget().get(properties);
+    }
 
-        if (entity.getType() == EntityType.PLAYER)
-        {
-            entity.sendActionBar(ChatColor.LIGHT_PURPLE + "Not enough mana!");
-        }
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        if (inverted) return ChatColor.LIGHT_PURPLE + "Too much mana!";
+
+        return ChatColor.LIGHT_PURPLE + "Not enough mana!";
     }
 }

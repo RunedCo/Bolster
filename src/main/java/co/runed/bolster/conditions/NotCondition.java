@@ -22,4 +22,10 @@ public class NotCondition extends Condition
     {
         this.condition.onFail(conditional, properties, !inverted);
     }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        return this.condition.getErrorMessage(conditional, properties, !inverted);
+    }
 }

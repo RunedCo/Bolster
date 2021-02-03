@@ -89,6 +89,11 @@ public class Team implements Listener
         return this.kills.get(entity.getUniqueId());
     }
 
+    public String getName()
+    {
+        return this.name;
+    }
+
     public int getTotalKills()
     {
         return this.totalKills;

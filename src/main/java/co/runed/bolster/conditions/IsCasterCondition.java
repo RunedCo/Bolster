@@ -23,4 +23,10 @@ public class IsCasterCondition extends TargetedCondition<BolsterEntity>
     {
 
     }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        return null;
+    }
 }

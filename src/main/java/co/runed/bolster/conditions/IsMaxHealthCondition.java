@@ -4,7 +4,6 @@ import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.EntityType;
 
 public class IsMaxHealthCondition extends TargetedCondition<BolsterEntity>
 {
@@ -25,13 +24,14 @@ public class IsMaxHealthCondition extends TargetedCondition<BolsterEntity>
     @Override
     public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
-        if (!conditional.shouldShowErrorMessages()) return;
 
-        BolsterEntity entity = this.getTarget().get(properties);
+    }
 
-        if (entity.getType() == EntityType.PLAYER)
-        {
-            entity.sendActionBar(ChatColor.RED + "You are already full health!");
-        }
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        if (inverted) return ChatColor.RED + "You are already at full health!";
+
+        return ChatColor.RED + "You are not at full health!";
     }
 }

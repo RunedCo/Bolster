@@ -3,6 +3,7 @@ package co.runed.bolster.conditions;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -25,5 +26,13 @@ public class IsSneakingCondition extends TargetedCondition<BolsterEntity>
     public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
 
+    }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        if(inverted) return ChatColor.RED + "You must not be sneaking to use this ability!";
+
+        return ChatColor.RED + "You must be sneaking to use this ability!";
     }
 }

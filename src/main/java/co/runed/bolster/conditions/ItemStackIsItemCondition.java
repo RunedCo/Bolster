@@ -34,4 +34,10 @@ public class ItemStackIsItemCondition extends Condition
     {
 
     }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        return null;
+    }
 }

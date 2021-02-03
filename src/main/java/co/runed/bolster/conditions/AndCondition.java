@@ -37,4 +37,10 @@ public class AndCondition extends Condition
     public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
     }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        return null;
+    }
 }

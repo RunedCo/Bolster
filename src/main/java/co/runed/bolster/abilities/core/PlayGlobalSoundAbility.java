@@ -9,7 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.EntityType;
 
-public class PlaySoundLocationAbility extends TargetedAbility<Location>
+public class PlayGlobalSoundAbility extends TargetedAbility<Location>
 {
     Sound sound;
     String soundId = null;
@@ -17,21 +17,21 @@ public class PlaySoundLocationAbility extends TargetedAbility<Location>
     float volume;
     float pitch;
 
-    public PlaySoundLocationAbility(Target<Location> target, Sound sound, SoundCategory soundCategory, float volume, float pitch)
+    public PlayGlobalSoundAbility(Target<Location> target, Sound sound, SoundCategory soundCategory, float volume, float pitch)
     {
         this(target, soundCategory, volume, pitch);
 
         this.sound = sound;
     }
 
-    public PlaySoundLocationAbility(Target<Location> target, String sound, SoundCategory soundCategory, float volume, float pitch)
+    public PlayGlobalSoundAbility(Target<Location> target, String sound, SoundCategory soundCategory, float volume, float pitch)
     {
         this(target, soundCategory, volume, pitch);
 
         this.soundId = sound;
     }
 
-    private PlaySoundLocationAbility(Target<Location> target, SoundCategory soundCategory, float volume, float pitch)
+    private PlayGlobalSoundAbility(Target<Location> target, SoundCategory soundCategory, float volume, float pitch)
     {
         super(target);
 

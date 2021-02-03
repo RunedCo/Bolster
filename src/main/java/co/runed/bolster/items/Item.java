@@ -137,7 +137,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
     public void addLore(List<String> lore)
     {
-        this.lore.addAll(lore);
+         this.lore.addAll(lore);
     }
 
     public List<String> getStatsLore()
@@ -448,9 +448,9 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     }
 
     @Override
-    public void destroy()
+    public void destroy(boolean trigger)
     {
-        super.destroy();
+        super.destroy(trigger);
 
         this.abilityCooldowns.clear();
         this.lore.clear();

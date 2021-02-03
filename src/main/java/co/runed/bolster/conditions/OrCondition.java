@@ -40,4 +40,11 @@ public class OrCondition extends Condition
             condition.onFail(conditional, properties, inverted);
         }
     }
+
+    // todo check which conditions failed and then run error message only for that condition
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        return null;
+    }
 }

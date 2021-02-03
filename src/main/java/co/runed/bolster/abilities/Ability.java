@@ -1,6 +1,7 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.conditions.*;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.ManaManager;
@@ -60,6 +61,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
 
     private final List<Condition.Data> conditions = new ArrayList<>();
     private final List<Cost> costs = new ArrayList<>();
+    private final List<Ability> children = new ArrayList<>();
 
     public Ability()
     {
@@ -366,6 +368,17 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
             if (!result)
             {
                 condition.onFail(this, properties, false);
+
+                if (this.shouldShowErrorMessages())
+                {
+                    String error = condition.getErrorMessage(this, properties, false);
+
+                    if (error != null)
+                    {
+                        this.getCaster().sendMessage(error);
+                        BolsterEntity.from(this.getCaster()).sendActionBar(error);
+                    }
+                }
 
                 return false;
             }

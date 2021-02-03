@@ -6,6 +6,7 @@ import co.runed.bolster.events.AbilityPlaceBlockEvent;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -35,5 +36,13 @@ public class CanPlaceBlockCondition extends TargetedCondition<Location>
     public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
 
+    }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        if (inverted) return null;
+
+        return ChatColor.RED + "You cannot place a block there!";
     }
 }

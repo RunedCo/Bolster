@@ -3,7 +3,9 @@ package co.runed.bolster.conditions;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.target.Target;
+import org.bukkit.ChatColor;
 
 public class HasStatusEffect extends TargetedCondition<BolsterEntity>
 {
@@ -26,5 +28,15 @@ public class HasStatusEffect extends TargetedCondition<BolsterEntity>
     public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
 
+    }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        StatusEffect status = Registries.STATUS_EFFECTS.get(this.statusEffect);
+
+        if (inverted) return ChatColor.RED + "You must not have " + status.getName() + " to use this ability!";
+
+        return ChatColor.RED + "You must have " + status.getName() + " to use this ability!";
     }
 }

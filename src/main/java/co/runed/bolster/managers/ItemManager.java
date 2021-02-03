@@ -88,31 +88,12 @@ public class ItemManager extends Manager
      */
     public Item createItem(LivingEntity entity, String id)
     {
-//        // CHECK IF ITEM INSTANCE ALREADY EXISTS FOR PLAYER
-//
-//        Item item = this.getItem(entity, id);
-//
-//        if (item != null)
-//        {
-//            item.setEntity(entity);
-//            item.rebuild();
-//            return item;
-//        }
-//
-//        // IF NOT CREATE NEW ONE
-//        item = Registries.ITEMS.get(id);
-//
-//        if (item == null) return null;
-//
-//        AbilityManager.getInstance().addProvider(entity, item);
-//
-//        item.setEntity(entity);
-//        item.rebuild();
-
         Item newItem = Registries.ITEMS.get(id);
         boolean existing = AbilityManager.getInstance().hasProvider(entity, newItem);
 
         Item item = (Item) AbilityManager.getInstance().addProvider(entity, newItem);
+
+        if (item == null) return null;
 
         item.setEntity(entity);
         item.rebuild();

@@ -21,6 +21,8 @@ public abstract class Condition
      */
     public abstract void onFail(IConditional conditional, Properties properties, boolean inverted);
 
+    public abstract String getErrorMessage(IConditional conditional, Properties properties, boolean inverted);
+
     public static class Data implements Comparable<Data>
     {
         public Condition condition;

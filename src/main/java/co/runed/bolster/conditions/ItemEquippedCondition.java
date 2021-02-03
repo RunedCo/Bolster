@@ -6,6 +6,7 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.Collection;
@@ -51,5 +52,11 @@ public class ItemEquippedCondition extends TargetedCondition<BolsterEntity>
     public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
 
+    }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        return null;
     }
 }

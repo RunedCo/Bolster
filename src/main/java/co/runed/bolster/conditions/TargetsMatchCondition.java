@@ -27,4 +27,10 @@ public class TargetsMatchCondition<T> extends TargetedCondition<T>
     {
 
     }
+
+    @Override
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
+        return null;
+    }
 }
