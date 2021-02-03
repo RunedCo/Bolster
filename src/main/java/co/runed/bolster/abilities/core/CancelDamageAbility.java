@@ -22,7 +22,11 @@ public class CancelDamageAbility extends Ability
 
             if (event instanceof EntityDamageEvent)
             {
-                ((EntityDamageEvent) event).setDamage(0);
+                EntityDamageEvent damageEvent = (EntityDamageEvent) event;
+
+                if (damageEvent.getCause() == EntityDamageEvent.DamageCause.VOID) return;
+
+                damageEvent.setDamage(0);
             }
         }
     }

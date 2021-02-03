@@ -3,8 +3,10 @@ package co.runed.bolster.items;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
+import co.runed.bolster.abilities.AbilityProviderType;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.conditions.ConditionPriority;
+import co.runed.bolster.conditions.HasItemCondition;
 import co.runed.bolster.conditions.ItemEquippedCondition;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
@@ -82,6 +84,12 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         this.setPower(config.getDouble(POWER_KEY, 0));
         this.setHealth(config.getDouble(HEALTH_KEY, 0));
         this.setDroppable(config.getBoolean(DROPPABLE_KEY, true));
+    }
+
+    @Override
+    public AbilityProviderType getType()
+    {
+        return AbilityProviderType.ITEM;
     }
 
     @Override
@@ -308,16 +316,28 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         this.categories.add(category);
     }
 
-    public void addAbility(AbilityTrigger trigger, Ability ability, boolean showCooldown, boolean addDefaultConditions)
+    public void addAbility(AbilityTrigger trigger, Ability ability, boolean showCooldown, boolean mustBeActive, boolean mustBeInInventory)
     {
         if (showCooldown) this.abilityCooldowns.put(ability, showCooldown);
 
-        if (addDefaultConditions)
+        if (mustBeActive)
         {
             ability.addCondition(new ItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()), ConditionPriority.HIGHEST);
         }
 
+        // todo make sure hasitemcondition doesn't break anything or lag server
+        // only run mustBeInInventory if not already running active (if an item is active it is always in inventory)
+        if (mustBeInInventory && !mustBeActive)
+        {
+            ability.addCondition(new HasItemCondition(Target.CASTER, this.getClass(), 1));
+        }
+
         super.addAbility(trigger, ability);
+    }
+
+    public void addAbility(AbilityTrigger trigger, Ability ability, boolean showCooldown, boolean mustBeActive)
+    {
+        this.addAbility(trigger, ability, showCooldown, mustBeActive, true);
     }
 
     public void addAbility(AbilityTrigger trigger, Ability ability, boolean showCooldown)

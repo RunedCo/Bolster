@@ -167,6 +167,7 @@ public class Bolster extends JavaPlugin implements Listener
         statusEffectRegistry.register("stun", StunStatusEffect.class);
         statusEffectRegistry.register("untargetable", UntargetableStatusEffect.class);
         statusEffectRegistry.register("knockback_resistance", KnockbackResistanceStatusEffect.class);
+        statusEffectRegistry.register("vulnerable", VulnerableStatusEffect.class);
     }
 
     private void registerCurrencies()

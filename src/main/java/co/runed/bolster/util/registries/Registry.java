@@ -3,6 +3,8 @@ package co.runed.bolster.util.registries;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ConfigUtil;
+import co.runed.bolster.util.ICategorised;
+import co.runed.bolster.util.IConfigurable;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -228,7 +230,7 @@ public class Registry<T extends IRegisterable>
 
             T value = this.create();
 
-            if (value != null) this.categories = value.getCategories();
+            if (value != null) this.categories = value instanceof ICategorised ? ((ICategorised)value).getCategories() : new ArrayList<>();
         }
 
         public T create()
@@ -250,9 +252,13 @@ public class Registry<T extends IRegisterable>
                 // HACKY CLONE
                 config = ConfigUtil.cloneSection(config);
 
-                value.setConfig(config);
+                if (value instanceof IConfigurable)
+                {
+                    IConfigurable configurable = (IConfigurable) value;
 
-                value.create(config);
+                    configurable.setConfig(config);
+                    configurable.create(config);
+                }
 
                 return value;
             }

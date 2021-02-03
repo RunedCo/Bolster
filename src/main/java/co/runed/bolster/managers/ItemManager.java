@@ -162,6 +162,8 @@ public class ItemManager extends Manager
     {
         Item item = this.createItem(player, itemId);
 
+        if (item == null) return null;
+
         ItemStack stack = item.toItemStack();
         stack.setAmount(amount);
 
@@ -173,14 +175,21 @@ public class ItemManager extends Manager
         properties.set(AbilityProperties.INVENTORY, inv);
         AbilityManager.getInstance().trigger(player, item, AbilityTrigger.GIVE_ITEM, properties);
 
-        // TODO PRIORITISE EXISTING STACK, THEN EMPTY HAND, THEN NEW STACK
-        if (inv.getItemInMainHand().getType() == Material.AIR && !inv.containsAtLeast(stack, 1))
-        {
-            inv.setItemInMainHand(stack);
-            return item;
-        }
+        int amountRemaining = amount;
+        int maxSize = stack.getMaxStackSize();
 
-        inv.addItem(stack);
+        while (amountRemaining > 0)
+        {
+            ItemStack itemStack = stack.clone();
+
+            int removedAmount = Math.min(amountRemaining, maxSize);
+
+            itemStack.setAmount(removedAmount);
+
+            inv.addItem(itemStack);
+
+            amountRemaining -= removedAmount;
+        }
 
         return item;
     }
@@ -300,6 +309,14 @@ public class ItemManager extends Manager
             if (!stack.equals(newStack))
                 playerInventory.setItem(i, newStack);
         }
+    }
+
+    public boolean areStacksSimilar(ItemStack stack1, ItemStack stack2)
+    {
+        String itemId1 = this.getItemIdFromStack(stack1);
+        String itemId2 = this.getItemIdFromStack(stack2);
+
+        return itemId1 != null && itemId2 != null ? itemId1.equals(itemId2) : stack1.isSimilar(stack2);
     }
 
     public boolean areStacksEqual(ItemStack stack1, ItemStack stack2)

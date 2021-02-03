@@ -2,6 +2,7 @@ package co.runed.bolster.classes;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
+import co.runed.bolster.abilities.AbilityProviderType;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.managers.ClassManager;
@@ -45,6 +46,12 @@ public abstract class BolsterClass extends AbilityProvider
                 entity.setHealth(this.maxHealth);
             }
         });
+    }
+
+    @Override
+    public AbilityProviderType getType()
+    {
+        return AbilityProviderType.CLASS;
     }
 
     public String getName()

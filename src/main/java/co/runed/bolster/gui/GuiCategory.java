@@ -84,6 +84,7 @@ public class GuiCategory extends Gui
     {
         int stackAmount = info.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || info.getAction() == InventoryAction.DROP_ALL_SLOT ? 64 : 1;
         ItemStack stack = info.getClickedSlot().getItem(player);
+        stackAmount = Math.min(stackAmount, stack.getMaxStackSize());
         String itemId = ItemManager.getInstance().getItemIdFromStack(stack);
 
         if (info.getAction() == InventoryAction.DROP_ALL_SLOT || info.getAction() == InventoryAction.DROP_ONE_SLOT)

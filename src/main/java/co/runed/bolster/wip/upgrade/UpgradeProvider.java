@@ -2,6 +2,7 @@ package co.runed.bolster.wip.upgrade;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
+import co.runed.bolster.abilities.AbilityProviderType;
 
 public class UpgradeProvider extends AbilityProvider
 {
@@ -22,6 +23,12 @@ public class UpgradeProvider extends AbilityProvider
     public String getDescription()
     {
         return null;
+    }
+
+    @Override
+    public AbilityProviderType getType()
+    {
+        return AbilityProviderType.UPGRADE;
     }
 
     @Override

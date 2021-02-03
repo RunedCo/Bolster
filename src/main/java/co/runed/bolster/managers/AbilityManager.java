@@ -1,11 +1,7 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
-import co.runed.bolster.abilities.Ability;
-import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.abilities.AbilityProvider;
-import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.abilities.*;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.listeners.*;
@@ -20,13 +16,13 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.projectiles.ProjectileSource;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
 public class AbilityManager extends Manager
 {
-    Map<UUID, List<AbilityData>> abilities = new HashMap<>();
+    Map<UUID, Map<AbilityProviderType, List<AbilityProvider>>> providers = new HashMap<>();
+    //Map<UUID, List<AbilityData>> abilities = new HashMap<>();
 
     private static AbilityManager _instance;
 
@@ -59,7 +55,66 @@ public class AbilityManager extends Manager
         Bukkit.getPluginManager().registerEvents(new PlayerConnectListener(), plugin);
     }
 
-    public Ability add(LivingEntity entity, AbilityTrigger trigger, Ability ability)
+    public AbilityProvider addProvider(LivingEntity entity, AbilityProvider provider)
+    {
+        AbilityProviderType type = provider.getType();
+        UUID uuid = entity.getUniqueId();
+
+        this.providers.putIfAbsent(uuid, new HashMap<>());
+        this.providers.get(uuid).putIfAbsent(type, new ArrayList<>());
+        List<AbilityProvider> provList = this.providers.get(uuid).get(type);
+
+        boolean exists = false;
+        for (AbilityProvider existing : provList)
+        {
+            // check if existing exists and is enabled, if not enable
+            if (existing.getClass().equals(provider.getClass()))
+            {
+                existing.setEnabled(true);
+                provider = existing;
+
+                exists = true;
+
+                continue;
+            }
+
+            // check if type is solo - if so disable all others
+            if (type.isSolo())
+            {
+                existing.setEnabled(false);
+            }
+        }
+
+        if (!exists)
+        {
+            provList.add(provider);
+            provider.setEnabled(true);
+        }
+
+        return provider;
+    }
+
+    public void removeProvider(LivingEntity entity, AbilityProvider provider)
+    {
+        AbilityProviderType type = provider.getType();
+        UUID uuid = entity.getUniqueId();
+
+        if (!this.providers.containsKey(uuid)) return;
+        if (!this.providers.get(uuid).containsKey(type)) return;
+
+        List<AbilityProvider> provList = this.providers.get(uuid).get(type);
+
+        for (AbilityProvider existing : provList)
+        {
+            // check if existing exists and is enabled, if not enable
+            if (existing.getClass().equals(provider.getClass()))
+            {
+                existing.setEnabled(false);
+            }
+        }
+    }
+
+    private Ability add(LivingEntity entity, AbilityTrigger trigger, Ability ability)
     {
         this.abilities.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
 
@@ -74,14 +129,14 @@ public class AbilityManager extends Manager
         return ability;
     }
 
-    public void remove(LivingEntity entity, Ability ability)
+    private void remove(LivingEntity entity, Ability ability)
     {
         if (entity == null) return;
         if (!this.abilities.containsKey(entity.getUniqueId())) return;
 
-        List<AbilityData> abilities = this.abilities.get(entity.getUniqueId());
+        List<AbilityProvider.AbilityData> abilities = this.abilities.get(entity.getUniqueId());
 
-        Optional<AbilityData> filtered = abilities.stream().filter((data) -> data.ability == ability).findFirst();
+        Optional<AbilityProviderNew.AbilityData> filtered = abilities.stream().filter((data) -> data.ability == ability).findFirst();
 
         if (!filtered.isPresent()) return;
 
@@ -197,6 +252,7 @@ public class AbilityManager extends Manager
             {
                 Properties onCastProperties = new Properties(properties);
                 onCastProperties.set(AbilityProperties.ABILITY, ability);
+                
                 this.trigger(entity, provider, AbilityTrigger.ON_CAST_ABILITY, onCastProperties);
             }
 
@@ -207,7 +263,9 @@ public class AbilityManager extends Manager
         }
 
         if (trigger != AbilityTrigger.ALL && trigger != AbilityTrigger.TICK)
+        {
             this.trigger(entity, provider, AbilityTrigger.ALL, properties);
+        }
     }
 
     @EventHandler
@@ -302,57 +360,6 @@ public class AbilityManager extends Manager
             if (!ability2.isInProgress()) continue;
 
             if (ability2.isCancelledByCast()) ability2.cancel();
-        }
-    }
-
-    public static class AbilityData
-    {
-        AbilityTrigger trigger;
-        Ability ability;
-        BukkitTask task = null;
-
-        public AbilityData(AbilityTrigger trigger, Ability ability)
-        {
-            this.trigger = trigger;
-            this.ability = ability;
-
-            if (this.trigger == AbilityTrigger.TICK)
-            {
-                this.task = Bukkit.getServer().getScheduler().runTaskTimer(Bolster.getInstance(), this::run, 0L, 1L);
-            }
-        }
-
-        protected void run()
-        {
-            if (ability.getCaster() == null) return;
-            if (ability.isOnCooldown()) return;
-
-            Properties properties = new Properties();
-
-            AbilityManager.getInstance().trigger(ability.getCaster(), this.trigger, properties);
-        }
-
-        public void destroy()
-        {
-            ability.destroy();
-
-            if (this.task != null)
-            {
-                this.task.cancel();
-            }
-        }
-
-        @Override
-        public boolean equals(Object obj)
-        {
-            if (obj instanceof AbilityData)
-            {
-                AbilityData data = (AbilityData) obj;
-
-                return data.ability.equals(this.ability) && data.trigger.equals(this.trigger);
-            }
-
-            return super.equals(obj);
         }
     }
 
