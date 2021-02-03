@@ -3,6 +3,7 @@ package co.runed.bolster.game;
 import co.runed.bolster.events.GameModePausedEvent;
 import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
+import co.runed.bolster.util.IConfigurable;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.IRegisterable;
@@ -10,7 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
-public abstract class GameMode extends Manager implements IRegisterable
+public abstract class GameMode extends Manager implements IRegisterable, IConfigurable
 {
     public static final Property<Double> XP_MULTIPLER = new Property<>("xp_multiplier", 1.0);
     public static final Property<Double> GOLD_MULTIPLER = new Property<>("gold_multiplier", 1.0);

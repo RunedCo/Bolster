@@ -62,10 +62,4 @@ public class Property<T> implements IRegisterable
     {
         return null;
     }
-
-    @Override
-    public void create(ConfigurationSection config)
-    {
-
-    }
 }

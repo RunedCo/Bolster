@@ -18,6 +18,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AbilityManager extends Manager
 {
@@ -70,9 +71,7 @@ public class AbilityManager extends Manager
             // check if existing exists and is enabled, if not enable
             if (existing.getClass().equals(provider.getClass()))
             {
-                existing.setEnabled(true);
                 provider = existing;
-
                 exists = true;
 
                 continue;
@@ -88,8 +87,10 @@ public class AbilityManager extends Manager
         if (!exists)
         {
             provList.add(provider);
-            provider.setEnabled(true);
         }
+
+        provider.setEnabled(true);
+        provider.setEntity(entity);
 
         return provider;
     }
@@ -114,69 +115,62 @@ public class AbilityManager extends Manager
         }
     }
 
-    private Ability add(LivingEntity entity, AbilityTrigger trigger, Ability ability)
+    public boolean hasProvider(LivingEntity entity, AbilityProvider provider)
     {
-        this.abilities.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
-
-        AbilityData abilityData = new AbilityData(trigger, ability);
-
-        List<AbilityData> datas = this.abilities.get(entity.getUniqueId());
-
-        if (!datas.contains(abilityData)) datas.add(abilityData);
-
-        ability.setTrigger(trigger);
-
-        return ability;
+        return this.getProviders(entity).stream().anyMatch((prov) -> prov.getClass().equals(provider.getClass()));
     }
 
-    private void remove(LivingEntity entity, Ability ability)
+    public boolean hasExactProvider(LivingEntity entity, AbilityProvider provider)
     {
-        if (entity == null) return;
-        if (!this.abilities.containsKey(entity.getUniqueId())) return;
+        return this.getProviders(entity).contains(provider);
+    }
 
-        List<AbilityProvider.AbilityData> abilities = this.abilities.get(entity.getUniqueId());
+    public List<AbilityProvider> getProviders(LivingEntity entity)
+    {
+        UUID uuid = entity.getUniqueId();
 
-        Optional<AbilityProviderNew.AbilityData> filtered = abilities.stream().filter((data) -> data.ability == ability).findFirst();
+        List<AbilityProvider> providerList = new ArrayList<>();
 
-        if (!filtered.isPresent()) return;
+        if (!this.providers.containsKey(uuid)) return providerList;
 
-        AbilityData data = filtered.get();
+        for (List<AbilityProvider> list : this.providers.get(uuid).values())
+        {
+            providerList.addAll(list);
+        }
 
-        abilities.remove(data);
+        return providerList;
+    }
 
-        data.destroy();
+    public List<AbilityProvider> getProviders(LivingEntity entity, AbilityProviderType type)
+    {
+        return this.getProviders(entity).stream().filter((provider) -> provider.getType() == type).collect(Collectors.toList());
+    }
+
+    public List<AbilityProvider.AbilityData> getAbilityData(LivingEntity entity)
+    {
+        List<AbilityProvider.AbilityData> abilityList = new ArrayList<>();
+
+        for (AbilityProvider provider : this.getProviders(entity))
+        {
+            abilityList.addAll(provider.getAbilities());
+        }
+
+        return abilityList;
+    }
+
+    public List<AbilityProvider.AbilityData> getAbilityData(LivingEntity entity, AbilityTrigger trigger)
+    {
+        return this.getAbilityData(entity).stream().filter((data) -> data.trigger == trigger).collect(Collectors.toList());
     }
 
     public List<Ability> getAbilities(LivingEntity entity)
     {
-        List<Ability> abilityList = new ArrayList<>();
-
-        if (!this.abilities.containsKey(entity.getUniqueId())) return abilityList;
-
-        List<AbilityData> abilities = this.abilities.get(entity.getUniqueId());
-
-        for (AbilityData data : abilities)
-        {
-            abilityList.add(data.ability);
-        }
-
-        return abilityList;
+        return this.getAbilityData(entity).stream().map((data) -> data.ability).collect(Collectors.toList());
     }
 
     public List<Ability> getAbilities(LivingEntity entity, AbilityTrigger trigger)
     {
-        List<Ability> abilityList = new ArrayList<>();
-
-        if (!this.abilities.containsKey(entity.getUniqueId())) return abilityList;
-
-        List<AbilityData> abilities = this.abilities.get(entity.getUniqueId());
-
-        for (AbilityData data : abilities)
-        {
-            if (data.trigger == trigger) abilityList.add(data.ability);
-        }
-
-        return abilityList;
+        return this.getAbilityData(entity, trigger).stream().map((data) -> data.ability).collect(Collectors.toList());
     }
 
     public boolean hasAbilities(LivingEntity entity, AbilityTrigger trigger)
@@ -186,20 +180,27 @@ public class AbilityManager extends Manager
 
     public void reset(LivingEntity entity)
     {
-        List<AbilityData> abilityData = this.abilities.get(entity.getUniqueId());
-
-        for (AbilityData data : abilityData)
+        for (AbilityProvider provider : this.getProviders(entity))
         {
-            data.destroy();
+            provider.destroy();
         }
 
-        this.abilities.remove(entity.getUniqueId());
-        this.abilities.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
+        this.providers.remove(entity.getUniqueId());
+    }
+
+    public void reset(LivingEntity entity, AbilityProviderType type)
+    {
+        for (AbilityProvider provider : this.getProviders(entity, type))
+        {
+            provider.destroy();
+        }
+
+        if (this.providers.containsKey(entity.getUniqueId())) this.providers.get(entity.getUniqueId()).remove(type);
     }
 
     public void resetAll()
     {
-        for (UUID uuid : this.abilities.keySet())
+        for (UUID uuid : this.providers.keySet())
         {
             Entity entity = Bukkit.getEntity(uuid);
 
@@ -252,7 +253,7 @@ public class AbilityManager extends Manager
             {
                 Properties onCastProperties = new Properties(properties);
                 onCastProperties.set(AbilityProperties.ABILITY, ability);
-                
+
                 this.trigger(entity, provider, AbilityTrigger.ON_CAST_ABILITY, onCastProperties);
             }
 

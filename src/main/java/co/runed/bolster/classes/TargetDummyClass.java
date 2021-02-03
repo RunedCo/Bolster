@@ -37,6 +37,18 @@ public class TargetDummyClass extends BolsterClass
         this.setIcon(new ItemStack(Material.ARMOR_STAND));
     }
 
+    @Override
+    public void onEnable()
+    {
+
+    }
+
+    @Override
+    public void onDisable()
+    {
+
+    }
+
     public static void summon(Location location)
     {
         ArmorStand entity = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);

@@ -93,6 +93,18 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     }
 
     @Override
+    public void onEnable()
+    {
+
+    }
+
+    @Override
+    public void onDisable()
+    {
+
+    }
+
+    @Override
     public String getId()
     {
         return Registries.ITEMS.getId(this);

@@ -1,12 +1,14 @@
 package co.runed.bolster.util.currency;
 
+import co.runed.bolster.util.ICategorised;
+import co.runed.bolster.util.IConfigurable;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-public class Currency implements IRegisterable
+public class Currency implements IRegisterable, ICategorised, IConfigurable
 {
     String id;
     String name;

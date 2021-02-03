@@ -2,6 +2,7 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
+import co.runed.bolster.abilities.AbilityProviderType;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
@@ -27,14 +28,11 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class ItemManager extends Manager
 {
-    private final HashMap<UUID, List<Item>> entityItems = new HashMap<>();
-
     private static ItemManager _instance;
 
     public ItemManager(Plugin plugin)
@@ -61,9 +59,7 @@ public class ItemManager extends Manager
      */
     public Item getItem(LivingEntity entity, String id)
     {
-        this.entityItems.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
-
-        List<Item> items = this.entityItems.get(entity.getUniqueId());
+        List<Item> items = this.getItems(entity);
 
         for (Item item : items)
         {
@@ -92,32 +88,36 @@ public class ItemManager extends Manager
      */
     public Item createItem(LivingEntity entity, String id)
     {
-        this.entityItems.putIfAbsent(entity.getUniqueId(), new ArrayList<>());
+//        // CHECK IF ITEM INSTANCE ALREADY EXISTS FOR PLAYER
+//
+//        Item item = this.getItem(entity, id);
+//
+//        if (item != null)
+//        {
+//            item.setEntity(entity);
+//            item.rebuild();
+//            return item;
+//        }
+//
+//        // IF NOT CREATE NEW ONE
+//        item = Registries.ITEMS.get(id);
+//
+//        if (item == null) return null;
+//
+//        AbilityManager.getInstance().addProvider(entity, item);
+//
+//        item.setEntity(entity);
+//        item.rebuild();
 
-        List<Item> items = this.entityItems.get(entity.getUniqueId());
+        Item newItem = Registries.ITEMS.get(id);
+        boolean existing = AbilityManager.getInstance().hasProvider(entity, newItem);
 
-        // CHECK IF ITEM INSTANCE ALREADY EXISTS FOR PLAYER
-
-        Item item = this.getItem(entity, id);
-
-        if (item != null)
-        {
-            item.setEntity(entity);
-            item.rebuild();
-            return item;
-        }
-
-        // IF NOT CREATE NEW ONE
-        item = Registries.ITEMS.get(id);
-
-        if (item == null) return null;
-
-        items.add(item);
+        Item item = (Item) AbilityManager.getInstance().addProvider(entity, newItem);
 
         item.setEntity(entity);
         item.rebuild();
 
-        AbilityManager.getInstance().trigger(entity, item, AbilityTrigger.CREATE_ITEM, new Properties());
+        if (!existing) AbilityManager.getInstance().trigger(entity, item, AbilityTrigger.CREATE_ITEM, new Properties());
 
         return item;
     }
@@ -335,11 +335,11 @@ public class ItemManager extends Manager
      */
     public void clearItem(LivingEntity entity, Item item)
     {
-        if (!this.entityItems.containsKey(entity.getUniqueId())) return;
+        if (!AbilityManager.getInstance().hasExactProvider(entity, item)) return;
 
         item.destroy();
 
-        this.entityItems.get(entity.getUniqueId()).remove(item);
+        AbilityManager.getInstance().removeProvider(entity, item);
     }
 
     /**
@@ -349,6 +349,8 @@ public class ItemManager extends Manager
      */
     public void clearItems(LivingEntity entity)
     {
+        AbilityManager.getInstance().reset(entity, AbilityProviderType.ITEM);
+
         List<Item> items = new ArrayList<>(this.getItems(entity));
 
         for (Item item : items)
@@ -377,9 +379,7 @@ public class ItemManager extends Manager
      */
     public List<Item> getItems(LivingEntity entity)
     {
-        if (!this.entityItems.containsKey(entity.getUniqueId())) return new ArrayList<>();
-
-        return this.entityItems.get(entity.getUniqueId());
+        return AbilityManager.getInstance().getProviders(entity, AbilityProviderType.ITEM).stream().map((prov) -> (Item) prov).collect(Collectors.toList());
     }
 
     /**
@@ -450,7 +450,8 @@ public class ItemManager extends Manager
      */
     public void reset()
     {
-        this.entityItems.clear();
+        // TODO
+        //this.entityItems.clear();
     }
 
     @EventHandler
@@ -525,7 +526,7 @@ public class ItemManager extends Manager
 
         this.clearItems(player);
 
-        this.entityItems.remove(player.getUniqueId());
+        AbilityManager.getInstance().reset(event.getEntity(), AbilityProviderType.ITEM);
     }
 
     @EventHandler

@@ -32,6 +32,18 @@ public class UpgradeProvider extends AbilityProvider
     }
 
     @Override
+    public void onEnable()
+    {
+
+    }
+
+    @Override
+    public void onDisable()
+    {
+
+    }
+
+    @Override
     public void onCastAbility(Ability ability, Boolean success)
     {
 

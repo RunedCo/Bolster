@@ -6,6 +6,7 @@ import co.runed.bolster.abilities.AbilityProviderType;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.managers.ClassManager;
+import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.managers.UpgradeManager;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
@@ -38,14 +39,6 @@ public abstract class BolsterClass extends AbilityProvider
     public void create(ConfigurationSection config)
     {
         super.create(config);
-
-        this.addAbility(AbilityTrigger.SET_CLASS, (entity, props) -> {
-            if (this.maxHealth > 0)
-            {
-                entity.setMaxHealth(this.maxHealth);
-                entity.setHealth(this.maxHealth);
-            }
-        });
     }
 
     @Override
@@ -143,6 +136,23 @@ public abstract class BolsterClass extends AbilityProvider
     }
 
     @Override
+    public void onEnable()
+    {
+        if (this.maxHealth > 0)
+        {
+            this.getEntity().setMaxHealth(this.maxHealth);
+            this.getEntity().setHealth(this.maxHealth);
+        }
+    }
+
+    @Override
+    public void onDisable()
+    {
+        // clear status effects
+        StatusEffectManager.getInstance().clearStatusEffects(this.getEntity());
+    }
+
+    @Override
     public void onCastAbility(Ability ability, Boolean success)
     {
 
@@ -153,6 +163,7 @@ public abstract class BolsterClass extends AbilityProvider
     {
 
     }
+
 
     public void addUpgrade(Upgrade upgrade)
     {

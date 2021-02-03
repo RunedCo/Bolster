@@ -156,12 +156,6 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
         return this.getName();
     }
 
-    @Override
-    public void create(ConfigurationSection config)
-    {
-
-    }
-
     public void addPotionEffect(PotionEffectType type, int amplifier, boolean ambient, boolean particles, boolean icon)
     {
         this.addPotionEffect(type, (int) (this.getDuration() * 20), amplifier, ambient, particles, icon);

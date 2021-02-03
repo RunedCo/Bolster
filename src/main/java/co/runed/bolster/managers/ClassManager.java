@@ -1,6 +1,8 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.abilities.AbilityProvider;
+import co.runed.bolster.abilities.AbilityProviderType;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.registries.Registries;
@@ -19,13 +21,11 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.List;
 
 public class ClassManager extends Manager
 {
-    private final Map<UUID, BolsterClass> bolsterClasses = new HashMap<>();
+    //private final Map<UUID, BolsterClass> bolsterClasses = new HashMap<>();
 
     public static final NamespacedKey CLASS_KEY = new NamespacedKey("bolster", "class");
 
@@ -46,19 +46,15 @@ public class ClassManager extends Manager
      */
     public void setClass(LivingEntity entity, BolsterClass bolsterClass)
     {
-        UUID uuid = entity.getUniqueId();
-
-        if (this.bolsterClasses.containsKey(uuid))
+        if (bolsterClass == null)
         {
-            BolsterClass existingClass = this.bolsterClasses.get(uuid);
-
-            if (existingClass != bolsterClass && existingClass != null) existingClass.destroy();
+            AbilityManager.getInstance().reset(entity, AbilityProviderType.CLASS);
         }
-
-        this.bolsterClasses.put(uuid, bolsterClass);
 
         if (bolsterClass != null && bolsterClass.getEntity() != entity)
         {
+            bolsterClass = (BolsterClass) AbilityManager.getInstance().addProvider(entity, bolsterClass);
+
             if (!bolsterClass.isConfigSet())
             {
                 bolsterClass.setConfig(Registries.CLASSES.getConfig(bolsterClass.getId()));
@@ -77,11 +73,9 @@ public class ClassManager extends Manager
      */
     public BolsterClass getClass(LivingEntity entity)
     {
-        UUID uuid = entity.getUniqueId();
+        List<AbilityProvider> providers = AbilityManager.getInstance().getProviders(entity, AbilityProviderType.CLASS);
 
-        if (!this.bolsterClasses.containsKey(uuid)) return null;
-
-        return this.bolsterClasses.get(uuid);
+        return (BolsterClass) providers.stream().filter(prov -> prov instanceof BolsterClass && prov.isEnabled()).findFirst().orElse(null);
     }
 
     /**

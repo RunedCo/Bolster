@@ -141,7 +141,7 @@ public abstract class LevelableItem extends Item
             PlayerManager.getInstance().getPlayerData(player).setItemLevel(this.getId(), this.level);
         }
 
-        if (this.level != previousLevel) this.markDirty();
+        if (this.level != previousLevel) this.setDirty();
     }
 
     public int getLevel()

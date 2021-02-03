@@ -1,10 +1,11 @@
 package co.runed.bolster.items;
 
+import co.runed.bolster.util.IConfigurable;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class ItemSkin implements IRegisterable
+public class ItemSkin implements IRegisterable, IConfigurable
 {
     private String id;
     private String name;

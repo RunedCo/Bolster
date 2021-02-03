@@ -1,5 +1,6 @@
 package co.runed.bolster.abilities;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.AbilityManager;
@@ -11,12 +12,15 @@ import co.runed.bolster.util.json.JsonExclude;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.wip.traits.TraitProvider;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 /**
@@ -25,16 +29,19 @@ import java.util.function.BiConsumer;
  */
 public abstract class AbilityProvider extends TraitProvider implements IRegisterable, IConfigurable, ICategorised
 {
-    private final List<AbilityData> abilities = new ArrayList<>();
+    private final List<AbilityProvider.AbilityData> abilities = new ArrayList<>();
     private LivingEntity entity;
-    LivingEntity parent;
+    private LivingEntity parent;
     private ConfigurationSection config;
     private boolean enabled = true;
-    private boolean persistent;
     @JsonExclude
     private boolean dirty;
 
     public abstract AbilityProviderType getType();
+
+    public abstract void onEnable();
+
+    public abstract void onDisable();
 
     public abstract void onCastAbility(Ability ability, Boolean success);
 
@@ -53,6 +60,12 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     }
 
     @Override
+    public boolean isConfigSet()
+    {
+        return this.config != null;
+    }
+
+    @Override
     public void create(ConfigurationSection config)
     {
         ConfigUtil.parseVariables(config);
@@ -60,22 +73,18 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
 
     public void setEnabled(boolean enabled)
     {
+        if (this.enabled != enabled && this.getEntity() != null)
+        {
+            if (!enabled) this.onDisable();
+            if (enabled) this.onEnable();
+        }
+
         this.enabled = enabled;
     }
 
     public boolean isEnabled()
     {
         return enabled;
-    }
-
-    public void setPersistent(boolean persistent)
-    {
-        this.persistent = persistent;
-    }
-
-    public boolean isPersistent()
-    {
-        return persistent;
     }
 
     public LivingEntity getEntity()
@@ -91,10 +100,13 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
 
         this.entity = entity;
 
-        this.markDirty();
+        this.setDirty();
 
         if (firstTime)
         {
+            // FIXME move to better place
+            this.onEnable();
+
             this.rebuild();
 
             AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.CREATE, new Properties());
@@ -110,7 +122,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     {
         this.parent = parent;
 
-        this.markDirty();
+        this.setDirty();
     }
 
     public void addAbility(AbilityTrigger trigger, BiConsumer<LivingEntity, Properties> lambda)
@@ -120,18 +132,28 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
 
     public void addAbility(AbilityTrigger trigger, Ability ability)
     {
-        this.addAbility(trigger, ability, 0);
-    }
-
-    public void addAbility(AbilityTrigger trigger, Ability ability, int priority)
-    {
         ability.setAbilityProvider(this);
+        ability.setTrigger(trigger);
 
-        AbilityData data = new AbilityData(trigger, ability);
+        AbilityProvider.AbilityData data = new AbilityProvider.AbilityData(trigger, ability);
 
         this.abilities.add(data);
 
-        ability.setId(this.abilities.size() + "");
+        // TODO
+        //ability.setId(this.abilities.size() + "");
+    }
+
+    public void removeAbility(Ability ability)
+    {
+        Optional<AbilityData> filtered = abilities.stream().filter((data) -> data.ability == ability).findFirst();
+
+        if (!filtered.isPresent()) return;
+
+        AbilityProvider.AbilityData data = filtered.get();
+
+        abilities.remove(data);
+
+        data.destroy();
     }
 
     public boolean hasAbility(AbilityTrigger trigger)
@@ -139,19 +161,19 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         return this.abilities.stream().anyMatch((info) -> info.trigger.equals(trigger));
     }
 
+    public List<AbilityProvider.AbilityData> getAbilities()
+    {
+        return this.abilities;
+    }
+
     public boolean isDirty()
     {
         return this.dirty;
     }
 
-    public void markDirty()
+    public void setDirty()
     {
         this.dirty = true;
-    }
-
-    public boolean isConfigSet()
-    {
-        return this.config != null;
     }
 
     @Override
@@ -159,7 +181,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     {
         List<String> abilityDescriptions = new ArrayList<>();
 
-        for (AbilityData abilityData : this.getAbilities())
+        for (AbilityProvider.AbilityData abilityData : this.getAbilities())
         {
             Ability ability = abilityData.ability;
 
@@ -185,11 +207,6 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         return StringUtil.join("\n", abilityDescriptions);
     }
 
-    public List<AbilityData> getAbilities()
-    {
-        return this.abilities;
-    }
-
     public boolean rebuild()
     {
         if (!this.isDirty()) return false;
@@ -203,14 +220,15 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         {
             BolsterEntity.from(entity).addTraitProvider(this);
 
-            for (AbilityData abilityData : this.abilities)
+            for (AbilityProvider.AbilityData abilityData : this.abilities)
             {
                 Ability ability = abilityData.ability;
 
                 if (ability.getCaster() == entity) continue;
 
                 ability.setCaster(entity);
-                AbilityManager.getInstance().add(entity, abilityData.trigger, ability);
+                // TODO
+                // AbilityManager.getInstance().add(entity, abilityData.trigger, ability);
             }
         }
 
@@ -222,19 +240,25 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         this.destroy(true);
     }
 
+    // FIXME this whole destroying every time the entity is set is a pain in the ass and needs work
     public void destroy(boolean trigger)
     {
         if (this.getEntity() != null)
         {
             if (trigger)
+            {
+                this.onDisable();
+
                 AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.DESTROY, new Properties());
+            }
 
             BolsterEntity.from(this.getEntity()).removeTraitProvider(this);
         }
 
-        for (AbilityData abilityData : this.abilities)
+        List<AbilityData> abilityList = new ArrayList<>(this.abilities);
+        for (AbilityProvider.AbilityData abilityData : abilityList)
         {
-            AbilityManager.getInstance().remove(this.getEntity(), abilityData.ability);
+            this.removeAbility(abilityData.ability);
         }
 
         this.abilities.clear();
@@ -244,11 +268,50 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     {
         public AbilityTrigger trigger;
         public Ability ability;
+        public BukkitTask task = null;
 
         public AbilityData(AbilityTrigger trigger, Ability ability)
         {
             this.trigger = trigger;
             this.ability = ability;
+
+            if (this.trigger == AbilityTrigger.TICK)
+            {
+                this.task = Bukkit.getServer().getScheduler().runTaskTimer(Bolster.getInstance(), this::run, 0L, 1L);
+            }
+        }
+
+        protected void run()
+        {
+            if (ability.getCaster() == null) return;
+            if (ability.isOnCooldown()) return;
+
+            Properties properties = new Properties();
+
+            AbilityManager.getInstance().trigger(ability.getCaster(), this.trigger, properties);
+        }
+
+        public void destroy()
+        {
+            ability.destroy();
+
+            if (this.task != null)
+            {
+                this.task.cancel();
+            }
+        }
+
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (obj instanceof AbilityProvider.AbilityData)
+            {
+                AbilityProvider.AbilityData data = (AbilityProvider.AbilityData) obj;
+
+                return data.ability.equals(this.ability) && data.trigger.equals(this.trigger);
+            }
+
+            return super.equals(obj);
         }
     }
 }
