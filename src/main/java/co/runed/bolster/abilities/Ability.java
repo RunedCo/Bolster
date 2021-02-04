@@ -2,10 +2,12 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.abilities.base.LambdaAbility;
 import co.runed.bolster.conditions.*;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.TaskUtil;
+import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
@@ -25,8 +27,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BiConsumer;
 
-public abstract class Ability implements Listener, IConditional, ICooldownSource
+public abstract class Ability implements Listener, IConditional<Ability>, ICooldownSource<Ability>
 {
     private static final long CAST_BAR_UPDATE_TICKS = 5L;
 
@@ -76,14 +79,18 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return name;
     }
 
-    public void setName(String name)
+    public Ability setName(String name)
     {
         this.name = name;
+
+        return this;
     }
 
-    public void setId(String id)
+    public Ability setId(String id)
     {
         this.id = id;
+
+        return this;
     }
 
     public String getId()
@@ -98,9 +105,11 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return this.description;
     }
 
-    public void setDescription(String description)
+    public Ability setDescription(String description)
     {
         this.description = description;
+
+        return this;
     }
 
     public LivingEntity getCaster()
@@ -118,14 +127,30 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return this.manaCost;
     }
 
-    public void setManaCost(float manaCost)
+    public Ability setManaCost(float manaCost)
     {
         this.manaCost = manaCost;
+
+        return this;
     }
 
-    public void addCost(Cost cost)
+    public Ability addCost(Cost cost)
     {
         this.costs.add(cost);
+
+        return this;
+    }
+
+    public Ability addAbility(BiConsumer<LivingEntity, Properties> func)
+    {
+        return this.addAbility(new LambdaAbility(func));
+    }
+
+    public Ability addAbility(Ability ability)
+    {
+        this.children.add(ability);
+
+        return this;
     }
 
     public AbilityTrigger getTrigger()
@@ -133,15 +158,24 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return this.trigger;
     }
 
-    public void setTrigger(AbilityTrigger trigger)
+    public Ability setTrigger(AbilityTrigger trigger)
     {
         this.trigger = trigger;
+
+        for (Ability ability : this.children)
+        {
+            ability.setTrigger(trigger);
+        }
+
+        return this;
     }
 
     @Override
-    public void addCondition(Condition condition, ConditionPriority priority)
+    public Ability addCondition(Condition condition, ConditionPriority priority)
     {
         this.conditions.add(new Condition.Data(condition, priority));
+
+        return this;
     }
 
     public Duration getDuration()
@@ -149,11 +183,13 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return this.duration;
     }
 
-    public void setDuration(Duration duration)
+    public Ability setDuration(Duration duration)
     {
-        if (duration == null) return;
+        if (duration == null) return this;
 
         this.duration = duration;
+
+        return this;
     }
 
     public boolean shouldCancelEvent()
@@ -161,15 +197,19 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return cancelEventOnCast;
     }
 
-    public void setShouldCancelEvent(boolean cancelEventOnCast)
+    public Ability setShouldCancelEvent(boolean cancelEventOnCast)
     {
         this.cancelEventOnCast = cancelEventOnCast;
+
+        return this;
     }
 
     @Override
-    public void setShouldShowErrorMessages(boolean showErrors)
+    public Ability setShouldShowErrorMessages(boolean showErrors)
     {
         this.showErrors = showErrors;
+
+        return this;
     }
 
     @Override
@@ -183,14 +223,26 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return this.enabled;
     }
 
-    public void setEnabled(boolean enabled)
+    public Ability setEnabled(boolean enabled)
     {
         this.enabled = enabled;
+
+        return this;
     }
 
     public boolean isInProgress()
     {
-        return this.inProgress;
+        if (this.inProgress) return true;
+
+        for (Ability ability : this.children)
+        {
+            if (ability.isInProgress())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void setInProgress(boolean inProgress)
@@ -198,9 +250,11 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         this.inProgress = inProgress;
     }
 
-    public void setCastTime(double castTime)
+    public Ability setCastTime(double castTime)
     {
         this.castTime = castTime;
+
+        return this;
     }
 
     public double getCastTime()
@@ -208,9 +262,11 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return castTime;
     }
 
-    public void setPriority(int priority)
+    public Ability setPriority(int priority)
     {
         this.priority = priority;
+
+        return this;
     }
 
     public int getPriority()
@@ -218,9 +274,11 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return priority;
     }
 
-    public void setCharges(int charges)
+    public Ability setCharges(int charges)
     {
         this.charges = charges;
+
+        return this;
     }
 
     public int getCharges()
@@ -228,9 +286,11 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return charges;
     }
 
-    public void setAvailableCharges(int availableCharges)
+    public Ability setAvailableCharges(int availableCharges)
     {
         this.availableCharges = availableCharges;
+
+        return this;
     }
 
     public int getAvailableCharges()
@@ -238,9 +298,11 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return availableCharges;
     }
 
-    public void setCancelledByMovement(boolean cancelledByMovement)
+    public Ability setCancelledByMovement(boolean cancelledByMovement)
     {
         this.cancelledByMovement = cancelledByMovement;
+
+        return this;
     }
 
     public boolean isCancelledByMovement()
@@ -248,9 +310,11 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return cancelledByMovement;
     }
 
-    public void setCancelledByTakingDamage(boolean cancelledByDamage)
+    public Ability setCancelledByTakingDamage(boolean cancelledByDamage)
     {
         this.cancelledByTakingDamage = cancelledByDamage;
+
+        return this;
     }
 
     public boolean isCancelledByTakingDamage()
@@ -258,9 +322,11 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return cancelledByTakingDamage;
     }
 
-    public void setCancelledByDealingDamage(boolean cancelledByDealingDamage)
+    public Ability setCancelledByDealingDamage(boolean cancelledByDealingDamage)
     {
         this.cancelledByDealingDamage = cancelledByDealingDamage;
+
+        return this;
     }
 
     public boolean isCancelledByDealingDamage()
@@ -268,14 +334,21 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         return cancelledByDealingDamage;
     }
 
-    public void setCancelledByCast(boolean cancelledByCast)
+    public Ability setCancelledByCast(boolean cancelledByCast)
     {
         this.cancelledByCast = cancelledByCast;
+
+        return this;
     }
 
     public boolean isCancelledByCast()
     {
         return cancelledByCast;
+    }
+
+    public List<Ability> getChildren()
+    {
+        return children;
     }
 
     @Override
@@ -291,9 +364,11 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
     }
 
     @Override
-    public void setCooldown(double cooldown)
+    public Ability setCooldown(double cooldown)
     {
         this.cooldown = cooldown;
+
+        return this;
     }
 
     @Override
@@ -419,6 +494,7 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
                 }
             }
 
+            // TODO change system for cast time
             if (this.getCastTime() > 0)
             {
                 this.casting = true;
@@ -466,6 +542,12 @@ public abstract class Ability implements Listener, IConditional, ICooldownSource
         {
             this.setInProgress(true);
             this.onActivate(properties);
+
+            // TODO ?
+            for (Ability ability : this.children)
+            {
+                ability.activate(properties);
+            }
 
             this.onPostActivate(properties);
         }

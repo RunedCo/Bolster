@@ -4,26 +4,26 @@ import co.runed.bolster.util.properties.Properties;
 
 import java.util.function.BiFunction;
 
-public interface IConditional
+public interface IConditional<T>
 {
-    default void addCondition(Condition condition)
+    default T addCondition(Condition condition)
     {
-        this.addCondition(condition, ConditionPriority.NORMAL);
+        return this.addCondition(condition, ConditionPriority.NORMAL);
     }
 
-    default void addCondition(BiFunction<IConditional, Properties, Boolean> evaluateFunc)
+    default T addCondition(BiFunction<IConditional, Properties, Boolean> evaluateFunc)
     {
-        this.addCondition(evaluateFunc, ConditionPriority.NORMAL);
+        return this.addCondition(evaluateFunc, ConditionPriority.NORMAL);
     }
 
-    default void addCondition(BiFunction<IConditional, Properties, Boolean> evaluateFunc, ConditionPriority priority)
+    default T addCondition(BiFunction<IConditional, Properties, Boolean> evaluateFunc, ConditionPriority priority)
     {
-        this.addCondition(new LambdaCondition(evaluateFunc), priority);
+        return this.addCondition(new LambdaCondition(evaluateFunc), priority);
     }
 
-    void addCondition(Condition condition, ConditionPriority priority);
+    T addCondition(Condition condition, ConditionPriority priority);
 
-    void setShouldShowErrorMessages(boolean showErrors);
+    T setShouldShowErrorMessages(boolean showErrors);
 
     boolean shouldShowErrorMessages();
 }

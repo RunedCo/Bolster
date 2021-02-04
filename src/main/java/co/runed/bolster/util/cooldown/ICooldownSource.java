@@ -1,12 +1,12 @@
 package co.runed.bolster.util.cooldown;
 
-public interface ICooldownSource
+public interface ICooldownSource<T>
 {
     String getCooldownId();
 
     double getCooldown();
 
-    void setCooldown(double cooldown);
+    T setCooldown(double cooldown);
 
     void setRemainingCooldown(double cooldown);
 

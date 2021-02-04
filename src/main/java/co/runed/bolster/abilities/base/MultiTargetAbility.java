@@ -31,7 +31,7 @@ public class MultiTargetAbility extends MultiAbility
 
         String desc = "";
 
-        for (Ability ability : this.abilities)
+        for (Ability ability : this.getChildren())
         {
             if (ability.getDescription() == null) continue;
 
