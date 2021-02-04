@@ -1,6 +1,8 @@
-package co.runed.bolster.abilities;
+package co.runed.bolster.abilities.base;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;

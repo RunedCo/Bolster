@@ -1,4 +1,4 @@
-package co.runed.bolster.wip.traits;
+package co.runed.bolster.util.traits;
 
 import co.runed.bolster.util.json.JsonExclude;
 import co.runed.bolster.util.properties.Properties;

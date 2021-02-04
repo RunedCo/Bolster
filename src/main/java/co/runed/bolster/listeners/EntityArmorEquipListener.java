@@ -41,9 +41,6 @@ public class EntityArmorEquipListener implements Listener
             unequipProperties.set(AbilityProperties.ITEM_STACK, oldStack);
             unequipProperties.set(AbilityProperties.ARMOR_SLOT, slot);
 
-            // TODO
-            Bolster.getInstance().getLogger().info(player.getDisplayName() + " unequipped armor (stack: " + oldStack + " slot: " + slot + ")");
-
             AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_UNEQUIP_ARMOR, unequipProperties);
         }
 
@@ -53,9 +50,6 @@ public class EntityArmorEquipListener implements Listener
             equipProperties.set(AbilityProperties.EVENT, event);
             equipProperties.set(AbilityProperties.ITEM_STACK, newStack);
             equipProperties.set(AbilityProperties.ARMOR_SLOT, slot);
-
-            Bolster.getInstance().getLogger().info(player.getDisplayName() + " equipped armor (stack: " + newStack + " slot: " + slot + ")");
-
 
             AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_EQUIP_ARMOR, equipProperties);
         }

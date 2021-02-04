@@ -4,7 +4,7 @@ import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.abilities.core.CancelEventAbility;
+import co.runed.bolster.abilities.base.CancelEventAbility;
 import co.runed.bolster.util.properties.Properties;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;

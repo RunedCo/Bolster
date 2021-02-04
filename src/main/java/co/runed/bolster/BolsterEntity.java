@@ -9,8 +9,9 @@ import co.runed.bolster.util.NumberUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.v1_16_R3.CraftUtil;
-import co.runed.bolster.wip.traits.Trait;
-import co.runed.bolster.wip.traits.TraitProvider;
+import co.runed.bolster.util.Operation;
+import co.runed.bolster.util.traits.Trait;
+import co.runed.bolster.util.traits.TraitProvider;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -76,7 +77,7 @@ public class BolsterEntity extends TraitProvider
 
                 if (traits.contains(exProp))
                 {
-                    if (exValue instanceof Number && trait.getOperation() != Trait.Operation.SET)
+                    if (exValue instanceof Number && trait.getOperation() != Operation.SET)
                     {
                         Number exNumber = (Number) exValue;
 
@@ -105,7 +106,7 @@ public class BolsterEntity extends TraitProvider
                         }
                     }
 
-                    if (trait.getOperation() == Trait.Operation.SET && nextValue != trait.getDefault())
+                    if (trait.getOperation() == Operation.SET && nextValue != trait.getDefault())
                     {
                         exValue = nextValue;
                     }

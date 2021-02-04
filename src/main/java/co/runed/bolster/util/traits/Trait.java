@@ -1,5 +1,6 @@
-package co.runed.bolster.wip.traits;
+package co.runed.bolster.util.traits;
 
+import co.runed.bolster.util.Operation;
 import co.runed.bolster.util.properties.Property;
 
 public class Trait<T> extends Property<T>
@@ -23,12 +24,4 @@ public class Trait<T> extends Property<T>
         return operation;
     }
 
-    public enum Operation
-    {
-        ADD,
-        SUBTRACT,
-        DIVIDE,
-        MULTIPLY,
-        SET
-    }
 }

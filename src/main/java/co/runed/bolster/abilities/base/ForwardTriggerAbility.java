@@ -1,5 +1,8 @@
-package co.runed.bolster.abilities;
+package co.runed.bolster.abilities.base;
 
+import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.abilities.AbilityProvider;
+import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.util.properties.Properties;
 
 public class ForwardTriggerAbility extends Ability

@@ -1,5 +1,7 @@
 package co.runed.bolster.abilities;
 
+import co.runed.bolster.abilities.base.LambdaAbility;
+import co.runed.bolster.abilities.base.MultiAbility;
 import co.runed.bolster.conditions.Condition;
 import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.util.properties.Properties;

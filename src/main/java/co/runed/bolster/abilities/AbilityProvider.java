@@ -2,6 +2,7 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.abilities.base.LambdaAbility;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.ConfigUtil;
@@ -11,7 +12,7 @@ import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.json.JsonExclude;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
-import co.runed.bolster.wip.traits.TraitProvider;
+import co.runed.bolster.util.traits.TraitProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
