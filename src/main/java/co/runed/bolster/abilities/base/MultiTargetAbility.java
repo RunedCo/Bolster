@@ -6,22 +6,21 @@ import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Entity;
 
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class MultiTargetAbility extends MultiAbility
 {
-    Supplier<Collection<Entity>> entitySupplier;
+    Function<Properties, Collection<Entity>> entityFunction;
 
-    public MultiTargetAbility(Supplier<Collection<Entity>> entitySupplier, Ability ability)
+    public MultiTargetAbility(Function<Properties, Collection<Entity>> entityFunction)
     {
-        this.entitySupplier = entitySupplier;
-
-        this.addAbility(ability);
+        this.setEntityFunction(entityFunction);
     }
 
-    public void setEntitySupplier(Supplier<Collection<Entity>> entitySupplier)
+    public void setEntityFunction(Function<Properties, Collection<Entity>> entityFunction)
     {
-        this.entitySupplier = entitySupplier;
+        this.entityFunction = entityFunction;
     }
 
     @Override
@@ -41,17 +40,18 @@ public class MultiTargetAbility extends MultiAbility
         return desc;
     }
 
+    // TODO might not work (see old implementation on github)
     @Override
-    public void onActivate(Properties properties)
+    public void testActivate(Properties properties)
     {
-        Collection<Entity> entities = entitySupplier.get();
+        Collection<Entity> entities = entityFunction.apply(properties);
 
         for (Entity entity : entities)
         {
             Properties newProperties = new Properties(properties);
             newProperties.set(AbilityProperties.TARGET, entity);
 
-            super.onActivate(newProperties);
+            super.testActivate(newProperties);
         }
     }
 }

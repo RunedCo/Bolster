@@ -136,11 +136,11 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         ability.setAbilityProvider(this);
         ability.setTrigger(trigger);
 
+        // TODO potentially only create the AbilityData at a later point?
         AbilityProvider.AbilityData data = new AbilityProvider.AbilityData(trigger, ability);
-
         this.abilities.add(data);
 
-        // TODO
+        // TODO set id dynamically?
         //ability.setId(this.abilities.size() + "");
     }
 
@@ -259,7 +259,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         List<AbilityData> abilityList = new ArrayList<>(this.abilities);
         for (AbilityProvider.AbilityData abilityData : abilityList)
         {
-            this.removeAbility(abilityData.ability);
+            abilityData.destroy();
         }
 
         this.abilities.clear();

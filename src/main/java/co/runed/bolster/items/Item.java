@@ -341,7 +341,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         // only run mustBeInInventory if not already running active (if an item is active it is always in inventory)
         if (mustBeInInventory && !mustBeActive)
         {
-            ability.addCondition(new HasItemCondition(Target.CASTER, this.getClass(), 1));
+            ability.addCondition(new HasItemCondition(Target.CASTER, this.getClass(), 1), ConditionPriority.HIGHEST);
         }
 
         super.addAbility(trigger, ability);
@@ -366,9 +366,9 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     @Override
     public void onCastAbility(Ability ability, Boolean success)
     {
-        Optional<AbilityData> filtered = this.getAbilities().stream().filter((info) -> info.ability == ability).findFirst();
-
-        if (!filtered.isPresent()) return;
+//        Optional<AbilityData> filtered = this.getAbilities().stream().filter((info) -> info.ability == ability).findFirst();
+//
+//        if (!filtered.isPresent()) return;
 
         // TODO CHECK PERFORMANCE IMPACT OF THIS ESPECIALLY FOR TICKING ABILITIES
         if (this.getEntity() instanceof Player && this.getId() != null)// && this.isDirty())

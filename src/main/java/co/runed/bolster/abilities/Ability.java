@@ -48,6 +48,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     private boolean casting = false;
     private boolean cancelled = false;
     private boolean enabled = true;
+    private boolean child = false;
     private int priority = 0;
     private boolean inProgress = false;
 
@@ -120,6 +121,11 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     public void setCaster(LivingEntity caster)
     {
         this.caster = caster;
+
+        for (Ability ability : this.children)
+        {
+            ability.setCaster(caster);
+        }
     }
 
     public float getManaCost()
@@ -170,6 +176,16 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return this;
     }
 
+    public boolean isChild()
+    {
+        return child;
+    }
+
+    public void setIsChild(boolean child)
+    {
+        this.child = child;
+    }
+
     @Override
     public Ability addCondition(Condition condition, ConditionPriority priority)
     {
@@ -180,6 +196,8 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 
     public Duration getDuration()
     {
+        // TODO find highest duration from all children and return
+        // TODO if sequence add all together
         return this.duration;
     }
 
@@ -531,6 +549,17 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return false;
     }
 
+    public void testActivate(Properties properties)
+    {
+        this.onActivate(properties);
+
+        // TODO ?
+        for (Ability ability : this.children)
+        {
+            ability.activate(properties);
+        }
+    }
+
     private void doActivate(Properties properties)
     {
         if (this.getCastTime() > 0 && this.getCaster() instanceof Player)
@@ -541,13 +570,8 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         if (!this.cancelled)
         {
             this.setInProgress(true);
-            this.onActivate(properties);
 
-            // TODO ?
-            for (Ability ability : this.children)
-            {
-                ability.activate(properties);
-            }
+            this.testActivate(properties);
 
             this.onPostActivate(properties);
         }
@@ -584,6 +608,13 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     public void destroy()
     {
         HandlerList.unregisterAll(this);
+
+        for (Ability child : this.children)
+        {
+            child.destroy();
+        }
+
+        this.children.clear();
 
         //CooldownManager.getInstance().clearCooldown(this.getCaster(), this);
     }

@@ -22,8 +22,7 @@ import java.util.stream.Collectors;
 
 public class AbilityManager extends Manager
 {
-    Map<UUID, Map<AbilityProviderType, List<AbilityProvider>>> providers = new HashMap<>();
-    //Map<UUID, List<AbilityData>> abilities = new HashMap<>();
+    Map<UUID, List<AbilityProviderData>> providers = new HashMap<>();
 
     private static AbilityManager _instance;
 
@@ -63,17 +62,16 @@ public class AbilityManager extends Manager
         AbilityProviderType type = provider.getType();
         UUID uuid = entity.getUniqueId();
 
-        this.providers.putIfAbsent(uuid, new HashMap<>());
-        this.providers.get(uuid).putIfAbsent(type, new ArrayList<>());
-        List<AbilityProvider> provList = this.providers.get(uuid).get(type);
+        this.providers.putIfAbsent(uuid, new ArrayList<>());
+        List<AbilityProviderData> provList = this.providers.get(uuid);
 
         boolean exists = false;
-        for (AbilityProvider existing : provList)
+        for (AbilityProviderData existingData : provList)
         {
             // check if existing exists and is enabled, if not enable
-            if (existing.getClass().equals(provider.getClass()))
+            if (existingData.provider.getClass().equals(provider.getClass()))
             {
-                provider = existing;
+                provider = existingData.provider;
                 exists = true;
 
                 continue;
@@ -82,13 +80,13 @@ public class AbilityManager extends Manager
             // check if type is solo - if so disable all others
             if (type.isSolo())
             {
-                existing.setEnabled(false);
+                existingData.provider.setEnabled(false);
             }
         }
 
         if (!exists)
         {
-            provList.add(provider);
+            provList.add(new AbilityProviderData(provider, type));
         }
 
         provider.setEnabled(true);
@@ -103,18 +101,31 @@ public class AbilityManager extends Manager
         UUID uuid = entity.getUniqueId();
 
         if (!this.providers.containsKey(uuid)) return;
-        if (!this.providers.get(uuid).containsKey(type)) return;
 
-        List<AbilityProvider> provList = this.providers.get(uuid).get(type);
+        List<AbilityProviderData> provList = this.providers.get(uuid);
 
-        for (AbilityProvider existing : provList)
+        for (AbilityProviderData existingData : provList)
         {
             // check if existing exists and is enabled, if not enable
-            if (existing.getClass().equals(provider.getClass()))
+            if (existingData.provider.getClass().equals(provider.getClass()))
             {
-                existing.setEnabled(false);
+                existingData.provider.setEnabled(false);
             }
         }
+    }
+
+    public AbilityProvider getProvider(LivingEntity entity, AbilityProviderType type, String id)
+    {
+        if (id == null) return null;
+
+        return this.getProviders(entity).stream().filter((prov) -> prov.getType().equals(type) && prov.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    public boolean hasProvider(LivingEntity entity, AbilityProviderType type, String id)
+    {
+        if (id == null) return false;
+
+        return this.getProviders(entity).stream().anyMatch((prov) -> prov.getType().equals(type) && prov.getId().equals(id));
     }
 
     public boolean hasProvider(LivingEntity entity, AbilityProvider provider)
@@ -137,12 +148,7 @@ public class AbilityManager extends Manager
 
         if (!this.providers.containsKey(uuid)) return providerList;
 
-        for (List<AbilityProvider> list : this.providers.get(uuid).values())
-        {
-            providerList.addAll(list);
-        }
-
-        return providerList;
+        return this.providers.get(uuid).stream().map((data) -> data.provider).collect(Collectors.toList());
     }
 
     public List<AbilityProvider> getProviders(LivingEntity entity, AbilityProviderType type)
@@ -365,6 +371,18 @@ public class AbilityManager extends Manager
             if (!ability2.isInProgress()) continue;
 
             if (ability2.isCancelledByCast()) ability2.cancel();
+        }
+    }
+
+    private static class AbilityProviderData
+    {
+        private AbilityProvider provider;
+        private AbilityProviderType type;
+
+        public AbilityProviderData(AbilityProvider provider, AbilityProviderType type)
+        {
+            this.provider = provider;
+            this.type = type;
         }
     }
 

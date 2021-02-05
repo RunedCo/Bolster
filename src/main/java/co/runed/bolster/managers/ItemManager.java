@@ -88,12 +88,15 @@ public class ItemManager extends Manager
      */
     public Item createItem(LivingEntity entity, String id)
     {
-        Item newItem = Registries.ITEMS.get(id);
-        boolean existing = AbilityManager.getInstance().hasProvider(entity, newItem);
-
+        // NOTE: must not create the item instance unless there is no item instance of the same type created already
+        //       if we create the item instance it causes high cpu load due to constantly remaking any ticking ability instances
+        Item existingItem = (Item) AbilityManager.getInstance().getProvider(entity, AbilityProviderType.ITEM, id);
+        Item newItem = existingItem != null ? existingItem : Registries.ITEMS.get(id);
         Item item = (Item) AbilityManager.getInstance().addProvider(entity, newItem);
 
         if (item == null) return null;
+
+        boolean existing = item.equals(newItem);
 
         item.setEntity(entity);
         item.rebuild();
