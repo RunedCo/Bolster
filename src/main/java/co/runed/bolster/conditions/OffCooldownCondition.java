@@ -35,8 +35,6 @@ public class OffCooldownCondition extends TargetedCondition<BolsterEntity>
     {
         if (!conditional.shouldShowErrorMessages()) return;
         if (!(conditional instanceof ICooldownSource)) return;
-
-
     }
 
     @Override

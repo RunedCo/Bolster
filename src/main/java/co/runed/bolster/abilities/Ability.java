@@ -7,7 +7,6 @@ import co.runed.bolster.conditions.*;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.TaskUtil;
-import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
@@ -52,7 +51,6 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     private int priority = 0;
     private boolean inProgress = false;
 
-    private int availableCharges = 1;
     private int charges = 1;
     private boolean cancelledByMovement;
     private boolean cancelledByTakingDamage;
@@ -96,9 +94,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 
     public String getId()
     {
-        int chargeId = this.getCharges() - this.getAvailableCharges();
-
-        return (this.getAbilityProvider() == null ? this.parentId : this.getAbilityProvider().getId()) + "." + this.id + (this.getCharges() > 1 ? "." + chargeId : "");
+        return (this.getAbilityProvider() == null ? this.parentId : this.getAbilityProvider().getId()) + "." + this.id;
     }
 
     public String getDescription()
@@ -304,16 +300,25 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return charges;
     }
 
-    public Ability setAvailableCharges(int availableCharges)
+    public int getLowestCooldownCharge()
     {
-        this.availableCharges = availableCharges;
+        int charge = 0;
+        double lowest = this.getCooldown();
 
-        return this;
-    }
+        for (int i = 0; i < this.getCharges(); i++)
+        {
+            double remaining = CooldownManager.getInstance().getRemainingTime(this.getCaster(), this, i);
 
-    public int getAvailableCharges()
-    {
-        return availableCharges;
+            if (remaining < lowest)
+            {
+                lowest = remaining;
+                charge = i;
+
+                if (lowest <= 0) break;
+            }
+        }
+
+        return charge;
     }
 
     public Ability setCancelledByMovement(boolean cancelledByMovement)
@@ -392,13 +397,13 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     @Override
     public double getRemainingCooldown()
     {
-        return CooldownManager.getInstance().getRemainingTime(this.getCaster(), this);
+        return CooldownManager.getInstance().getRemainingTime(this.getCaster(), this, this.getLowestCooldownCharge());
     }
 
     @Override
     public void setRemainingCooldown(double cooldown)
     {
-        CooldownManager.getInstance().setCooldown(this.getCaster(), this, cooldown);
+        CooldownManager.getInstance().setCooldown(this.getCaster(), this, this.getLowestCooldownCharge(), cooldown);
     }
 
     @Override
@@ -416,12 +421,22 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     @Override
     public void clearCooldown()
     {
-        CooldownManager.getInstance().clearCooldown(this.getCaster(), this);
+        CooldownManager.getInstance().clearCooldown(this.getCaster(), this, this.getLowestCooldownCharge());
+    }
+
+    public void clearAllCooldowns()
+    {
+        for (int i = 0; i < this.getCharges(); i++)
+        {
+            CooldownManager.getInstance().clearCooldown(this.getCaster(), this, i);
+        }
     }
 
     @Override
     public void onToggleCooldown()
     {
+        // todo set all slots on 0.2s cooldown after one is used
+
         if (this.getAbilityProvider() != null) this.getAbilityProvider().onToggleCooldown(this);
     }
 

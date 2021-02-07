@@ -167,6 +167,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         return this.abilities;
     }
 
+
     public boolean isDirty()
     {
         return this.dirty;
@@ -197,6 +198,8 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
                 abilityDesc += ChatColor.DARK_GRAY + " (" + ability.getCooldown() + "s cooldown)";
             if (ability.getManaCost() > 0)
                 abilityDesc += ChatColor.BLUE + " (" + ability.getManaCost() + " mana)";
+            if (ability.getCharges() > 1)
+                abilityDesc += ChatColor.BLUE + " (" + ability.getCharges() + " charges";
             if (ability.getCastTime() > 0)
                 abilityDesc += ChatColor.BLUE + " (" + ability.getCastTime() + "s cast time)";
 

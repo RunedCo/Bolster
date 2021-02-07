@@ -2,8 +2,8 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.game.Traits;
-import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.Manager;
+import co.runed.bolster.util.cooldown.ICooldownSource;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
@@ -33,17 +33,17 @@ public class CooldownManager extends Manager
      * @param source   the source
      * @param cooldown the cooldown in seconds
      */
-    public void setCooldown(LivingEntity entity, ICooldownSource source, double cooldown)
+    public void setCooldown(LivingEntity entity, ICooldownSource source, int slot, double cooldown)
     {
         cooldown = Math.max(cooldown, 0);
 
         cooldown = cooldown * Math.max(0, 1 - BolsterEntity.from(entity).getTrait(Traits.COOLDOWN_REDUCTION_PERCENT));
 
-        this.cooldowns.removeIf(cd -> cd.source.getCooldownId().equals(source.getCooldownId()) && cd.caster.equals(entity));
+        this.cooldowns.removeIf(cd -> cd.source.getCooldownId().equals(source.getCooldownId()) && cd.caster.equals(entity) && cd.slot == slot);
 
-        if (this.getRemainingTime(entity, source) <= 0)
+        if (this.getRemainingTime(entity, source, slot) <= 0)
         {
-            this.cooldowns.add(new CooldownData(entity, source, Instant.now(), (long) (cooldown * 1000)));
+            this.cooldowns.add(new CooldownData(entity, source, slot, Instant.now(), (long) (cooldown * 1000)));
         }
 
         source.onToggleCooldown();
@@ -60,7 +60,28 @@ public class CooldownManager extends Manager
 
         for (CooldownData data : cds)
         {
-            this.clearCooldown(entity, data.source);
+            this.clearCooldown(entity, data.source, data.slot);
+        }
+    }
+
+    /**
+     * Clear one cooldown from every source from an entity
+     *
+     * @param entity the entity
+     */
+    public void clearOneFrom(LivingEntity entity)
+    {
+        List<String> cleared = new ArrayList<>();
+        // todo sort by lowest
+        List<CooldownData> cds = this.cooldowns.stream().filter(cd -> cd.caster.equals(entity)).collect(Collectors.toList());
+
+        for (CooldownData data : cds)
+        {
+            if (cleared.contains(data.source.getCooldownId())) continue;
+
+            this.clearCooldown(entity, data.source, data.slot);
+
+            cleared.add(data.source.getCooldownId());
         }
     }
 
@@ -70,9 +91,9 @@ public class CooldownManager extends Manager
      * @param entity the entity
      * @param source the source
      */
-    public void clearCooldown(LivingEntity entity, ICooldownSource source)
+    public void clearCooldown(LivingEntity entity, ICooldownSource source, int slot)
     {
-        this.setCooldown(entity, source, 0);
+        this.setCooldown(entity, source, slot, 0);
     }
 
     /**
@@ -82,11 +103,11 @@ public class CooldownManager extends Manager
      * @param source the source
      * @return the time remaining in seconds
      */
-    public double getRemainingTime(LivingEntity entity, ICooldownSource source)
+    public double getRemainingTime(LivingEntity entity, ICooldownSource source, int slot)
     {
         for (CooldownData cd : this.cooldowns)
         {
-            if (cd.caster.equals(entity) && cd.source.getCooldownId().equals(source.getCooldownId()))
+            if (cd.caster.equals(entity) && cd.source.getCooldownId().equals(source.getCooldownId()) && cd.slot == slot)
             {
                 return cd.getRemainingTime() / 1000d;
             }
@@ -101,13 +122,15 @@ public class CooldownManager extends Manager
         private final ICooldownSource source;
         private final Instant castTime;
         private final long cooldown;
+        private int slot = 0;
 
-        private CooldownData(LivingEntity entity, ICooldownSource source, Instant castTime, long cooldownMs)
+        private CooldownData(LivingEntity entity, ICooldownSource source, int slot, Instant castTime, long cooldownMs)
         {
             this.caster = entity;
             this.source = source;
             this.castTime = castTime;
             this.cooldown = cooldownMs;
+            this.slot = slot;
         }
 
         /**
