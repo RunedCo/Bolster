@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class TaskUtil
 {
@@ -86,11 +87,49 @@ public class TaskUtil
                 task.run();
 
                 runningTicks += period;
+            }
 
-                if (runningTicks >= TimeUtil.toTicks(duration))
-                {
-                    this.cancel();
-                }
+            @Override
+            public boolean shouldCancel()
+            {
+                return runningTicks >= TimeUtil.toTicks(duration);
+            }
+        };
+
+        return runTaskTimerUntil(plugin, run, null, initialDelay, period, onFinish);
+    }
+
+    /**
+     * Runs a repeating task for a specified duration
+     *
+     * @param plugin       the plugin instance
+     * @param task         the task
+     * @param runUntil
+     * @param initialDelay the delay before running the first task
+     * @param period       the interval between repeats
+     * @param onFinish     function to run when task finishes
+     * @return
+     */
+    public static synchronized BukkitTask runTaskTimerUntil(Plugin plugin, Runnable task, Supplier<Boolean> runUntil, long initialDelay, long period, Runnable onFinish)
+    {
+        BukkitRunnable run = new BolsterRunnable(onFinish)
+        {
+            long runningTicks = 0L;
+
+            @Override
+            public void run()
+            {
+                if (this.isCancelled()) return;
+
+                task.run();
+
+                if (this.shouldCancel()) this.cancel();
+            }
+
+            @Override
+            public boolean shouldCancel()
+            {
+                return runUntil != null ? runUntil.get() : super.shouldCancel();
             }
         };
 
@@ -168,6 +207,11 @@ public class TaskUtil
         public BolsterRunnable(Runnable onFinish)
         {
             this.onFinish = onFinish;
+        }
+
+        public boolean shouldCancel()
+        {
+            return false;
         }
 
         @Override
