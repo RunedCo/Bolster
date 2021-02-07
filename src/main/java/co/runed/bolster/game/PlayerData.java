@@ -1,6 +1,8 @@
-package co.runed.bolster.util;
+package co.runed.bolster.game;
 
 import co.runed.bolster.util.currency.Currency;
+import co.runed.bolster.util.registries.Registries;
+import co.runed.bolster.wip.particles.ParticleSet;
 import co.runed.bolster.wip.settings.Setting;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,6 +14,8 @@ public class PlayerData
 {
     //ObjectId _id;
     UUID uuid;
+
+    public String activeParticleSet;
 
     HashMap<String, Integer> currencies = new HashMap<>();
     HashMap<String, Integer> itemLevels = new HashMap<>();
@@ -81,6 +85,16 @@ public class PlayerData
     public void setItemLevel(String id, int level)
     {
         this.itemLevels.put(id, level);
+    }
+
+    public ParticleSet getActiveParticleSet()
+    {
+        return this.activeParticleSet != null ? Registries.PARTICLE_SETS.get(this.activeParticleSet) : new ParticleSet();
+    }
+
+    public void setActiveParticleSet(String id)
+    {
+        this.activeParticleSet = id;
     }
 
     public <T> T getSetting(Setting<T> setting)

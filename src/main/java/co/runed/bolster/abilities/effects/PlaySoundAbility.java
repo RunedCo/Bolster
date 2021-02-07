@@ -1,4 +1,4 @@
-package co.runed.bolster.abilities.targeted;
+package co.runed.bolster.abilities.effects;
 
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.TargetedAbility;

@@ -105,10 +105,10 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
 
         if (firstTime)
         {
+            this.rebuild();
+
             // FIXME move to better place
             this.onEnable();
-
-            this.rebuild();
 
             AbilityManager.getInstance().trigger(this.getEntity(), this, AbilityTrigger.CREATE, new Properties());
         }

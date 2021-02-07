@@ -89,7 +89,7 @@ public class EntityDamageListener implements Listener
         LivingEntity entity = (LivingEntity) event.getEntity();
         EntityEquipment inv = entity.getEquipment();
         ItemStack stack = inv.getItemInMainHand();
-        double damage = event.getDamage();
+        double damage = event.getFinalDamage();
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.EVENT, event);

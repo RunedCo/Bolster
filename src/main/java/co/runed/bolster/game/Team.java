@@ -6,6 +6,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -30,10 +31,21 @@ public class Team implements Listener
     boolean allowFriendlyFire;
     boolean removePlayersOnDeath = true;
 
+    boolean isSetup = false;
+
     public Team(String name, ChatColor color)
     {
         this.name = name;
         this.color = color;
+    }
+
+    public void setup()
+    {
+        if (this.isSetup) return;
+
+        this.isSetup = true;
+
+        Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
     }
 
     /**
@@ -41,6 +53,8 @@ public class Team implements Listener
      */
     public void add(LivingEntity entity)
     {
+        if (!this.isSetup) this.setup();
+
         if (this.members.contains(entity.getUniqueId())) return;
 
         if (entity.getType() == EntityType.PLAYER) this.players.add(entity.getUniqueId());
@@ -121,16 +135,6 @@ public class Team implements Listener
      */
     public void setAutoAddPlayers(boolean shouldAdd)
     {
-        if (shouldAdd && !this.autoAddPlayers)
-        {
-            Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
-        }
-
-//        if (!shouldAdd)
-//        {
-//            HandlerList.unregisterAll(this);
-//        }
-
         this.autoAddPlayers = shouldAdd;
     }
 
@@ -200,7 +204,7 @@ public class Team implements Listener
         this.kills.put(player.getUniqueId(), this.kills.get(player.getUniqueId()) + 1);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onDamageEntity(EntityDamageByEntityEvent event)
     {
         Entity damager = event.getDamager();
@@ -234,6 +238,7 @@ public class Team implements Listener
 
         if (this.isInTeam(damagee) && this.isInTeam(entity) && !this.allowFriendlyFire())
         {
+            event.setDamage(0);
             event.setCancelled(true);
         }
     }

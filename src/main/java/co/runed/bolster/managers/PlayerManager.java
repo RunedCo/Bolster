@@ -2,7 +2,7 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.util.Manager;
-import co.runed.bolster.util.PlayerData;
+import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.util.json.JsonExclude;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
