@@ -87,16 +87,15 @@ public class TaskUtil
                 task.run();
 
                 runningTicks += period;
-            }
 
-            @Override
-            public boolean shouldCancel()
-            {
-                return runningTicks >= TimeUtil.toTicks(duration);
+                if (runningTicks >= TimeUtil.toTicks(duration))
+                {
+                    this.cancel();
+                }
             }
         };
 
-        return runTaskTimerUntil(plugin, run, null, initialDelay, period, onFinish);
+        return run.runTaskTimer(plugin, initialDelay, period);
     }
 
     /**
@@ -114,8 +113,6 @@ public class TaskUtil
     {
         BukkitRunnable run = new BolsterRunnable(onFinish)
         {
-            long runningTicks = 0L;
-
             @Override
             public void run()
             {
@@ -123,13 +120,16 @@ public class TaskUtil
 
                 task.run();
 
-                if (this.shouldCancel()) this.cancel();
+                if (this.shouldCancel())
+                    this.cancel();
             }
 
             @Override
             public boolean shouldCancel()
             {
-                return runUntil != null ? runUntil.get() : super.shouldCancel();
+                return runUntil != null ?
+                        runUntil.get() :
+                        super.shouldCancel();
             }
         };
 

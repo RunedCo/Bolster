@@ -135,6 +135,8 @@ public class Team implements Listener
      */
     public void setAutoAddPlayers(boolean shouldAdd)
     {
+        if (!this.isSetup) this.setup();
+
         this.autoAddPlayers = shouldAdd;
     }
 

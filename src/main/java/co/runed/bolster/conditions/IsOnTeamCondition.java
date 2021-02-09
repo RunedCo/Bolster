@@ -34,8 +34,10 @@ public class IsOnTeamCondition extends TargetedCondition<BolsterEntity>
     @Override
     public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
     {
-        if (inverted) return ChatColor.RED + "You must not be on the " + this.team.getName() + " to use this ability!";
-
-        return ChatColor.RED + "You must be on the " + this.team.getName() + " to use this ability!";
+        return null;
+//
+//        if (inverted) return ChatColor.RED + "You must not be on the " + this.team.getName() + " to use this ability!";
+//
+//        return ChatColor.RED + "You must be on the " + this.team.getName() + " to use this ability!";
     }
 }

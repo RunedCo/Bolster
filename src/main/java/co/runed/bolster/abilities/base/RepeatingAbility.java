@@ -25,7 +25,7 @@ public class RepeatingAbility extends Ability
     {
         this(frequency);
 
-        this.duration = duration.minus(Duration.ofSeconds(frequency / 20));
+        this.runUntil = runUntil;
     }
 
     private RepeatingAbility(long frequency)
@@ -42,15 +42,23 @@ public class RepeatingAbility extends Ability
     }
 
     @Override
-    public void onActivate(Properties properties)
+    public void testActivate(Properties properties)
     {
         if (this.duration != null)
         {
-            TaskUtil.runDurationTaskTimer(Bolster.getInstance(), () -> this.activate(properties), this.duration, frequency, frequency);
+            TaskUtil.runDurationTaskTimer(Bolster.getInstance(), () -> super.testActivate(properties), this.duration, frequency, frequency);
         }
         else
         {
-            TaskUtil.runTaskTimerUntil(Bolster.getInstance(), () -> this.activate(properties), this.runUntil, frequency, frequency, null);
+            TaskUtil.runTaskTimerUntil(Bolster.getInstance(), () -> super.testActivate(properties), this.runUntil, frequency, frequency, null);
         }
+
+        super.testActivate(properties);
+    }
+
+    @Override
+    public void onActivate(Properties properties)
+    {
+
     }
 }

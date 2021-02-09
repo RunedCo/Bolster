@@ -269,9 +269,6 @@ public class GameProperties extends Properties implements Listener
             effectData.effect = new PotionEffect(effect.getType(), effectData.duration, effect.getAmplifier(), effect.isAmbient(), effect.hasParticles(), effect.hasIcon());
             effectData.effect.apply(entity);
         }
-
-        ChatColor color = ChatColor.values()[9 + action.ordinal()];
-        entity.sendMessage(color + "Potion effect " + action + ". New effect is " + newEffect + ". Old effect is " + oldEffect);
     }
 
     private static class PotionEffectData

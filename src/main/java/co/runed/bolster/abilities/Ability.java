@@ -150,7 +150,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 
     public Ability addAbility(Ability ability)
     {
-        this.children.add(ability);
+        this.children.add(ability.setShouldShowErrorMessages(false));
 
         return this;
     }
@@ -291,6 +291,11 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     public Ability setCharges(int charges)
     {
         this.charges = charges;
+
+        for (Ability ability : this.children)
+        {
+            ability.setCharges(charges);
+        }
 
         return this;
     }

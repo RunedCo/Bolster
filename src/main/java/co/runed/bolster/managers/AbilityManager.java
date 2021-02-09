@@ -89,6 +89,8 @@ public class AbilityManager extends Manager
             provList.add(new AbilityProviderData(provider, type));
         }
 
+        if (exists) provider.setEnabled(false);
+
         provider.setEnabled(true);
         provider.setEntity(entity);
 
@@ -205,7 +207,8 @@ public class AbilityManager extends Manager
             provider.destroy();
         }
 
-        if (this.providers.containsKey(entity.getUniqueId())) this.providers.get(entity.getUniqueId()).remove(type);
+        if (this.providers.containsKey(entity.getUniqueId()))
+            this.providers.get(entity.getUniqueId()).removeIf((d) -> d.type == type);
     }
 
     public void resetAll()
