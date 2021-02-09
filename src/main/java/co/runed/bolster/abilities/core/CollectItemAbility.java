@@ -57,6 +57,6 @@ public class CollectItemAbility extends Ability
     {
         Player player = (Player) properties.get(AbilityProperties.CASTER).getBukkit();
 
-        ItemManager.getInstance().giveItem(player, itemClassFunc.apply(properties), outputCount);
+        ItemManager.getInstance().giveItem(player, player.getInventory(), itemClassFunc.apply(properties), outputCount);
     }
 }

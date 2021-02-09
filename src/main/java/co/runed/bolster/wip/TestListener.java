@@ -1,6 +1,7 @@
 package co.runed.bolster.wip;
 
-import co.runed.bolster.events.AbilityPlaceBlockEvent;
+import co.runed.bolster.events.CustomCanDestroyBlockEvent;
+import co.runed.bolster.events.CustomCanPlaceBlockEvent;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
@@ -25,7 +26,7 @@ public class TestListener implements Listener
     }
 
     @EventHandler
-    private void onAbilityPlaceBlock(AbilityPlaceBlockEvent event)
+    private void onAbilityPlaceBlock(CustomCanPlaceBlockEvent event)
     {
         if (!(event.getEntity() instanceof Player)) return;
 
@@ -33,7 +34,22 @@ public class TestListener implements Listener
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
 
-        if (!query.testState(BukkitAdapter.adapt(event.getBlock().getLocation()), player, Flags.BUILD))
+        if (!query.testState(BukkitAdapter.adapt(event.getBlock().getLocation()), player, Flags.BLOCK_PLACE))
+        {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    private void onAbilityDestroyBlock(CustomCanDestroyBlockEvent event)
+    {
+        if (!(event.getEntity() instanceof Player)) return;
+
+        LocalPlayer player = WorldGuardPlugin.inst().wrapPlayer((Player) event.getEntity());
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionQuery query = container.createQuery();
+
+        if (!query.testState(BukkitAdapter.adapt(event.getBlock().getLocation()), player, Flags.BLOCK_BREAK))
         {
             event.setCancelled(true);
         }

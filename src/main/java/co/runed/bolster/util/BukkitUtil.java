@@ -1,6 +1,8 @@
 package co.runed.bolster.util;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.events.CustomCanDestroyBlockEvent;
+import co.runed.bolster.events.CustomCanPlaceBlockEvent;
 import co.runed.bolster.events.EntityTargetedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -101,7 +103,7 @@ public class BukkitUtil
         entities.removeIf(entity -> {
             EntityTargetedEvent event = new EntityTargetedEvent(entity);
             Bukkit.getServer().getPluginManager().callEvent(event);
-            
+
             return event.isCancelled();
         });
 
@@ -248,5 +250,25 @@ public class BukkitUtil
         }
 
         return entities;
+    }
+
+    public static boolean canDestroyBlockAt(LivingEntity entity, Location location)
+    {
+        Block block = location.getBlock();
+
+        CustomCanDestroyBlockEvent event = new CustomCanDestroyBlockEvent(block, entity.getEquipment().getItemInMainHand(), entity, true);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+
+        return !event.isCancelled();
+    }
+
+    public static boolean canPlaceBlockAt(LivingEntity entity, Location location)
+    {
+        Block block = location.getBlock();
+
+        CustomCanPlaceBlockEvent event = new CustomCanPlaceBlockEvent(block, entity.getEquipment().getItemInMainHand(), entity, true);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+
+        return !event.isCancelled();
     }
 }

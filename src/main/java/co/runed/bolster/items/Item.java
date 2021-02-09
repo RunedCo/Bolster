@@ -15,6 +15,7 @@ import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.target.Target;
+import co.runed.bolster.util.traits.Traits;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -95,13 +96,13 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     @Override
     public void onEnable()
     {
-
+        this.setTrait(Traits.MAX_HEALTH, this.getHealth());
     }
 
     @Override
     public void onDisable()
     {
-
+        this.setTrait(Traits.MAX_HEALTH, 0d);
     }
 
     @Override
@@ -137,7 +138,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
     public void addLore(List<String> lore)
     {
-         this.lore.addAll(lore);
+        this.lore.addAll(lore);
     }
 
     public List<String> getStatsLore()

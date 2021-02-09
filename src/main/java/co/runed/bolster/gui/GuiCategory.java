@@ -98,6 +98,6 @@ public class GuiCategory extends Gui
             return;
         }
 
-        ItemManager.getInstance().giveItem(player, itemId, stackAmount);
+        ItemManager.getInstance().giveItem(player, player.getInventory(), itemId, stackAmount);
     }
 }

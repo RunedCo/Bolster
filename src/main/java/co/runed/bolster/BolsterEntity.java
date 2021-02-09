@@ -6,12 +6,12 @@ import co.runed.bolster.managers.EntityManager;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.NumberUtil;
+import co.runed.bolster.util.Operation;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
-import co.runed.bolster.v1_16_R3.CraftUtil;
-import co.runed.bolster.util.Operation;
 import co.runed.bolster.util.traits.Trait;
 import co.runed.bolster.util.traits.TraitProvider;
+import co.runed.bolster.v1_16_R3.CraftUtil;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -23,16 +23,16 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class BolsterEntity extends TraitProvider
 {
     private LivingEntity _entity;
     List<TraitProvider> traitProviders = new ArrayList<>();
+    HashMap<String, Inventory> additionalInventories = new HashMap<>();
 
     public BolsterEntity(LivingEntity entity)
     {
@@ -341,6 +341,23 @@ public class BolsterEntity extends TraitProvider
     public UUID getUniqueId()
     {
         return this._entity.getUniqueId();
+    }
+
+    public void addAdditionalInventory(String id, Inventory inventory)
+    {
+        this.additionalInventories.put(id, inventory);
+    }
+
+    public Inventory getAdditionalInventory(String id)
+    {
+        if (!this.additionalInventories.containsKey(id)) return null;
+
+        return this.additionalInventories.get(id);
+    }
+
+    public Collection<Inventory> getAdditionalInventories()
+    {
+        return this.additionalInventories.values();
     }
 
     public void destroy()

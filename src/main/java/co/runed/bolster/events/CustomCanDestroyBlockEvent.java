@@ -7,29 +7,24 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.BlockEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-public final class AbilityPlaceBlockEvent extends BlockEvent implements Cancellable
+public final class CustomCanDestroyBlockEvent extends BlockEvent implements Cancellable
 {
     Ability ability;
 
     private static final HandlerList handlers = new HandlerList();
     protected boolean cancel;
     protected boolean canBuild;
-    protected Block placedAgainst;
-    protected BlockState replacedBlockState;
     protected ItemStack itemInHand;
     protected LivingEntity entity;
 
-    public AbilityPlaceBlockEvent(Ability ability, Block placedBlock, BlockState replacedBlockState, Block placedAgainst, ItemStack itemInHand, LivingEntity entity, boolean canBuild)
+    public CustomCanDestroyBlockEvent(Block destroyedBlock, ItemStack itemInHand, LivingEntity entity, boolean canBuild)
     {
-        super(placedBlock);
-        this.ability = ability;
-        this.placedAgainst = placedAgainst;
+        super(destroyedBlock);
+
         this.itemInHand = itemInHand;
         this.entity = entity;
-        this.replacedBlockState = replacedBlockState;
         this.canBuild = canBuild;
         this.cancel = false;
     }
@@ -49,19 +44,9 @@ public final class AbilityPlaceBlockEvent extends BlockEvent implements Cancella
         return this.entity;
     }
 
-    public Block getBlockPlaced()
+    public Block getBlockDestroyed()
     {
         return this.getBlock();
-    }
-
-    public BlockState getBlockReplacedState()
-    {
-        return this.replacedBlockState;
-    }
-
-    public Block getBlockAgainst()
-    {
-        return this.placedAgainst;
     }
 
     public ItemStack getItemInHand()

@@ -35,6 +35,6 @@ public class ConvertItemAbility extends Ability
     {
         Player player = (Player) properties.get(AbilityProperties.CASTER).getBukkit();
 
-        ItemManager.getInstance().giveItem(player, this.outputItemClass, this.outputCount);
+        ItemManager.getInstance().giveItem(player, player.getInventory(), this.outputItemClass, this.outputCount);
     }
 }

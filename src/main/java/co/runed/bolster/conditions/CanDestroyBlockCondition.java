@@ -8,9 +8,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
-public class CanPlaceBlockCondition extends TargetedCondition<Location>
+public class CanDestroyBlockCondition extends TargetedCondition<Location>
 {
-    public CanPlaceBlockCondition(Target<Location> target)
+    public CanDestroyBlockCondition(Target<Location> target)
     {
         super(target);
     }
@@ -21,7 +21,7 @@ public class CanPlaceBlockCondition extends TargetedCondition<Location>
         LivingEntity caster = properties.get(AbilityProperties.CASTER).getBukkit();
         Location location = this.getTarget().get(properties);
 
-        return BukkitUtil.canPlaceBlockAt(caster, location);
+        return BukkitUtil.canDestroyBlockAt(caster, location);
     }
 
     @Override

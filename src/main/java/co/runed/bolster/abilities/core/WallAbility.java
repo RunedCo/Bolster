@@ -2,11 +2,10 @@ package co.runed.bolster.abilities.core;
 
 import co.runed.bolster.abilities.TargetedAbility;
 import co.runed.bolster.conditions.CanPlaceBlockCondition;
-import co.runed.bolster.events.AbilityPlaceBlockEvent;
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.collection.RandomCollection;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -92,12 +91,9 @@ public class WallAbility extends TargetedAbility<Location>
 
         for (Block block : blockList)
         {
-            AbilityPlaceBlockEvent event = new AbilityPlaceBlockEvent(this, block, block.getState(), block, this.getCaster().getEquipment().getItemInMainHand(), this.getCaster(), true);
-            Bukkit.getServer().getPluginManager().callEvent(event);
+            if (!BukkitUtil.canPlaceBlockAt(this.getCaster(), location))
 
-            if (event.isCancelled()) continue;
-
-            if (materialsToReplace.contains(block.getType())) block.setType(this.blocks.next());
+                if (materialsToReplace.contains(block.getType())) block.setType(this.blocks.next());
         }
     }
 }

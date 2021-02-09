@@ -61,7 +61,7 @@ public class ItemCost extends Cost
             count = properties.get(AbilityProperties.ITEM_STACK).getAmount();
         }
 
-        return ItemManager.getInstance().inventoryContainsAtLeast(player, item.getId(), count);
+        return ItemManager.getInstance().inventoryContainsAtLeast(player.getInventory(), item.getId(), count);
     }
 
     @Override
@@ -96,6 +96,6 @@ public class ItemCost extends Cost
             count = properties.get(AbilityProperties.ITEM_STACK).getAmount();
         }
 
-        return ItemManager.getInstance().removeItem(player, item, count);
+        return ItemManager.getInstance().removeItem(player.getInventory(), item, count);
     }
 }

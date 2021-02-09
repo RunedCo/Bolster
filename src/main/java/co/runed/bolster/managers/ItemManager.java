@@ -1,5 +1,6 @@
 package co.runed.bolster.managers;
 
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityProviderType;
@@ -10,7 +11,6 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,14 +20,15 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -109,55 +110,54 @@ public class ItemManager extends Manager
     /**
      * {@code amount} defaults to {@code 1}
      *
-     * @see #giveItem(Player, String, int)
+     * @see #giveItem(LivingEntity, Inventory, String, int)
      */
-    public Item giveItem(Player player, Class<? extends Item> itemClass)
+    public Item giveItem(LivingEntity entity, Inventory inventory, Class<? extends Item> itemClass)
     {
-        return this.giveItem(player, itemClass, 1);
+        return this.giveItem(entity, inventory, itemClass, 1);
     }
 
     /**
-     * @see #giveItem(Player, String, int)
+     * @see #giveItem(LivingEntity, Inventory, String, int)
      */
-    public Item giveItem(Player player, Class<? extends Item> itemClass, int amount)
+    public Item giveItem(LivingEntity entity, Inventory inventory, Class<? extends Item> itemClass, int amount)
     {
-        return this.giveItem(player, Registries.ITEMS.getId(itemClass), amount);
+        return this.giveItem(entity, inventory, Registries.ITEMS.getId(itemClass), amount);
     }
 
     /**
      * {@code amount} defaults to {@code 1}
      *
-     * @see #giveItem(Player, String, int)
+     * @see #giveItem(LivingEntity, Inventory, String, int)
      */
-    public Item giveItem(Player player, String itemId)
+    public Item giveItem(LivingEntity entity, Inventory inventory, String itemId)
     {
-        return this.giveItem(player, itemId, 1);
+        return this.giveItem(entity, inventory, itemId, 1);
     }
 
     /**
      * Creates an item instance for the player and gives them an amount in their inventory
      *
-     * @param player the player
-     * @param itemId the item id
-     * @param amount the amount of items to give
+     * @param entity    the entity
+     * @param inventory the inventory
+     * @param itemId    the item id
+     * @param amount    the amount of items to give
      * @return the item instance
      */
-    public Item giveItem(Player player, String itemId, int amount)
+    public Item giveItem(LivingEntity entity, Inventory inventory, String itemId, int amount)
     {
-        Item item = this.createItem(player, itemId);
+        Item item = this.createItem(entity, itemId);
 
         if (item == null) return null;
 
         ItemStack stack = item.toItemStack();
         stack.setAmount(amount);
 
-        PlayerInventory inv = player.getInventory();
-
         Properties properties = new Properties();
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.ITEM, item);
-        properties.set(AbilityProperties.INVENTORY, inv);
-        AbilityManager.getInstance().trigger(player, item, AbilityTrigger.GIVE_ITEM, properties);
+        properties.set(AbilityProperties.INVENTORY, inventory);
+        AbilityManager.getInstance().trigger(entity, item, AbilityTrigger.GIVE_ITEM, properties);
 
         int amountRemaining = amount;
         int maxSize = stack.getMaxStackSize();
@@ -170,7 +170,7 @@ public class ItemManager extends Manager
 
             itemStack.setAmount(removedAmount);
 
-            inv.addItem(itemStack);
+            inventory.addItem(itemStack);
 
             amountRemaining -= removedAmount;
         }
@@ -181,71 +181,71 @@ public class ItemManager extends Manager
     /**
      * {@code amount} defaults to {@code 1}
      *
-     * @see #removeItem(Player, Item, int)
+     * @see #removeItem(Inventory, Item, int)
      */
-    public boolean removeItem(Player player, Item item)
+    public boolean removeItem(Inventory inventory, Item item)
     {
-        return this.removeItem(player, item, 1);
+        return this.removeItem(inventory, item, 1);
     }
 
     /**
      * Removes a number of an item from a player's inventory
      *
-     * @param player the player
-     * @param item   the item
-     * @param count  the number of items to remove
+     * @param inventory the inventory
+     * @param item      the item
+     * @param count     the number of items to remove
      * @return true if there were enough items to successfully remove
      */
-    public boolean removeItem(Player player, Item item, int count)
+    public boolean removeItem(Inventory inventory, Item item, int count)
     {
-        PlayerInventory inv = player.getInventory();
+        Inventory inv = inventory;
         ItemStack stack = item.toItemStack();
         stack.setAmount(count);
 
         if (!inv.containsAtLeast(stack, count))
         {
-            if (!this.inventoryContainsAtLeast(player, item.getId(), 1)) this.clearItem(player, item);
+            // TODO this is a bit jank
+            if (!this.inventoryContainsAtLeast(inventory, item.getId(), 1))
+                this.clearItem(inventory.getViewers().get(0), item);
 
             return false;
         }
 
-        ItemStack mainHand = inv.getItemInMainHand();
-        String itemId = this.getItemIdFromStack(mainHand);
-        int remaining = count;
+//        ItemStack mainHand = inv.getItemInMainHand();
+//        String itemId = this.getItemIdFromStack(mainHand);
+//        int remaining = count;
+//
+//        if (itemId != null && itemId.equals(item.getId()))
+//        {
+//            remaining = count - mainHand.getAmount();
+//
+//            if (remaining >= 0)
+//            {
+//                inv.setItemInMainHand(new ItemStack(Material.AIR));
+//
+//                stack.setAmount(remaining);
+//            }
+//            else
+//            {
+//                mainHand.setAmount(mainHand.getAmount() - count);
+//            }
+//        }
 
-        if (itemId != null && itemId.equals(item.getId()))
-        {
-            remaining = count - mainHand.getAmount();
-
-            if (remaining >= 0)
-            {
-                inv.setItemInMainHand(new ItemStack(Material.AIR));
-
-                stack.setAmount(remaining);
-            }
-            else
-            {
-                mainHand.setAmount(mainHand.getAmount() - count);
-            }
-        }
-
-        if (remaining > 0) inv.removeItem(stack);
+        inv.removeItem(stack);
 
         return true;
     }
 
-    public boolean inventoryContainsAtLeast(Player player, Class<? extends Item> item, int count)
+    public boolean inventoryContainsAtLeast(Inventory inventory, Class<? extends Item> item, int count)
     {
-        return this.inventoryContainsAtLeast(player, Registries.ITEMS.getId(item), count);
+        return this.inventoryContainsAtLeast(inventory, Registries.ITEMS.getId(item), count);
     }
 
-    public boolean inventoryContainsAtLeast(Player player, String itemId, int count)
+    public boolean inventoryContainsAtLeast(Inventory inventory, String itemId, int count)
     {
-        PlayerInventory playerInventory = player.getInventory();
-
         int numberFound = 0;
 
-        for (ItemStack stack : playerInventory)
+        for (ItemStack stack : inventory)
         {
             String stackItemId = this.getItemIdFromStack(stack);
 
@@ -278,20 +278,25 @@ public class ItemManager extends Manager
 
         if (item == null) return;
 
-        PlayerInventory playerInventory = player.getInventory();
-        for (int i = 0; i < playerInventory.getSize(); i++)
+        Collection<Inventory> inventories = new ArrayList<>();
+        inventories.add(player.getInventory());
+        inventories.addAll(BolsterEntity.from(player).getAdditionalInventories());
+
+        for (Inventory inventory : inventories)
         {
-            ItemStack stack = playerInventory.getItem(i);
+            for (int i = 0; i < inventory.getSize(); i++)
+            {
+                ItemStack stack = inventory.getItem(i);
 
-            String stackItemId = this.getItemIdFromStack(stack);
+                String stackItemId = this.getItemIdFromStack(stack);
 
-            if (stackItemId == null || !stackItemId.equals(itemId)) continue;
+                if (stackItemId == null || !stackItemId.equals(itemId)) continue;
 
-            ItemStack newStack = item.toItemStack().clone();
-            newStack.setAmount(stack.getAmount());
+                ItemStack newStack = item.toItemStack().clone();
+                newStack.setAmount(stack.getAmount());
 
-            if (!stack.equals(newStack))
-                playerInventory.setItem(i, newStack);
+                if (!stack.equals(newStack)) inventory.setItem(i, newStack);
+            }
         }
     }
 
@@ -532,7 +537,7 @@ public class ItemManager extends Manager
             return;
         }
 
-        this.removeItem(player, item);
+        this.removeItem(player.getInventory(), item);
     }
 
     @EventHandler

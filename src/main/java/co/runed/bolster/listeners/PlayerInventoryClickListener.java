@@ -4,6 +4,7 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,9 +20,9 @@ public class PlayerInventoryClickListener implements Listener
         if (event.getClickedInventory() == null) return;
 
         Player player = (Player) event.getWhoClicked();
-        ItemStack stack = event.getClickedInventory()
-                .getItem(
-                        event.getSlot());
+        ItemStack stack = event.getClickedInventory().getItem(event.getSlot());
+
+        if (stack != null && ChatColor.stripColor(stack.getItemMeta().getDisplayName()).equals("")) event.setCancelled(true);
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.ITEM_STACK, stack);
@@ -32,9 +33,8 @@ public class PlayerInventoryClickListener implements Listener
         properties.set(AbilityProperties.CLICK_TYPE, event.getClick());
         properties.set(AbilityProperties.INVENTORY_ACTION, event.getAction());
         properties.set(AbilityProperties.INVENTORY, event.getClickedInventory());
-
         properties.set(AbilityProperties.EVENT, event);
 
-        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_BREAK_BLOCK, properties);
+        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_CLICK_INVENTORY, properties);
     }
 }

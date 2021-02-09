@@ -6,8 +6,13 @@ import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.target.Target;
+import org.bukkit.GameMode;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class HasItemCondition extends TargetedCondition<BolsterEntity>
 {
@@ -31,9 +36,20 @@ public class HasItemCondition extends TargetedCondition<BolsterEntity>
     {
         LivingEntity entity = this.getTarget().get(properties).getBukkit();
 
-        if (!(entity instanceof Player)) return false;
+        if (entity instanceof Player && ((Player) entity).getGameMode() == GameMode.CREATIVE) return true;
 
-        return ItemManager.getInstance().inventoryContainsAtLeast((Player) entity, this.id, this.count);
+        Collection<Inventory> invs = new ArrayList<>();
+        if (entity instanceof Player) invs.add(((Player) entity).getInventory());
+        invs.addAll(BolsterEntity.from(entity).getAdditionalInventories());
+
+        for (Inventory inv : invs)
+        {
+            boolean contains = ItemManager.getInstance().inventoryContainsAtLeast(inv, this.id, this.count);
+
+            if (contains) return true;
+        }
+
+        return false;
     }
 
     @Override

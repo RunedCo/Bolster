@@ -29,6 +29,6 @@ public class GiveItemAbility extends TargetedAbility<BolsterEntity>
 
         if (!(entity instanceof Player)) return;
 
-        ItemManager.getInstance().giveItem((Player) entity, this.itemClass, this.outputCount);
+        ItemManager.getInstance().giveItem(entity, ((Player) entity).getInventory(), this.itemClass, this.outputCount);
     }
 }
