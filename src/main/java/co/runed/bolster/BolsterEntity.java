@@ -11,6 +11,7 @@ import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.traits.Trait;
 import co.runed.bolster.util.traits.TraitProvider;
+import co.runed.bolster.util.traits.Traits;
 import co.runed.bolster.v1_16_R3.CraftUtil;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -65,6 +66,8 @@ public class BolsterEntity extends TraitProvider
 
         for (TraitProvider traitProvider : this.traitProviders)
         {
+            if (!traitProvider.isEnabled()) continue;
+
             Properties next = traitProvider == this ? super.getTraits() : traitProvider.getTraits();
 
             for (Property exProp : next.getAll().keySet())
@@ -341,6 +344,11 @@ public class BolsterEntity extends TraitProvider
     public UUID getUniqueId()
     {
         return this._entity.getUniqueId();
+    }
+
+    public void updateHealth()
+    {
+        this.setMaxHealth(this.getTrait(Traits.MAX_HEALTH));
     }
 
     public void addAdditionalInventory(String id, Inventory inventory)

@@ -34,7 +34,7 @@ public class TestListener implements Listener
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
 
-        if (!query.testState(BukkitAdapter.adapt(event.getBlock().getLocation()), player, Flags.BLOCK_PLACE))
+        if (!query.testState(BukkitAdapter.adapt(event.getBlock().getLocation()), player, Flags.BUILD))
         {
             event.setCancelled(true);
         }
@@ -49,7 +49,7 @@ public class TestListener implements Listener
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
 
-        if (!query.testState(BukkitAdapter.adapt(event.getBlock().getLocation()), player, Flags.BLOCK_BREAK))
+        if (!query.testState(BukkitAdapter.adapt(event.getBlock().getLocation()), player, Flags.BUILD))
         {
             event.setCancelled(true);
         }

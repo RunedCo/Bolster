@@ -35,6 +35,6 @@ public class CanDestroyBlockCondition extends TargetedCondition<Location>
     {
         if (inverted) return null;
 
-        return ChatColor.RED + "You cannot place a block there!";
+        return ChatColor.RED + "You cannot destroy that block!";
     }
 }

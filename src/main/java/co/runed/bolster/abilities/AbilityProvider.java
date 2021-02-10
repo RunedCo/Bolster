@@ -34,7 +34,6 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     private LivingEntity entity;
     private LivingEntity parent;
     private ConfigurationSection config;
-    private boolean enabled = true;
     @JsonExclude
     private boolean dirty;
 
@@ -72,20 +71,16 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         ConfigUtil.parseVariables(config);
     }
 
+    @Override
     public void setEnabled(boolean enabled)
     {
-        if (this.enabled != enabled && this.getEntity() != null)
+        if (this.isEnabled() != enabled && this.getEntity() != null)
         {
             if (!enabled) this.onDisable();
             if (enabled) this.onEnable();
         }
 
-        this.enabled = enabled;
-    }
-
-    public boolean isEnabled()
-    {
-        return enabled;
+        super.setEnabled(enabled);
     }
 
     public LivingEntity getEntity()

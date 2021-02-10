@@ -51,7 +51,6 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     private static final UUID powerUuid = new UUID(1238, 1238);
     private static final UUID healthUuid = new UUID(1239, 1239);
 
-    private String id;
     private String name;
     private List<String> lore = new ArrayList<>();
     private ItemStack itemStack = new ItemStack(Material.STICK);

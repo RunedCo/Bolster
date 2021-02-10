@@ -6,9 +6,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ConfigUtil
 {
@@ -152,6 +154,90 @@ public class ConfigUtil
             this.set(path, value);
 
             return value;
+        }
+
+        @Override
+        public boolean isInt(@NotNull String path)
+        {
+            try
+            {
+                Integer test = (Integer) this.getInt(path);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean isDouble(@NotNull String path)
+        {
+            try
+            {
+                Double test = (Double) this.getDouble(path);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean isLong(@NotNull String path)
+        {
+            try
+            {
+                Long test = (Long) this.getLong(path);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int getInt(@NotNull String path, int def)
+        {
+            if (this.isList(path) && this.getList(path).size() >= 2)
+            {
+                List<Integer> range = this.getIntegerList(path);
+
+                return ThreadLocalRandom.current().nextInt(range.get(0), range.get(1) + 1);
+            }
+
+            return super.getInt(path, def);
+        }
+
+        @Override
+        public double getDouble(@NotNull String path, double def)
+        {
+            if (this.isList(path) && this.getList(path).size() >= 2)
+            {
+                List<Double> range = this.getDoubleList(path);
+
+                return ThreadLocalRandom.current().nextDouble(range.get(0), range.get(1) + 1);
+            }
+
+            return super.getDouble(path, def);
+        }
+
+        @Override
+        public long getLong(@NotNull String path, long def)
+        {
+            if (this.isList(path) && this.getList(path).size() >= 2)
+            {
+                List<Long> range = this.getLongList(path);
+
+                return ThreadLocalRandom.current().nextLong(range.get(0), range.get(1) + 1);
+            }
+
+            return super.getLong(path, def);
         }
     }
 }

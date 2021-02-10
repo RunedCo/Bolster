@@ -3,8 +3,10 @@ package co.runed.bolster.util.traits;
 import co.runed.bolster.util.json.JsonExclude;
 import co.runed.bolster.util.properties.Properties;
 
-public class TraitProvider
+public abstract class TraitProvider
 {
+    private boolean enabled = true;
+
     @JsonExclude
     private final Properties traits = new Properties();
 
@@ -21,5 +23,15 @@ public class TraitProvider
     public <T> T getTrait(Trait<T> key)
     {
         return this.traits.get(key);
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled()
+    {
+        return enabled;
     }
 }

@@ -26,6 +26,11 @@ public class CooldownManager extends Manager
         _instance = this;
     }
 
+    public void setCooldown(LivingEntity entity, ICooldownSource source, int slot, double cooldown)
+    {
+        this.setCooldown(entity, source, slot, cooldown, true);
+    }
+
     /**
      * Sets the cooldown for a specific cooldown source for an entity
      *
@@ -33,7 +38,7 @@ public class CooldownManager extends Manager
      * @param source   the source
      * @param cooldown the cooldown in seconds
      */
-    public void setCooldown(LivingEntity entity, ICooldownSource source, int slot, double cooldown)
+    public void setCooldown(LivingEntity entity, ICooldownSource source, int slot, double cooldown, boolean trigger)
     {
         cooldown = Math.max(cooldown, 0);
 
@@ -46,7 +51,7 @@ public class CooldownManager extends Manager
             this.cooldowns.add(new CooldownData(entity, source, slot, Instant.now(), (long) (cooldown * 1000)));
         }
 
-        source.onToggleCooldown();
+        if (trigger) source.onToggleCooldown();
     }
 
     /**
