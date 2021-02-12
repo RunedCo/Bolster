@@ -118,7 +118,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     {
         this.caster = caster;
 
-        for (Ability ability : this.children)
+        for (Ability ability : this.getChildren())
         {
             ability.setCaster(caster);
         }
@@ -248,7 +248,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     {
         if (this.inProgress) return true;
 
-        for (Ability ability : this.children)
+        for (Ability ability : this.getChildren())
         {
             if (ability.isInProgress())
             {
@@ -376,7 +376,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 
     public List<Ability> getChildren()
     {
-        return children;
+        return new ArrayList<>(children);
     }
 
     @Override
@@ -574,7 +574,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         this.onActivate(properties);
 
         // TODO ?
-        for (Ability ability : this.children)
+        for (Ability ability : this.getChildren())
         {
             ability.activate(properties);
         }
@@ -629,7 +629,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     {
         HandlerList.unregisterAll(this);
 
-        for (Ability child : this.children)
+        for (Ability child : this.getChildren())
         {
             child.destroy();
         }

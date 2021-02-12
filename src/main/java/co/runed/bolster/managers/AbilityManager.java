@@ -88,8 +88,11 @@ public class AbilityManager extends Manager
         {
             provList.add(new AbilityProviderData(provider, type));
         }
-
-        if (exists) provider.setEnabled(false);
+// TODO keep an eye on this
+//        if (exists)
+//        {
+//            provider.setEnabled(false);
+//        }
 
         provider.setEnabled(true);
         provider.setEntity(entity);
@@ -232,7 +235,7 @@ public class AbilityManager extends Manager
     {
         if (entity == null) return;
 
-        EntityPreCastAbilityEvent preCastEvent = new EntityPreCastAbilityEvent(entity, trigger);
+        EntityPreCastAbilityEvent preCastEvent = new EntityPreCastAbilityEvent(entity, provider, trigger, properties);
         Bukkit.getPluginManager().callEvent(preCastEvent);
 
         if (preCastEvent.isCancelled()) return;
@@ -243,8 +246,7 @@ public class AbilityManager extends Manager
         properties.set(AbilityProperties.CASTER, BolsterEntity.from(entity));
         properties.set(AbilityProperties.WORLD, entity.getWorld());
         properties.set(AbilityProperties.ABILITY_PROVIDER, provider);
-        if (properties.contains(AbilityProperties.TARGET))
-            properties.set(AbilityProperties.INITIAL_TARGET, properties.get(AbilityProperties.TARGET));
+        if (properties.contains(AbilityProperties.TARGET)) properties.set(AbilityProperties.INITIAL_TARGET, properties.get(AbilityProperties.TARGET));
         if (trigger != AbilityTrigger.ALL) properties.set(AbilityProperties.TRIGGER, trigger);
 
         for (Ability ability : abilities)

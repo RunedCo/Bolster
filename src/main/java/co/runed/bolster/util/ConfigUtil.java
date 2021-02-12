@@ -6,7 +6,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -157,7 +156,7 @@ public class ConfigUtil
         }
 
         @Override
-        public boolean isInt(@NotNull String path)
+        public boolean isInt(String path)
         {
             try
             {
@@ -172,7 +171,7 @@ public class ConfigUtil
         }
 
         @Override
-        public boolean isDouble(@NotNull String path)
+        public boolean isDouble(String path)
         {
             try
             {
@@ -187,7 +186,7 @@ public class ConfigUtil
         }
 
         @Override
-        public boolean isLong(@NotNull String path)
+        public boolean isLong(String path)
         {
             try
             {
@@ -202,7 +201,7 @@ public class ConfigUtil
         }
 
         @Override
-        public int getInt(@NotNull String path, int def)
+        public int getInt(String path, int def)
         {
             if (this.isList(path) && this.getList(path).size() >= 2)
             {
@@ -215,7 +214,7 @@ public class ConfigUtil
         }
 
         @Override
-        public double getDouble(@NotNull String path, double def)
+        public double getDouble(String path, double def)
         {
             if (this.isList(path) && this.getList(path).size() >= 2)
             {
@@ -228,7 +227,7 @@ public class ConfigUtil
         }
 
         @Override
-        public long getLong(@NotNull String path, long def)
+        public long getLong(String path, long def)
         {
             if (this.isList(path) && this.getList(path).size() >= 2)
             {

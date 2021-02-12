@@ -2,7 +2,7 @@ package co.runed.bolster;
 
 import co.runed.bolster.classes.TargetDummyClass;
 import co.runed.bolster.commands.*;
-import co.runed.bolster.events.DisguiseListener;
+import co.runed.bolster.wip.DisguiseListener;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.status.*;

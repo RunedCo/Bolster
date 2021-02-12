@@ -76,8 +76,17 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     {
         if (this.isEnabled() != enabled && this.getEntity() != null)
         {
-            if (!enabled) this.onDisable();
-            if (enabled) this.onEnable();
+            if (!enabled)
+            {
+                this.onDisable();
+                AbilityTrigger.DISABLE.trigger(this.getEntity(), this, new Properties());
+            }
+
+            if (enabled)
+            {
+                this.onEnable();
+                AbilityTrigger.ENABLE.trigger(this.getEntity(), this, new Properties());
+            }
         }
 
         super.setEnabled(enabled);
@@ -130,6 +139,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     {
         ability.setAbilityProvider(this);
         ability.setTrigger(trigger);
+        if (this.getEntity() != null) ability.setCaster(this.getEntity());
 
         // TODO potentially only create the AbilityData at a later point?
         AbilityProvider.AbilityData data = new AbilityProvider.AbilityData(trigger, ability);
@@ -161,7 +171,6 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     {
         return this.abilities;
     }
-
 
     public boolean isDirty()
     {

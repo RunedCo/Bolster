@@ -28,7 +28,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -198,15 +197,18 @@ public class ItemManager extends Manager
      */
     public boolean removeItem(Inventory inventory, Item item, int count)
     {
-        Inventory inv = inventory;
         ItemStack stack = item.toItemStack();
         stack.setAmount(count);
 
-        if (!inv.containsAtLeast(stack, count))
+        if (!inventory.containsAtLeast(stack, count))
         {
+            LivingEntity entity = inventory.getViewers().size() > 1 ? inventory.getViewers().get(0) : null;
+
             // TODO this is a bit jank
-            if (!this.inventoryContainsAtLeast(inventory, item.getId(), 1))
-                this.clearItem(inventory.getViewers().get(0), item);
+            if (entity != null && !this.anyInventoryContainsAtLeast(entity, item.getId(), 1))
+            {
+                this.clearItem(entity, item);
+            }
 
             return false;
         }
@@ -231,7 +233,7 @@ public class ItemManager extends Manager
 //            }
 //        }
 
-        inv.removeItem(stack);
+        inventory.removeItem(stack);
 
         return true;
     }
@@ -259,30 +261,38 @@ public class ItemManager extends Manager
         return false;
     }
 
-    public void rebuildAllItemStacks(Player player)
+    public boolean anyInventoryContainsAtLeast(LivingEntity entity, String itemId, int count)
     {
-        for (Item item : this.getItems(player))
+        for (Inventory inventory : BolsterEntity.from(entity).getAllInventories())
         {
-            this.rebuildItemStack(player, item.getId());
+            boolean success = this.inventoryContainsAtLeast(inventory, itemId, count);
+
+            if (success) return true;
+        }
+
+        return false;
+    }
+
+    public void rebuildAllItemStacks(LivingEntity entity)
+    {
+        for (Item item : this.getItems(entity))
+        {
+            this.rebuildItemStack(entity, item.getId());
         }
     }
 
-    public void rebuildItemStack(Player player, Class<? extends Item> item)
+    public void rebuildItemStack(LivingEntity entity, Class<? extends Item> item)
     {
-        this.rebuildItemStack(player, Registries.ITEMS.getId(item));
+        this.rebuildItemStack(entity, Registries.ITEMS.getId(item));
     }
 
-    public void rebuildItemStack(Player player, String itemId)
+    public void rebuildItemStack(LivingEntity entity, String itemId)
     {
-        Item item = this.getItem(player, itemId);
+        Item item = this.getItem(entity, itemId);
 
         if (item == null) return;
 
-        Collection<Inventory> inventories = new ArrayList<>();
-        inventories.add(player.getInventory());
-        inventories.addAll(BolsterEntity.from(player).getAdditionalInventories());
-
-        for (Inventory inventory : inventories)
+        for (Inventory inventory : BolsterEntity.from(entity).getAllInventories())
         {
             for (int i = 0; i < inventory.getSize(); i++)
             {
@@ -357,7 +367,7 @@ public class ItemManager extends Manager
      */
     public boolean hasItem(LivingEntity entity, String id)
     {
-        return this.getItem(entity, id) != null;
+        return AbilityManager.getInstance().hasProvider(entity, AbilityProviderType.ITEM, id);
     }
 
     /**
@@ -446,31 +456,52 @@ public class ItemManager extends Manager
     @EventHandler
     private void onPreCastAbility(EntityPreCastAbilityEvent event)
     {
+//        LivingEntity entity = event.getEntity();
+//        EntityEquipment inv = entity.getEquipment();
+//        ItemStack stack = inv.getItemInMainHand();
+//
+//        String itemId = this.getItemIdFromStack(stack);
+//
+//        if (itemId == null) return;
+//
+//        Item item = this.createItem(entity, itemId);
+
         LivingEntity entity = event.getEntity();
-        EntityEquipment inv = entity.getEquipment();
-        ItemStack stack = inv.getItemInMainHand();
 
-        String itemId = this.getItemIdFromStack(stack);
+        for (Inventory inventory : BolsterEntity.from(entity).getAllInventories())
+        {
+            for (ItemStack item : inventory)
+            {
+                String itemId = this.getItemIdFromStack(item);
 
-        if (itemId == null) return;
+                if (itemId == null) continue;
 
-        Item item = this.createItem(entity, itemId);
+                if (!this.hasItem(entity, itemId)) this.createItem(entity, itemId);
+            }
+        }
+
+        this.rebuildAllItemStacks(entity);
     }
 
     @EventHandler
     private void onCastAbility(EntityCastAbilityEvent event)
     {
-        AbilityProvider abilitySource = event.getAbility().getAbilityProvider();
+        AbilityProvider abilityProvider = event.getAbility().getAbilityProvider();
+        Properties properties = event.getProperties();
 
         Item item = null;
 
-        if (abilitySource instanceof Item)
+        if (abilityProvider instanceof Item)
         {
-            item = (Item) abilitySource;
+            item = (Item) abilityProvider;
         }
-        else if (event.getProperties().get(AbilityProperties.ITEM_STACK) != null)
+        else if (properties.get(AbilityProperties.ITEM) != null)
         {
-            String itemId = this.getItemIdFromStack(event.getProperties().get(AbilityProperties.ITEM_STACK));
+            item = properties.get(AbilityProperties.ITEM);
+        }
+        else if (properties.get(AbilityProperties.ITEM_STACK) != null)
+        {
+            String itemId = this.getItemIdFromStack(properties.get(AbilityProperties.ITEM_STACK));
 
             if (itemId != null)
             {
@@ -478,8 +509,7 @@ public class ItemManager extends Manager
             }
         }
 
-        event.getProperties().set(AbilityProperties.ITEM, item);
-
+        properties.set(AbilityProperties.ITEM, item);
     }
 
     @EventHandler
@@ -487,13 +517,16 @@ public class ItemManager extends Manager
     {
         Player player = event.getPlayer();
 
-        for (ItemStack item : player.getInventory())
+        for (Inventory inventory : BolsterEntity.from(player).getAllInventories())
         {
-            String itemId = this.getItemIdFromStack(item);
+            for (ItemStack item : inventory)
+            {
+                String itemId = this.getItemIdFromStack(item);
 
-            if (itemId == null) continue;
+                if (itemId == null) continue;
 
-            this.createItem(player, itemId);
+                this.createItem(player, itemId);
+            }
         }
 
         this.rebuildAllItemStacks(player);

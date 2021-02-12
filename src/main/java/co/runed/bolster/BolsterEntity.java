@@ -363,9 +363,25 @@ public class BolsterEntity extends TraitProvider
         return this.additionalInventories.get(id);
     }
 
+    public Inventory removeAdditionalInventory(String id)
+    {
+        if (!this.additionalInventories.containsKey(id)) return null;
+
+        return this.additionalInventories.remove(id);
+    }
+
     public Collection<Inventory> getAdditionalInventories()
     {
         return this.additionalInventories.values();
+    }
+
+    public Collection<Inventory> getAllInventories()
+    {
+        ArrayList<Inventory> inventories = new ArrayList<>();
+        if (this.getBukkit() instanceof Player) inventories.add(((Player) this.getBukkit()).getInventory());
+        inventories.addAll(this.getAdditionalInventories());
+
+        return inventories;
     }
 
     public void destroy()

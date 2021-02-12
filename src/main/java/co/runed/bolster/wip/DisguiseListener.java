@@ -1,4 +1,4 @@
-package co.runed.bolster.events;
+package co.runed.bolster.wip;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.util.NetworkUtil;

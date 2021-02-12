@@ -1,6 +1,7 @@
 package co.runed.bolster.conditions;
 
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
@@ -38,11 +39,12 @@ public class HasItemCondition extends TargetedCondition<BolsterEntity>
 
         if (entity instanceof Player && ((Player) entity).getGameMode() == GameMode.CREATIVE) return true;
 
-        Collection<Inventory> invs = new ArrayList<>();
-        if (entity instanceof Player) invs.add(((Player) entity).getInventory());
-        invs.addAll(BolsterEntity.from(entity).getAdditionalInventories());
+        if (this.id == null)
+        {
+            this.id = properties.get(AbilityProperties.ITEM).getId();
+        }
 
-        for (Inventory inv : invs)
+        for (Inventory inv : BolsterEntity.from(entity).getAllInventories())
         {
             boolean contains = ItemManager.getInstance().inventoryContainsAtLeast(inv, this.id, this.count);
 
