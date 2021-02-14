@@ -33,7 +33,7 @@ public abstract class LevelableItem extends Item
     {
         List<String> out = new ArrayList<>();
 
-        out.add(ChatColor.GRAY + "Level " + this.getLevel());
+        out.add(this.getLevelDisplayText());
         out.addAll(super.getStatsLore());
 
         return out;
@@ -153,6 +153,11 @@ public abstract class LevelableItem extends Item
     {
         // Minus 1 because it includes level 0
         return this.levels.size() - 1;
+    }
+
+    public String getLevelDisplayText()
+    {
+        return ChatColor.GRAY + "Level " + this.getLevel();
     }
 
     public List<String> getUpgradeTooltip(int level)

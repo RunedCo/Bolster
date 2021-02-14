@@ -18,6 +18,8 @@ public class Config
     public String databasePassword;
     public String databaseName;
 
+    public boolean debugMode = false;
+
     public Config() throws IOException, InvalidConfigurationException
     {
         Bolster bolster = Bolster.getInstance();
@@ -39,6 +41,8 @@ public class Config
         this.databaseUsername = database.getString("username", "admin");
         this.databasePassword = database.getString("password", "admin");
         this.databaseName = database.getString("database", "bolster");
+
+        this.debugMode = this.config.getBoolean("debug", this.debugMode);
     }
 
     public Configuration getRawConfig()

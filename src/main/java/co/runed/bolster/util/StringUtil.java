@@ -12,6 +12,7 @@ import java.util.TreeMap;
 public class StringUtil
 {
     public static final int LINE_LENGTH = 50;
+    public static final String NEW_LINE = "\n";
 
     /**
      * Format a string to the default length, keeping {@link ChatColor} between lines
@@ -37,7 +38,7 @@ public class StringUtil
 
         if (text == null) return lore;
 
-        String[] lines = text.split("\n");
+        String[] lines = text.split(NEW_LINE);
 
         for (String line : lines)
         {
@@ -53,8 +54,8 @@ public class StringUtil
 
         int length = lineLength + (text.length() - ChatColor.stripColor(text).length());
 
-        String wrapped = WordUtils.wrap(text, length, "\n", true);
-        String[] wrappedArray = wrapped.split("\n");
+        String wrapped = WordUtils.wrap(text, length, NEW_LINE, true);
+        String[] wrappedArray = wrapped.split(NEW_LINE);
 
         String previousLine = null;
         for (String line : wrappedArray)

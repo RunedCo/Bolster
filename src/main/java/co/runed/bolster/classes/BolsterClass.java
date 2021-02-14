@@ -12,6 +12,7 @@ import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
+import co.runed.bolster.util.traits.Traits;
 import co.runed.bolster.wip.upgrade.Upgrade;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -62,6 +63,7 @@ public abstract class BolsterClass extends AbilityProvider
     public void setMaxHealth(double maxHealth)
     {
         this.maxHealth = maxHealth;
+        this.setTrait(Traits.MAX_HEALTH, maxHealth);
     }
 
     public double getMaxHealth()
@@ -135,19 +137,23 @@ public abstract class BolsterClass extends AbilityProvider
         ClassManager.getInstance().setClass(entity, this);
     }
 
-    @Override
-    public void onEnable()
-    {
-        if (this.maxHealth > 0)
-        {
-            this.getEntity().setMaxHealth(this.maxHealth);
-            this.getEntity().setHealth(this.maxHealth);
-        }
-    }
+//    @Override
+//    public void onEnable()
+//    {
+//        super.onEnable();
+//
+//        if (this.maxHealth > 0)
+//        {
+//            this.getEntity().setMaxHealth(this.maxHealth);
+//            this.getEntity().setHealth(this.maxHealth);
+//        }
+//    }
 
     @Override
     public void onDisable()
     {
+        super.onDisable();
+
         // clear status effects
         StatusEffectManager.getInstance().clearStatusEffects(this.getEntity());
     }

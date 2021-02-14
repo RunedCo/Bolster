@@ -13,6 +13,7 @@ import co.runed.bolster.util.json.JsonExclude;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.traits.TraitProvider;
+import co.runed.bolster.util.traits.Traits;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,16 +37,37 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     private ConfigurationSection config;
     @JsonExclude
     private boolean dirty;
+    @JsonExclude
+    private String tooltip;
 
     public abstract AbilityProviderType getType();
-
-    public abstract void onEnable();
-
-    public abstract void onDisable();
 
     public abstract void onCastAbility(Ability ability, Boolean success);
 
     public abstract void onToggleCooldown(Ability ability);
+
+    public void onEnable()
+    {
+        if (Bolster.getBolsterConfig().debugMode)
+            Bolster.getInstance().getLogger().info(ChatColor.stripColor(this.getEntity().getName()) + " (" + this.getEntity().getUniqueId() + ")" + ": " + this.getId() + " enabled");
+
+        double health = this.getTrait(Traits.MAX_HEALTH);
+
+        this.getEntity().setMaxHealth(this.getEntity().getMaxHealth() + health);
+        this.getEntity().setHealth(this.getEntity().getHealth() + health);
+    }
+
+    public void onDisable()
+    {
+        if (Bolster.getBolsterConfig().debugMode)
+            Bolster.getInstance().getLogger().info(ChatColor.stripColor(this.getEntity().getName()) + " (" + this.getEntity().getUniqueId() + ")" + ": " + this.getId() + " disabled");
+
+        double health = this.getEntity().getMaxHealth() - this.getTrait(Traits.MAX_HEALTH);
+
+        if (health <= 0) health = 20;
+
+        this.getEntity().setMaxHealth(health);
+    }
 
     @Override
     public void setConfig(ConfigurationSection config)
@@ -69,6 +91,8 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     public void create(ConfigurationSection config)
     {
         ConfigUtil.parseVariables(config);
+
+        this.tooltip = config.getString("tooltip");
     }
 
     @Override
@@ -212,7 +236,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
 
         if (abilityDescriptions.size() <= 0) return null;
 
-        return StringUtil.join("\n", abilityDescriptions);
+        return StringUtil.join(StringUtil.NEW_LINE, abilityDescriptions);
     }
 
     public boolean rebuild()

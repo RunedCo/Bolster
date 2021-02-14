@@ -6,7 +6,6 @@ import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityProviderType;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.events.EntityCastAbilityEvent;
-import co.runed.bolster.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.properties.Properties;
@@ -14,6 +13,8 @@ import co.runed.bolster.util.registries.Registries;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -453,35 +454,35 @@ public class ItemManager extends Manager
         //this.entityItems.clear();
     }
 
-    @EventHandler
-    private void onPreCastAbility(EntityPreCastAbilityEvent event)
-    {
+//    @EventHandler
+//    private void onPreCastAbility(EntityPreCastAbilityEvent event)
+//    {
+////        LivingEntity entity = event.getEntity();
+////        EntityEquipment inv = entity.getEquipment();
+////        ItemStack stack = inv.getItemInMainHand();
+////
+////        String itemId = this.getItemIdFromStack(stack);
+////
+////        if (itemId == null) return;
+////
+////        Item item = this.createItem(entity, itemId);
+//
 //        LivingEntity entity = event.getEntity();
-//        EntityEquipment inv = entity.getEquipment();
-//        ItemStack stack = inv.getItemInMainHand();
 //
-//        String itemId = this.getItemIdFromStack(stack);
+//        for (Inventory inventory : BolsterEntity.from(entity).getAllInventories())
+//        {
+//            for (ItemStack item : inventory)
+//            {
+//                String itemId = this.getItemIdFromStack(item);
 //
-//        if (itemId == null) return;
+//                if (itemId == null) continue;
 //
-//        Item item = this.createItem(entity, itemId);
-
-        LivingEntity entity = event.getEntity();
-
-        for (Inventory inventory : BolsterEntity.from(entity).getAllInventories())
-        {
-            for (ItemStack item : inventory)
-            {
-                String itemId = this.getItemIdFromStack(item);
-
-                if (itemId == null) continue;
-
-                if (!this.hasItem(entity, itemId)) this.createItem(entity, itemId);
-            }
-        }
-
-        this.rebuildAllItemStacks(entity);
-    }
+//                if (!this.hasItem(entity, itemId)) this.createItem(entity, itemId);
+//            }
+//        }
+//
+//        this.rebuildAllItemStacks(entity);
+//    }
 
     @EventHandler
     private void onCastAbility(EntityCastAbilityEvent event)
@@ -541,15 +542,28 @@ public class ItemManager extends Manager
         this.clearItems(player);
     }*/
 
-    @EventHandler
-    private void onPlayerDie(PlayerDeathEvent event)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onFatalDamage(EntityDamageEvent event)
     {
-        Player player = event.getEntity();
+        if(!(event.getEntity() instanceof LivingEntity)) return;
 
-        this.clearItems(player);
+        LivingEntity entity = (LivingEntity) event.getEntity();
 
-        AbilityManager.getInstance().reset(event.getEntity(), AbilityProviderType.ITEM);
+        if (event.getFinalDamage() >= entity.getHealth())
+        {
+            AbilityManager.getInstance().reset(entity, AbilityProviderType.ITEM);
+        }
     }
+
+//    @EventHandler
+//    private void onPlayerDie(PlayerDeathEvent event)
+//    {
+//        Player player = event.getEntity();
+//
+//        this.clearItems(player);
+//
+//        AbilityManager.getInstance().reset(event.getEntity(), AbilityProviderType.ITEM);
+//    }
 
     @EventHandler
     private void onDropItem(PlayerDropItemEvent event)

@@ -96,12 +96,8 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     public void onEnable()
     {
         this.setTrait(Traits.MAX_HEALTH, this.getHealth());
-    }
 
-    @Override
-    public void onDisable()
-    {
-        this.setTrait(Traits.MAX_HEALTH, 0d);
+        super.onEnable();
     }
 
     @Override
@@ -302,6 +298,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     public void setHealth(double health)
     {
         this.health = health;
+        this.setTrait(Traits.MAX_HEALTH, health);
     }
 
     public void setDroppable(boolean droppable)

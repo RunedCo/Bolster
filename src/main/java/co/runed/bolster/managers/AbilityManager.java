@@ -78,7 +78,7 @@ public class AbilityManager extends Manager
             }
 
             // check if type is solo - if so disable all others
-            if (type.isSolo())
+            if (type.isSolo() && existingData.type.equals(type))
             {
                 existingData.provider.setEnabled(false);
             }
@@ -211,7 +211,9 @@ public class AbilityManager extends Manager
         }
 
         if (this.providers.containsKey(entity.getUniqueId()))
+        {
             this.providers.get(entity.getUniqueId()).removeIf((d) -> d.type == type);
+        }
     }
 
     public void resetAll()

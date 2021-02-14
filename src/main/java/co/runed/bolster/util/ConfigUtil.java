@@ -156,6 +156,21 @@ public class ConfigUtil
         }
 
         @Override
+        public boolean isString(String path)
+        {
+            try
+            {
+                String test = (String) this.getString(path);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
         public boolean isInt(String path)
         {
             try
@@ -198,6 +213,17 @@ public class ConfigUtil
             }
 
             return true;
+        }
+
+        @Override
+        public String getString(String path, String def)
+        {
+            if (this.isList(path))
+            {
+                return String.join(StringUtil.join(StringUtil.NEW_LINE, this.getStringList(path)));
+            }
+
+            return super.getString(path, def);
         }
 
         @Override
