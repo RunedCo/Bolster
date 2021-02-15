@@ -247,8 +247,17 @@ public class AbilityManager extends Manager
 
         properties.set(AbilityProperties.CASTER, BolsterEntity.from(entity));
         properties.set(AbilityProperties.WORLD, entity.getWorld());
-        properties.set(AbilityProperties.ABILITY_PROVIDER, provider);
-        if (properties.contains(AbilityProperties.TARGET)) properties.set(AbilityProperties.INITIAL_TARGET, properties.get(AbilityProperties.TARGET));
+
+        if (provider != null || !properties.contains(AbilityProperties.ABILITY_PROVIDER))
+        {
+            properties.set(AbilityProperties.ABILITY_PROVIDER, provider);
+        }
+
+        if (properties.contains(AbilityProperties.TARGET))
+        {
+            properties.set(AbilityProperties.INITIAL_TARGET, properties.get(AbilityProperties.TARGET));
+        }
+
         if (trigger != AbilityTrigger.ALL) properties.set(AbilityProperties.TRIGGER, trigger);
 
         for (Ability ability : abilities)
@@ -266,7 +275,7 @@ public class AbilityManager extends Manager
 
             boolean success = ability.activate(properties);
 
-            if (ability.getTrigger() != AbilityTrigger.TICK && ability.getTrigger() != AbilityTrigger.ON_CAST_ABILITY)
+            if (ability.getTrigger() != AbilityTrigger.TICK && ability.getTrigger() != AbilityTrigger.ON_CAST_ABILITY && trigger != AbilityTrigger.ALL)
             {
                 Properties onCastProperties = new Properties(properties);
                 onCastProperties.set(AbilityProperties.ABILITY, ability);
@@ -350,7 +359,7 @@ public class AbilityManager extends Manager
         Location movedFrom = event.getFrom();
         Location movedTo = event.getTo();
 
-        if ((movedFrom.getX() == movedTo.getX()) && (movedFrom.getY() == movedTo.getY()) && (movedFrom.getZ() == movedTo.getZ()))
+        if ((Math.abs(movedFrom.getX() - movedTo.getX()) >= 0.5) && (Math.abs(movedFrom.getY() - movedTo.getY()) >= 0.5) && (Math.abs(movedFrom.getZ() - movedTo.getZ()) >= 0.5))
             return;
 
         for (Ability ability : this.getAbilities(player))

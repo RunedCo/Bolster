@@ -56,6 +56,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     private boolean cancelledByTakingDamage;
     private boolean cancelledByCast;
     private boolean cancelledByDealingDamage;
+    private long lastErrorTime = 0;
 
     TaskUtil.TaskSeries castingTask;
 
@@ -486,10 +487,11 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
                 {
                     String error = condition.getErrorMessage(this, properties, false);
 
-                    if (error != null)
+                    if (error != null && System.currentTimeMillis() - this.lastErrorTime >= 1000)
                     {
                         this.getCaster().sendMessage(error);
-                        BolsterEntity.from(this.getCaster()).sendActionBar(error);
+                        //BolsterEntity.from(this.getCaster()).sendActionBar(error);
+                        this.lastErrorTime = System.currentTimeMillis();
                     }
                 }
 

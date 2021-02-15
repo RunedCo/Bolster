@@ -53,12 +53,12 @@ public class ClassManager extends Manager
 
         if (bolsterClass != null && bolsterClass.getEntity() != entity)
         {
-            bolsterClass = (BolsterClass) AbilityManager.getInstance().addProvider(entity, bolsterClass);
-
             if (!bolsterClass.isConfigSet())
             {
                 bolsterClass.setConfig(Registries.CLASSES.getConfig(bolsterClass.getId()));
             }
+
+            bolsterClass = (BolsterClass) AbilityManager.getInstance().addProvider(entity, bolsterClass);
 
             bolsterClass.setEntity(entity);
             bolsterClass.rebuild();

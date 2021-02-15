@@ -34,6 +34,7 @@ public class HasStatusEffect extends TargetedCondition<BolsterEntity>
     public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
     {
         StatusEffect status = Registries.STATUS_EFFECTS.get(this.statusEffect);
+        if (status == null || status.getName() == null) return null;
 
         if (inverted) return ChatColor.RED + "You must not have " + status.getName() + " to use this ability!";
 

@@ -16,6 +16,7 @@ import co.runed.bolster.util.traits.Traits;
 import co.runed.bolster.wip.upgrade.Upgrade;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -40,6 +41,8 @@ public abstract class BolsterClass extends AbilityProvider
     public void create(ConfigurationSection config)
     {
         super.create(config);
+
+        if (config.isDouble("attack-damage")) this.setBaseAttackDamage(config.getDouble("attack-damage"));
     }
 
     @Override
@@ -170,6 +173,11 @@ public abstract class BolsterClass extends AbilityProvider
 
     }
 
+
+    public void setBaseAttackDamage(double damage)
+    {
+        this.getEntity().getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(damage);
+    }
 
     public void addUpgrade(Upgrade upgrade)
     {

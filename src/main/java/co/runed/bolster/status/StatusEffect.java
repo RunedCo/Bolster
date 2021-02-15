@@ -16,6 +16,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,6 +31,7 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
     double duration;
     LivingEntity entity;
     BukkitTask task;
+    Instant startTime;
 
     boolean active;
     private List<PotionEffectType> potionEffects = new ArrayList<>();
@@ -71,6 +74,13 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
         this.duration += duration;
     }
 
+    public Duration getRemainingDuration()
+    {
+        Duration sinceStart = Duration.between(startTime, Instant.now());
+        Duration remaining = TimeUtil.fromSeconds(this.getDuration()).minus(sinceStart);
+        return remaining.isNegative() ? Duration.ZERO : remaining;
+    }
+
     public LivingEntity getEntity()
     {
         return entity;
@@ -97,15 +107,12 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
 
-        for (PotionEffect effect : entity.getActivePotionEffects())
-        {
-            entity.sendMessage("Effect " + effect.toString());
-        }
-
         if (this.canStart())
         {
             this.onStart();
         }
+
+        this.startTime = Instant.now();
 
         this.task = TaskUtil.runDurationTaskTimer(Bolster.getInstance(), this::onTick,
                 TimeUtil.fromSeconds(this.getDuration()), 0, 1L, this::end);

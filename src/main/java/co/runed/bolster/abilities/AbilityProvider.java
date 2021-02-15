@@ -92,7 +92,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     {
         ConfigUtil.parseVariables(config);
 
-        this.tooltip = config.getString("tooltip");
+        if (config != null) this.tooltip = config.getString("tooltip", null);
     }
 
     @Override

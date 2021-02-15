@@ -584,7 +584,7 @@ public class ItemManager extends Manager
             return;
         }
 
-        this.removeItem(player.getInventory(), item);
+        //this.removeItem(player.getInventory(), item);
     }
 
     @EventHandler

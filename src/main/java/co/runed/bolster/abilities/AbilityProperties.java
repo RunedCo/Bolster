@@ -38,6 +38,8 @@ public class AbilityProperties
     public static final Property<Event> EVENT = new Property<>("event");
     public static final Property<ItemStack> ITEM_STACK = new Property<>("item_stack");
     public static final Property<Item> ITEM = new Property<>("item");
+    public static final Property<String> ITEM_ID = new Property<>("item_id");
+    public static final Property<Integer> ITEM_COUNT = new Property<>("item_count");
     public static final Property<AbilityTrigger> TRIGGER = new Property<>("trigger", AbilityTrigger.ALL);
     public static final Property<AbilityProvider> ABILITY_PROVIDER = new Property<>("ability_provider");
     public static final Property<Ability> ABILITY = new Property<>("ability");

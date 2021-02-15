@@ -1,26 +1,23 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.NetworkUtil;
 import co.runed.bolster.util.TimeUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class StatusEffectManager extends Manager
 {
@@ -33,6 +30,8 @@ public class StatusEffectManager extends Manager
         super(plugin);
 
         _instance = this;
+
+        Bukkit.getScheduler().runTaskTimer(Bolster.getInstance(), () -> Bukkit.getOnlinePlayers().forEach(this::updateTitleDisplay), 0L, 20);
     }
 
     // TODO:
@@ -101,14 +100,20 @@ public class StatusEffectManager extends Manager
 
         statusEffect.clear();
 
-        if (entity instanceof Player && statusEffect.getId() != null)
+        if (entity instanceof Player)
         {
             Player player = (Player) entity;
-            ByteBuf byteBuf = Unpooled.buffer();
-            NetworkUtil.writeString(byteBuf, statusEffect.getId());
-            byteBuf.writeDouble(statusEffect.getDuration());
 
-            player.sendPluginMessage(Bolster.getInstance(), "bolster:remove_status_effect", byteBuf.array());
+            if (statusEffect.getId() != null)
+            {
+                ByteBuf byteBuf = Unpooled.buffer();
+                NetworkUtil.writeString(byteBuf, statusEffect.getId());
+                byteBuf.writeDouble(statusEffect.getDuration());
+
+                player.sendPluginMessage(Bolster.getInstance(), "bolster:remove_status_effect", byteBuf.array());
+            }
+
+            this.updateTitleDisplay(player);
         }
 
         if (this.currentStatusEffects.containsKey(uuid)) this.currentStatusEffects.get(uuid).remove(statusEffect);
@@ -145,14 +150,23 @@ public class StatusEffectManager extends Manager
     {
         StringBuilder display = new StringBuilder();
 
-        for (StatusEffect effect : this.getStatusEffects(player))
+        Collection<StatusEffect> effects = this.getStatusEffects(player);
+
+        if (effects.size() <= 0) return;
+
+        for (StatusEffect effect : effects)
         {
             if (effect.getName() == null) continue;
 
-            display.append(effect.getColor()).append(effect.getName().toUpperCase()).append(" (").append(effect.getDuration()).append(")").append(", ");
+            display.append(ChatColor.BOLD)
+                    .append(effect.getColor()).append(effect.getName().toUpperCase()).append(ChatColor.RESET)
+                    .append(" (").append(TimeUtil.formatDurationHhMmSs(effect.getRemainingDuration())).append(")")
+                    .append(" | ");
         }
 
-        display = new StringBuilder(display.substring(0, display.length() - 2));
+        display = new StringBuilder(display.substring(0, display.length() - 3));
+
+        BolsterEntity.from(player).sendActionBar(display.toString());
 
         //PlayerUtil.sendActionBar(player, ChatColor.BOLD + display.toString());
 
