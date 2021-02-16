@@ -178,6 +178,8 @@ public abstract class LevelableItem extends Item
             tooltip.add(formatIncrease("Knockback", KNOCKBACK_KEY, level));
         if (config.isSet(POWER_KEY))
             tooltip.add(formatIncrease("Power", POWER_KEY, level));
+        if (config.isSet(HEALTH_KEY))
+            tooltip.add(formatIncrease("Health", POWER_KEY, level));
 
         return tooltip;
     }

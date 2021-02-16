@@ -5,11 +5,16 @@ import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
 import co.runed.bolster.util.IConfigurable;
 import co.runed.bolster.util.Manager;
+import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 public abstract class GameMode extends Manager implements IRegisterable, IConfigurable
 {
@@ -20,8 +25,9 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
 
     StateSeries mainState;
     String id;
-
     GameProperties properties;
+    HashMap<UUID, Properties> statistics = new HashMap<>();
+    Properties globalStatistics = new Properties();
 
     boolean hasStarted = false;
     boolean paused = false;
@@ -85,6 +91,30 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     public GameProperties getProperties()
     {
         return this.properties;
+    }
+
+    public <T> T getStatistic(Player player, Property<T> statistic)
+    {
+        this.statistics.putIfAbsent(player.getUniqueId(), new Properties());
+
+        return this.statistics.get(player.getUniqueId()).get(statistic);
+    }
+
+    public <T> void setStatistic(Player player, Property<T> statistic, T value)
+    {
+        this.statistics.putIfAbsent(player.getUniqueId(), new Properties());
+
+        this.statistics.get(player.getUniqueId()).set(statistic, value);
+    }
+
+    public <T> T getGlobalStatistic(Property<T> statistic)
+    {
+        return this.globalStatistics.get(statistic);
+    }
+
+    public <T> void setGlobalStatistic(Property<T> statistic, T value)
+    {
+        this.globalStatistics.set(statistic, value);
     }
 
     @Override

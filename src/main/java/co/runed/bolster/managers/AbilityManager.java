@@ -197,13 +197,29 @@ public class AbilityManager extends Manager
     {
         for (AbilityProvider provider : this.getProviders(entity))
         {
+            provider.setEnabled(false);
+        }
+    }
+
+    public void reset(LivingEntity entity, AbilityProviderType type)
+    {
+        for (AbilityProvider provider : this.getProviders(entity, type))
+        {
+            provider.setEnabled(false);
+        }
+    }
+
+    public void destroy(LivingEntity entity)
+    {
+        for (AbilityProvider provider : this.getProviders(entity))
+        {
             provider.destroy();
         }
 
         this.providers.remove(entity.getUniqueId());
     }
 
-    public void reset(LivingEntity entity, AbilityProviderType type)
+    public void destroy(LivingEntity entity, AbilityProviderType type)
     {
         for (AbilityProvider provider : this.getProviders(entity, type))
         {

@@ -159,9 +159,13 @@ public class StatusEffectManager extends Manager
             if (effect.getName() == null) continue;
 
             display.append(ChatColor.BOLD)
-                    .append(effect.getColor()).append(effect.getName().toUpperCase()).append(ChatColor.RESET)
-                    .append(" (").append(TimeUtil.formatDurationHhMmSs(effect.getRemainingDuration())).append(")")
-                    .append(" | ");
+                    .append(effect.getColor()).append(effect.getName().toUpperCase()).append(ChatColor.RESET);
+
+            if (effect.getDuration() < Integer.MAX_VALUE)
+                display.append(" (").append(TimeUtil.formatDurationHhMmSs(effect.getRemainingDuration())).append(")");
+
+
+            display.append(" | ");
         }
 
         display = new StringBuilder(display.substring(0, display.length() - 3));

@@ -55,6 +55,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     private List<String> lore = new ArrayList<>();
     private ItemStack itemStack = new ItemStack(Material.STICK);
     private boolean droppable = true;
+    private boolean clearOnRemove = true;
 
     // attributes
     double attackDamage = 0;
@@ -309,6 +310,16 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     public boolean isDroppable()
     {
         return droppable;
+    }
+
+    public void setClearOnRemove(boolean clearOnRemove)
+    {
+        this.clearOnRemove = clearOnRemove;
+    }
+
+    public boolean shouldClearOnRemove()
+    {
+        return clearOnRemove;
     }
 
     @Override

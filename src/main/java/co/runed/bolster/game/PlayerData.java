@@ -1,9 +1,9 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.util.currency.Currency;
+import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.wip.particles.ParticleSet;
-import co.runed.bolster.wip.settings.Setting;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -97,7 +97,7 @@ public class PlayerData
         this.activeParticleSet = id;
     }
 
-    public <T> T getSetting(Setting<T> setting)
+    public <T> T getSetting(Property<T> setting)
     {
         T value;
 
@@ -115,7 +115,7 @@ public class PlayerData
         return value;
     }
 
-    public <T> void setSetting(Setting<T> setting, T value)
+    public <T> void setSetting(Property<T> setting, T value)
     {
         this.settings.put(setting.getId(), value);
     }

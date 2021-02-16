@@ -179,16 +179,6 @@ public class ItemManager extends Manager
     }
 
     /**
-     * {@code amount} defaults to {@code 1}
-     *
-     * @see #removeItem(Inventory, Item, int)
-     */
-    public boolean removeItem(Inventory inventory, Item item)
-    {
-        return this.removeItem(inventory, item, 1);
-    }
-
-    /**
      * Removes a number of an item from a player's inventory
      *
      * @param inventory the inventory
@@ -206,7 +196,7 @@ public class ItemManager extends Manager
             LivingEntity entity = inventory.getViewers().size() > 1 ? inventory.getViewers().get(0) : null;
 
             // TODO this is a bit jank
-            if (entity != null && !this.anyInventoryContainsAtLeast(entity, item.getId(), 1))
+            if (entity != null && item.shouldClearOnRemove() && !this.anyInventoryContainsAtLeast(entity, item.getId(), 1))
             {
                 this.clearItem(entity, item);
             }
