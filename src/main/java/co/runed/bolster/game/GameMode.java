@@ -10,6 +10,7 @@ import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -100,7 +101,8 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         return this.statistics.get(player.getUniqueId()).get(statistic);
     }
 
-    public <T> void setStatistic(Player player, Property<T> statistic, T value)
+    // TODO better statistics?
+    public <T> void setStatistic(Player player, Property<Integer> statistic, int value)
     {
         this.statistics.putIfAbsent(player.getUniqueId(), new Properties());
 

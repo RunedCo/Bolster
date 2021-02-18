@@ -16,7 +16,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EntityEquipment;
@@ -108,13 +107,42 @@ public class ItemManager extends Manager
     }
 
     /**
-     * {@code amount} defaults to {@code 1}
-     *
-     * @see #giveItem(LivingEntity, Inventory, String, int)
+     * @see #setItem(LivingEntity, Inventory, int, String, int)
      */
-    public Item giveItem(LivingEntity entity, Inventory inventory, Class<? extends Item> itemClass)
+    public Item setItem(LivingEntity entity, Inventory inventory, int slot, Class<? extends Item> itemClass, int amount)
     {
-        return this.giveItem(entity, inventory, itemClass, 1);
+        return this.setItem(entity, inventory, slot, Registries.ITEMS.getId(itemClass), amount);
+    }
+
+    /**
+     * Creates an item instance for the player and gives them an amount in their inventory
+     *
+     * @param entity    the entity
+     * @param inventory the inventory
+     * @param slot      the slot
+     * @param itemId    the item id
+     * @param amount    the amount of items to give
+     * @return the item instance
+     */
+    public Item setItem(LivingEntity entity, Inventory inventory, int slot, String itemId, int amount)
+    {
+        Item item = this.createItem(entity, itemId);
+
+        if (item == null) return null;
+
+        ItemStack stack = item.toItemStack();
+        stack.setAmount(amount);
+
+        Properties properties = new Properties();
+        properties.set(AbilityProperties.ITEM_STACK, stack);
+        properties.set(AbilityProperties.ITEM, item);
+        properties.set(AbilityProperties.INVENTORY, inventory);
+        properties.set(AbilityProperties.SLOT, amount);
+        AbilityManager.getInstance().trigger(entity, item, AbilityTrigger.GIVE_ITEM, properties);
+
+        inventory.setItem(slot, stack);
+
+        return item;
     }
 
     /**
@@ -123,16 +151,6 @@ public class ItemManager extends Manager
     public Item giveItem(LivingEntity entity, Inventory inventory, Class<? extends Item> itemClass, int amount)
     {
         return this.giveItem(entity, inventory, Registries.ITEMS.getId(itemClass), amount);
-    }
-
-    /**
-     * {@code amount} defaults to {@code 1}
-     *
-     * @see #giveItem(LivingEntity, Inventory, String, int)
-     */
-    public Item giveItem(LivingEntity entity, Inventory inventory, String itemId)
-    {
-        return this.giveItem(entity, inventory, itemId, 1);
     }
 
     /**
@@ -254,7 +272,7 @@ public class ItemManager extends Manager
 
     public boolean anyInventoryContainsAtLeast(LivingEntity entity, String itemId, int count)
     {
-        for (Inventory inventory : BolsterEntity.from(entity).getAllInventories())
+        for (Inventory inventory : BolsterEntity.from(entity).getInventories())
         {
             boolean success = this.inventoryContainsAtLeast(inventory, itemId, count);
 
@@ -283,7 +301,7 @@ public class ItemManager extends Manager
 
         if (item == null) return;
 
-        for (Inventory inventory : BolsterEntity.from(entity).getAllInventories())
+        for (Inventory inventory : BolsterEntity.from(entity).getInventories())
         {
             for (int i = 0; i < inventory.getSize(); i++)
             {
@@ -508,7 +526,7 @@ public class ItemManager extends Manager
     {
         Player player = event.getPlayer();
 
-        for (Inventory inventory : BolsterEntity.from(player).getAllInventories())
+        for (Inventory inventory : BolsterEntity.from(player).getInventories())
         {
             for (ItemStack item : inventory)
             {
@@ -535,7 +553,7 @@ public class ItemManager extends Manager
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onFatalDamage(EntityDamageEvent event)
     {
-        if(!(event.getEntity() instanceof LivingEntity)) return;
+        if (!(event.getEntity() instanceof LivingEntity)) return;
 
         LivingEntity entity = (LivingEntity) event.getEntity();
 

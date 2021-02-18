@@ -12,9 +12,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class HasItemCondition extends TargetedCondition<BolsterEntity>
 {
     String id;
@@ -44,7 +41,7 @@ public class HasItemCondition extends TargetedCondition<BolsterEntity>
             this.id = properties.get(AbilityProperties.ITEM).getId();
         }
 
-        for (Inventory inv : BolsterEntity.from(entity).getAllInventories())
+        for (Inventory inv : BolsterEntity.from(entity).getInventories())
         {
             boolean contains = ItemManager.getInstance().inventoryContainsAtLeast(inv, this.id, this.count);
 

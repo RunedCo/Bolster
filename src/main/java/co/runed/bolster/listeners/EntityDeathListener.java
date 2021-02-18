@@ -2,7 +2,6 @@ package co.runed.bolster.listeners;
 
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -24,6 +23,11 @@ public class EntityDeathListener implements Listener
         properties.set(AbilityProperties.ITEM_STACK, stack);
         properties.set(AbilityProperties.EVENT, event);
 
-        AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_DEATH, properties);
+        AbilityTrigger.ON_DEATH.trigger(entity, properties);
+
+        Properties globalDeathProperties = new Properties(properties);
+        globalDeathProperties.set(AbilityProperties.TARGET, entity);
+
+        AbilityTrigger.ON_ENTITY_DEATH.triggerAll(globalDeathProperties);
     }
 }

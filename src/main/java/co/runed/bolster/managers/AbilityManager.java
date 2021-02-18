@@ -323,7 +323,12 @@ public class AbilityManager extends Manager
             if (!entity.equals(ability.getCaster())) continue;
             if (!ability.isInProgress()) continue;
 
-            if (ability.isCancelledByTakingDamage()) ability.cancel();
+            if (ability.isCancelledByTakingDamage())
+            {
+                System.out.println("Cancelled " + ability.getId() + " for " + ability.getCaster().getName() + " reason: take damage");
+
+                ability.cancel();
+            }
         }
     }
 
@@ -364,7 +369,12 @@ public class AbilityManager extends Manager
             if (!entity.equals(ability.getCaster())) continue;
             if (!ability.isInProgress()) continue;
 
-            if (ability.isCancelledByDealingDamage()) ability.cancel();
+            if (ability.isCancelledByDealingDamage())
+            {
+                System.out.println("Cancelled " + ability.getId() + " for " + ability.getCaster().getName() + " reason: deal damage");
+
+                ability.cancel();
+            }
         }
     }
 
@@ -372,10 +382,12 @@ public class AbilityManager extends Manager
     private void onPlayerMove(PlayerMoveEvent event)
     {
         Player player = event.getPlayer();
-        Location movedFrom = event.getFrom();
-        Location movedTo = event.getTo();
+        Location movedFrom = event.getFrom().clone();
+        Location movedTo = event.getTo().clone();
+        double movementThreshold = 0.02;
+        double distance = movedTo.subtract(movedFrom).toVector().length();
 
-        if ((Math.abs(movedFrom.getX() - movedTo.getX()) >= 0.5) && (Math.abs(movedFrom.getY() - movedTo.getY()) >= 0.5) && (Math.abs(movedFrom.getZ() - movedTo.getZ()) >= 0.5))
+        if (distance <= movementThreshold && distance >= -movementThreshold)
             return;
 
         for (Ability ability : this.getAbilities(player))
@@ -383,7 +395,12 @@ public class AbilityManager extends Manager
             if (!player.equals(ability.getCaster())) continue;
             if (!ability.isInProgress()) continue;
 
-            if (ability.isCancelledByMovement()) ability.cancel();
+            if (ability.isCancelledByMovement())
+            {
+                System.out.println("Cancelled " + ability.getId() + " for " + ability.getCaster().getName() + " reason: move");
+
+                ability.cancel();
+            }
         }
     }
 
@@ -402,7 +419,12 @@ public class AbilityManager extends Manager
             if (!ability.getCaster().equals(ability2.getCaster())) continue;
             if (!ability2.isInProgress()) continue;
 
-            if (ability2.isCancelledByCast()) ability2.cancel();
+            if (ability2.isCancelledByCast())
+            {
+                System.out.println("Cancelled " + ability.getId() + " for " + ability.getCaster().getName() + " reason: cast");
+
+                ability2.cancel();
+            }
         }
     }
 

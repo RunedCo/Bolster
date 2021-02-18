@@ -5,7 +5,7 @@ import co.runed.bolster.util.properties.Properties;
 
 public abstract class TraitProvider
 {
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     @JsonExclude
     private final Properties traits = new Properties();

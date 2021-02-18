@@ -123,15 +123,20 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
 
     public void setEntity(LivingEntity entity)
     {
-        boolean firstTime = this.getEntity() == null || !this.getEntity().getUniqueId().equals(entity.getUniqueId());
+        this.setEntity(entity, true);
+    }
 
-        if (entity.equals(this.getEntity())) return;
+    public void setEntity(LivingEntity entity, boolean trigger)
+    {
+        boolean firstTime = this.getEntity() == null || (entity != null && !this.getEntity().getUniqueId().equals(entity.getUniqueId()));
+
+        if (entity != null && entity.equals(this.getEntity())) return;
 
         this.entity = entity;
 
         this.setDirty();
 
-        if (firstTime)
+        if (firstTime && trigger)
         {
             this.rebuild();
 

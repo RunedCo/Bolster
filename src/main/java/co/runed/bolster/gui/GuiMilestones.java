@@ -158,7 +158,7 @@ public class GuiMilestones extends Gui
             }
             else
             {
-                builder = builder.addLore(ChatColor.GREEN + "" + ChatColor.BOLD + "Click to level up!");
+                builder = builder.addLore(ChatColor.GREEN + "" + ChatColor.BOLD + "► Click to level up!");
             }
         }
 

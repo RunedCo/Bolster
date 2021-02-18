@@ -101,7 +101,7 @@ public class ItemCost extends Cost
             count = properties.get(AbilityProperties.ITEM_STACK).getAmount();
         }
 
-        for (Inventory inv : BolsterEntity.from(entity).getAllInventories())
+        for (Inventory inv : BolsterEntity.from(entity).getInventories())
         {
             boolean success = ItemManager.getInstance().removeItem(inv, item, count);
 

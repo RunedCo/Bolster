@@ -4,6 +4,9 @@ import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Location;
 
+/**
+ * A MultiTargetAbility that gets entities in a radius
+ */
 public class AOEAbility extends MultiTargetAbility
 {
     Target<Location> target;

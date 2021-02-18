@@ -2,6 +2,7 @@ package co.runed.bolster.abilities.base;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.properties.Properties;
 
@@ -12,7 +13,15 @@ public class RepeatingAbility extends Ability
 {
     Duration duration = null;
     Supplier<Boolean> runUntil = null;
+    int repeats = 0;
     long frequency;
+
+    public RepeatingAbility(int repeats, long frequency)
+    {
+        this(frequency);
+
+        this.repeats = repeats;
+    }
 
     public RepeatingAbility(Duration duration, long frequency)
     {
@@ -46,13 +55,24 @@ public class RepeatingAbility extends Ability
     {
         if (this.duration != null)
         {
-            TaskUtil.runDurationTaskTimer(Bolster.getInstance(), () -> super.testActivate(properties), this.duration, frequency, frequency);
+            TaskUtil.runDurationTaskTimer(Bolster.getInstance(), () -> this.run(properties), this.duration, frequency, frequency);
         }
-        else
+        else if (this.runUntil != null)
         {
-            TaskUtil.runTaskTimerUntil(Bolster.getInstance(), () -> super.testActivate(properties), this.runUntil, frequency, frequency, null);
+            TaskUtil.runTaskTimerUntil(Bolster.getInstance(), () -> this.run(properties), this.runUntil, frequency, frequency, null);
+        }
+        else if (this.repeats > 0)
+        {
+            TaskUtil.runRepeatingTaskTimer(Bolster.getInstance(), () -> this.run(properties), this.repeats, frequency, frequency);
         }
 
+        properties.set(AbilityProperties.RUN_NUMBER, -1);
+        this.run(properties);
+    }
+
+    private void run(Properties properties)
+    {
+        properties.set(AbilityProperties.RUN_NUMBER, properties.get(AbilityProperties.RUN_NUMBER) + 1);
         super.testActivate(properties);
     }
 

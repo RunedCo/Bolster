@@ -9,6 +9,9 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * An ability that runs for multiple targets
+ */
 public class MultiTargetAbility extends MultiAbility
 {
     Function<Properties, Collection<Entity>> entityFunction;

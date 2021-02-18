@@ -88,4 +88,7 @@ public class AbilityProperties
             (p, c) -> {
                 if (p.get(EVENT) instanceof Cancellable) ((Cancellable) p.get(EVENT)).setCancelled(c);
             });
+
+    // REPEATING PROPERTIES
+    public static final Property<Integer> RUN_NUMBER = new Property<>("run_number", 0);
 }

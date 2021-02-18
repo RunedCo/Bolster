@@ -13,16 +13,14 @@ import co.runed.bolster.util.traits.Trait;
 import co.runed.bolster.util.traits.TraitProvider;
 import co.runed.bolster.util.traits.Traits;
 import co.runed.bolster.v1_16_R3.CraftUtil;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.util.Vector;
@@ -33,7 +31,9 @@ public class BolsterEntity extends TraitProvider
 {
     private LivingEntity _entity;
     List<TraitProvider> traitProviders = new ArrayList<>();
-    HashMap<String, Inventory> additionalInventories = new HashMap<>();
+    Map<String, Inventory> inventories = new TreeMap<>();
+
+    private static final String PLAYER_INVENTORY_KEY = "_player_inventory";
 
     public BolsterEntity(LivingEntity entity)
     {
@@ -57,6 +57,15 @@ public class BolsterEntity extends TraitProvider
 
     public void setBukkit(LivingEntity entity)
     {
+        Inventory inventory = Bukkit.createInventory(null, InventoryType.PLAYER);
+
+        if (entity instanceof Player)
+        {
+            inventory = ((Player) entity).getInventory();
+        }
+
+        this.setInventory(PLAYER_INVENTORY_KEY, inventory);
+
         this._entity = entity;
     }
 
@@ -351,37 +360,33 @@ public class BolsterEntity extends TraitProvider
         this.setMaxHealth(this.getTrait(Traits.MAX_HEALTH));
     }
 
-    public void addAdditionalInventory(String id, Inventory inventory)
+    public Inventory getPlayerInventory()
     {
-        this.additionalInventories.put(id, inventory);
+        return this.getInventory(PLAYER_INVENTORY_KEY);
     }
 
-    public Inventory getAdditionalInventory(String id)
+    public void setInventory(String id, Inventory inventory)
     {
-        if (!this.additionalInventories.containsKey(id)) return null;
-
-        return this.additionalInventories.get(id);
+        this.inventories.put(id, inventory);
     }
 
-    public Inventory removeAdditionalInventory(String id)
+    public Inventory getInventory(String id)
     {
-        if (!this.additionalInventories.containsKey(id)) return null;
+        if (!this.inventories.containsKey(id)) return null;
 
-        return this.additionalInventories.remove(id);
+        return this.inventories.get(id);
     }
 
-    public Collection<Inventory> getAdditionalInventories()
+    public Inventory removeInventory(String id)
     {
-        return this.additionalInventories.values();
+        if (!this.inventories.containsKey(id)) return null;
+
+        return this.inventories.remove(id);
     }
 
-    public Collection<Inventory> getAllInventories()
+    public Collection<Inventory> getInventories()
     {
-        ArrayList<Inventory> inventories = new ArrayList<>();
-        if (this.getBukkit() instanceof Player) inventories.add(((Player) this.getBukkit()).getInventory());
-        inventories.addAll(this.getAdditionalInventories());
-
-        return inventories;
+        return this.inventories.values();
     }
 
     public void destroy()

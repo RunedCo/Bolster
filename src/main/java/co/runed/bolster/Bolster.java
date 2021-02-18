@@ -116,6 +116,7 @@ public class Bolster extends JavaPlugin implements Listener
         // REGISTER COMMANDS
         this.commandManager.add(new CommandItems());
         this.commandManager.add(new CommandBecome());
+        this.commandManager.add(new CommandBecomeGUI());
         this.commandManager.add(new CommandMana());
         this.commandManager.add(new CommandSummonDummy());
         this.commandManager.add(new CommandConfirm());

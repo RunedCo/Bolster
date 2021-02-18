@@ -1,5 +1,6 @@
 package co.runed.bolster.gui;
 
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
@@ -98,6 +99,6 @@ public class GuiCategory extends Gui
             return;
         }
 
-        ItemManager.getInstance().giveItem(player, player.getInventory(), itemId, stackAmount);
+        ItemManager.getInstance().giveItem(player, BolsterEntity.from(player).getPlayerInventory(), itemId, stackAmount);
     }
 }

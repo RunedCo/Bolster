@@ -2,7 +2,9 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 public class AbilityTrigger
 {
@@ -47,6 +49,7 @@ public class AbilityTrigger
     public static final AbilityTrigger ON_CLICK_INVENTORY = new AbilityTrigger("on_click_inventory", "Passive", true);
     public static final AbilityTrigger ON_CONNECT = new AbilityTrigger("on_connect", "Passive", true);
     public static final AbilityTrigger ON_DISCONNECT = new AbilityTrigger("on_disconnect", "Passive", true);
+    public static final AbilityTrigger ON_ENTITY_DEATH = new AbilityTrigger("on_entity_death", "Passive", true);
 
     // TRIGGERED WHEN YOU BECOME THIS CLASS
     public static final AbilityTrigger SET_CLASS = new AbilityTrigger("become_class", "Passive", true);
@@ -105,5 +108,13 @@ public class AbilityTrigger
     public void trigger(LivingEntity entity, AbilityProvider provider, Properties properties)
     {
         AbilityManager.getInstance().trigger(entity, provider, this, properties);
+    }
+
+    public void triggerAll(Properties properties)
+    {
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+            this.trigger(player, null, new Properties(properties));
+        }
     }
 }

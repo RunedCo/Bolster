@@ -1,6 +1,8 @@
 package co.runed.bolster.gui;
 
 import co.runed.bolster.items.Item;
+import co.runed.bolster.items.LevelableItem;
+import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
@@ -64,6 +66,10 @@ public class GuiItems extends Gui
             {
                 itemCategories.putIfAbsent(category, new ArrayList<>());
 
+                item.setEntity(player, false);
+                item.setEntity(null, false);
+                item.rebuild();
+
                 itemCategories.get(category).add(item.toItemStack());
             }
 
@@ -82,7 +88,7 @@ public class GuiItems extends Gui
             SlotSettings settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(category.getIcon()))
                     .clickHandler((p, info) -> {
-                       new GuiCategory(this, category, categoryItems).show(player);
+                        new GuiCategory(this, category, categoryItems).show(player);
                     })
                     .build();
 

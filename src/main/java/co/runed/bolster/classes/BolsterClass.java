@@ -77,7 +77,10 @@ public abstract class BolsterClass extends AbilityProvider
     @Override
     public ItemStack getIcon()
     {
-        return new ItemBuilder(this.icon).setDisplayName(this.getName()).setLore(this.getDescription()).build();
+        return new ItemBuilder(this.icon)
+                .setDisplayName(this.getName())
+                .setLore(this.getDescription())
+                .build();
     }
 
     public void setIcon(ItemStack icon)
@@ -124,20 +127,23 @@ public abstract class BolsterClass extends AbilityProvider
     }
 
     @Override
-    public void setEntity(LivingEntity entity)
+    public void setEntity(LivingEntity entity, boolean trigger)
     {
         boolean firstTime = this.getEntity() == null || !this.getEntity().getUniqueId().equals(entity.getUniqueId());
 
         if (entity.equals(this.getEntity())) return;
 
-        super.setEntity(entity);
+        super.setEntity(entity, trigger);
 
-        if (firstTime)
+        if (trigger)
         {
-            AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.SET_CLASS, new Properties());
-        }
+            if (firstTime)
+            {
+                AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.SET_CLASS, new Properties());
+            }
 
-        ClassManager.getInstance().setClass(entity, this);
+            ClassManager.getInstance().setClass(entity, this);
+        }
     }
 
 //    @Override

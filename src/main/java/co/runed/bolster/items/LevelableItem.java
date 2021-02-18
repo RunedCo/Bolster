@@ -209,7 +209,7 @@ public abstract class LevelableItem extends Item
     }
 
     @Override
-    public void setEntity(LivingEntity entity)
+    public void setEntity(LivingEntity entity, boolean trigger)
     {
         if (entity instanceof Player)
         {
@@ -218,7 +218,7 @@ public abstract class LevelableItem extends Item
             this.setLevel(PlayerManager.getInstance().getPlayerData(player).getItemLevel(this.getId()));
         }
 
-        super.setEntity(entity);
+        super.setEntity(entity, trigger);
     }
 
     public static class MilestoneData

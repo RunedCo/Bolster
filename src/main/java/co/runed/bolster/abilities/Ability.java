@@ -1,7 +1,6 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.base.LambdaAbility;
 import co.runed.bolster.conditions.*;
 import co.runed.bolster.managers.CooldownManager;
@@ -52,10 +51,10 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     private boolean inProgress = false;
 
     private int charges = 1;
-    private boolean cancelledByMovement;
-    private boolean cancelledByTakingDamage;
-    private boolean cancelledByCast;
-    private boolean cancelledByDealingDamage;
+    private boolean cancelledByMovement = false;
+    private boolean cancelledByTakingDamage = false;
+    private boolean cancelledByCast = false;
+    private boolean cancelledByDealingDamage = false;
     private long lastErrorTime = 0;
 
     TaskUtil.TaskSeries castingTask;
@@ -115,7 +114,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return this.caster;
     }
 
-    public void setCaster(LivingEntity caster)
+    public Ability setCaster(LivingEntity caster)
     {
         this.caster = caster;
 
@@ -123,6 +122,8 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         {
             ability.setCaster(caster);
         }
+
+        return this;
     }
 
     public float getManaCost()
@@ -151,7 +152,20 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 
     public Ability addAbility(Ability ability)
     {
-        this.children.add(ability.setShouldShowErrorMessages(false));
+        ability.setShouldShowErrorMessages(false);
+
+        if (this.getCaster() != null) ability.setCaster(this.getCaster());
+
+        this.children.add(ability);
+
+        return this;
+    }
+
+    public Ability removeAbility(Ability ability)
+    {
+        ability.destroy();
+
+        this.children.remove(ability);
 
         return this;
     }
@@ -458,8 +472,9 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 
     public void cancel()
     {
-        if (this.castingTask != null) this.castingTask.cancel();
         this.cancelled = true;
+        this.setInProgress(false);
+        if (this.castingTask != null) this.castingTask.cancel();
         this.setInProgress(false);
     }
 
