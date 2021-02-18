@@ -7,7 +7,6 @@ import org.bukkit.entity.Entity;
 
 import java.util.Collection;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * An ability that runs for multiple targets
@@ -45,7 +44,7 @@ public class MultiTargetAbility extends MultiAbility
 
     // TODO might not work (see old implementation on github)
     @Override
-    public void testActivate(Properties properties)
+    public void doActivate(Properties properties)
     {
         Collection<Entity> entities = entityFunction.apply(properties);
 
@@ -54,7 +53,7 @@ public class MultiTargetAbility extends MultiAbility
             Properties newProperties = new Properties(properties);
             newProperties.set(AbilityProperties.TARGET, entity);
 
-            super.testActivate(newProperties);
+            super.doActivate(newProperties);
         }
     }
 }

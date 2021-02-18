@@ -7,12 +7,12 @@ import co.runed.bolster.util.properties.Properties;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-public class SetDamageAbility extends Ability
+public class ModifyDamageAbility extends Ability
 {
     double amount;
     Operation operation;
 
-    public SetDamageAbility(double amount, Operation operation)
+    public ModifyDamageAbility(Operation operation, double amount)
     {
         super();
 

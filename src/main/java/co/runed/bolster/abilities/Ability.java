@@ -572,21 +572,21 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
                                         player.setExp(Math.min(xpPercent, 0.999f));
                                         player.setLevel(0);
                                     }, castTimeTicks, CAST_BAR_UPDATE_TICKS)
-                            .add(() -> this.doActivate(properties))
-                            .onCancel(() -> this.doActivate(properties));
+                            .add(() -> this.preActivate(properties))
+                            .onCancel(() -> this.preActivate(properties));
                 }
 
                 return true;
             }
 
-            this.doActivate(properties);
+            this.preActivate(properties);
             return true;
         }
 
         return false;
     }
 
-    public void testActivate(Properties properties)
+    public void doActivate(Properties properties)
     {
         this.onActivate(properties);
 
@@ -597,7 +597,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         }
     }
 
-    private void doActivate(Properties properties)
+    private void preActivate(Properties properties)
     {
         if (this.getCastTime() > 0 && this.getCaster() instanceof Player)
         {
@@ -608,7 +608,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         {
             this.setInProgress(true);
 
-            this.testActivate(properties);
+            this.doActivate(properties);
 
             this.onPostActivate(properties);
         }
