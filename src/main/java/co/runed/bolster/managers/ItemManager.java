@@ -504,10 +504,6 @@ public class ItemManager extends Manager
         {
             item = (Item) abilityProvider;
         }
-        else if (properties.get(AbilityProperties.ITEM) != null)
-        {
-            item = properties.get(AbilityProperties.ITEM);
-        }
         else if (properties.get(AbilityProperties.ITEM_STACK) != null)
         {
             String itemId = this.getItemIdFromStack(properties.get(AbilityProperties.ITEM_STACK));

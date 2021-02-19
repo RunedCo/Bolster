@@ -10,6 +10,7 @@ import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import co.runed.bolster.util.currency.Currencies;
 import co.runed.bolster.util.currency.Currency;
+import co.runed.bolster.wip.PotionUtil;
 import co.runed.bolster.wip.TestListener;
 import co.runed.bolster.wip.particles.ParticleSet;
 import com.mongodb.ConnectionString;
@@ -143,6 +144,7 @@ public class Bolster extends JavaPlugin implements Listener
         Bukkit.getPluginManager().registerEvents(menuListener, this);
         Bukkit.getPluginManager().registerEvents(new TestListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisguiseListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PotionUtil(), this);
 
         this.registerStatusEffects();
         this.registerCurrencies();

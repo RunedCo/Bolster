@@ -30,12 +30,6 @@ public class RootStatusEffect extends StatusEffect
     }
 
     @Override
-    public Collection<PotionEffectType> getPotionEffects()
-    {
-        return Arrays.asList(PotionEffectType.JUMP, PotionEffectType.SLOW);
-    }
-
-    @Override
     public void onStart()
     {
         if (this.getEntity().getType() == EntityType.PLAYER)

@@ -194,7 +194,7 @@ public class GameProperties extends Properties implements Listener
 
     // TODO MAKE SURE WORKS
     // TODO DOES NOT WORK IF YOU ALREADY HAVE STATUS EFFECT SET (try setting speed 1 for 100 seconds and then speed 9 for 10 seconds)
-    @EventHandler
+    //@EventHandler
     private void onPotionAdded(EntityPotionEffectEvent event)
     {
         if (!this.get(GameProperties.ENABLE_POTION_STACKING)) return;

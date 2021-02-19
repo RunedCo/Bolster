@@ -31,7 +31,7 @@ public class StatusEffectManager extends Manager
 
         _instance = this;
 
-        Bukkit.getScheduler().runTaskTimer(Bolster.getInstance(), () -> Bukkit.getOnlinePlayers().forEach(this::updateTitleDisplay), 0L, 20);
+        Bukkit.getScheduler().runTaskTimer(Bolster.getInstance(), () -> Bukkit.getOnlinePlayers().forEach(this::updateTitleDisplay), 0L, 1L);
     }
 
     // TODO:
@@ -57,7 +57,7 @@ public class StatusEffectManager extends Manager
 
             player.sendPluginMessage(Bolster.getInstance(), "bolster:add_status_effect", byteBuf.array());
 
-            this.updateTitleDisplay(player);
+            this.updateTitleDisplay(player, true);
         }
     }
 
@@ -113,7 +113,7 @@ public class StatusEffectManager extends Manager
                 player.sendPluginMessage(Bolster.getInstance(), "bolster:remove_status_effect", byteBuf.array());
             }
 
-            this.updateTitleDisplay(player);
+            this.updateTitleDisplay(player, true);
         }
 
         if (this.currentStatusEffects.containsKey(uuid)) this.currentStatusEffects.get(uuid).remove(statusEffect);
@@ -148,9 +148,24 @@ public class StatusEffectManager extends Manager
 
     public void updateTitleDisplay(Player player)
     {
+        this.updateTitleDisplay(player, false);
+    }
+
+    public void updateTitleDisplay(Player player, boolean force)
+    {
         StringBuilder display = new StringBuilder();
 
         Collection<StatusEffect> effects = this.getStatusEffects(player);
+
+        if (effects.size() <= 0)
+        {
+            if (!force)
+            {
+                return;
+            }
+
+            display.append(" | ");
+        }
 
         if (effects.size() <= 0) return;
 
@@ -170,11 +185,9 @@ public class StatusEffectManager extends Manager
 
         display = new StringBuilder(display.substring(0, display.length() - 3));
 
+        if (display.toString().isEmpty()) display.append("   ");
+
         BolsterEntity.from(player).sendActionBar(display.toString());
-
-        //PlayerUtil.sendActionBar(player, ChatColor.BOLD + display.toString());
-
-        //player.sendTitle("", display.toString(), 0, 10, 0);
     }
 
     @EventHandler

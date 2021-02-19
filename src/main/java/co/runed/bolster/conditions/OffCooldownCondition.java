@@ -33,8 +33,7 @@ public class OffCooldownCondition extends TargetedCondition<BolsterEntity>
     @Override
     public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
-        if (!conditional.shouldShowErrorMessages()) return;
-        if (!(conditional instanceof ICooldownSource)) return;
+
     }
 
     @Override
@@ -42,14 +41,22 @@ public class OffCooldownCondition extends TargetedCondition<BolsterEntity>
     {
         double cooldown = ((ICooldownSource) conditional).getRemainingCooldown();
         String formattedCooldown = "" + (int) cooldown;
+        String name = "Ability";
+
+        if (conditional instanceof Ability)
+        {
+            String abilityName = ((Ability) conditional).getName();
+
+            if (abilityName != null) name = abilityName + ChatColor.RESET;
+        }
 
         if (cooldown < 1)
         {
             formattedCooldown = decimalFormatter.format(cooldown);
         }
 
-        if (inverted) return ChatColor.RED + "Ability is not on cooldown!";
+        if (inverted) return ChatColor.RED + name + " is not on cooldown!";
 
-        return ChatColor.RED + "Ability on cooldown (" + formattedCooldown + " seconds remaining)";
+        return ChatColor.RED + name + ChatColor.RED + " on cooldown (" + formattedCooldown + " seconds remaining)";
     }
 }

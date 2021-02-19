@@ -10,7 +10,7 @@ import co.runed.bolster.util.currency.Currency;
 import co.runed.bolster.wip.particles.ParticleSet;
 import co.runed.bolster.wip.upgrade.Upgrade;
 
-public class Registries
+public final class Registries
 {
     public static final Registry<Item> ITEMS = new Registry<>(Bolster.getInstance(), "items");
     public static final Registry<BolsterClass> CLASSES = new Registry<>(Bolster.getInstance(), "classes");
@@ -20,4 +20,6 @@ public class Registries
     public static final Registry<Property<?>> GAME_PROPERTIES = new Registry<>(Bolster.getInstance());
     public static final Registry<StatusEffect> STATUS_EFFECTS = new Registry<>(Bolster.getInstance());
     public static final Registry<Currency> CURRENCIES = new Registry<>(Bolster.getInstance(), "currencies");
+    public static final Registry<Property<?>> SETTINGS = new Registry<>(Bolster.getInstance());
+    public static final Registry<Property<?>> TRAITS = new Registry<>(Bolster.getInstance());
 }
