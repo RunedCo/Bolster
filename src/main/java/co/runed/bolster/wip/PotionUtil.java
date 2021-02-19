@@ -30,6 +30,7 @@ public class PotionUtil implements Listener
     {
         PotionEffectContainer container = _instance.addEffectToQueue(entity, effect);
         // block next removal event for this type and entity
+
         _instance.setBlockNextRemoval(entity, effect.getType(), true);
         _instance.update(entity, effect.getType());
 
@@ -165,7 +166,7 @@ public class PotionUtil implements Listener
         PotionEffect newEffect = event.getNewEffect();
         PotionEffectType type = oldEffect == null ? newEffect.getType() : oldEffect.getType();
 
-        pendingEffects.removeIf(e -> e == null || e.getRemainingDurationMs() <= 0);
+        pendingEffects.removeIf(e -> e == null || e.getRemainingDurationTicks() <= 0);
 
         // WHEN EFFECT ADDED USE DEFAULT BEHAVIOUR (+ LOGGING)
         if (action == EntityPotionEffectEvent.Action.ADDED)
@@ -240,7 +241,7 @@ public class PotionUtil implements Listener
         {
             this.owner = owner;
             this.type = effect.getType();
-            this.duration = effect.getDuration() + 1;
+            this.duration = effect.getDuration();
             this.amplifier = effect.getAmplifier();
             this.ambient = effect.isAmbient();
             this.particles = effect.hasParticles();
@@ -252,6 +253,8 @@ public class PotionUtil implements Listener
 
         public Duration getRemainingDuration()
         {
+            if (this.duration == Integer.MAX_VALUE) return Duration.ofSeconds(this.duration);
+
             Duration sinceStart = Duration.between(startTime, Instant.now());
             Duration remaining = TimeUtil.fromSeconds((double) (this.duration) / 20d).minus(sinceStart);
             return remaining.isNegative() ? Duration.ZERO : remaining;
@@ -259,11 +262,15 @@ public class PotionUtil implements Listener
 
         public long getRemainingDurationMs()
         {
+            if (this.duration == Integer.MAX_VALUE) return this.duration;
+
             return this.getRemainingDuration().toMillis();
         }
 
         public long getRemainingDurationTicks()
         {
+            if (this.duration == Integer.MAX_VALUE) return this.duration;
+
             return TimeUtil.toTicks(this.getRemainingDuration());
         }
 
