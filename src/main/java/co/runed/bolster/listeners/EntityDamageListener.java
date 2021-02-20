@@ -19,7 +19,7 @@ import org.bukkit.projectiles.ProjectileSource;
  */
 public class EntityDamageListener implements Listener
 {
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onDamageEntity(EntityDamageByEntityEvent event)
     {
         Entity damager = event.getDamager();
@@ -61,7 +61,7 @@ public class EntityDamageListener implements Listener
         AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_DAMAGE_ENTITY, properties);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onLeftClickEntity(EntityDamageByEntityEvent event)
     {
         if (!(event.getDamager() instanceof Player)) return;
@@ -82,7 +82,7 @@ public class EntityDamageListener implements Listener
         AbilityManager.getInstance().trigger(player, AbilityTrigger.LEFT_CLICK_ENTITY, properties);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onEntityFatalDamage(EntityDamageEvent event)
     {
         if (!(event.getEntity() instanceof LivingEntity)) return;

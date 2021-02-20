@@ -7,6 +7,7 @@ import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EntityEquipment;
@@ -14,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class PlayerInteractAtEntityListener implements Listener
 {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteractAtEntity(PlayerInteractAtEntityEvent event)
     {
         Player player = event.getPlayer();
@@ -29,7 +30,7 @@ public class PlayerInteractAtEntityListener implements Listener
         AbilityManager.getInstance().trigger(player, AbilityTrigger.RIGHT_CLICK_ENTITY, properties);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteractedWith(PlayerInteractAtEntityEvent event)
     {
         if (!(event.getRightClicked() instanceof LivingEntity)) return;

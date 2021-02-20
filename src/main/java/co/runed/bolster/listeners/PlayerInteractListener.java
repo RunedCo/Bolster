@@ -6,6 +6,7 @@ import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -17,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class PlayerInteractListener implements Listener
 {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerInteract(PlayerInteractEvent event)
     {
         if (event.getHand() != EquipmentSlot.HAND) return;

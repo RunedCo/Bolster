@@ -241,7 +241,7 @@ public class Team implements Listener
         this.kills.put(player.getUniqueId(), this.kills.get(player.getUniqueId()) + 1);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onDamageEntity(EntityDamageByEntityEvent event)
     {
         Entity damager = event.getDamager();

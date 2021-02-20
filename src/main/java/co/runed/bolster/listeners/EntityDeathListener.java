@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class EntityDeathListener implements Listener
 {
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onEntityDeath(EntityDeathEvent event)
     {
         LivingEntity entity = event.getEntity();

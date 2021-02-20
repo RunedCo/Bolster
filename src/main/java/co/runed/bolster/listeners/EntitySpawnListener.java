@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class EntitySpawnListener implements Listener
 {
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onEntitySpawn(EntitySpawnEvent event)
     {
         if (!(event.getEntity() instanceof LivingEntity)) return;
@@ -24,13 +24,13 @@ public class EntitySpawnListener implements Listener
         this.run(event, (LivingEntity) event.getEntity());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerJoin(PlayerJoinEvent event)
     {
         this.run(event, event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerRespawn(PlayerRespawnEvent event)
     {
         this.run(event, event.getPlayer());

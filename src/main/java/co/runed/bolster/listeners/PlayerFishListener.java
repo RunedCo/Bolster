@@ -6,6 +6,7 @@ import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class PlayerFishListener implements Listener
 {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerFish(PlayerFishEvent event)
     {
         if (event.getState() != PlayerFishEvent.State.CAUGHT_ENTITY && event.getState() != PlayerFishEvent.State.CAUGHT_FISH)

@@ -24,7 +24,7 @@ public class EntityArmorEquipListener implements Listener
 {
     private EnumSet<EquipmentSlot> armorSlots = EnumSet.of(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.HEAD, EquipmentSlot.CHEST);
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerArmorChange(PlayerArmorChangeEvent event)
     {
         Player player = event.getPlayer();
@@ -56,7 +56,7 @@ public class EntityArmorEquipListener implements Listener
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onEntitySpawnEquip(EntitySpawnEvent event)
     {
         if (!(event.getEntity() instanceof LivingEntity)) return;

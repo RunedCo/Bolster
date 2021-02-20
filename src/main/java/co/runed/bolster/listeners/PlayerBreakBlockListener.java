@@ -6,6 +6,7 @@ import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class PlayerBreakBlockListener implements Listener
 {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerBreakBlock(BlockBreakEvent event)
     {
         Player player = event.getPlayer();
