@@ -68,7 +68,7 @@ public class CommandBecomeGUI extends CommandBase
             SlotSettings settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(clazz.getIcon()))
                     .clickHandler((p, i) -> {
-                        BolsterEntity.from(p).setBolsterClass(clazz);
+                        p.performCommand("become " + clazz.getId());
                         p.closeInventory();
                     })
                     .build();

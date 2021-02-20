@@ -17,6 +17,7 @@ import co.runed.bolster.wip.upgrade.Upgrade;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -36,6 +37,8 @@ public abstract class BolsterClass extends AbilityProvider
     List<Upgrade> upgrades = new ArrayList<>();
     String description;
     double maxHealth = 20;
+
+    private double startingBaseAttackDamage;
 
     @Override
     public void create(ConfigurationSection config)
@@ -146,7 +149,16 @@ public abstract class BolsterClass extends AbilityProvider
         }
     }
 
-//    @Override
+    @Override
+    public void onEnable()
+    {
+        super.onEnable();
+
+        AttributeInstance attackDamageAttribute = this.getEntity().getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+        if (attackDamageAttribute != null) attackDamageAttribute.setBaseValue(this.getBaseAttackDamage());
+    }
+
+    //    @Override
 //    public void onEnable()
 //    {
 //        super.onEnable();
@@ -162,6 +174,9 @@ public abstract class BolsterClass extends AbilityProvider
     public void onDisable()
     {
         super.onDisable();
+
+        AttributeInstance attackDamageAttribute = this.getEntity().getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+        if (attackDamageAttribute != null) attackDamageAttribute.setBaseValue(attackDamageAttribute.getDefaultValue());
 
         // clear status effects
         StatusEffectManager.getInstance().clearStatusEffects(this.getEntity());
@@ -179,10 +194,14 @@ public abstract class BolsterClass extends AbilityProvider
 
     }
 
-
     public void setBaseAttackDamage(double damage)
     {
-        this.getEntity().getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(damage);
+        this.setTrait(Traits.ATTACK_DAMAGE, damage);
+    }
+
+    public double getBaseAttackDamage()
+    {
+        return this.getTrait(Traits.ATTACK_DAMAGE);
     }
 
     public void addUpgrade(Upgrade upgrade)
