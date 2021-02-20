@@ -14,6 +14,7 @@ import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
 
@@ -30,13 +31,21 @@ public class Team implements Listener
     int totalKills = 0;
     boolean allowFriendlyFire;
     boolean removePlayersOnDeath = true;
+    boolean addBukkitTeam;
 
+    org.bukkit.scoreboard.Team scoreboardTeam = null;
     boolean isSetup = false;
 
     public Team(String name, ChatColor color)
     {
+        this(name, color, false);
+    }
+
+    public Team(String name, ChatColor color, boolean addBukkitTeam)
+    {
         this.name = name;
         this.color = color;
+        this.addBukkitTeam = addBukkitTeam;
     }
 
     public void setup()
@@ -46,6 +55,15 @@ public class Team implements Listener
         this.isSetup = true;
 
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
+
+        if (this.addBukkitTeam)
+        {
+            Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+            org.bukkit.scoreboard.Team team = scoreboard.getTeam(this.name);
+            if (team == null) team = scoreboard.registerNewTeam(this.name);
+
+            this.scoreboardTeam = team;
+        }
     }
 
     /**
@@ -62,6 +80,11 @@ public class Team implements Listener
         this.members.add(entity.getUniqueId());
         this.kills.put(entity.getUniqueId(), 0);
 
+        if (this.scoreboardTeam != null && this.addBukkitTeam)
+        {
+            this.scoreboardTeam.addEntry(entity.getName());
+        }
+
         if ((entity.isValid() && !entity.isDead()) || (entity instanceof Player && ((Player) entity).isOnline()))
         {
             onlineMembers.add(entity.getUniqueId());
@@ -77,8 +100,20 @@ public class Team implements Listener
 
         if (entity.getType() == EntityType.PLAYER) this.players.remove(entity.getUniqueId());
 
+        if (this.scoreboardTeam != null && this.addBukkitTeam)
+        {
+            this.scoreboardTeam.removeEntry(entity.getName());
+        }
+
         this.members.remove(entity.getUniqueId());
         this.onlineMembers.remove(entity.getUniqueId());
+    }
+
+    public org.bukkit.scoreboard.Team getScoreboardTeam()
+    {
+        if (!this.isSetup) this.setup();
+
+        return scoreboardTeam;
     }
 
     public boolean isInTeam(LivingEntity entity)

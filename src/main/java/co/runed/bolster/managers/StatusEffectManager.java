@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class StatusEffectManager extends Manager
 {
@@ -155,7 +156,7 @@ public class StatusEffectManager extends Manager
     {
         StringBuilder display = new StringBuilder();
 
-        Collection<StatusEffect> effects = this.getStatusEffects(player);
+        Collection<StatusEffect> effects = this.getStatusEffects(player).stream().filter(e -> e.getName() != null && !e.isAmbient()).collect(Collectors.toList());
 
         if (effects.size() <= 0)
         {
@@ -171,8 +172,6 @@ public class StatusEffectManager extends Manager
 
         for (StatusEffect effect : effects)
         {
-            if (effect.getName() == null) continue;
-
             display.append(ChatColor.BOLD)
                     .append(effect.getColor()).append(effect.getName().toUpperCase()).append(ChatColor.RESET);
 
@@ -185,7 +184,7 @@ public class StatusEffectManager extends Manager
 
         display = new StringBuilder(display.substring(0, display.length() - 3));
 
-        if (display.toString().isEmpty()) display.append("   ");
+        if (display.toString().isEmpty()) display.append(ChatColor.RESET);
 
         BolsterEntity.from(player).sendActionBar(display.toString());
     }

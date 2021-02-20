@@ -33,6 +33,7 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
     BukkitTask task;
     Instant startTime;
     double startingDuration;
+    boolean ambient = false;
 
     boolean active;
     private List<PotionData> potionEffects = new ArrayList<>();
@@ -51,6 +52,18 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
     }
 
     public abstract String getName();
+
+    public boolean isAmbient()
+    {
+        return ambient;
+    }
+
+    public StatusEffect setAmbient(boolean ambient)
+    {
+        this.ambient = ambient;
+
+        return this;
+    }
 
     public ChatColor getColor()
     {
@@ -162,8 +175,9 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
     {
         if (this.task == null || this.task.isCancelled()) return;
 
-        this.task.cancel();
+        this.duration = 0;
 
+        this.task.cancel();
         this.end();
     }
 

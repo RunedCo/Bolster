@@ -46,9 +46,9 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     private boolean casting = false;
     private boolean cancelled = false;
     private boolean enabled = true;
-    private boolean child = false;
     private int priority = 0;
     private boolean inProgress = false;
+    private boolean skipIfCancelled = false;
 
     private int charges = 1;
     private boolean cancelledByMovement = false;
@@ -187,22 +187,24 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return this;
     }
 
-    public boolean isChild()
-    {
-        return child;
-    }
-
-    public void setIsChild(boolean child)
-    {
-        this.child = child;
-    }
-
     @Override
     public Ability addCondition(Condition condition, ConditionPriority priority)
     {
         this.conditions.add(new Condition.Data(condition, priority));
 
         return this;
+    }
+
+    public Ability setSkipIfCancelled(boolean skipIfCancelled)
+    {
+        this.skipIfCancelled = skipIfCancelled;
+
+        return this;
+    }
+
+    public boolean shouldSkipIfCancelled()
+    {
+        return skipIfCancelled;
     }
 
     public Duration getDuration()
@@ -590,7 +592,6 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     {
         this.onActivate(properties);
 
-        // TODO ?
         for (Ability ability : this.getChildren())
         {
             ability.activate(properties);
@@ -652,8 +653,6 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         }
 
         this.children.clear();
-
-        //CooldownManager.getInstance().clearCooldown(this.getCaster(), this);
     }
 }
 

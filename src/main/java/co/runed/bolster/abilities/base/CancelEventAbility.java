@@ -26,5 +26,7 @@ public class CancelEventAbility extends Ability
                 ((Cancellable) event).setCancelled(true);
             }
         }
+
+        properties.set(AbilityProperties.CANCELLED, true);
     }
 }
