@@ -200,7 +200,7 @@ public class Team implements Listener
      *
      * @param event The event
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     private void onPlayerJoin(PlayerJoinEvent event)
     {
         if (this.autoAddPlayers)
@@ -215,13 +215,13 @@ public class Team implements Listener
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     private void onPlayerLeave(PlayerQuitEvent event)
     {
         this.onlineMembers.remove(event.getPlayer().getUniqueId());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     private void onEntityDeath(EntityDeathEvent event)
     {
         LivingEntity entity = event.getEntity();
@@ -229,7 +229,7 @@ public class Team implements Listener
         if (!(entity instanceof Player) || shouldRemovePlayersOnDeath()) this.remove(entity);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     private void onEntityKill(EntityDeathEvent event)
     {
         Player player = event.getEntity().getKiller();
@@ -241,7 +241,7 @@ public class Team implements Listener
         this.kills.put(player.getUniqueId(), this.kills.get(player.getUniqueId()) + 1);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     private void onDamageEntity(EntityDamageByEntityEvent event)
     {
         Entity damager = event.getDamager();
@@ -280,7 +280,7 @@ public class Team implements Listener
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     private void onEntityTarget(EntityTargetLivingEntityEvent event)
     {
         if (!(event.getEntity() instanceof LivingEntity)) return;
