@@ -504,7 +504,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
                 {
                     String error = condition.getErrorMessage(this, properties, false);
 
-                    if (error != null && System.currentTimeMillis() - this.lastErrorTime >= 1000)
+                    if (error != null && System.currentTimeMillis() - this.lastErrorTime >= 750)
                     {
                         this.getCaster().sendMessage(error);
                         //BolsterEntity.from(this.getCaster()).sendActionBar(error);
