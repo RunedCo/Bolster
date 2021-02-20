@@ -281,7 +281,7 @@ public class AbilityManager extends Manager
             if (ability == null) continue;
             if (provider != null && provider != ability.getAbilityProvider()) continue;
             if (!ability.isEnabled()) continue;
-            if (properties.get(AbilityProperties.CANCELLED) && ability.shouldSkipIfCancelled()) continue;
+            if (properties.get(AbilityProperties.IS_CANCELLED) && ability.shouldSkipIfCancelled()) continue;
 
             AbilityProvider abilityProvider = provider != null ? provider : ability.getAbilityProvider();
 

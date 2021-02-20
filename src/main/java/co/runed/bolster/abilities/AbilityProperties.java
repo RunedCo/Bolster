@@ -43,7 +43,6 @@ public class AbilityProperties
     public static final Property<AbilityTrigger> TRIGGER = new Property<>("trigger", AbilityTrigger.ALL);
     public static final Property<AbilityProvider> ABILITY_PROVIDER = new Property<>("ability_provider");
     public static final Property<Ability> ABILITY = new Property<>("ability");
-    public static final Property<Boolean> CANCELLED = new Property<>("cancelled", false);
 
     // BLOCK PROPERTIES
     public static final Property<Block> BLOCK = new Property<>("block");
@@ -85,7 +84,8 @@ public class AbilityProperties
 
     // EVENT PROPERTIES
     public static final Property<Boolean> IS_CANCELLED = new FunctionProperty<>("is_cancelled",
-            (p) -> p.get(EVENT) instanceof Cancellable && ((Cancellable) p.get(EVENT)).isCancelled(),
+            (p) -> (p.get(EVENT) instanceof Cancellable && ((Cancellable) p.get(EVENT)).isCancelled())
+                    || (p.get(EVENT) instanceof EntityDamageEvent && ((EntityDamageEvent) p.get(EVENT)).getFinalDamage() <= 0),
             (p, c) -> {
                 if (p.get(EVENT) instanceof Cancellable) ((Cancellable) p.get(EVENT)).setCancelled(c);
             });

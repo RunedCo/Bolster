@@ -5,6 +5,7 @@ import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.EntityEquipment;
@@ -12,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class EntityDeathListener implements Listener
 {
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onEntityDeath(EntityDeathEvent event)
     {
         LivingEntity entity = event.getEntity();

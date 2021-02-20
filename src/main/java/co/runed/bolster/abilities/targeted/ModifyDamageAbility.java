@@ -55,9 +55,6 @@ public class ModifyDamageAbility extends Ability
                 }
 
                 damageEvent.setDamage(damage);
-
-                // TODO check cancelled
-                if (damageEvent.getFinalDamage() <= 0) properties.set(AbilityProperties.CANCELLED, true);
             }
         }
     }

@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.inventory.EntityEquipment;
@@ -23,7 +24,7 @@ public class EntityArmorEquipListener implements Listener
 {
     private EnumSet<EquipmentSlot> armorSlots = EnumSet.of(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.HEAD, EquipmentSlot.CHEST);
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onPlayerArmorChange(PlayerArmorChangeEvent event)
     {
         Player player = event.getPlayer();
@@ -55,7 +56,7 @@ public class EntityArmorEquipListener implements Listener
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onEntitySpawnEquip(EntitySpawnEvent event)
     {
         if (!(event.getEntity() instanceof LivingEntity)) return;

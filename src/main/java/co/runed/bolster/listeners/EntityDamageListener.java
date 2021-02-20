@@ -6,6 +6,7 @@ import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -18,7 +19,7 @@ import org.bukkit.projectiles.ProjectileSource;
  */
 public class EntityDamageListener implements Listener
 {
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onDamageEntity(EntityDamageByEntityEvent event)
     {
         Entity damager = event.getDamager();
@@ -60,7 +61,7 @@ public class EntityDamageListener implements Listener
         AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_DAMAGE_ENTITY, properties);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onLeftClickEntity(EntityDamageByEntityEvent event)
     {
         if (!(event.getDamager() instanceof Player)) return;
@@ -81,7 +82,7 @@ public class EntityDamageListener implements Listener
         AbilityManager.getInstance().trigger(player, AbilityTrigger.LEFT_CLICK_ENTITY, properties);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onEntityFatalDamage(EntityDamageEvent event)
     {
         if (!(event.getEntity() instanceof LivingEntity)) return;
