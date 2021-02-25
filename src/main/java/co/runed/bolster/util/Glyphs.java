@@ -11,6 +11,8 @@ public class Glyphs
     public static final char VERTICAL_RECTANGLE = '\u25AE';
 
     public static final char BULLET = '\u2022';
+    public static final char ARROW = '\u25BA';
+    public static final char CROSS = '\u274C';
 
     public static String coloredGlyph(char glyph)
     {

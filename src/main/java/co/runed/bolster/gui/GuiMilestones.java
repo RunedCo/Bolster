@@ -2,6 +2,7 @@ package co.runed.bolster.gui;
 
 import co.runed.bolster.items.LevelableItem;
 import co.runed.bolster.managers.PlayerManager;
+import co.runed.bolster.util.Glyphs;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.util.registries.Registries;
@@ -154,11 +155,11 @@ public class GuiMilestones extends Gui
 
             if (!this.canAfford())
             {
-                builder = builder.addLore(ChatColor.RED + "" + ChatColor.BOLD + "Cannot afford to level up!");
+                builder = builder.addLore(ChatColor.RED + "" + ChatColor.BOLD + Glyphs.CROSS + "Cannot afford to level up!");
             }
             else
             {
-                builder = builder.addLore(ChatColor.GREEN + "" + ChatColor.BOLD + "► Click to level up!");
+                builder = builder.addLore(ChatColor.GREEN + "" + ChatColor.BOLD + Glyphs.ARROW + "Click to level up!");
             }
         }
 

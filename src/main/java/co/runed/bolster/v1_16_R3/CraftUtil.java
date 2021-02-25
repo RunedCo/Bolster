@@ -1,5 +1,7 @@
 package co.runed.bolster.v1_16_R3;
 
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatMessageType;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -47,24 +49,6 @@ public class CraftUtil
         // it's already been added to the world at this point
 
         return nmsEntity == null ? null : nmsEntity.getBukkitEntity(); // convert to a Bukkit entity
-    }
-
-    /**
-     * Set the actionbar display for a player
-     *
-     * @param player the player
-     * @param message the text to display
-     */
-    public static void sendActionBar(Player player, String message)
-    {
-        message = message.replaceAll("%player%", player.getDisplayName());
-        message = ChatColor.translateAlternateColorCodes('&', message);
-        IChatBaseComponent chatComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + message + "\"}");
-
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-
-        PacketPlayOutChat packet = new PacketPlayOutChat(chatComponent, ChatMessageType.GAME_INFO, player.getUniqueId());
-        craftPlayer.getHandle().playerConnection.sendPacket(packet);
     }
 
     /**

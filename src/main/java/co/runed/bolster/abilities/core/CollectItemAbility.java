@@ -2,6 +2,7 @@ package co.runed.bolster.abilities.core;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
+import co.runed.bolster.abilities.effects.PlaySoundAbility;
 import co.runed.bolster.conditions.BlockIsMaterialCondition;
 import co.runed.bolster.conditions.IsEntityTypeCondition;
 import co.runed.bolster.items.Item;
@@ -9,6 +10,7 @@ import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Material;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -50,6 +52,8 @@ public class CollectItemAbility extends Ability
 
         this.addCondition(new IsEntityTypeCondition(Target.CASTER, EntityType.PLAYER));
         this.addCondition(new BlockIsMaterialCondition(this.materials));
+
+        this.addAbility(new PlaySoundAbility(Target.CASTER, Target.CASTER_LOCATION, "activatebow", SoundCategory.BLOCKS, 0.5f, 1.5f));
     }
 
     @Override

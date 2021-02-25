@@ -2,6 +2,9 @@ package co.runed.bolster;
 
 import co.runed.bolster.classes.TargetDummyClass;
 import co.runed.bolster.commands.*;
+import co.runed.bolster.util.properties.Property;
+import co.runed.bolster.util.traits.Trait;
+import co.runed.bolster.util.traits.Traits;
 import co.runed.bolster.wip.DisguiseListener;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.managers.*;
@@ -124,6 +127,7 @@ public class Bolster extends JavaPlugin implements Listener
         this.commandManager.add(new CommandSetItemLevel());
         this.commandManager.add(new CommandLevelItem());
         this.commandManager.add(new CommandPause());
+        this.commandManager.add(new CommandCurrency());
 
         // REGISTER PLUGIN CHANNELS
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -148,6 +152,7 @@ public class Bolster extends JavaPlugin implements Listener
 
         this.registerStatusEffects();
         this.registerCurrencies();
+        this.registerTraits();
     }
 
     // NOTE: SHIT WORKAROUND FOR CANVAS NOT TRIGERRING EVENT WHEN IN SPECTATOR
@@ -179,6 +184,14 @@ public class Bolster extends JavaPlugin implements Listener
         currencyRegistry.register(Currencies.DIAMOND);
         currencyRegistry.register(Currencies.EMERALD);
         currencyRegistry.register(Currencies.GOLD);
+    }
+
+    private void registerTraits()
+    {
+        Registry<Property<?>> registry = Registries.TRAITS;
+        registry.register(Traits.ATTACK_DAMAGE);
+        registry.register(Traits.DEBUG_MODE);
+        registry.register(Traits.MAX_HEALTH);
     }
 
     @Override

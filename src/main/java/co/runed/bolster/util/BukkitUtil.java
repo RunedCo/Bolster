@@ -4,6 +4,8 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.events.CustomCanDestroyBlockEvent;
 import co.runed.bolster.events.CustomCanPlaceBlockEvent;
 import co.runed.bolster.events.EntityTargetedEvent;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -270,5 +272,17 @@ public class BukkitUtil
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         return !event.isCancelled();
+    }
+
+    /**
+     * Set the actionbar display for a player
+     *
+     * @param player the player
+     * @param message the text to display
+     */
+    public static void sendActionBar(Player player, String message)
+    {
+        message = message.replaceAll("%player%", player.getDisplayName());
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
     }
 }

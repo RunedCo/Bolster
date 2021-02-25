@@ -6,6 +6,7 @@ import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,7 +24,7 @@ public class PlayerInventoryClickListener implements Listener
         Player player = (Player) event.getWhoClicked();
         ItemStack stack = event.getClickedInventory().getItem(event.getSlot());
 
-        if (stack != null && ChatColor.stripColor(stack.getItemMeta().getDisplayName()).equals("")) event.setCancelled(true);
+        if (stack != null && ChatColor.stripColor(stack.getItemMeta().getDisplayName()).equals("")) event.setResult(Event.Result.DENY);
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.ITEM_STACK, stack);

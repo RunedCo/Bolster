@@ -101,6 +101,8 @@ public class StatusEffectManager extends Manager
 
         statusEffect.clear();
 
+        if (this.currentStatusEffects.containsKey(uuid)) this.currentStatusEffects.get(uuid).remove(statusEffect);
+
         if (entity instanceof Player)
         {
             Player player = (Player) entity;
@@ -116,8 +118,6 @@ public class StatusEffectManager extends Manager
 
             this.updateTitleDisplay(player, true);
         }
-
-        if (this.currentStatusEffects.containsKey(uuid)) this.currentStatusEffects.get(uuid).remove(statusEffect);
     }
 
     public List<StatusEffect> getStatusEffects(LivingEntity entity)
@@ -152,6 +152,7 @@ public class StatusEffectManager extends Manager
         this.updateTitleDisplay(player, false);
     }
 
+    // TODO unjank
     public void updateTitleDisplay(Player player, boolean force)
     {
         StringBuilder display = new StringBuilder();
@@ -165,10 +166,8 @@ public class StatusEffectManager extends Manager
                 return;
             }
 
-            display.append(" | ");
+            display.append("   ");
         }
-
-        if (effects.size() <= 0) return;
 
         for (StatusEffect effect : effects)
         {
@@ -184,7 +183,7 @@ public class StatusEffectManager extends Manager
 
         display = new StringBuilder(display.substring(0, display.length() - 3));
 
-        if (display.toString().isEmpty()) display.append(ChatColor.RESET);
+        if (display.toString().isEmpty()) display.append("   ");
 
         BolsterEntity.from(player).sendActionBar(display.toString());
     }

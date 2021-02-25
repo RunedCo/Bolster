@@ -1,5 +1,6 @@
 package co.runed.bolster.util;
 
+import co.runed.bolster.items.Item;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -9,6 +10,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -200,6 +202,29 @@ public class ItemBuilder
         ItemMeta meta = this.itemStack.getItemMeta();
         meta.getPersistentDataContainer().set(key, dataType, value);
         this.itemStack.setItemMeta(meta);
+        return new ItemBuilder(this.itemStack);
+    }
+
+    public ItemBuilder removePersistentData(NamespacedKey key)
+    {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        meta.getPersistentDataContainer().remove(key);
+        this.itemStack.setItemMeta(meta);
+        return new ItemBuilder(this.itemStack);
+    }
+
+    public ItemBuilder setDamagePercent(double percent)
+    {
+        return this.setDamage((int) (this.itemStack.getType().getMaxStackSize() * percent));
+    }
+
+    public ItemBuilder setDamage(int damage)
+    {
+        if (!(this.itemStack.getItemMeta() instanceof Damageable)) return this;
+        Damageable damageable = (Damageable) this.itemStack.getItemMeta();
+
+        damageable.setDamage(damage);
+
         return new ItemBuilder(this.itemStack);
     }
 

@@ -32,6 +32,10 @@ public class PotionUtil implements Listener
         // block next removal event for this type and entity
 
         _instance.setBlockNextRemoval(entity, effect.getType(), true);
+
+        // then remove current effect of that type
+        entity.removePotionEffect(effect.getType());
+
         _instance.update(entity, effect.getType());
 
         return container;
@@ -56,6 +60,9 @@ public class PotionUtil implements Listener
 
         // block next removal event for this type and entity
         this.setBlockNextRemoval(entity, effect.getType(), true);
+
+        // then remove current effect of that type
+        entity.removePotionEffect(effect.getType());
 
         this.update(entity, effect.getType());
     }
@@ -119,9 +126,6 @@ public class PotionUtil implements Listener
         PotionEffectContainer nextEffect = this.getNextEffect(entity, type);
         PotionEffectContainer activeEffect = this.getActiveEffect(entity, type);
         PotionEffectContainer effectToAdd = activeEffect == null || (nextEffect != null && nextEffect.amplifier > activeEffect.amplifier) ? nextEffect : activeEffect;
-
-        // then remove current effect of that type
-        entity.removePotionEffect(type);
 
         if (effectToAdd != null)
         {
@@ -189,6 +193,9 @@ public class PotionUtil implements Listener
 
             // block next removal event for this type and entity
             this.setBlockNextRemoval(entity, type, true);
+
+            // then remove current effect of that type
+            entity.removePotionEffect(type);
 
             // and update current effect
             this.update(entity, type);

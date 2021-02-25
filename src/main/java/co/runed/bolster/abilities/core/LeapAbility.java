@@ -40,8 +40,7 @@ public class LeapAbility extends Ability
         v.setY(0).normalize().multiply(forwardVelocity).setY(upwardVelocity);
 
         this.touchedGround = false;
-
-        if (this.ignoreFallDamage) this.ignoreNext = true;
+        this.ignoreNext = this.ignoreFallDamage;
 
         this.getCaster().setVelocity(v);
     }
@@ -66,7 +65,8 @@ public class LeapAbility extends Ability
     private void onPlayerMove(PlayerMoveEvent event)
     {
         if (this.delayedIgnoreTriggered) return;
-        if (event.getPlayer() != this.getCaster()) return;
+        if (this.getCaster() == null) return;
+        if (!event.getPlayer().getUniqueId().equals(this.getCaster().getUniqueId())) return;
         if (!event.getPlayer().isOnGround()) return;
 
         this.delayedIgnoreTriggered = true;
@@ -82,7 +82,8 @@ public class LeapAbility extends Ability
     private void onNextFallDamage(EntityDamageEvent event)
     {
         if (!ignoreNext) return;
-        if (event.getEntity() != this.getCaster()) return;
+        if (this.getCaster() == null) return;
+        if (!event.getEntity().getUniqueId().equals(this.getCaster().getUniqueId())) return;
         if (event.getCause() != EntityDamageEvent.DamageCause.FALL) return;
 
         this.ignoreNext = false;

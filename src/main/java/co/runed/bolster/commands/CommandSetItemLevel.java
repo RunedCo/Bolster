@@ -46,7 +46,7 @@ public class CommandSetItemLevel extends CommandBase
                 .withPermission("bolster.commands.setitemlevel")
                 .withArguments(
                         new PlayerArgument("player"),
-                        new StringArgument("item_id").overrideSuggestions(this::getSuggestions),
+                        new StringArgument("item").overrideSuggestions(this::getSuggestions),
                         new IntegerArgument("level")
                 )
                 .executes((sender, args) -> {

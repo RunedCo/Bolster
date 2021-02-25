@@ -5,6 +5,7 @@ import co.runed.bolster.managers.ClassManager;
 import co.runed.bolster.managers.EntityManager;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.status.StatusEffect;
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.NumberUtil;
 import co.runed.bolster.util.Operation;
 import co.runed.bolster.util.properties.Properties;
@@ -12,7 +13,6 @@ import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.traits.Trait;
 import co.runed.bolster.util.traits.TraitProvider;
 import co.runed.bolster.util.traits.Traits;
-import co.runed.bolster.v1_16_R3.CraftUtil;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -38,6 +38,8 @@ public class BolsterEntity extends TraitProvider
     public BolsterEntity(LivingEntity entity)
     {
         this._entity = entity;
+
+        this.setEnabled(true);
     }
 
     public BolsterClass getBolsterClass()
@@ -342,7 +344,7 @@ public class BolsterEntity extends TraitProvider
     {
         if (this._entity.getType() != EntityType.PLAYER) return;
 
-        CraftUtil.sendActionBar((Player) this._entity, message);
+        BukkitUtil.sendActionBar((Player) this._entity, message);
     }
 
     public EntityType getType()
