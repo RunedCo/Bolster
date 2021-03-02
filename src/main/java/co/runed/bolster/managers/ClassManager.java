@@ -51,7 +51,7 @@ public class ClassManager extends Manager
             AbilityManager.getInstance().reset(entity, AbilityProviderType.CLASS);
         }
 
-        if (bolsterClass != null && bolsterClass.getEntity() != entity)
+        if (bolsterClass != null)
         {
             if (!bolsterClass.isConfigSet())
             {

@@ -102,7 +102,6 @@ public class AbilityManager extends Manager
 
     public void removeProvider(LivingEntity entity, AbilityProvider provider)
     {
-        AbilityProviderType type = provider.getType();
         UUID uuid = entity.getUniqueId();
 
         if (!this.providers.containsKey(uuid)) return;

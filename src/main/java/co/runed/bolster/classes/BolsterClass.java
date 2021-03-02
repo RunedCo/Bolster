@@ -145,7 +145,7 @@ public abstract class BolsterClass extends AbilityProvider
                 AbilityManager.getInstance().trigger(entity, this, AbilityTrigger.SET_CLASS, new Properties());
             }
 
-            ClassManager.getInstance().setClass(entity, this);
+            if (this.getEntity() != entity) ClassManager.getInstance().setClass(entity, this);
         }
     }
 
