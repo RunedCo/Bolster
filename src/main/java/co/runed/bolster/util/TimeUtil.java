@@ -31,6 +31,8 @@ public class TimeUtil
 
     public static long toTicks(Duration duration)
     {
+        if (duration.getSeconds() >= Integer.MAX_VALUE) return Integer.MAX_VALUE;
+
         long seconds = duration.toMillis() / 1000;
 
         return seconds * 20;

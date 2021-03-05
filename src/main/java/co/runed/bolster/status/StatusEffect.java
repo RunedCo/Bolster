@@ -38,8 +38,6 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
     boolean active;
     private List<PotionData> potionEffects = new ArrayList<>();
 
-    int changeNumber = 0;
-
     public StatusEffect()
     {
         this(0);
@@ -105,6 +103,8 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
     public Duration getRemainingDuration()
     {
+        if (this.duration >= Integer.MAX_VALUE) return TimeUtil.fromSeconds(this.duration);
+
         Duration sinceStart = Duration.between(startTime, Instant.now());
         Duration remaining = TimeUtil.fromSeconds(this.getDuration()).minus(sinceStart);
         return remaining.isNegative() ? Duration.ZERO : remaining;
