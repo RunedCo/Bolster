@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     private LivingEntity entity;
     private LivingEntity parent;
     private ConfigurationSection config;
+    private String name = null;
     @JsonExclude
     private boolean dirty;
     @JsonExclude
@@ -93,6 +95,19 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         ConfigUtil.parseVariables(config);
 
         if (config != null) this.tooltip = config.getString("tooltip", null);
+    }
+
+    @Override
+    public String getName()
+    {
+        if (name == null) return this.getId();
+
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
     }
 
     @Override

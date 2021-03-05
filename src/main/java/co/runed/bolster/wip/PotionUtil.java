@@ -260,7 +260,7 @@ public class PotionUtil implements Listener
 
         public Duration getRemainingDuration()
         {
-            if (this.duration == Integer.MAX_VALUE) return Duration.ofSeconds(this.duration);
+            if (this.duration == Integer.MAX_VALUE) return Duration.ofSeconds(Long.MAX_VALUE);
 
             Duration sinceStart = Duration.between(startTime, Instant.now());
             Duration remaining = TimeUtil.fromSeconds((double) (this.duration) / 20d).minus(sinceStart);

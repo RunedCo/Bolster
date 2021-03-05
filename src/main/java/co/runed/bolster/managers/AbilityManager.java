@@ -118,6 +118,12 @@ public class AbilityManager extends Manager
         }
     }
 
+    public AbilityProvider getOrCreateProvider(LivingEntity entity, AbilityProviderType type, String id)
+    {
+        // TODO check all registries and ensure type
+        return this.hasProvider(entity, type, id) ? this.getProvider(entity, type, id) : (AbilityProvider) type.getRegistries().get(0).get(id);
+    }
+
     public AbilityProvider getProvider(LivingEntity entity, AbilityProviderType type, String id)
     {
         if (id == null) return null;

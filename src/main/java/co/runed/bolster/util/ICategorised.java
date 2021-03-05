@@ -16,9 +16,4 @@ public interface ICategorised
     {
         return new ArrayList<>();
     }
-
-    default ItemStack getIcon()
-    {
-        return new ItemStack(Material.AIR);
-    }
 }

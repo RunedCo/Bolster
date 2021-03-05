@@ -51,7 +51,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
     private static final UUID powerUuid = new UUID(1238, 1238);
     private static final UUID healthUuid = new UUID(1239, 1239);
 
-    private String name;
+
     private List<String> lore = new ArrayList<>();
     private ItemStack itemStack = new ItemStack(Material.STICK);
     private boolean droppable = true;
@@ -107,14 +107,10 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         return Registries.ITEMS.getId(this);
     }
 
+    @Override
     public String getName()
     {
-        return (this.hasSkin() && this.getSkin().shouldShowName() ? this.getSkin().getName() : this.name) + ChatColor.WHITE;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
+        return (this.hasSkin() && this.getSkin().shouldShowName() ? this.getSkin().getName() : super.getName()) + ChatColor.WHITE;
     }
 
     public void setLore(String lore)

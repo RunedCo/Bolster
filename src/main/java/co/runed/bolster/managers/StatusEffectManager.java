@@ -175,8 +175,11 @@ public class StatusEffectManager extends Manager
                     .append(effect.getColor()).append(effect.getName().toUpperCase()).append(ChatColor.RESET);
 
             if (effect.getDuration() < Integer.MAX_VALUE)
-                display.append(" (").append(TimeUtil.formatDurationHhMmSs(effect.getRemainingDuration())).append(")");
-
+            {
+                display.append(" (")
+                        .append(TimeUtil.formatDurationHhMmSs(effect.getRemainingDuration()))
+                        .append(")");
+            }
 
             display.append(" | ");
         }

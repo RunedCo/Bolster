@@ -31,7 +31,6 @@ import java.util.List;
 
 public abstract class BolsterClass extends AbilityProvider
 {
-    String name = null;
     ItemStack icon = new ItemStack(Material.PLAYER_HEAD);
     List<Category> categories = new ArrayList<>();
     List<Upgrade> upgrades = new ArrayList<>();
@@ -52,18 +51,6 @@ public abstract class BolsterClass extends AbilityProvider
     public AbilityProviderType getType()
     {
         return AbilityProviderType.CLASS;
-    }
-
-    public String getName()
-    {
-        if (name == null) return this.getId();
-
-        return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
     }
 
     public void setMaxHealth(double maxHealth)
