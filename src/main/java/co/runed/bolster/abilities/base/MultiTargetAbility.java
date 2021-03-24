@@ -18,6 +18,8 @@ public class MultiTargetAbility extends MultiAbility
     public MultiTargetAbility(Function<Properties, Collection<Entity>> entityFunction)
     {
         this.setEntityFunction(entityFunction);
+
+        this.setEvaluateConditions(false);
     }
 
     public void setEntityFunction(Function<Properties, Collection<Entity>> entityFunction)
@@ -44,7 +46,7 @@ public class MultiTargetAbility extends MultiAbility
 
     // TODO might not work (see old implementation on github)
     @Override
-    public void doActivate(Properties properties)
+    public void activateAbilityAndChildren(Properties properties)
     {
         Collection<Entity> entities = entityFunction.apply(properties);
 
@@ -53,7 +55,7 @@ public class MultiTargetAbility extends MultiAbility
             Properties newProperties = new Properties(properties);
             newProperties.set(AbilityProperties.TARGET, entity);
 
-            super.doActivate(newProperties);
+            if (this.canActivate(newProperties) && this.evaluateConditions(newProperties)) super.activateAbilityAndChildren(newProperties);
         }
     }
 }

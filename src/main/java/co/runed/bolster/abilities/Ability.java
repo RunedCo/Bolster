@@ -1,6 +1,7 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.abilities.base.DynamicParameterAbility;
 import co.runed.bolster.abilities.base.LambdaAbility;
 import co.runed.bolster.conditions.*;
 import co.runed.bolster.managers.CooldownManager;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public abstract class Ability implements Listener, IConditional<Ability>, ICooldownSource<Ability>
 {
@@ -46,6 +48,8 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     private boolean casting = false;
     private boolean cancelled = false;
     private boolean enabled = true;
+    private boolean evaluateConditions = true;
+    private boolean useCosts = true;
     private int priority = 0;
     private boolean inProgress = false;
     private boolean skipIfCancelled = false;
@@ -148,6 +152,11 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     public Ability addAbility(BiConsumer<LivingEntity, Properties> func)
     {
         return this.addAbility(new LambdaAbility(func));
+    }
+
+    public Ability addAbility(Function<Properties, Ability> func)
+    {
+        return this.addAbility(new DynamicParameterAbility(func));
     }
 
     public Ability addAbility(Ability ability)
@@ -391,6 +400,30 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return cancelledByCast;
     }
 
+    public Ability setEvaluateConditions(boolean evaluateConditions)
+    {
+        this.evaluateConditions = evaluateConditions;
+
+        return this;
+    }
+
+    public boolean shouldEvaluateConditions()
+    {
+        return evaluateConditions;
+    }
+
+    public Ability setUseCosts(boolean useCosts)
+    {
+        this.useCosts = useCosts;
+
+        return this;
+    }
+
+    public boolean shouldUseCosts()
+    {
+        return useCosts;
+    }
+
     public List<Ability> getChildren()
     {
         return new ArrayList<>(children);
@@ -480,14 +513,8 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         this.setInProgress(false);
     }
 
-    public boolean canActivate(Properties properties)
+    public boolean evaluateConditions(Properties properties)
     {
-        if (!properties.contains(AbilityProperties.CASTER)) return false;
-        if (this.getAbilityProvider() != null && !this.getAbilityProvider().isEnabled()) return false;
-        if (!this.isEnabled()) return false;
-
-        if (this.casting) return false;
-
         Collections.sort(this.conditions);
 
         for (Condition.Data data : this.conditions)
@@ -516,6 +543,11 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
             }
         }
 
+        return true;
+    }
+
+    public boolean evaluateCosts(Properties properties)
+    {
         List<Cost> costs = new ArrayList<>(this.costs);
         costs.add(new ManaCost(this.getManaCost()));
 
@@ -533,23 +565,44 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return true;
     }
 
+    public boolean canActivate(Properties properties)
+    {
+        if (!properties.contains(AbilityProperties.CASTER)) return false;
+        if (this.getAbilityProvider() != null && !this.getAbilityProvider().isEnabled()) return false;
+        if (!this.isEnabled()) return false;
+
+        if (this.casting) return false;
+
+        if (this.shouldEvaluateConditions() && !this.evaluateConditions(properties)) return false;
+        if (this.shouldUseCosts() && !this.evaluateCosts(properties)) return false;
+
+        return true;
+    }
+
+    public boolean applyCosts(Properties properties)
+    {
+        List<Cost> costs = new ArrayList<>(this.costs);
+        costs.add(new ManaCost(this.getManaCost()));
+
+        // loop through every cost and remove
+        for (Cost cost : costs)
+        {
+            boolean result = cost.run(properties);
+
+            if (!result)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public boolean activate(Properties properties)
     {
         if (this.canActivate(properties))
         {
-            List<Cost> costs = new ArrayList<>(this.costs);
-            costs.add(new ManaCost(this.getManaCost()));
-
-            // loop through every cost and remove
-            for (Cost cost : costs)
-            {
-                boolean result = cost.run(properties);
-
-                if (!result)
-                {
-                    return false;
-                }
-            }
+            if (this.shouldUseCosts() && !this.applyCosts(properties)) return false;
 
             // TODO change system for cast time
             if (this.getCastTime() > 0)
@@ -588,7 +641,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return false;
     }
 
-    public void doActivate(Properties properties)
+    public void activateAbilityAndChildren(Properties properties)
     {
         this.onActivate(properties);
 
@@ -609,7 +662,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         {
             this.setInProgress(true);
 
-            this.doActivate(properties);
+            this.activateAbilityAndChildren(properties);
 
             this.onPostActivate(properties);
         }

@@ -1,6 +1,9 @@
 package co.runed.bolster.wip.particles;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.game.Team;
+import de.slikey.effectlib.Effect;
+import de.slikey.effectlib.EffectType;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
@@ -35,7 +38,8 @@ public class ParticleInfo
     {
         for (LivingEntity entity : team.getMembers())
         {
-            if(entity instanceof Player) this.spawnParticle((Player) entity, location, count, offsetX, offsetY, offsetZ);
+            if (entity instanceof Player)
+                this.spawnParticle((Player) entity, location, count, offsetX, offsetY, offsetZ);
         }
     }
 
@@ -57,5 +61,20 @@ public class ParticleInfo
         {
             world.spawnParticle(particle, location, countPer, offsetX, offsetY, offsetZ, this.data);
         }
+    }
+
+    public void playEffect(Player player, Location location, Effect effect)
+    {
+        effect.setEntity(player);
+        effect.setLocation(location);
+
+        if (data instanceof Particle.DustOptions)
+        {
+            Particle.DustOptions dustOptions = (Particle.DustOptions) data;
+            effect.particleSize = dustOptions.getSize();
+            effect.color = dustOptions.getColor();
+        }
+
+        Bolster.getEffectManager().start(effect);
     }
 }

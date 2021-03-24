@@ -38,6 +38,11 @@ public class TimeUtil
         return seconds * 20;
     }
 
+    public static double toSeconds(Duration duration)
+    {
+        return duration.toMillis() / 1000d;
+    }
+
     public static Duration fromTicks(long ticks)
     {
         return fromSeconds(ticks * 20);

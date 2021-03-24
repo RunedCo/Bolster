@@ -221,7 +221,7 @@ public class Team implements Listener
         this.onlineMembers.remove(event.getPlayer().getUniqueId());
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onEntityDeath(EntityDeathEvent event)
     {
         LivingEntity entity = event.getEntity();

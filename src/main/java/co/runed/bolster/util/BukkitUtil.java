@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -126,6 +127,96 @@ public class BukkitUtil
         return entities;
     }
 
+    /**
+     * @param location  starting position
+     * @param radius    distance cone travels
+     * @param degrees   angle of cone
+     * @param direction direction of the cone
+     * @return All entities inside the cone
+     */
+    public static List<Entity> getEntitiesInCone(Location location, float radius, float degrees, Vector direction)
+    {
+        List<Entity> newEntities = new ArrayList<>();        //    Returned list
+        float squaredRadius = radius * radius;                     //    We don't want to use square root
+        Vector startPos = location.toVector();
+
+        Collection<Entity> entities = getEntitiesRadius(location, squaredRadius);
+
+        for (Entity e : entities)
+        {
+            Vector relativePosition = e.getLocation().toVector();                            //    Position of the entity relative to the cone origin
+            relativePosition.subtract(startPos);
+            if (relativePosition.lengthSquared() > squaredRadius)
+                continue;                    //    First check : distance
+            if (getAngleBetweenVectors(direction, relativePosition) > degrees) continue;    //    Second check : angle
+
+            newEntities.add(e);                                                                //    The entity e is in the cone
+        }
+
+        return newEntities;
+    }
+
+    /**
+     * @param startPos  starting position
+     * @param radius    distance cone travels
+     * @param degrees   angle of cone
+     * @param direction direction of the cone
+     * @return All block positions inside the cone
+     */
+    public static List<Vector> getPositionsInCone(Vector startPos, float radius, float degrees, Vector direction)
+    {
+        List<Vector> positions = new ArrayList<>();        //    Returned list
+        float squaredRadius = radius * radius;                     //    We don't want to use square root
+
+        for (float x = startPos.getBlockX() - radius; x < startPos.getBlockX() + radius; x++)
+            for (float y = startPos.getBlockY() - radius; y < startPos.getBlockY() + radius; y++)
+                for (float z = startPos.getBlockZ() - radius; z < startPos.getBlockZ() + radius; z++)
+                {
+                    Vector relative = new Vector(x, y, z);
+                    relative.subtract(startPos);
+                    if (relative.lengthSquared() > squaredRadius) continue;            //    First check : distance
+                    if (getAngleBetweenVectors(direction, relative) > degrees) continue;    //    Second check : angle
+
+                    positions.add(new Vector(x, y, z));                                                //    The position v is in the cone
+                }
+        return positions;
+    }
+
+    public static float getAngleBetweenVectors(Vector v1, Vector v2)
+    {
+        return Math.abs((float) Math.toDegrees(v1.angle(v2)));
+    }
+
+    public static Collection<Entity> getEntitiesInFrontOf(LivingEntity source, float maxDistance)
+    {
+        List<Entity> output = new ArrayList<>();        //    Returned list
+        Collection<Entity> entities = getEntitiesRadius(source.getLocation(), maxDistance);
+
+        for (Entity entity : entities)
+        {
+            if (!isTargetBehindEntity(source, entity) && entity.getLocation().distance(source.getLocation()) <= maxDistance)
+                output.add(entity);
+        }
+
+        return output;
+    }
+
+    private static boolean isTargetBehindEntity(Entity source, Entity target)
+    {
+        return isTargetBehindLocation(source.getLocation(), target);
+    }
+
+    private static boolean isTargetBehindLocation(Location source, Entity target)
+    {
+        double yaw = 2 * Math.PI - Math.PI * source.getYaw() / 180;
+        Vector v = target.getLocation().toVector().subtract(source.toVector());
+
+        Vector r = new Vector(Math.sin(yaw), 0, Math.cos(yaw));
+        float theta = r.angle(v);
+
+        return Math.PI / 2 < theta && theta < 3 * Math.PI / 2;
+    }
+
     public static BoundingBox radiusBoundingBox(Location location, double radius)
     {
         double x = location.getX();
@@ -167,6 +258,78 @@ public class BukkitUtil
         }
 
         return blocks;
+    }
+
+    public static Vector makeFinite(Vector vector)
+    {
+        double x = vector.getX();
+        double y = vector.getY();
+        double z = vector.getZ();
+
+        if (Double.isNaN(x)) x = 0.0D;
+        if (Double.isNaN(y)) y = 0.0D;
+        if (Double.isNaN(z)) z = 0.0D;
+
+        if (Double.isInfinite(x))
+        {
+            boolean negative = (x < 0.0D);
+            x = negative ? -1 : 1;
+        }
+
+        if (Double.isInfinite(y))
+        {
+            boolean negative = (y < 0.0D);
+            y = negative ? -1 : 1;
+        }
+
+        if (Double.isInfinite(z))
+        {
+            boolean negative = (z < 0.0D);
+            z = negative ? -1 : 1;
+        }
+
+        return new Vector(x, y, z);
+    }
+
+    public static Location makeFinite(Location location)
+    {
+        float yaw = location.getYaw();
+        float pitch = location.getPitch();
+
+        if (Float.isNaN(yaw)) yaw = 0.0F;
+        if (Float.isNaN(pitch)) pitch = 0.0F;
+
+        if (Float.isInfinite(yaw))
+        {
+            boolean negative = (yaw < 0.0F);
+            yaw = negative ? -1F : 1F;
+        }
+
+        if (Float.isInfinite(pitch))
+        {
+            boolean negative = (pitch < 0.0F);
+            pitch = negative ? -1F : 1F;
+        }
+
+        Vector vec = makeFinite(location.toVector());
+
+        return new Location(location.getWorld(), vec.getX(), vec.getY(), vec.getZ(), yaw, pitch);
+    }
+
+    public static Location lerp(Location start, Location end, double percent)
+    {
+        end = end.clone();
+        start = start.clone();
+
+        return (start.add((end.subtract(start)).multiply(percent)));
+    }
+
+    public static Vector lerp(Vector start, Vector end, double percent)
+    {
+        end = end.clone();
+        start = start.clone();
+
+        return (start.add((end.subtract(start)).multiply(percent)));
     }
 
     public static Location stringToLocation(String locString)
@@ -277,7 +440,7 @@ public class BukkitUtil
     /**
      * Set the actionbar display for a player
      *
-     * @param player the player
+     * @param player  the player
      * @param message the text to display
      */
     public static void sendActionBar(Player player, String message)

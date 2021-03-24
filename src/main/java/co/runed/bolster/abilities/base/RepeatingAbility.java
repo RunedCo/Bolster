@@ -51,7 +51,7 @@ public class RepeatingAbility extends Ability
     }
 
     @Override
-    public void doActivate(Properties properties)
+    public void activateAbilityAndChildren(Properties properties)
     {
         if (this.duration != null)
         {
@@ -73,7 +73,7 @@ public class RepeatingAbility extends Ability
     private void run(Properties properties)
     {
         properties.set(AbilityProperties.RUN_NUMBER, properties.get(AbilityProperties.RUN_NUMBER) + 1);
-        super.doActivate(properties);
+        super.activateAbilityAndChildren(properties);
     }
 
     @Override

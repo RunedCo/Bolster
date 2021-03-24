@@ -81,4 +81,19 @@ public class NumberUtil
             return a.intValue() / b.intValue();
         }
     }
+
+    public static double easeIn(double t, double speed)
+    {
+        return Math.pow(t, speed);
+    }
+
+    public static double easeOut(double t, double speed)
+    {
+        return flip(Math.pow(flip(t), speed));
+    }
+
+    static double flip(double x)
+    {
+        return 1 - x;
+    }
 }

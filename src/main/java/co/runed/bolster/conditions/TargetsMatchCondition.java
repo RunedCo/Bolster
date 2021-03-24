@@ -19,7 +19,10 @@ public class TargetsMatchCondition<T> extends TargetedCondition<T>
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        return this.target1.get(properties).equals(this.target2.get(properties));
+        T t1 = this.target1.get(properties);
+        T t2 = this.target2.get(properties);
+
+        return t1.equals(t2);
     }
 
     @Override

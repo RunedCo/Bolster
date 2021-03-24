@@ -21,8 +21,7 @@ public class IsOnTeamCondition extends TargetedCondition<BolsterEntity>
     {
         BolsterEntity entity = this.getTarget().get(properties);
 
-        return this.team.isInTeam(
-                entity.getBukkit());
+        return this.team.isInTeam(entity.getBukkit());
     }
 
     @Override
