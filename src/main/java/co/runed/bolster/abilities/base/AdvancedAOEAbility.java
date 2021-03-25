@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * A MultiTargetAbility that gets nearby entities
  */
-public class NewAOEAbility extends MultiTargetAbility
+public class AdvancedAOEAbility extends MultiTargetAbility
 {
     Target<Location> target;
 
@@ -32,7 +32,7 @@ public class NewAOEAbility extends MultiTargetAbility
     private double vRadiusSquared;
     private double hRadiusSquared;
 
-    public NewAOEAbility(Target<Location> target, double vRadius, double hRadius, double coneAngle, boolean circleShape, int maxTargets)
+    public AdvancedAOEAbility(Target<Location> target, double vRadius, double hRadius, double coneAngle, boolean circleShape, int maxTargets)
     {
         super(null);
 
