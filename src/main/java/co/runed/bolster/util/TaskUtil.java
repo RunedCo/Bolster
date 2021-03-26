@@ -146,6 +146,7 @@ public class TaskUtil
         Runnable cancelRunnable = null;
         List<BukkitTask> tasks = new ArrayList<>();
         long duration = 0;
+        boolean cancelled = false;
 
         public TaskSeries add(Runnable task)
         {
@@ -192,6 +193,11 @@ public class TaskUtil
             {
                 this.cancelRunnable.run();
             }
+        }
+
+        public boolean isCancelled()
+        {
+            return cancelled;
         }
     }
 

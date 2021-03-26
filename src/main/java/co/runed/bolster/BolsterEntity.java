@@ -5,9 +5,8 @@ import co.runed.bolster.managers.ClassManager;
 import co.runed.bolster.managers.EntityManager;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.status.StatusEffect;
-import co.runed.bolster.util.BukkitUtil;
-import co.runed.bolster.util.NumberUtil;
-import co.runed.bolster.util.Operation;
+import co.runed.bolster.util.*;
+import co.runed.bolster.util.easing.Ease;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.traits.Trait;
@@ -25,7 +24,10 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.util.Vector;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class BolsterEntity extends TraitProvider
 {
@@ -389,6 +391,33 @@ public class BolsterEntity extends TraitProvider
     public Collection<Inventory> getInventories()
     {
         return this.inventories.values();
+    }
+
+    public CompletableFuture<BolsterEntity> moveTo(Location position, Ease ease, Duration duration, double speed)
+    {
+        CompletableFuture<BolsterEntity> completableFuture = new CompletableFuture<>();
+        LivingEntity entity = this.getBukkit();
+        Instant startTime = Instant.now();
+
+        TaskUtil.TaskSeries task = new TaskUtil.TaskSeries();
+
+        task.addRepeating(() -> {
+            double sinceStart = TimeUtil.toSeconds(Duration.between(startTime, Instant.now()));
+            double durationSeconds = TimeUtil.toSeconds(duration);
+            double time = sinceStart / durationSeconds;
+
+            if (completableFuture.isCancelled())
+            {
+                if (!task.isCancelled()) task.cancel();
+                return;
+            }
+
+            entity.teleport(BukkitUtil.lerp(entity.getLocation(), position, ease.getEaseFunction().apply(time, durationSeconds) * speed));
+        }, TimeUtil.toTicks(duration), 1);
+
+        task.add(() -> completableFuture.complete(this));
+
+        return completableFuture;
     }
 
     public void destroy()
