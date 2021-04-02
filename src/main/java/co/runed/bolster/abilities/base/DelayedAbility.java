@@ -19,7 +19,9 @@ public class DelayedAbility extends Ability
     @Override
     public boolean activate(Properties properties)
     {
-        Bukkit.getScheduler().runTaskLater(Bolster.getInstance(), () -> super.activate(properties), (long) (this.delay * 20));
+        Properties cloned = new Properties(properties);
+
+        Bukkit.getScheduler().runTaskLater(Bolster.getInstance(), () -> super.activate(cloned), (long) (this.delay * 20));
 
         return true;
     }
