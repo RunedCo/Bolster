@@ -420,6 +420,11 @@ public class BolsterEntity extends TraitProvider
         return completableFuture;
     }
 
+    public void remove()
+    {
+        this._entity.remove();
+    }
+
     public void destroy()
     {
         if (this.getBolsterClass() != null)
