@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Config
 {
-    private YamlConfiguration config;
+    private final YamlConfiguration config;
 
     public String databaseUrl;
     public String databasePort;

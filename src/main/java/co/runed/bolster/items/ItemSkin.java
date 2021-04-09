@@ -7,7 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class ItemSkin implements IRegisterable, IConfigurable
 {
-    private String id;
+    private final String id;
     private String name;
     private int customModelData = 0;
     private boolean showName;

@@ -287,7 +287,7 @@ public class Team implements Listener
         if (event.getTarget() == null) return;
 
         LivingEntity targeter = (LivingEntity) event.getEntity();
-        LivingEntity targeted = (LivingEntity) event.getTarget();
+        LivingEntity targeted = event.getTarget();
 
         if (this.isInTeam(targeter) && this.isInTeam(targeted) && !this.allowFriendlyFire())
         {

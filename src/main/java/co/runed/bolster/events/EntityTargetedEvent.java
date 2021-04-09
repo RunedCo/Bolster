@@ -10,7 +10,7 @@ public class EntityTargetedEvent extends EntityEvent implements Cancellable
     private static final HandlerList handlers = new HandlerList();
 
     private boolean cancelled = false;
-    private Entity targeter;
+    private final Entity targeter;
 
     public EntityTargetedEvent(Entity what)
     {

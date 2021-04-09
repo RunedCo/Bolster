@@ -19,8 +19,8 @@ import java.util.concurrent.Callable;
 public class Registry<T extends IRegisterable>
 {
     public Plugin plugin;
-    private String folderName;
-    private HashMap<String, ConfigurationSection> configs = new HashMap<>();
+    private final String folderName;
+    private final HashMap<String, ConfigurationSection> configs = new HashMap<>();
     private final HashMap<String, Entry<? extends T>> entries = new HashMap<>();
 
     private final HashMap<Class<? extends T>, String> classKeys = new HashMap<>();

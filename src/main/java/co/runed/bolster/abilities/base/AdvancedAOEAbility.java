@@ -24,13 +24,13 @@ public class AdvancedAOEAbility extends MultiTargetAbility
     Target<Location> target;
 
     private double coneAngle = 0;
-    private double vRadius;
-    private double hRadius;
+    private final double vRadius;
+    private final double hRadius;
     private int maxTargets = -1;
     private boolean circleShape = false;
 
-    private double vRadiusSquared;
-    private double hRadiusSquared;
+    private final double vRadiusSquared;
+    private final double hRadiusSquared;
 
     public AdvancedAOEAbility(Target<Location> target, double vRadius, double hRadius, double coneAngle, boolean circleShape, int maxTargets)
     {

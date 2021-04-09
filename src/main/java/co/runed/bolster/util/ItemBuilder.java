@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ItemBuilder
 {
-    private ItemStack itemStack;
+    private final ItemStack itemStack;
 
     public ItemBuilder(Material material)
     {
@@ -244,10 +244,7 @@ public class ItemBuilder
         {
             if (item.getItemMeta().hasDisplayName())
             {
-                if (item.getItemMeta().getDisplayName().equals(name))
-                {
-                    return true;
-                }
+                return item.getItemMeta().getDisplayName().equals(name);
             }
         }
 

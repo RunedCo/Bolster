@@ -63,7 +63,7 @@ public enum Ease
     private static final double _PiOver2 = Math.PI * 0.5f;
     private static final double _TwoPi = Math.PI * 2;
 
-    private BiFunction<Double, Double, Double> easeFunction;
+    private final BiFunction<Double, Double, Double> easeFunction;
 
     Ease(BiFunction<Double, Double, Double> easeFunction)
     {

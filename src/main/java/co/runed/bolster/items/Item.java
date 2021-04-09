@@ -377,7 +377,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
         // TODO CHECK PERFORMANCE IMPACT OF THIS ESPECIALLY FOR TICKING ABILITIES
         if (this.getEntity() instanceof Player && this.getId() != null)// && this.isDirty())
         {
-            ItemManager.getInstance().rebuildItemStack((Player) this.getEntity(), this.getId());
+            ItemManager.getInstance().rebuildItemStack(this.getEntity(), this.getId());
         }
     }
 
@@ -408,7 +408,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
         if (this.getEntity() != null && this.getEntity() instanceof Player)
         {
-            ItemManager.getInstance().rebuildItemStack((Player) this.getEntity(), this.getId());
+            ItemManager.getInstance().rebuildItemStack(this.getEntity(), this.getId());
         }
 
         return true;

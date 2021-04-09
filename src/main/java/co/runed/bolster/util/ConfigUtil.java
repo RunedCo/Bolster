@@ -160,7 +160,7 @@ public class ConfigUtil
         {
             try
             {
-                String test = (String) this.getString(path);
+                String test = this.getString(path);
             }
             catch (Exception e)
             {
@@ -175,7 +175,7 @@ public class ConfigUtil
         {
             try
             {
-                Integer test = (Integer) this.getInt(path);
+                Integer test = this.getInt(path);
             }
             catch (Exception e)
             {
@@ -190,7 +190,7 @@ public class ConfigUtil
         {
             try
             {
-                Double test = (Double) this.getDouble(path);
+                Double test = this.getDouble(path);
             }
             catch (Exception e)
             {
@@ -205,7 +205,7 @@ public class ConfigUtil
         {
             try
             {
-                Long test = (Long) this.getLong(path);
+                Long test = this.getLong(path);
             }
             catch (Exception e)
             {

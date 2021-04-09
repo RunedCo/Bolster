@@ -25,7 +25,7 @@ import java.util.List;
 
 public abstract class StatusEffect implements Listener, IRegisterable, Comparable<StatusEffect>
 {
-    private static Collection<PotionEffectType> MAX_DURATION_EFFECTS = Arrays.asList(PotionEffectType.BLINDNESS, PotionEffectType.CONFUSION, PotionEffectType.NIGHT_VISION);
+    private static final Collection<PotionEffectType> MAX_DURATION_EFFECTS = Arrays.asList(PotionEffectType.BLINDNESS, PotionEffectType.CONFUSION, PotionEffectType.NIGHT_VISION);
 
     String id;
     double duration;
@@ -36,7 +36,7 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
     boolean ambient = false;
 
     boolean active;
-    private List<PotionData> potionEffects = new ArrayList<>();
+    private final List<PotionData> potionEffects = new ArrayList<>();
 
     public StatusEffect()
     {

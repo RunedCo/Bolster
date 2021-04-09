@@ -22,7 +22,7 @@ import java.util.EnumSet;
 
 public class EntityArmorEquipListener implements Listener
 {
-    private EnumSet<EquipmentSlot> armorSlots = EnumSet.of(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.HEAD, EquipmentSlot.CHEST);
+    private final EnumSet<EquipmentSlot> armorSlots = EnumSet.of(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.HEAD, EquipmentSlot.CHEST);
 
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerArmorChange(PlayerArmorChangeEvent event)

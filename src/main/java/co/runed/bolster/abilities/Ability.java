@@ -33,7 +33,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 {
     private static final long CAST_BAR_UPDATE_TICKS = 5L;
 
-    private String parentId = UUID.randomUUID().toString();
+    private final String parentId = UUID.randomUUID().toString();
     private String id = UUID.randomUUID().toString();
     private String name = null;
     private String description = null;
@@ -574,9 +574,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         if (this.casting) return false;
 
         if (this.shouldEvaluateConditions() && !this.evaluateConditions(properties)) return false;
-        if (this.shouldUseCosts() && !this.evaluateCosts(properties)) return false;
-
-        return true;
+        return !this.shouldUseCosts() || this.evaluateCosts(properties);
     }
 
     public boolean applyCosts(Properties properties)

@@ -436,8 +436,8 @@ public class AbilityManager extends Manager
 
     private static class AbilityProviderData
     {
-        private AbilityProvider provider;
-        private AbilityProviderType type;
+        private final AbilityProvider provider;
+        private final AbilityProviderType type;
 
         public AbilityProviderData(AbilityProvider provider, AbilityProviderType type)
         {
