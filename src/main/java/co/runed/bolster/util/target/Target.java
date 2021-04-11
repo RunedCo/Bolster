@@ -5,6 +5,7 @@ import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -38,6 +39,9 @@ public class Target<T> implements IRegisterable
     public static final Target<Location> INITIAL_TARGET_LOCATION = new Target<>("initial_target_location", properties -> properties.get(AbilityProperties.INITIAL_TARGET).getLocation());
     public static final Target<Location> CASTER_EYE_LOCATION = new Target<>("caster_eye_location", properties -> properties.get(AbilityProperties.CASTER).getBukkit().getEyeLocation());
     public static final Target<Location> BLOCK_LOCATION = new Target<>("block_location", properties -> properties.get(AbilityProperties.BLOCK).getLocation());
+
+    public static final Target<World> CASTER_WORLD = new Target<>("caster_world", properties -> Target.CASTER_LOCATION.get(properties).getWorld());
+    public static final Target<World> TARGET_WORLD = new Target<>("target_world", properties -> Target.TARGET_LOCATION.get(properties).getWorld());
 
     String id;
     Function<Properties, ? extends T> getTargetFunction;
