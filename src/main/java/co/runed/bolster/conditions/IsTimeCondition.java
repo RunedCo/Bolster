@@ -5,11 +5,13 @@ import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.World;
 
-public class IsTimeCondition extends TargetedCondition<World> {
+public class IsTimeCondition extends TargetedCondition<World>
+{
     Operator operator;
     long time;
 
-    public IsTimeCondition(Target<World> target, Operator operator, long time) {
+    public IsTimeCondition(Target<World> target, Operator operator, long time)
+    {
         super(target);
 
         this.operator = operator;
@@ -17,24 +19,31 @@ public class IsTimeCondition extends TargetedCondition<World> {
     }
 
     @Override
-    public boolean evaluate(IConditional conditional, Properties properties) {
+    public boolean evaluate(IConditional conditional, Properties properties)
+    {
         World world = this.getTarget().get(properties);
         long worldTime = world.getTime();
-        
-        switch (operator) {
-            case ABOVE: {
+
+        switch (operator)
+        {
+            case ABOVE:
+            {
                 return worldTime > this.time;
             }
-            case ABOVE_OR_EQUAL: {
+            case ABOVE_OR_EQUAL:
+            {
                 return worldTime >= this.time;
             }
-            case EQUAL: {
+            case EQUAL:
+            {
                 return worldTime == this.time;
             }
-            case BELOW_OR_EQUAL: {
+            case BELOW_OR_EQUAL:
+            {
                 return worldTime <= this.time;
             }
-            case BELOW: {
+            case BELOW:
+            {
                 return worldTime < this.time;
             }
         }
@@ -43,12 +52,14 @@ public class IsTimeCondition extends TargetedCondition<World> {
     }
 
     @Override
-    public void onFail(IConditional conditional, Properties properties, boolean inverted) {
+    public void onFail(IConditional conditional, Properties properties, boolean inverted)
+    {
 
     }
 
     @Override
-    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted) {
+    public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
+    {
         return null;
     }
 }

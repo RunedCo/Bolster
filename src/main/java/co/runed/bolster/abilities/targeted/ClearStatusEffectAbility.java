@@ -1,14 +1,10 @@
 package co.runed.bolster.abilities.targeted;
 
 import co.runed.bolster.BolsterEntity;
-import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.TargetedAbility;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
-import org.bukkit.entity.LivingEntity;
-
-import java.util.function.BiConsumer;
 
 public class ClearStatusEffectAbility extends TargetedAbility<BolsterEntity>
 {
