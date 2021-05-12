@@ -3,8 +3,8 @@ package co.runed.bolster;
 import co.runed.bolster.classes.TargetDummyClass;
 import co.runed.bolster.commands.*;
 import co.runed.bolster.util.properties.Property;
-import co.runed.bolster.util.traits.Trait;
 import co.runed.bolster.util.traits.Traits;
+import co.runed.bolster.wip.BowUtil;
 import co.runed.bolster.wip.DisguiseListener;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.managers.*;
@@ -149,6 +149,7 @@ public class Bolster extends JavaPlugin implements Listener
         Bukkit.getPluginManager().registerEvents(new TestListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisguiseListener(), this);
         Bukkit.getPluginManager().registerEvents(new PotionUtil(), this);
+        Bukkit.getPluginManager().registerEvents(new BowUtil(), this);
 
         this.registerStatusEffects();
         this.registerCurrencies();
