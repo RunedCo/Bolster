@@ -1,7 +1,9 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.events.EntityRemoveStatusEffectEvent;
 import co.runed.bolster.items.Item;
+import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.properties.FunctionProperty;
 import co.runed.bolster.util.properties.Property;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
@@ -69,6 +71,10 @@ public class AbilityProperties
 
     // CHARGE PROPERTIES
     public static final Property<Long> CHARGE_TIME = new Property<>("charge_time");
+
+    // EFFECT PROPERTIES
+    public static final Property<StatusEffect> STATUS_EFFECT = new Property<>("status_effect");
+    public static final Property<EntityRemoveStatusEffectEvent.Cause> STATUS_EFFECT_REMOVAL_CAUSE = new Property<>("status_effect_cause");
 
     // CLICK PROPERTIES
     public static final Property<ItemStack> CURRENT_ITEM_STACK = new Property<>("current_item_stack");

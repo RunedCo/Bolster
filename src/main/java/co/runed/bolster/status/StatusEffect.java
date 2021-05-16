@@ -1,12 +1,14 @@
 package co.runed.bolster.status;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.events.EntityAddStatusEffectEvent;
+import co.runed.bolster.events.EntityRemoveStatusEffectEvent;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
-import co.runed.bolster.wip.PotionUtil;
+import co.runed.bolster.wip.PotionSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
@@ -37,6 +39,8 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
     boolean active;
     private final List<PotionData> potionEffects = new ArrayList<>();
+
+    private boolean cleared = false;
 
     public StatusEffect()
     {
@@ -92,12 +96,12 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
         for (PotionData data : this.potionEffects)
         {
-            PotionUtil.PotionEffectContainer container = data.container;
+            PotionSystem.PotionEffectContainer container = data.container;
             long finalDuration = (data.initialDuration - sinceStart) + difference;
 
-            PotionUtil.removeExactPotionEffect(entity, container);
+            PotionSystem.removeExactPotionEffect(entity, container);
 
-            data.container = PotionUtil.addPotionEffect(entity, new PotionEffect(container.type, (int) finalDuration, container.amplifier, container.ambient, container.particles, container.icon));
+            data.container = PotionSystem.addPotionEffect(entity, new PotionEffect(container.type, (int) finalDuration, container.amplifier, container.ambient, container.particles, container.icon));
         }
     }
 
@@ -134,6 +138,16 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
     {
         this.setEntity(entity);
 
+        EntityAddStatusEffectEvent addEvent = new EntityAddStatusEffectEvent(entity, this);
+        Bukkit.getServer().getPluginManager().callEvent(addEvent);
+
+        if (addEvent.isCancelled())
+        {
+            // TODO: temp fix
+            this.clear(true);
+            return;
+        }
+
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
 
         this.startTime = Instant.now();
@@ -159,9 +173,15 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
             return;
         }
 
+        if (!cleared)
+        {
+            EntityRemoveStatusEffectEvent removeEvent = new EntityRemoveStatusEffectEvent(entity, this, EntityRemoveStatusEffectEvent.Cause.EXPIRED);
+            Bukkit.getServer().getPluginManager().callEvent(removeEvent);
+        }
+
         for (PotionData potionEffect : this.potionEffects)
         {
-            PotionUtil.removeExactPotionEffect(entity, potionEffect.container);
+            PotionSystem.removeExactPotionEffect(entity, potionEffect.container);
         }
 
         StatusEffectManager.getInstance().removeStatusEffect(this.getEntity(), this);
@@ -173,7 +193,21 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
     public void clear()
     {
+        this.clear(false);
+    }
+
+    public void clear(boolean forced)
+    {
         if (this.task == null || this.task.isCancelled()) return;
+
+        EntityRemoveStatusEffectEvent.Cause cause = forced ? EntityRemoveStatusEffectEvent.Cause.FORCE_CLEARED : EntityRemoveStatusEffectEvent.Cause.CLEARED;
+
+        EntityRemoveStatusEffectEvent removeEvent = new EntityRemoveStatusEffectEvent(entity, this, cause);
+        Bukkit.getServer().getPluginManager().callEvent(removeEvent);
+
+        if (removeEvent.isCancelled() && !forced) return;
+
+        this.cleared = true;
 
         this.duration = 0;
 
@@ -209,7 +243,7 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
         PotionEffect effect = new PotionEffect(type, duration, amplifier, ambient, particles, icon);
 
-        this.potionEffects.add(new PotionData(PotionUtil.addPotionEffect(entity, effect), duration));
+        this.potionEffects.add(new PotionData(PotionSystem.addPotionEffect(entity, effect), duration));
     }
 
     public abstract void onStart();
@@ -226,10 +260,10 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
     private static class PotionData
     {
-        PotionUtil.PotionEffectContainer container;
+        PotionSystem.PotionEffectContainer container;
         long initialDuration;
 
-        public PotionData(PotionUtil.PotionEffectContainer container, long initialDuration)
+        public PotionData(PotionSystem.PotionEffectContainer container, long initialDuration)
         {
             this.container = container;
             this.initialDuration = initialDuration;

@@ -7,6 +7,7 @@
           <platformType>SPIGOT</platformType>
           <platformType>BUKKIT</platformType>
           <platformType>PAPER</platformType>
+          <platformType>ADVENTURE</platformType>
         </autoDetectTypes>
       </configuration>
     </facet>

@@ -50,6 +50,9 @@ public class AbilityTrigger
     public static final AbilityTrigger ON_CONNECT = new AbilityTrigger("on_connect", "Passive", true);
     public static final AbilityTrigger ON_DISCONNECT = new AbilityTrigger("on_disconnect", "Passive", true);
     public static final AbilityTrigger ON_ENTITY_DEATH = new AbilityTrigger("on_entity_death", "Passive", true);
+    public static final AbilityTrigger ON_REMOVE_STATUS_EFFECT = new AbilityTrigger("on_remove_status_effect", "Passive", true);
+    public static final AbilityTrigger ON_ADD_STATUS_EFFECT = new AbilityTrigger("on_add_status_effect", "Passive", true);
+
 
     // TRIGGERED WHEN YOU BECOME THIS CLASS
     public static final AbilityTrigger SET_CLASS = new AbilityTrigger("become_class", "Passive", true);

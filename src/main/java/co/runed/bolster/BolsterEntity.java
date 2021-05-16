@@ -12,7 +12,7 @@ import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.traits.Trait;
 import co.runed.bolster.util.traits.TraitProvider;
 import co.runed.bolster.util.traits.Traits;
-import co.runed.bolster.wip.BowUtil;
+import co.runed.bolster.wip.BowTracker;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -319,7 +319,7 @@ public class BolsterEntity extends TraitProvider
     {
         if (this._entity.getType() != EntityType.PLAYER) return false;
 
-        return BowUtil.getInstance().isDrawingBow((Player) this.getBukkit());
+        return BowTracker.getInstance().isDrawingBow((Player) this.getBukkit());
     }
 
     public void setFoodLevel(int foodLevel)

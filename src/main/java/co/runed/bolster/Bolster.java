@@ -4,8 +4,7 @@ import co.runed.bolster.classes.TargetDummyClass;
 import co.runed.bolster.commands.*;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.traits.Traits;
-import co.runed.bolster.wip.BowUtil;
-import co.runed.bolster.wip.DisguiseListener;
+import co.runed.bolster.wip.*;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.status.*;
@@ -13,8 +12,6 @@ import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import co.runed.bolster.util.currency.Currencies;
 import co.runed.bolster.util.currency.Currency;
-import co.runed.bolster.wip.PotionUtil;
-import co.runed.bolster.wip.TestListener;
 import co.runed.bolster.wip.particles.ParticleSet;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -148,8 +145,9 @@ public class Bolster extends JavaPlugin implements Listener
         Bukkit.getPluginManager().registerEvents(menuListener, this);
         Bukkit.getPluginManager().registerEvents(new TestListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisguiseListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PotionUtil(), this);
-        Bukkit.getPluginManager().registerEvents(new BowUtil(), this);
+        Bukkit.getPluginManager().registerEvents(new PotionSystem(), this);
+        Bukkit.getPluginManager().registerEvents(new BowTracker(), this);
+        Bukkit.getPluginManager().registerEvents(new HitTracker(), this);
 
         this.registerStatusEffects();
         this.registerCurrencies();
@@ -160,7 +158,7 @@ public class Bolster extends JavaPlugin implements Listener
     @EventHandler(priority = EventPriority.HIGH)
     private void onInventoryClick(InventoryClickEvent event)
     {
-        if(!event.isCancelled()) return;
+        if (!event.isCancelled()) return;
 
         this.menuListener.handleGuiClick(event);
     }

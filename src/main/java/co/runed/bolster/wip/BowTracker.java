@@ -13,13 +13,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class BowUtil implements Listener
+public class BowTracker implements Listener
 {
     private final Set<UUID> drawing = new HashSet<>();
 
-    private static BowUtil _instance;
+    private static BowTracker _instance;
 
-    public BowUtil()
+    public BowTracker()
     {
         _instance = this;
     }
@@ -63,7 +63,7 @@ public class BowUtil implements Listener
         return this.drawing.contains(player.getUniqueId());
     }
 
-    public static BowUtil getInstance()
+    public static BowTracker getInstance()
     {
         return _instance;
     }

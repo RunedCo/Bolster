@@ -13,15 +13,15 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PotionUtil implements Listener
+public class PotionSystem implements Listener
 {
     Map<UUID, Map<PotionEffectType, Boolean>> blockNextRemoval = new HashMap<>();
     List<PotionEffectContainer> activeEffects = new ArrayList<>();
     List<PotionEffectContainer> pendingEffects = new ArrayList<>();
 
-    private static PotionUtil _instance;
+    private static PotionSystem _instance;
 
-    public PotionUtil()
+    public PotionSystem()
     {
         _instance = this;
     }
