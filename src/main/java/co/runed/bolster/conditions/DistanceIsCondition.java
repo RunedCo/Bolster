@@ -1,6 +1,6 @@
 package co.runed.bolster.conditions;
 
-import co.runed.bolster.util.Operator;
+import co.runed.bolster.math.Operator;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Location;

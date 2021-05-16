@@ -2,7 +2,7 @@ package co.runed.bolster.gui;
 
 import co.runed.bolster.items.LevelableItem;
 import co.runed.bolster.managers.PlayerManager;
-import co.runed.bolster.util.Glyphs;
+import co.runed.bolster.fx.Glyphs;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.util.registries.Registries;

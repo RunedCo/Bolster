@@ -3,7 +3,7 @@ package co.runed.bolster.game;
 import co.runed.bolster.util.currency.Currency;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
-import co.runed.bolster.wip.particles.ParticleSet;
+import co.runed.bolster.fx.particles.ParticleSet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

@@ -1,6 +1,6 @@
 package co.runed.bolster.util.currency;
 
-import co.runed.bolster.util.Glyphs;
+import co.runed.bolster.fx.Glyphs;
 
 public class Currencies
 {

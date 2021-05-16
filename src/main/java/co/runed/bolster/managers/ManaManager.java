@@ -1,6 +1,5 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.util.Manager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

@@ -12,7 +12,7 @@ import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import co.runed.bolster.util.currency.Currencies;
 import co.runed.bolster.util.currency.Currency;
-import co.runed.bolster.wip.particles.ParticleSet;
+import co.runed.bolster.fx.particles.ParticleSet;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;

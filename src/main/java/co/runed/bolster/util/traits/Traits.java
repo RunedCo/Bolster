@@ -1,6 +1,6 @@
 package co.runed.bolster.util.traits;
 
-import co.runed.bolster.util.Operation;
+import co.runed.bolster.math.Operation;
 
 public class Traits
 {

@@ -1,6 +1,6 @@
 package co.runed.bolster.util.traits;
 
-import co.runed.bolster.util.Operation;
+import co.runed.bolster.math.Operation;
 import co.runed.bolster.util.properties.Property;
 
 public class Trait<T> extends Property<T>

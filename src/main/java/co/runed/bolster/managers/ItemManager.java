@@ -7,7 +7,6 @@ import co.runed.bolster.abilities.AbilityProviderType;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.items.Item;
-import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
 import org.bukkit.entity.LivingEntity;

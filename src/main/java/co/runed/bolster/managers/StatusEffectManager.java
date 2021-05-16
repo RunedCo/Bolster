@@ -3,7 +3,6 @@ package co.runed.bolster.managers;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.status.StatusEffect;
-import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.NetworkUtil;
 import co.runed.bolster.util.TimeUtil;
 import io.netty.buffer.ByteBuf;
