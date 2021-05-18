@@ -143,11 +143,11 @@ public class Bolster extends JavaPlugin implements Listener
         // REGISTER EVENTS
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(menuListener, this);
-        Bukkit.getPluginManager().registerEvents(new TestListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisguiseListener(), this);
         Bukkit.getPluginManager().registerEvents(new PotionSystem(), this);
         Bukkit.getPluginManager().registerEvents(new BowTracker(), this);
         Bukkit.getPluginManager().registerEvents(new HitTracker(), this);
+        Bukkit.getPluginManager().registerEvents(new WorldGuardListener(), this);
 
         this.registerStatusEffects();
         this.registerCurrencies();
@@ -180,6 +180,7 @@ public class Bolster extends JavaPlugin implements Listener
     private void registerCurrencies()
     {
         Registry<Currency> currencyRegistry = Registries.CURRENCIES;
+
         currencyRegistry.register(Currencies.DIAMOND);
         currencyRegistry.register(Currencies.EMERALD);
         currencyRegistry.register(Currencies.GOLD);
@@ -188,6 +189,7 @@ public class Bolster extends JavaPlugin implements Listener
     private void registerTraits()
     {
         Registry<Property<?>> registry = Registries.TRAITS;
+
         registry.register(Traits.ATTACK_DAMAGE);
         registry.register(Traits.DEBUG_MODE);
         registry.register(Traits.MAX_HEALTH);

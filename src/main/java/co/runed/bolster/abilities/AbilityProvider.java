@@ -2,7 +2,7 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
-import co.runed.bolster.abilities.base.LambdaAbility;
+import co.runed.bolster.abilities.base.FunctionAbility;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.ConfigUtil;
@@ -18,7 +18,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -176,7 +175,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
 
     public void addAbility(AbilityTrigger trigger, BiConsumer<LivingEntity, Properties> lambda)
     {
-        this.addAbility(trigger, new LambdaAbility(lambda));
+        this.addAbility(trigger, new FunctionAbility(lambda));
     }
 
     public void addAbility(AbilityTrigger trigger, Ability ability)

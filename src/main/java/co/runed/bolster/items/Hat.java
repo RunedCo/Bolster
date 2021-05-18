@@ -37,7 +37,7 @@ public class Hat extends Item
 
             ItemStack invItem = equipment.getItem(EquipmentSlot.HEAD);
 
-            if (invItem == null || invItem.getType() == Material.AIR)
+            if (invItem.getType() == Material.AIR)
             {
                 equipment.setHelmet(item);
                 item.setAmount(0);

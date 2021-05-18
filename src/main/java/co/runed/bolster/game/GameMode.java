@@ -11,6 +11,8 @@ import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
@@ -31,6 +33,7 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
 
     boolean hasStarted = false;
     boolean paused = false;
+    boolean requiresResourcePack = false;
 
     public GameMode(String id, Plugin plugin)
     {
@@ -81,6 +84,16 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
 
         GameModePausedEvent event = new GameModePausedEvent(paused);
         Bukkit.getServer().getPluginManager().callEvent(event);
+    }
+
+    public void setRequiresResourcePack(boolean requiresResourcePack)
+    {
+        this.requiresResourcePack = requiresResourcePack;
+    }
+
+    public boolean getRequiresResourcePack()
+    {
+        return requiresResourcePack;
     }
 
     public boolean hasStarted()
@@ -134,5 +147,14 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     public void create(ConfigurationSection config)
     {
 
+    }
+
+    @EventHandler
+    public void onResourcePackFailed(PlayerResourcePackStatusEvent event)
+    {
+        if (event.getStatus() == PlayerResourcePackStatusEvent.Status.DECLINED || event.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD)
+        {
+            event.getPlayer().kickPlayer("You need to enable resource packs.");
+        }
     }
 }

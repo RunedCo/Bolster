@@ -18,7 +18,7 @@ public interface IConditional<T>
 
     default T addCondition(BiFunction<IConditional, Properties, Boolean> evaluateFunc, ConditionPriority priority)
     {
-        return this.addCondition(new LambdaCondition(evaluateFunc), priority);
+        return this.addCondition(new FunctionCondition(evaluateFunc), priority);
     }
 
     T addCondition(Condition condition, ConditionPriority priority);

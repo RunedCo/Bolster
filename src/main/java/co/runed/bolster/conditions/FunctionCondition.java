@@ -4,11 +4,11 @@ import co.runed.bolster.util.properties.Properties;
 
 import java.util.function.BiFunction;
 
-public class LambdaCondition extends Condition
+public class FunctionCondition extends Condition
 {
     BiFunction<IConditional, Properties, Boolean> evaluateFunc;
 
-    public LambdaCondition(BiFunction<IConditional, Properties, Boolean> evaluateFunc)
+    public FunctionCondition(BiFunction<IConditional, Properties, Boolean> evaluateFunc)
     {
         super();
 

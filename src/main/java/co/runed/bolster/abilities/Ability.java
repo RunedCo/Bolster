@@ -2,7 +2,7 @@ package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.base.DynamicParameterAbility;
-import co.runed.bolster.abilities.base.LambdaAbility;
+import co.runed.bolster.abilities.base.FunctionAbility;
 import co.runed.bolster.conditions.*;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.ManaManager;
@@ -151,7 +151,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 
     public Ability addAbility(BiConsumer<LivingEntity, Properties> func)
     {
-        return this.addAbility(new LambdaAbility(func));
+        return this.addAbility(new FunctionAbility(func));
     }
 
     public Ability addAbility(Function<Properties, Ability> func)

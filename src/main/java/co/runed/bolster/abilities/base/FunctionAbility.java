@@ -6,11 +6,11 @@ import org.bukkit.entity.LivingEntity;
 
 import java.util.function.BiConsumer;
 
-public class LambdaAbility extends Ability
+public class FunctionAbility extends Ability
 {
     BiConsumer<LivingEntity, Properties> lambda;
 
-    public LambdaAbility(BiConsumer<LivingEntity, Properties> lambda)
+    public FunctionAbility(BiConsumer<LivingEntity, Properties> lambda)
     {
         super();
 
