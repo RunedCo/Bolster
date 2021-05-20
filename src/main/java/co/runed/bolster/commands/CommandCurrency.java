@@ -1,7 +1,7 @@
 package co.runed.bolster.commands;
 
 import co.runed.bolster.managers.PlayerManager;
-import co.runed.bolster.util.currency.Currency;
+import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import dev.jorel.commandapi.CommandAPICommand;
@@ -9,7 +9,6 @@ import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class CommandCurrency extends CommandBase

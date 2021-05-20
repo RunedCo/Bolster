@@ -1,14 +1,10 @@
 package co.runed.bolster.events;
 
-import co.runed.bolster.abilities.Ability;
-import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.status.StatusEffect;
-import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.entity.EntityEvent;
 
 public final class EntityRemoveStatusEffectEvent extends Event implements Cancellable
 {
@@ -16,10 +12,10 @@ public final class EntityRemoveStatusEffectEvent extends Event implements Cancel
 
     private final LivingEntity entity;
     private final StatusEffect statusEffect;
-    private final Cause cause;
+    private final StatusEffect.RemovalCause cause;
     private boolean cancelled = false;
 
-    public EntityRemoveStatusEffectEvent(LivingEntity entity, StatusEffect statusEffect, Cause cause)
+    public EntityRemoveStatusEffectEvent(LivingEntity entity, StatusEffect statusEffect, StatusEffect.RemovalCause cause)
     {
         this.entity = entity;
         this.statusEffect = statusEffect;
@@ -36,7 +32,7 @@ public final class EntityRemoveStatusEffectEvent extends Event implements Cancel
         return statusEffect;
     }
 
-    public Cause getCause()
+    public StatusEffect.RemovalCause getCause()
     {
         return cause;
     }
@@ -64,12 +60,5 @@ public final class EntityRemoveStatusEffectEvent extends Event implements Cancel
         cancelled = b;
     }
 
-    public enum Cause
-    {
-        CLEARED, // cleared with .clear() method
-        EXPIRED, // timed out
-        CANCELLED, // cancelled when adding
-        FORCE_CLEARED // force cleared
-    }
 }
 

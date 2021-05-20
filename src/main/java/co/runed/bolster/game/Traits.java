@@ -1,7 +1,7 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.math.Operation;
-import co.runed.bolster.util.traits.Trait;
+import co.runed.bolster.game.traits.Trait;
 
 public class Traits
 {

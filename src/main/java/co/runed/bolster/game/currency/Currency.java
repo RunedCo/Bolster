@@ -1,4 +1,4 @@
-package co.runed.bolster.util.currency;
+package co.runed.bolster.game.currency;
 
 import co.runed.bolster.util.ICategorised;
 import co.runed.bolster.util.IConfigurable;

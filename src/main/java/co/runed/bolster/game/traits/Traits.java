@@ -1,4 +1,4 @@
-package co.runed.bolster.util.traits;
+package co.runed.bolster.game.traits;
 
 import co.runed.bolster.math.Operation;
 

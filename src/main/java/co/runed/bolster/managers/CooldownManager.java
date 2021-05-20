@@ -73,7 +73,7 @@ public class CooldownManager extends Manager
      *
      * @param entity the entity
      */
-    public void clearOneFrom(LivingEntity entity)
+    public void clearOneChargeFrom(LivingEntity entity)
     {
         List<String> cleared = new ArrayList<>();
         // todo sort by lowest
@@ -90,7 +90,7 @@ public class CooldownManager extends Manager
     }
 
     /**
-     * Clear a specific cooldown from an entity
+     * Clear a specific cooldown from an entity in a specific slot
      *
      * @param entity the entity
      * @param source the source
@@ -98,6 +98,22 @@ public class CooldownManager extends Manager
     public void clearCooldown(LivingEntity entity, ICooldownSource source, int slot)
     {
         this.setCooldown(entity, source, slot, 0);
+    }
+
+    /**
+     * Clear a specific cooldown from an entity in all slots
+     *
+     * @param entity the entity
+     * @param source the source
+     */
+    public void clearCooldown(LivingEntity entity, ICooldownSource source)
+    {
+        List<CooldownData> cds = this.cooldowns.stream().filter(cd -> cd.caster.equals(entity) && cd.source == source).collect(Collectors.toList());
+
+        for (CooldownData data : cds)
+        {
+            this.clearCooldown(entity, data.source, data.slot);
+        }
     }
 
     /**

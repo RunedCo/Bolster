@@ -11,9 +11,9 @@ import co.runed.bolster.util.*;
 import co.runed.bolster.math.easing.Ease;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
-import co.runed.bolster.util.traits.Trait;
-import co.runed.bolster.util.traits.TraitProvider;
-import co.runed.bolster.util.traits.Traits;
+import co.runed.bolster.game.traits.Trait;
+import co.runed.bolster.game.traits.TraitProvider;
+import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.wip.BowTracker;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -292,7 +292,12 @@ public class BolsterEntity extends TraitProvider
 
     public void clearStatusEffect(Class<? extends StatusEffect> statusEffect)
     {
-        StatusEffectManager.getInstance().clearStatusEffect(this._entity, statusEffect);
+        this.clearStatusEffect(statusEffect, false);
+    }
+
+    public void clearStatusEffect(Class<? extends StatusEffect> statusEffect, boolean force)
+    {
+        StatusEffectManager.getInstance().clearStatusEffect(this._entity, statusEffect, force);
     }
 
     public boolean hasStatusEffect(Class<? extends StatusEffect> statusEffect)

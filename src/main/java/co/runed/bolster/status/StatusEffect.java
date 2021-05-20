@@ -38,7 +38,7 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
     boolean ambient = false;
 
     boolean active;
-    private final List<PotionData> potionEffects = new ArrayList<>();
+    private final List<StatusEffectPotionData> potionEffects = new ArrayList<>();
 
     private boolean cleared = false;
 
@@ -54,6 +54,11 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
     }
 
     public abstract String getName();
+
+    public boolean isNegative()
+    {
+        return false;
+    }
 
     public boolean isAmbient()
     {
@@ -94,7 +99,7 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
         long difference = (long) ((duration - this.startingDuration) * 20);
         long sinceStart = TimeUtil.toTicks(Duration.between(startTime, Instant.now()));
 
-        for (PotionData data : this.potionEffects)
+        for (StatusEffectPotionData data : this.potionEffects)
         {
             PotionSystem.PotionEffectContainer container = data.container;
             long finalDuration = (data.initialDuration - sinceStart) + difference;
@@ -138,19 +143,18 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
     {
         this.setEntity(entity);
 
+        this.startTime = Instant.now();
+
         EntityAddStatusEffectEvent addEvent = new EntityAddStatusEffectEvent(entity, this);
         Bukkit.getServer().getPluginManager().callEvent(addEvent);
 
         if (addEvent.isCancelled())
         {
-            // TODO: temp fix
-            this.clear(true);
+            this.clear(RemovalCause.CANCELLED);
             return;
         }
 
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
-
-        this.startTime = Instant.now();
 
         if (this.canStart())
         {
@@ -175,11 +179,11 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
         if (!cleared)
         {
-            EntityRemoveStatusEffectEvent removeEvent = new EntityRemoveStatusEffectEvent(entity, this, EntityRemoveStatusEffectEvent.Cause.EXPIRED);
+            EntityRemoveStatusEffectEvent removeEvent = new EntityRemoveStatusEffectEvent(entity, this, RemovalCause.EXPIRED);
             Bukkit.getServer().getPluginManager().callEvent(removeEvent);
         }
 
-        for (PotionData potionEffect : this.potionEffects)
+        for (StatusEffectPotionData potionEffect : this.potionEffects)
         {
             PotionSystem.removeExactPotionEffect(entity, potionEffect.container);
         }
@@ -198,9 +202,14 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
     public void clear(boolean forced)
     {
+        this.clear(forced ? RemovalCause.FORCE_CLEARED : RemovalCause.CLEARED);
+    }
+
+    protected void clear(RemovalCause cause)
+    {
         if (this.task == null || this.task.isCancelled()) return;
 
-        EntityRemoveStatusEffectEvent.Cause cause = forced ? EntityRemoveStatusEffectEvent.Cause.FORCE_CLEARED : EntityRemoveStatusEffectEvent.Cause.CLEARED;
+        boolean forced = cause == RemovalCause.FORCE_CLEARED;
 
         EntityRemoveStatusEffectEvent removeEvent = new EntityRemoveStatusEffectEvent(entity, this, cause);
         Bukkit.getServer().getPluginManager().callEvent(removeEvent);
@@ -243,7 +252,7 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
         PotionEffect effect = new PotionEffect(type, duration, amplifier, ambient, particles, icon);
 
-        this.potionEffects.add(new PotionData(PotionSystem.addPotionEffect(entity, effect), duration));
+        this.potionEffects.add(new StatusEffectPotionData(PotionSystem.addPotionEffect(entity, effect), duration));
     }
 
     public abstract void onStart();
@@ -258,12 +267,21 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
         return 0;
     }
 
-    private static class PotionData
+    public enum RemovalCause
+    {
+        CLEARED, // cleared with .clear() method
+        EXPIRED, // timed out
+        CANCELLED, // cancelled when adding
+        FORCE_CLEARED, // force cleared
+        INTERNAL // internal status effect (e.g stealth effect cancelling on damage taken or dealt)
+    }
+
+    private static class StatusEffectPotionData
     {
         PotionSystem.PotionEffectContainer container;
         long initialDuration;
 
-        public PotionData(PotionSystem.PotionEffectContainer container, long initialDuration)
+        public StatusEffectPotionData(PotionSystem.PotionEffectContainer container, long initialDuration)
         {
             this.container = container;
             this.initialDuration = initialDuration;

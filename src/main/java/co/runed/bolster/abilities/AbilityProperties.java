@@ -1,7 +1,6 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.BolsterEntity;
-import co.runed.bolster.events.EntityRemoveStatusEffectEvent;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.properties.FunctionProperty;
@@ -74,7 +73,7 @@ public class AbilityProperties
 
     // EFFECT PROPERTIES
     public static final Property<StatusEffect> STATUS_EFFECT = new Property<>("status_effect");
-    public static final Property<EntityRemoveStatusEffectEvent.Cause> STATUS_EFFECT_REMOVAL_CAUSE = new Property<>("status_effect_cause");
+    public static final Property<StatusEffect.RemovalCause> STATUS_EFFECT_REMOVAL_CAUSE = new Property<>("status_effect_cause");
 
     // CLICK PROPERTIES
     public static final Property<ItemStack> CURRENT_ITEM_STACK = new Property<>("current_item_stack");

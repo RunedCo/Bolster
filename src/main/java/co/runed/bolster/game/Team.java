@@ -32,6 +32,7 @@ public class Team implements Listener
     boolean allowFriendlyFire;
     boolean removePlayersOnDeath = true;
     boolean addBukkitTeam;
+    List<Team> alliedTeams = new ArrayList<>();
 
     org.bukkit.scoreboard.Team scoreboardTeam = null;
     boolean isSetup = false;
@@ -107,6 +108,18 @@ public class Team implements Listener
 
         this.members.remove(entity.getUniqueId());
         this.onlineMembers.remove(entity.getUniqueId());
+    }
+
+    public void addAlliedTeam(Team team)
+    {
+        if (this.alliedTeams.contains(team)) return;
+
+        this.alliedTeams.add(team);
+    }
+
+    public void removeAlliedTeam(Team team)
+    {
+        this.alliedTeams.remove(team);
     }
 
     public org.bukkit.scoreboard.Team getScoreboardTeam()

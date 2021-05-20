@@ -1,6 +1,6 @@
 package co.runed.bolster.game;
 
-import co.runed.bolster.util.currency.Currency;
+import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.fx.particles.ParticleSet;

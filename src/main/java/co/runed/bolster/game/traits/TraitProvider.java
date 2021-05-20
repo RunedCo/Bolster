@@ -1,4 +1,4 @@
-package co.runed.bolster.util.traits;
+package co.runed.bolster.game.traits;
 
 import co.runed.bolster.util.json.JsonExclude;
 import co.runed.bolster.util.properties.Properties;

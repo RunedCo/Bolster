@@ -15,7 +15,7 @@ import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.target.Target;
-import co.runed.bolster.util.traits.Traits;
+import co.runed.bolster.game.traits.Traits;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

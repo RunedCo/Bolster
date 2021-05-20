@@ -12,7 +12,7 @@ import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
-import co.runed.bolster.util.traits.Traits;
+import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.game.upgrade.Upgrade;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

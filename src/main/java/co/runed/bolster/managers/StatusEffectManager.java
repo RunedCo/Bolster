@@ -63,15 +63,25 @@ public class StatusEffectManager extends Manager
 
     public void clearStatusEffects(LivingEntity entity)
     {
+        this.clearStatusEffects(entity, false);
+    }
+
+    public void clearStatusEffects(LivingEntity entity, boolean force)
+    {
         List<StatusEffect> effects = new ArrayList<>(this.getStatusEffects(entity));
 
         for (StatusEffect effect : effects)
         {
-            this.clearStatusEffect(entity, effect.getClass());
+            this.clearStatusEffect(entity, effect.getClass(), force);
         }
     }
 
     public void clearStatusEffect(LivingEntity entity, Class<? extends StatusEffect> statusEffect)
+    {
+        this.clearStatusEffect(entity, statusEffect, false);
+    }
+
+    public void clearStatusEffect(LivingEntity entity, Class<? extends StatusEffect> statusEffect, boolean force)
     {
         List<StatusEffect> entityEffects = this.getStatusEffects(entity);
 
@@ -87,7 +97,7 @@ public class StatusEffectManager extends Manager
 
         if (effectToRemove != null)
         {
-            effectToRemove.clear();
+            effectToRemove.clear(force);
             entityEffects.remove(effectToRemove);
         }
     }

@@ -6,7 +6,7 @@ import co.runed.bolster.fx.Glyphs;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.util.registries.Registries;
-import co.runed.bolster.util.currency.Currency;
+import co.runed.bolster.game.currency.Currency;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
