@@ -53,6 +53,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     private int priority = 0;
     private boolean inProgress = false;
     private boolean skipIfCancelled = false;
+    private boolean resetCooldownOnDeath = false;
 
     private int charges = 1;
     private boolean cancelledByMovement = false;
@@ -290,6 +291,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         this.inProgress = inProgress;
     }
 
+    /* Cast Time */
     public Ability setCastTime(double castTime)
     {
         this.castTime = castTime;
@@ -302,6 +304,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return castTime;
     }
 
+    /* Priority */
     public Ability setPriority(int priority)
     {
         this.priority = priority;
@@ -314,6 +317,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return priority;
     }
 
+    /* Charges */
     public Ability setCharges(int charges)
     {
         this.charges = charges;
@@ -352,6 +356,18 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return charge;
     }
 
+    /* Should Reset Cooldown On Death */
+    public boolean shouldResetCooldownOnDeath()
+    {
+        return resetCooldownOnDeath;
+    }
+
+    public void setResetCooldownOnDeath(boolean resetCooldownOnDeath)
+    {
+        this.resetCooldownOnDeath = resetCooldownOnDeath;
+    }
+
+    /* Ability Cancelling */
     public Ability setCancelledByMovement(boolean cancelledByMovement)
     {
         this.cancelledByMovement = cancelledByMovement;

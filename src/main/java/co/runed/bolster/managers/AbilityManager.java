@@ -12,6 +12,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.projectiles.ProjectileSource;
@@ -407,6 +408,19 @@ public class AbilityManager extends Manager
 
                 ability.cancel();
             }
+        }
+    }
+
+    @EventHandler
+    private void onDeath(EntityDeathEvent event)
+    {
+        LivingEntity entity = event.getEntity();
+        for (Ability ability : this.getAbilities(entity))
+        {
+            if (!entity.equals(ability.getCaster())) continue;
+            if (ability.shouldResetCooldownOnDeath()) continue;
+
+            CooldownManager.getInstance().clearCooldown(entity, ability);
         }
     }
 
