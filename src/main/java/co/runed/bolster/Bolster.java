@@ -2,8 +2,8 @@ package co.runed.bolster;
 
 import co.runed.bolster.classes.TargetDummyClass;
 import co.runed.bolster.commands.*;
+import co.runed.bolster.game.Traits;
 import co.runed.bolster.util.properties.Property;
-import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.wip.*;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.managers.*;

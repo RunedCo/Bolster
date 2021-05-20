@@ -1,6 +1,7 @@
 package co.runed.bolster;
 
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.game.Traits;
 import co.runed.bolster.managers.ClassManager;
 import co.runed.bolster.managers.EntityManager;
 import co.runed.bolster.managers.StatusEffectManager;
@@ -13,7 +14,6 @@ import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.game.traits.Trait;
 import co.runed.bolster.game.traits.TraitProvider;
-import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.wip.BowTracker;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
