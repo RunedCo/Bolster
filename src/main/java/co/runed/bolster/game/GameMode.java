@@ -1,6 +1,6 @@
 package co.runed.bolster.game;
 
-import co.runed.bolster.events.GameModePausedEvent;
+import co.runed.bolster.events.GameModePauseChangeEvent;
 import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
 import co.runed.bolster.util.IConfigurable;
@@ -82,7 +82,7 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     {
         this.paused = paused;
 
-        GameModePausedEvent event = new GameModePausedEvent(paused);
+        GameModePauseChangeEvent event = new GameModePauseChangeEvent(paused);
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 

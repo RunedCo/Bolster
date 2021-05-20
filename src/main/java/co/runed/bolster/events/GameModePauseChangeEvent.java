@@ -8,13 +8,13 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public final class GameModePausedEvent extends Event
+public final class GameModePauseChangeEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
 
     boolean paused;
 
-    public GameModePausedEvent(boolean paused)
+    public GameModePauseChangeEvent(boolean paused)
     {
         this.paused = paused;
     }
