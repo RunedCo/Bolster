@@ -34,7 +34,7 @@ public class WallAbility extends TargetedAbility<Location>
         this.blocks = blocks;
         this.materialsToReplace = materialsToReplace;
 
-        this.addCondition(new CanPlaceBlockCondition(target));
+//        this.addCondition(new CanPlaceBlockCondition(target));
     }
 
     @Override
@@ -91,9 +91,9 @@ public class WallAbility extends TargetedAbility<Location>
 
         for (Block block : blockList)
         {
-            if (!BukkitUtil.canPlaceBlockAt(this.getCaster(), location))
+            if (!BukkitUtil.canPlaceBlockAt(this.getCaster(), location)) return;
 
-                if (materialsToReplace.contains(block.getType())) block.setType(this.blocks.next());
+            if (materialsToReplace.contains(block.getType())) block.setType(this.blocks.next());
         }
     }
 }

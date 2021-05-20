@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -318,7 +319,7 @@ public class AbilityManager extends Manager
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onTakeDamage(EntityDamageEvent event)
     {
         Entity entity = event.getEntity();
@@ -327,7 +328,7 @@ public class AbilityManager extends Manager
 
         for (Ability ability : this.getAbilities((LivingEntity) entity))
         {
-            if (!entity.equals(ability.getCaster())) continue;
+            if (!entity.getUniqueId().equals(ability.getCaster().getUniqueId())) continue;
             if (!ability.isInProgress()) continue;
 
             if (ability.isCancelledByTakingDamage())
@@ -339,7 +340,7 @@ public class AbilityManager extends Manager
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onDealDamage(EntityDamageByEntityEvent event)
     {
         Entity damager = event.getDamager();
@@ -373,7 +374,7 @@ public class AbilityManager extends Manager
 
         for (Ability ability : this.getAbilities(entity))
         {
-            if (!entity.equals(ability.getCaster())) continue;
+            if (!entity.getUniqueId().equals(ability.getCaster().getUniqueId())) continue;
             if (!ability.isInProgress()) continue;
 
             if (ability.isCancelledByDealingDamage())
@@ -385,7 +386,7 @@ public class AbilityManager extends Manager
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onPlayerMove(PlayerMoveEvent event)
     {
         Player player = event.getPlayer();
@@ -411,7 +412,7 @@ public class AbilityManager extends Manager
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onDeath(EntityDeathEvent event)
     {
         LivingEntity entity = event.getEntity();
@@ -424,7 +425,7 @@ public class AbilityManager extends Manager
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onCastAbility(EntityCastAbilityEvent event)
     {
         Ability ability = event.getAbility();
