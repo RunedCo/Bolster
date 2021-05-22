@@ -104,11 +104,11 @@ public class EntityDamageListener implements Listener
             properties.set(AbilityProperties.DAMAGER, ((EntityDamageByEntityEvent) event).getDamager());
         }
 
-        if (damage >= entity.getHealth())
+        AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_TAKE_DAMAGE, properties);
+
+        if (event.getFinalDamage() >= entity.getHealth())
         {
             AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_TAKE_FATAL_DAMAGE, properties);
         }
-
-        AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_TAKE_DAMAGE, properties);
     }
 }
