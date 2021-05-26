@@ -121,6 +121,16 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         this.statistics.get(player.getUniqueId()).set(statistic, value);
     }
 
+    // TODO better statistics?
+    public <T> void incrementStatistic(Player player, Property<Integer> statistic, int increment)
+    {
+        this.statistics.putIfAbsent(player.getUniqueId(), new Properties());
+
+        int value = this.statistics.get(player.getUniqueId()).get(statistic);
+
+        this.statistics.get(player.getUniqueId()).set(statistic, value + increment);
+    }
+
     public <T> T getGlobalStatistic(Property<T> statistic)
     {
         return this.globalStatistics.get(statistic);
@@ -129,6 +139,13 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     public <T> void setGlobalStatistic(Property<T> statistic, T value)
     {
         this.globalStatistics.set(statistic, value);
+    }
+
+    public <T> void incrementGlobalStatistic(Property<Integer> statistic, int increment)
+    {
+        int value = this.globalStatistics.get(statistic);
+
+        this.globalStatistics.set(statistic, value + increment);
     }
 
     @Override
