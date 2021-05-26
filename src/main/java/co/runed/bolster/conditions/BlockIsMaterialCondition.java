@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class BlockIsMaterialCondition extends TargetedCondition<Block>
+public class BlockIsMaterialCondition extends Condition
 {
+    Target<Block> blockTarget;
     Collection<Material> materials = new ArrayList<>();
 
     public BlockIsMaterialCondition(Material material)
@@ -26,7 +27,7 @@ public class BlockIsMaterialCondition extends TargetedCondition<Block>
 
     public BlockIsMaterialCondition(Collection<Material> materials)
     {
-        super(Target.BLOCK);
+        this.blockTarget = Target.BLOCK;
 
         this.materials.addAll(materials);
     }
@@ -34,7 +35,7 @@ public class BlockIsMaterialCondition extends TargetedCondition<Block>
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        Block block = this.getTarget().get(properties);
+        Block block = this.blockTarget.get(properties);
 
         if (block == null) return false;
 
