@@ -1,6 +1,7 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.managers.EntityManager;
 import co.runed.bolster.util.BukkitUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -31,7 +32,7 @@ public class Team implements Listener
     int totalKills = 0;
     boolean allowFriendlyFire;
     boolean removePlayersOnDeath = true;
-    boolean addBukkitTeam;
+    boolean createBukkitTeam;
     List<Team> alliedTeams = new ArrayList<>();
 
     org.bukkit.scoreboard.Team scoreboardTeam = null;
@@ -42,11 +43,11 @@ public class Team implements Listener
         this(name, color, false);
     }
 
-    public Team(String name, ChatColor color, boolean addBukkitTeam)
+    public Team(String name, ChatColor color, boolean createBukkitTeam)
     {
         this.name = name;
         this.color = color;
-        this.addBukkitTeam = addBukkitTeam;
+        this.createBukkitTeam = createBukkitTeam;
     }
 
     public void setup()
@@ -57,7 +58,7 @@ public class Team implements Listener
 
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
 
-        if (this.addBukkitTeam)
+        if (this.createBukkitTeam)
         {
             Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
             org.bukkit.scoreboard.Team team = scoreboard.getTeam(this.name);
@@ -76,12 +77,14 @@ public class Team implements Listener
 
         if (this.members.contains(entity.getUniqueId())) return;
 
+        EntityManager.getInstance().joinTeam(entity, this);
+
         if (entity.getType() == EntityType.PLAYER) this.players.add(entity.getUniqueId());
 
         this.members.add(entity.getUniqueId());
         this.kills.put(entity.getUniqueId(), 0);
 
-        if (this.scoreboardTeam != null && this.addBukkitTeam)
+        if (this.scoreboardTeam != null && this.createBukkitTeam)
         {
             this.scoreboardTeam.addEntry(entity.getName());
         }
@@ -99,15 +102,24 @@ public class Team implements Listener
     {
         if (!this.members.contains(entity.getUniqueId())) return;
 
+        EntityManager.getInstance().leaveTeam(entity, this);
+
         if (entity.getType() == EntityType.PLAYER) this.players.remove(entity.getUniqueId());
 
-        if (this.scoreboardTeam != null && this.addBukkitTeam)
+        if (this.scoreboardTeam != null && this.createBukkitTeam)
         {
             this.scoreboardTeam.removeEntry(entity.getName());
         }
 
         this.members.remove(entity.getUniqueId());
         this.onlineMembers.remove(entity.getUniqueId());
+    }
+
+    public boolean isAlliedTeam(Team team)
+    {
+        if (team.equals(this)) return true;
+
+        return this.alliedTeams.contains(team);
     }
 
     public void addAlliedTeam(Team team)
