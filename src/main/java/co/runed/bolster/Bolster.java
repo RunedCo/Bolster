@@ -123,7 +123,7 @@ public class Bolster extends JavaPlugin implements Listener
         this.commandManager.add(new CommandLevelItem());
         this.commandManager.add(new CommandPause());
         this.commandManager.add(new CommandCurrency());
-        this.commandManager.add(new CommandStartGameMode());
+        this.commandManager.add(new CommandLoadGameMode());
 
         // REGISTER PLUGIN CHANNELS
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");

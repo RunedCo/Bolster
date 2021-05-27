@@ -7,11 +7,11 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.StringArgument;
 import org.bukkit.command.CommandSender;
 
-public class CommandStartGameMode extends CommandBase
+public class CommandLoadGameMode extends CommandBase
 {
-    public CommandStartGameMode()
+    public CommandLoadGameMode()
     {
-        super("startgamemode");
+        super("loadgamemode");
     }
 
     private String[] getSuggestions(CommandSender sender)
@@ -23,14 +23,14 @@ public class CommandStartGameMode extends CommandBase
     public CommandAPICommand build()
     {
         return new CommandAPICommand(this.command)
-                .withPermission("bolster.commands.startgamemode")
+                .withPermission("bolster.commands.loadgamemode")
                 .withArguments(new StringArgument("gamemode").overrideSuggestions(this::getSuggestions))
                 .executes((sender, args) -> {
                     String id = (String) args[0];
 
                     Bolster.setActiveGameMode(id);
 
-                    sender.sendMessage("Starter Game Mode '" + id + "'");
+                    sender.sendMessage("Loading Game Mode '" + id + "'...");
                 });
     }
 }
