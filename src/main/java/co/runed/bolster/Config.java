@@ -18,6 +18,8 @@ public class Config
     public String databasePassword;
     public String databaseName;
 
+    public String gameMode;
+
     public boolean debugMode = false;
 
     public Config() throws IOException, InvalidConfigurationException
@@ -41,6 +43,8 @@ public class Config
         this.databaseUsername = database.getString("username", "admin");
         this.databasePassword = database.getString("password", "admin");
         this.databaseName = database.getString("database", "bolster");
+
+        this.gameMode = this.config.getString("gamemode", "bolster");
 
         this.debugMode = this.config.getBoolean("debug", this.debugMode);
     }

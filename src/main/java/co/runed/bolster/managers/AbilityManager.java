@@ -251,19 +251,19 @@ public class AbilityManager extends Manager
         }
     }
 
-    public void trigger(LivingEntity entity, AbilityTrigger trigger, Properties properties)
+    public boolean trigger(LivingEntity entity, AbilityTrigger trigger, Properties properties)
     {
-        this.trigger(entity, null, trigger, properties);
+        return this.trigger(entity, null, trigger, properties);
     }
 
-    public void trigger(LivingEntity entity, AbilityProvider provider, AbilityTrigger trigger, Properties properties)
+    public boolean trigger(LivingEntity entity, AbilityProvider provider, AbilityTrigger trigger, Properties properties)
     {
-        if (entity == null) return;
+        if (entity == null) return false;
 
         EntityPreCastAbilityEvent preCastEvent = new EntityPreCastAbilityEvent(entity, provider, trigger, properties);
         Bukkit.getPluginManager().callEvent(preCastEvent);
 
-        if (preCastEvent.isCancelled()) return;
+        if (preCastEvent.isCancelled()) return false;
 
         List<Ability> abilities = new ArrayList<>(this.getAbilities(entity, trigger));
         abilities.sort((a1, a2) -> a2.getPriority() - a1.getPriority());
@@ -283,6 +283,8 @@ public class AbilityManager extends Manager
 
         if (trigger != AbilityTrigger.ALL) properties.set(AbilityProperties.TRIGGER, trigger);
 
+        boolean isSuccess = true;
+
         for (Ability ability : abilities)
         {
             if (ability == null) continue;
@@ -298,6 +300,9 @@ public class AbilityManager extends Manager
             if (castEvent.isCancelled()) continue;
 
             boolean success = ability.activate(properties);
+
+            // TODO test
+            isSuccess = !properties.get(AbilityProperties.IS_CANCELLED);
 
             if (ability.getTrigger() != AbilityTrigger.TICK && ability.getTrigger() != AbilityTrigger.ON_CAST_ABILITY && trigger != AbilityTrigger.ALL)
             {
@@ -317,6 +322,8 @@ public class AbilityManager extends Manager
         {
             this.trigger(entity, provider, AbilityTrigger.ALL, properties);
         }
+
+        return isSuccess;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

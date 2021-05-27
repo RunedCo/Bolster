@@ -88,11 +88,15 @@ public class AbilityProperties
     public static final Property<PlayerArmorChangeEvent.SlotType> ARMOR_SLOT = new Property<>("armor_slot");
 
     // EVENT PROPERTIES
+    private static final Property<Boolean> INTERNAL_CANCELLED = new Property<>("internal_cancelled", false);
+
     public static final Property<Boolean> IS_CANCELLED = new FunctionProperty<>("is_cancelled",
             (p) -> (p.get(EVENT) instanceof Cancellable && ((Cancellable) p.get(EVENT)).isCancelled())
-                    || (p.get(EVENT) instanceof EntityDamageEvent && ((EntityDamageEvent) p.get(EVENT)).getFinalDamage() <= 0),
+                    || (p.get(EVENT) instanceof EntityDamageEvent && ((EntityDamageEvent) p.get(EVENT)).getFinalDamage() <= 0)
+                    || p.get(INTERNAL_CANCELLED),
             (p, c) -> {
                 if (p.get(EVENT) instanceof Cancellable) ((Cancellable) p.get(EVENT)).setCancelled(c);
+                p.set(INTERNAL_CANCELLED, c);
             });
 
     // REPEATING PROPERTIES

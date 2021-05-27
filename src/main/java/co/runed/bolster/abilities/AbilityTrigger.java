@@ -6,6 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AbilityTrigger
 {
     // LEFT CLICK VARIANTS
@@ -103,14 +106,14 @@ public class AbilityTrigger
         return passive;
     }
 
-    public void trigger(LivingEntity entity, Properties properties)
+    public boolean trigger(LivingEntity entity, Properties properties)
     {
-        this.trigger(entity, null, properties);
+        return this.trigger(entity, null, properties);
     }
 
-    public void trigger(LivingEntity entity, AbilityProvider provider, Properties properties)
+    public boolean trigger(LivingEntity entity, AbilityProvider provider, Properties properties)
     {
-        AbilityManager.getInstance().trigger(entity, provider, this, properties);
+        return AbilityManager.getInstance().trigger(entity, provider, this, properties);
     }
 
     public void triggerAll(Properties properties)

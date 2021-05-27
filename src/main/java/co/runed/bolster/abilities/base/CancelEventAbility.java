@@ -17,14 +17,16 @@ public class CancelEventAbility extends Ability
     @Override
     public void onActivate(Properties properties)
     {
-        if (properties.get(AbilityProperties.EVENT) != null)
-        {
-            Event event = properties.get(AbilityProperties.EVENT);
-
-            if (event instanceof Cancellable)
-            {
-                ((Cancellable) event).setCancelled(true);
-            }
-        }
+        properties.set(AbilityProperties.IS_CANCELLED, true);
+//
+//        if (properties.get(AbilityProperties.EVENT) != null)
+//        {
+//            Event event = properties.get(AbilityProperties.EVENT);
+//
+//            if (event instanceof Cancellable)
+//            {
+//                ((Cancellable) event).setCancelled(true);
+//            }
+//        }
     }
 }

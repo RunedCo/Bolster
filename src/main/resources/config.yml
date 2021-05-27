@@ -4,3 +4,4 @@ database:
   username: admin
   password: password
   database: bolster
+gamemode: bolster

@@ -152,6 +152,22 @@ public class Bolster extends JavaPlugin implements Listener
         this.registerStatusEffects();
         this.registerCurrencies();
         this.registerTraits();
+
+        getServer().getScheduler().scheduleSyncDelayedTask(this, this::onPostEnable);
+    }
+
+    public void onPostEnable()
+    {
+        GameMode gameMode = Registries.GAME_MODES.get(this.config.gameMode);
+
+        if (gameMode != null)
+        {
+            setActiveGameMode(gameMode);
+        }
+        else
+        {
+            this.getLogger().severe("Invalid GameMode '" + this.config.gameMode + "'");
+        }
     }
 
     // NOTE: SHIT WORKAROUND FOR CANVAS NOT TRIGERRING EVENT WHEN IN SPECTATOR
@@ -203,27 +219,6 @@ public class Bolster extends JavaPlugin implements Listener
         PlayerManager.getInstance().saveAllPlayers();
     }
 
-    public void setActiveGameMode(GameMode gameMode)
-    {
-        if (this.activeGameMode != null)
-        {
-            HandlerList.unregisterAll(this.activeGameMode.getProperties());
-            HandlerList.unregisterAll(this.activeGameMode);
-        }
-
-        this.activeGameMode = gameMode;
-
-        Bukkit.getPluginManager().registerEvents(this.activeGameMode.getProperties(), this);
-        Bukkit.getPluginManager().registerEvents(this.activeGameMode, this);
-
-        this.activeGameMode.start();
-    }
-
-    public GameMode getActiveGameMode()
-    {
-        return this.activeGameMode;
-    }
-
     // SINGLETON GETTERS
     public static Bolster getInstance()
     {
@@ -243,5 +238,32 @@ public class Bolster extends JavaPlugin implements Listener
     public static MongoClient getMongoClient()
     {
         return Bolster.getInstance().mongoClient;
+    }
+
+    public static GameMode getActiveGameMode()
+    {
+        return Bolster.getInstance().activeGameMode;
+    }
+
+    public static void setActiveGameMode(GameMode gameMode)
+    {
+        Bolster bolster = Bolster.getInstance();
+
+        if (bolster.activeGameMode != null)
+        {
+            bolster.getLogger().info("Unloading GameMode '" + bolster.activeGameMode.getId() + "'");
+
+            HandlerList.unregisterAll(bolster.activeGameMode.getProperties());
+            HandlerList.unregisterAll(bolster.activeGameMode);
+        }
+
+        bolster.activeGameMode = gameMode;
+
+        bolster.getLogger().info("Loading GameMode '" + bolster.activeGameMode.getId() + "'");
+
+        Bukkit.getPluginManager().registerEvents(bolster.activeGameMode.getProperties(), bolster);
+        Bukkit.getPluginManager().registerEvents(bolster.activeGameMode, bolster);
+
+        bolster.activeGameMode.start();
     }
 }
