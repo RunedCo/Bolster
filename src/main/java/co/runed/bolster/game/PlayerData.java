@@ -7,7 +7,9 @@ import co.runed.bolster.fx.particles.ParticleSet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerData
@@ -20,6 +22,7 @@ public class PlayerData
     HashMap<String, Integer> currencies = new HashMap<>();
     HashMap<String, Integer> itemLevels = new HashMap<>();
     HashMap<String, Object> settings = new HashMap<>();
+    HashMap<String, List<String>> shopUnlocks = new HashMap<>();
 
     public void onSave()
     {
@@ -118,5 +121,24 @@ public class PlayerData
     public <T> void setSetting(Property<T> setting, T value)
     {
         this.settings.put(setting.getId(), value);
+    }
+
+    public List<String> getUnlockedShopItems(String shopId)
+    {
+        if (!shopUnlocks.containsKey(shopId)) return new ArrayList<>();
+
+        return shopUnlocks.get(shopId);
+    }
+
+    public void unlockShopItem(String shopId, String itemId)
+    {
+        if (!shopUnlocks.containsKey(shopId)) shopUnlocks.put(shopId, new ArrayList<>());
+
+        shopUnlocks.get(shopId).add(itemId);
+    }
+
+    public boolean isShopItemUnlocked(String shopId, String itemId)
+    {
+        return this.getUnlockedShopItems(shopId).contains(itemId);
     }
 }

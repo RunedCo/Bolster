@@ -105,9 +105,7 @@ public class Bolster extends JavaPlugin implements Listener
         this.manaManager = new ManaManager(this);
         this.statusEffectManager = new StatusEffectManager(this);
         this.playerManager = new PlayerManager(this);
-
         this.entityManager = new EntityManager(this);
-
         this.effectManager = new EffectManager(this);
 
         // SET MANA MANAGER SETTINGS
@@ -125,6 +123,7 @@ public class Bolster extends JavaPlugin implements Listener
         this.commandManager.add(new CommandLevelItem());
         this.commandManager.add(new CommandPause());
         this.commandManager.add(new CommandCurrency());
+        this.commandManager.add(new CommandStartGameMode());
 
         // REGISTER PLUGIN CHANNELS
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -134,8 +133,6 @@ public class Bolster extends JavaPlugin implements Listener
         getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:remove_status_effect");
 
         Registries.CLASSES.register("target_dummy", TargetDummyClass::new);
-
-        // CREATE REGISTRIES
         Registries.PARTICLE_SETS.register("bruce_test", ParticleSet::new);
 
         this.menuListener = new MenuFunctionListener();
@@ -158,16 +155,7 @@ public class Bolster extends JavaPlugin implements Listener
 
     public void onPostEnable()
     {
-        GameMode gameMode = Registries.GAME_MODES.get(this.config.gameMode);
-
-        if (gameMode != null)
-        {
-            setActiveGameMode(gameMode);
-        }
-        else
-        {
-            this.getLogger().severe("Invalid GameMode '" + this.config.gameMode + "'");
-        }
+        setActiveGameMode(this.config.gameMode);
     }
 
     // NOTE: SHIT WORKAROUND FOR CANVAS NOT TRIGERRING EVENT WHEN IN SPECTATOR
@@ -243,6 +231,21 @@ public class Bolster extends JavaPlugin implements Listener
     public static GameMode getActiveGameMode()
     {
         return Bolster.getInstance().activeGameMode;
+    }
+
+    public static void setActiveGameMode(String id)
+    {
+        Bolster bolster = Bolster.getInstance();
+        GameMode gameMode = Registries.GAME_MODES.get(id);
+
+        if (gameMode != null)
+        {
+            setActiveGameMode(gameMode);
+        }
+        else
+        {
+            bolster.getLogger().severe("Invalid GameMode '" + id + "'");
+        }
     }
 
     public static void setActiveGameMode(GameMode gameMode)
