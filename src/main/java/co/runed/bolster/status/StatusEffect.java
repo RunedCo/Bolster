@@ -179,7 +179,7 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
         if (!cleared)
         {
-            EntityRemoveStatusEffectEvent removeEvent = new EntityRemoveStatusEffectEvent(entity, this, RemovalCause.EXPIRED);
+            EntityRemoveStatusEffectEvent removeEvent = new EntityRemoveStatusEffectEvent(entity, this, RemovalCause.EXPIRED, null);
             Bukkit.getServer().getPluginManager().callEvent(removeEvent);
         }
 
@@ -207,11 +207,17 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
     protected void clear(RemovalCause cause)
     {
+        this.clear(cause, null);
+    }
+
+    // NOTE: Data object is a bit of a janky workaround, maybe find another solution here?
+    protected void clear(RemovalCause cause, Object data)
+    {
         if (this.task == null || this.task.isCancelled()) return;
 
         boolean forced = cause == RemovalCause.FORCE_CLEARED;
 
-        EntityRemoveStatusEffectEvent removeEvent = new EntityRemoveStatusEffectEvent(entity, this, cause);
+        EntityRemoveStatusEffectEvent removeEvent = new EntityRemoveStatusEffectEvent(entity, this, cause, data);
         Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
         if (removeEvent.isCancelled() && !forced) return;

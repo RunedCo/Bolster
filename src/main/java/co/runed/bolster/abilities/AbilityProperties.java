@@ -74,6 +74,7 @@ public class AbilityProperties
     // EFFECT PROPERTIES
     public static final Property<StatusEffect> STATUS_EFFECT = new Property<>("status_effect");
     public static final Property<StatusEffect.RemovalCause> STATUS_EFFECT_REMOVAL_CAUSE = new Property<>("status_effect_cause");
+    public static final Property<Object> STATUS_EFFECT_REMOVAL_DATA = new Property<>("status_effect_removal_data");
 
     // CLICK PROPERTIES
     public static final Property<ItemStack> CURRENT_ITEM_STACK = new Property<>("current_item_stack");

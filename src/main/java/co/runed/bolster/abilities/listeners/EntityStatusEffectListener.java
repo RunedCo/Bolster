@@ -21,6 +21,7 @@ public class EntityStatusEffectListener implements Listener
         Properties properties = new Properties();
         properties.set(AbilityProperties.STATUS_EFFECT, event.getStatusEffect());
         properties.set(AbilityProperties.STATUS_EFFECT_REMOVAL_CAUSE, event.getCause());
+        properties.set(AbilityProperties.STATUS_EFFECT_REMOVAL_DATA, event.getData());
         properties.set(AbilityProperties.EVENT, event);
 
         AbilityManager.getInstance().trigger(entity, AbilityTrigger.ON_REMOVE_STATUS_EFFECT, properties);

@@ -14,12 +14,14 @@ public final class EntityRemoveStatusEffectEvent extends Event implements Cancel
     private final StatusEffect statusEffect;
     private final StatusEffect.RemovalCause cause;
     private boolean cancelled = false;
+    private Object data;
 
-    public EntityRemoveStatusEffectEvent(LivingEntity entity, StatusEffect statusEffect, StatusEffect.RemovalCause cause)
+    public EntityRemoveStatusEffectEvent(LivingEntity entity, StatusEffect statusEffect, StatusEffect.RemovalCause cause, Object data)
     {
         this.entity = entity;
         this.statusEffect = statusEffect;
         this.cause = cause;
+        this.data = data;
     }
 
     public LivingEntity getEntity()
@@ -35,6 +37,11 @@ public final class EntityRemoveStatusEffectEvent extends Event implements Cancel
     public StatusEffect.RemovalCause getCause()
     {
         return cause;
+    }
+
+    public Object getData()
+    {
+        return data;
     }
 
     @Override
