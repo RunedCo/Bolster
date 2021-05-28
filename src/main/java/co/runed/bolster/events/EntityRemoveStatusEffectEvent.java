@@ -13,8 +13,9 @@ public final class EntityRemoveStatusEffectEvent extends Event implements Cancel
     private final LivingEntity entity;
     private final StatusEffect statusEffect;
     private final StatusEffect.RemovalCause cause;
+    private final Object data;
+    
     private boolean cancelled = false;
-    private Object data;
 
     public EntityRemoveStatusEffectEvent(LivingEntity entity, StatusEffect statusEffect, StatusEffect.RemovalCause cause, Object data)
     {
@@ -66,6 +67,4 @@ public final class EntityRemoveStatusEffectEvent extends Event implements Cancel
     {
         cancelled = b;
     }
-
 }
-

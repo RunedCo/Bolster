@@ -1,15 +1,23 @@
 package co.runed.bolster.conditions;
 
-import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.util.properties.Properties;
-import org.bukkit.event.Cancellable;
+import co.runed.bolster.util.properties.Property;
 
-public class EventCancelledCondition extends Condition
+public class PropertyInstanceOfCondition<T> extends Condition
 {
+    Property<T> property;
+    Class<? extends T> value;
+
+    public PropertyInstanceOfCondition(Property<T> property, Class<? extends T> value)
+    {
+        this.property = property;
+        this.value = value;
+    }
+
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)
     {
-        return properties.get(AbilityProperties.IS_CANCELLED);
+        return properties.get(this.property).getClass().equals(this.value);
     }
 
     @Override
@@ -24,3 +32,5 @@ public class EventCancelledCondition extends Condition
         return null;
     }
 }
+
+

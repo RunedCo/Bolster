@@ -149,7 +149,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 
         return this;
     }
-
+    
     public Ability addAbility(BiConsumer<LivingEntity, Properties> func)
     {
         return this.addAbility(new FunctionAbility(func));
