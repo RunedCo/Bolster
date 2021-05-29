@@ -11,6 +11,11 @@ public class IsAlliedCondition extends Condition
     Target<BolsterEntity> source;
     Target<BolsterEntity> target;
 
+    public IsAlliedCondition(Target<BolsterEntity> target)
+    {
+        this(Target.CASTER, target);
+    }
+
     public IsAlliedCondition(Target<BolsterEntity> source, Target<BolsterEntity> target)
     {
         super();

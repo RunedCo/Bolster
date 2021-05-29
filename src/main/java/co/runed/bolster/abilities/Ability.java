@@ -74,7 +74,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     {
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
 
-        this.addCondition(new OffCooldownCondition(Target.CASTER), ConditionPriority.LOWEST);
+        this.addCondition(new IsOffCooldownCondition(Target.CASTER), ConditionPriority.LOWEST);
         this.addCondition(new HasManaCondition(Target.CASTER), ConditionPriority.LOWEST);
     }
 
@@ -149,7 +149,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 
         return this;
     }
-    
+
     public Ability addAbility(BiConsumer<LivingEntity, Properties> func)
     {
         return this.addAbility(new FunctionAbility(func));

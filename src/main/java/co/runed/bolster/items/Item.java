@@ -7,7 +7,7 @@ import co.runed.bolster.abilities.AbilityProviderType;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.conditions.ConditionPriority;
 import co.runed.bolster.conditions.HasItemCondition;
-import co.runed.bolster.conditions.ItemEquippedCondition;
+import co.runed.bolster.conditions.IsItemEquippedCondition;
 import co.runed.bolster.game.Traits;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
@@ -338,7 +338,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
         if (mustBeActive)
         {
-            ability.addCondition(new ItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()), ConditionPriority.HIGHEST);
+            ability.addCondition(new IsItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()), ConditionPriority.HIGHEST);
         }
 
         // todo make sure hasitemcondition doesn't break anything or lag server

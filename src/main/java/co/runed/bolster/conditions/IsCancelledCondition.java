@@ -4,7 +4,7 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.event.Cancellable;
 
-public class EventCancelledCondition extends Condition
+public class IsCancelledCondition extends Condition
 {
     @Override
     public boolean evaluate(IConditional conditional, Properties properties)

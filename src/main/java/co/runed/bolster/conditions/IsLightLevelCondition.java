@@ -6,12 +6,12 @@ import co.runed.bolster.util.target.Target;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
-public class LightLevelIsCondition extends TargetedCondition<Location>
+public class IsLightLevelCondition extends TargetedCondition<Location>
 {
     int level;
     Operator operator;
 
-    public LightLevelIsCondition(Target<Location> target, Operator operator, int level)
+    public IsLightLevelCondition(Target<Location> target, Operator operator, int level)
     {
         super(target);
 

@@ -6,23 +6,22 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.Collection;
 import java.util.EnumSet;
 
-public class ItemEquippedCondition extends TargetedCondition<BolsterEntity>
+public class IsItemEquippedCondition extends TargetedCondition<BolsterEntity>
 {
     Collection<EquipmentSlot> slots;
     Class<? extends Item> item;
 
-    public ItemEquippedCondition(Target<BolsterEntity> target, EquipmentSlot slot, Class<? extends Item> item)
+    public IsItemEquippedCondition(Target<BolsterEntity> target, EquipmentSlot slot, Class<? extends Item> item)
     {
         this(target, EnumSet.of(slot), item);
     }
 
-    public ItemEquippedCondition(Target<BolsterEntity> target, Collection<EquipmentSlot> slots, Class<? extends Item> item)
+    public IsItemEquippedCondition(Target<BolsterEntity> target, Collection<EquipmentSlot> slots, Class<? extends Item> item)
     {
         super(target);
 

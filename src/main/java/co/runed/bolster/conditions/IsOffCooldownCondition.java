@@ -9,11 +9,11 @@ import org.bukkit.ChatColor;
 
 import java.text.DecimalFormat;
 
-public class OffCooldownCondition extends TargetedCondition<BolsterEntity>
+public class IsOffCooldownCondition extends TargetedCondition<BolsterEntity>
 {
     private static final DecimalFormat decimalFormatter = new DecimalFormat("#.#");
 
-    public OffCooldownCondition(Target<BolsterEntity> target)
+    public IsOffCooldownCondition(Target<BolsterEntity> target)
     {
         super(target);
     }
