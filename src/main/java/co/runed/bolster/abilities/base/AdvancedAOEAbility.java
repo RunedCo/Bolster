@@ -26,13 +26,12 @@ public class AdvancedAOEAbility extends MultiTargetAbility
     private double coneAngle = 0;
     private final double vRadius;
     private final double hRadius;
-    private int maxTargets = -1;
     private boolean circleShape = false;
 
     private final double vRadiusSquared;
     private final double hRadiusSquared;
 
-    public AdvancedAOEAbility(Target<Location> target, double vRadius, double hRadius, double coneAngle, boolean circleShape, int maxTargets)
+    public AdvancedAOEAbility(Target<Location> target, double vRadius, double hRadius, double coneAngle, boolean circleShape)
     {
         super(null);
 
@@ -41,7 +40,6 @@ public class AdvancedAOEAbility extends MultiTargetAbility
         this.hRadius = hRadius;
         this.coneAngle = coneAngle;
         this.circleShape = circleShape;
-        this.maxTargets = maxTargets;
 
         vRadiusSquared = vRadius * vRadius;
         hRadiusSquared = hRadius * hRadius;

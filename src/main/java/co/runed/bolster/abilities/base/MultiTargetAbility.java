@@ -1,9 +1,12 @@
 package co.runed.bolster.abilities.base;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
+import co.runed.bolster.conditions.Condition;
+import co.runed.bolster.conditions.ConditionPriority;
+import co.runed.bolster.conditions.HasManaCondition;
+import co.runed.bolster.conditions.IsOffCooldownCondition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.entity.Entity;
@@ -19,14 +22,29 @@ import java.util.function.Function;
 public class MultiTargetAbility extends MultiAbility
 {
     Function<Properties, List<Entity>> entityFunction;
-    int maxTargets = -1;
+    int maxTargets = -1; // -1 is no limit
     List<Target<BolsterEntity>> ignoredTargets = new ArrayList<>();
+    boolean shouldActivateIfEmpty = false;
+
+    private boolean lastRunEmpty;
+    private List<Condition.Data> parentConditions = new ArrayList<>();
+    private boolean addConditionsToParent = true;
 
     public MultiTargetAbility(Function<Properties, List<Entity>> entityFunction)
     {
+        super();
+
         this.setEntityFunction(entityFunction);
 
-        this.setEvaluateConditions(false);
+//        this.setEvaluateConditions(false);
+
+        this.moveDefaultConditions();
+    }
+
+    private void moveDefaultConditions()
+    {
+        this.parentConditions = new ArrayList<>(this.conditions);
+        this.conditions.clear();
     }
 
     public MultiTargetAbility setEntityFunction(Function<Properties, List<Entity>> entityFunction)
@@ -50,6 +68,13 @@ public class MultiTargetAbility extends MultiAbility
         return this;
     }
 
+    public MultiTargetAbility setShouldActivateIfEmpty(boolean shouldActivateIfEmpty)
+    {
+        this.shouldActivateIfEmpty = shouldActivateIfEmpty;
+
+        return this;
+    }
+
     @Override
     public String getDescription()
     {
@@ -67,18 +92,38 @@ public class MultiTargetAbility extends MultiAbility
         return desc;
     }
 
+    @Override
+    public boolean evaluateConditions(Properties properties)
+    {
+        // COPY OLD CONDITIONS
+        List<Condition.Data> oldConditions = new ArrayList<>(this.conditions);
+
+        // REPLACE OLD CONDITIONS WITH PARENT CONDITIONS
+        this.conditions = new ArrayList<>(this.parentConditions);
+
+        // EVALUATE OLD + PARENT
+        boolean success = super.evaluateConditions(properties);
+
+        // REVERT TO OLD CONDITIONS
+        this.conditions = oldConditions;
+
+        return success;
+    }
+
     // TODO might not work (see old implementation on github)
     @Override
     public void activateAbilityAndChildren(Properties properties)
     {
         List<Entity> entities = entityFunction.apply(properties);
 
-        int count = maxTargets > 0 ? maxTargets : entities.size();
-
         for (Target<BolsterEntity> ignored : this.ignoredTargets)
         {
             entities.remove(ignored.get(properties).getBukkit());
         }
+
+        int count = Math.min(maxTargets > 0 ? maxTargets : entities.size(), entities.size());
+
+        lastRunEmpty = entities.size() <= 0;
 
         for (int i = 0; i < count; i++)
         {
@@ -86,10 +131,16 @@ public class MultiTargetAbility extends MultiAbility
             Properties newProperties = new Properties(properties);
             newProperties.set(AbilityProperties.TARGET, entity);
 
-            if (this.canActivate(newProperties) && this.evaluateConditions(newProperties))
+            if (super.canActivate(newProperties) && super.evaluateConditions(newProperties))
             {
                 super.activateAbilityAndChildren(newProperties);
             }
         }
+    }
+
+    @Override
+    public void onPostActivate(Properties properties)
+    {
+        if (!lastRunEmpty || shouldActivateIfEmpty) super.onPostActivate(properties);
     }
 }

@@ -399,7 +399,7 @@ public class AbilityManager extends Manager
         Player player = event.getPlayer();
         Location movedFrom = event.getFrom().clone();
         Location movedTo = event.getTo().clone();
-        double movementThreshold = 0.02;
+        double movementThreshold = 0.04;
         double distance = movedTo.subtract(movedFrom).toVector().length();
 
         if (distance <= movementThreshold && distance >= -movementThreshold)
@@ -412,7 +412,7 @@ public class AbilityManager extends Manager
 
             if (ability.isCancelledByMovement())
             {
-                System.out.println("Cancelled " + ability.getId() + " for " + ability.getCaster().getName() + " reason: move");
+                System.out.println("Cancelled " + ability.getId() + " for " + ability.getCaster().getName() + " reason: move, dist: " + distance);
 
                 ability.cancel();
             }

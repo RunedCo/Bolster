@@ -4,14 +4,14 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.base.DynamicParameterAbility;
 import co.runed.bolster.abilities.base.FunctionAbility;
 import co.runed.bolster.conditions.*;
+import co.runed.bolster.game.cost.Cost;
+import co.runed.bolster.game.cost.ManaCost;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.ManaManager;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
-import co.runed.bolster.game.cost.Cost;
-import co.runed.bolster.game.cost.ManaCost;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -66,7 +67,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 
     private Duration duration = Duration.ofSeconds(0);
 
-    private final List<Condition.Data> conditions = new ArrayList<>();
+    protected List<Condition.Data> conditions = new ArrayList<>();
     private final List<Cost> costs = new ArrayList<>();
     private final List<Ability> children = new ArrayList<>();
 
@@ -362,9 +363,11 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         return resetCooldownOnDeath;
     }
 
-    public void setResetCooldownOnDeath(boolean resetCooldownOnDeath)
+    public Ability setResetCooldownOnDeath(boolean resetCooldownOnDeath)
     {
         this.resetCooldownOnDeath = resetCooldownOnDeath;
+
+        return this;
     }
 
     /* Ability Cancelling */
@@ -627,23 +630,22 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
                 long castTimeTicks = (long) (this.getCastTime() * 20L);
                 AtomicLong repeats = new AtomicLong();
 
-                if (this.getCaster() instanceof Player)
-                {
-                    Player player = (Player) this.getCaster();
+                this.castingTask = new TaskUtil.TaskSeries()
+                        .addRepeating(() -> {
+                            if (this.getCaster() instanceof Player)
+                            {
+                                Player player = (Player) this.getCaster();
 
-                    this.castingTask = new TaskUtil.TaskSeries()
-                            .addRepeating(
-                                    () -> {
-                                        repeats.addAndGet(CAST_BAR_UPDATE_TICKS);
+                                repeats.addAndGet(CAST_BAR_UPDATE_TICKS);
 
-                                        float xpPercent = (repeats.floatValue() / (float) castTimeTicks);
+                                float percent = (repeats.floatValue() / (float) castTimeTicks);
 
-                                        player.setExp(Math.min(xpPercent, 0.999f));
-                                        player.setLevel(0);
-                                    }, castTimeTicks, CAST_BAR_UPDATE_TICKS)
-                            .add(() -> this.preActivate(properties))
-                            .onCancel(() -> this.preActivate(properties));
-                }
+                                player.setExp(Math.min(percent, 0.999f));
+                                player.setLevel(0);
+                            }
+                        }, castTimeTicks, CAST_BAR_UPDATE_TICKS)
+                        .add(() -> this.preActivate(properties))
+                        .onCancel(() -> this.preActivate(properties));
 
                 return true;
             }

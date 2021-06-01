@@ -17,7 +17,8 @@ import java.util.*;
 public class CombatTracker implements Listener
 {
     private static Map<UUID, LivingEntity> damageMap = new HashMap<>();
-    private static Map<UUID, List<Mob>> targetedByMap = new HashMap<>();
+    //    private static Map<UUID, List<Mob>> targetedByMap = new HashMap<>();
+    private static Map<Mob, LivingEntity> targetMap = new HashMap<>();
 
     // returns the last entity hit by another entity, does not check that they did damage, reset on death
     public static LivingEntity getLastHit(LivingEntity damager)
@@ -44,38 +45,65 @@ public class CombatTracker implements Listener
         damageMap.remove(event.getEntity().getUniqueId());
     }
 
+//    public static void clearAggro(LivingEntity entity)
+//    {
+//        UUID uuid = entity.getUniqueId();
+//
+//        if (!targetedByMap.containsKey(uuid)) return;
+//
+//        List<Mob> targeters = targetedByMap.get(uuid);
+//
+//        for (Mob target : targeters)
+//        {
+//            if (target.getTarget().getUniqueId().equals(uuid))
+//            {
+//                target.setTarget(null);
+//            }
+//        }
+//
+//        targeters.remove(uuid);
+//    }
+
     public static void clearAggro(LivingEntity entity)
     {
         UUID uuid = entity.getUniqueId();
 
-        if (!targetedByMap.containsKey(uuid)) return;
-
-        List<Mob> targeters = targetedByMap.get(uuid);
-
-        for (Mob target : targeters)
+        for (Map.Entry<Mob, LivingEntity> targetInfo : targetMap.entrySet())
         {
-            if (target.getTarget().getUniqueId().equals(uuid))
-            {
-                target.setTarget(null);
-            }
-        }
+            if (!targetInfo.getValue().getUniqueId().equals(uuid)) continue;
 
-        targeters.remove(uuid);
+            targetInfo.getKey().setTarget(null);
+        }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onEntityTarget(EntityTargetLivingEntityEvent event)
     {
-        EntityTargetEvent.TargetReason reason = event.getReason();
-        LivingEntity target = event.getTarget();
         Mob entity = (Mob) event.getEntity();
+        LivingEntity target = event.getTarget();
 
         if (target == null)
         {
-
+            targetMap.remove(entity);
+            return;
         }
 
-        UUID uuid = target.getUniqueId();
-        if (!targetedByMap.containsKey(uuid)) targetedByMap.put(uuid, new ArrayList<>());
+        targetMap.put(entity, target);
     }
+
+//    @EventHandler(priority = EventPriority.HIGH)
+//    private void onEntityTarget(EntityTargetLivingEntityEvent event)
+//    {
+//        EntityTargetEvent.TargetReason reason = event.getReason();
+//        LivingEntity target = event.getTarget();
+//        Mob entity = (Mob) event.getEntity();
+//
+//        if (target == null)
+//        {
+//
+//        }
+//
+//        UUID uuid = target.getUniqueId();
+//        if (!targetedByMap.containsKey(uuid)) targetedByMap.put(uuid, new ArrayList<>());
+//    }
 }

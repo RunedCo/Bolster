@@ -11,6 +11,11 @@ public class TauntEntityAbility extends TargetedAbility<BolsterEntity>
 {
     Target<BolsterEntity> taunted;
 
+    public TauntEntityAbility(Target<BolsterEntity> taunted)
+    {
+        this(Target.CASTER, taunted);
+    }
+
     public TauntEntityAbility(Target<BolsterEntity> taunting, Target<BolsterEntity> taunted)
     {
         super(taunting);
