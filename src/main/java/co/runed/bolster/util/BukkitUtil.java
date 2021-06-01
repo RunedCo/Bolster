@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BukkitUtil
 {
@@ -99,7 +100,7 @@ public class BukkitUtil
         return entity.getTargetBlock(EnumSet.of(Material.AIR, Material.CAVE_AIR, Material.VOID_AIR), range);
     }
 
-    public static Collection<Entity> getEntitiesRadius(Location location, double radius)
+    public static List<Entity> getEntitiesRadius(Location location, double radius)
     {
         Collection<Entity> entities = location.getWorld().getNearbyEntities(location, radius, radius, radius);
 
@@ -110,7 +111,7 @@ public class BukkitUtil
             return event.isCancelled();
         });
 
-        return entities;
+        return new ArrayList<>(entities);
     }
 
     public static Collection<Entity> getEntitiesRadiusCircle(Location location, double radius)
@@ -187,7 +188,7 @@ public class BukkitUtil
         return Math.abs((float) Math.toDegrees(v1.angle(v2)));
     }
 
-    public static Collection<Entity> getEntitiesInFrontOf(LivingEntity source, float maxDistance)
+    public static List<Entity> getEntitiesInFrontOf(LivingEntity source, float maxDistance)
     {
         List<Entity> output = new ArrayList<>();        //    Returned list
         Collection<Entity> entities = getEntitiesRadius(source.getLocation(), maxDistance);
@@ -195,7 +196,9 @@ public class BukkitUtil
         for (Entity entity : entities)
         {
             if (!isTargetBehindEntity(source, entity) && entity.getLocation().distance(source.getLocation()) <= maxDistance)
+            {
                 output.add(entity);
+            }
         }
 
         return output;

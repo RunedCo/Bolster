@@ -49,7 +49,7 @@ public class AdvancedAOEAbility extends MultiTargetAbility
         this.setEntityFunction(this::run);
     }
 
-    private Collection<Entity> run(Properties properties)
+    private List<Entity> run(Properties properties)
     {
         int count = 0;
 

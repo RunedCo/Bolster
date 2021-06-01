@@ -77,8 +77,6 @@ public class Team implements Listener
 
         if (this.members.contains(entity.getUniqueId())) return;
 
-        EntityManager.getInstance().joinTeam(entity, this);
-
         if (entity.getType() == EntityType.PLAYER) this.players.add(entity.getUniqueId());
 
         this.members.add(entity.getUniqueId());
@@ -93,6 +91,8 @@ public class Team implements Listener
         {
             onlineMembers.add(entity.getUniqueId());
         }
+
+        EntityManager.getInstance().joinTeam(entity, this);
     }
 
     /**
@@ -101,8 +101,6 @@ public class Team implements Listener
     public void remove(LivingEntity entity)
     {
         if (!this.members.contains(entity.getUniqueId())) return;
-
-        EntityManager.getInstance().leaveTeam(entity, this);
 
         if (entity.getType() == EntityType.PLAYER) this.players.remove(entity.getUniqueId());
 
@@ -113,6 +111,8 @@ public class Team implements Listener
 
         this.members.remove(entity.getUniqueId());
         this.onlineMembers.remove(entity.getUniqueId());
+
+        EntityManager.getInstance().leaveTeam(entity, this);
     }
 
     public boolean isAlliedTeam(Team team)

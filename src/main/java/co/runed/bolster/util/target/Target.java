@@ -4,7 +4,7 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
-import co.runed.bolster.wip.HitTracker;
+import co.runed.bolster.wip.CombatTracker;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -43,9 +43,9 @@ public class Target<T> implements IRegisterable
     public static final Target<World> CASTER_WORLD = new Target<>("caster_world", properties -> Target.CASTER_LOCATION.get(properties).getWorld());
     public static final Target<World> TARGET_WORLD = new Target<>("target_world", properties -> Target.TARGET_LOCATION.get(properties).getWorld());
 
-    public static final Target<BolsterEntity> CASTER_LAST_HIT = new Target<>("caster_last_hit", properties -> BolsterEntity.from(HitTracker.getLastHit(Target.CASTER.get(properties).getBukkit())));
-    public static final Target<BolsterEntity> TARGET_LAST_HIT = new Target<>("target_last_hit", properties -> BolsterEntity.from(HitTracker.getLastHit(Target.TARGET.get(properties).getBukkit())));
-    public static final Target<BolsterEntity> INITIAL_TARGET_LAST_HIT = new Target<>("initial_target_last_hit", properties -> BolsterEntity.from(HitTracker.getLastHit(Target.INITIAL_TARGET.get(properties).getBukkit())));
+    public static final Target<BolsterEntity> CASTER_LAST_HIT = new Target<>("caster_last_hit", properties -> BolsterEntity.from(CombatTracker.getLastHit(Target.CASTER.get(properties).getBukkit())));
+    public static final Target<BolsterEntity> TARGET_LAST_HIT = new Target<>("target_last_hit", properties -> BolsterEntity.from(CombatTracker.getLastHit(Target.TARGET.get(properties).getBukkit())));
+    public static final Target<BolsterEntity> INITIAL_TARGET_LAST_HIT = new Target<>("initial_target_last_hit", properties -> BolsterEntity.from(CombatTracker.getLastHit(Target.INITIAL_TARGET.get(properties).getBukkit())));
 
     String id;
     Function<Properties, ? extends T> getTargetFunction;

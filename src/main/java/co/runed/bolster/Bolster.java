@@ -143,7 +143,7 @@ public class Bolster extends JavaPlugin implements Listener
         Bukkit.getPluginManager().registerEvents(new DisguiseListener(), this);
         Bukkit.getPluginManager().registerEvents(new PotionSystem(), this);
         Bukkit.getPluginManager().registerEvents(new BowTracker(), this);
-        Bukkit.getPluginManager().registerEvents(new HitTracker(), this);
+        Bukkit.getPluginManager().registerEvents(new CombatTracker(), this);
         Bukkit.getPluginManager().registerEvents(new WorldGuardListener(), this);
 
         this.registerStatusEffects();

@@ -5,6 +5,7 @@ import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
@@ -61,7 +62,7 @@ public class LeapAbility extends Ability
         return ignoreFallDamage;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     private void onPlayerMove(PlayerMoveEvent event)
     {
         if (this.delayedIgnoreTriggered) return;
@@ -78,7 +79,7 @@ public class LeapAbility extends Ability
         }, 10L);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     private void onNextFallDamage(EntityDamageEvent event)
     {
         if (!ignoreNext) return;

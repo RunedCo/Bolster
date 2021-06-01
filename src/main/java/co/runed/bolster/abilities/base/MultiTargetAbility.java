@@ -6,6 +6,7 @@ import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.Entity;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -13,18 +14,24 @@ import java.util.function.Function;
  */
 public class MultiTargetAbility extends MultiAbility
 {
-    Function<Properties, Collection<Entity>> entityFunction;
+    Function<Properties, List<Entity>> entityFunction;
+    int maxTargets = -1;
 
-    public MultiTargetAbility(Function<Properties, Collection<Entity>> entityFunction)
+    public MultiTargetAbility(Function<Properties, List<Entity>> entityFunction)
     {
         this.setEntityFunction(entityFunction);
 
         this.setEvaluateConditions(false);
     }
 
-    public void setEntityFunction(Function<Properties, Collection<Entity>> entityFunction)
+    public void setEntityFunction(Function<Properties, List<Entity>> entityFunction)
     {
         this.entityFunction = entityFunction;
+    }
+
+    public void setMaxTargets(int maxTargets)
+    {
+        this.maxTargets = maxTargets;
     }
 
     @Override
@@ -36,7 +43,7 @@ public class MultiTargetAbility extends MultiAbility
 
         for (Ability ability : this.getChildren())
         {
-            if (ability.getDescription() == null) continue;
+            if (ability.getDescription() == null || ability.getDescription().isEmpty()) continue;
 
             desc += ability.getDescription() + "\n";
         }
@@ -48,14 +55,20 @@ public class MultiTargetAbility extends MultiAbility
     @Override
     public void activateAbilityAndChildren(Properties properties)
     {
-        Collection<Entity> entities = entityFunction.apply(properties);
+        List<Entity> entities = entityFunction.apply(properties);
 
-        for (Entity entity : entities)
+        int count = maxTargets > 0 ? maxTargets : entities.size();
+
+        for (int i = 0; i < count; i++)
         {
+            Entity entity = entities.get(i);
             Properties newProperties = new Properties(properties);
             newProperties.set(AbilityProperties.TARGET, entity);
 
-            if (this.canActivate(newProperties) && this.evaluateConditions(newProperties)) super.activateAbilityAndChildren(newProperties);
+            if (this.canActivate(newProperties) && this.evaluateConditions(newProperties))
+            {
+                super.activateAbilityAndChildren(newProperties);
+            }
         }
     }
 }
