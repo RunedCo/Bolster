@@ -130,11 +130,18 @@ public class PlayerData
         return shopUnlocks.get(shopId);
     }
 
-    public void unlockShopItem(String shopId, String itemId)
+    public void setShopItemUnlocked(String shopId, String itemId, boolean unlocked)
     {
         if (!shopUnlocks.containsKey(shopId)) shopUnlocks.put(shopId, new ArrayList<>());
 
-        shopUnlocks.get(shopId).add(itemId);
+        if (unlocked)
+        {
+            if (!shopUnlocks.get(shopId).contains(itemId)) shopUnlocks.get(shopId).add(itemId);
+        }
+        else
+        {
+            shopUnlocks.get(shopId).remove(itemId);
+        }
     }
 
     public boolean isShopItemUnlocked(String shopId, String itemId)

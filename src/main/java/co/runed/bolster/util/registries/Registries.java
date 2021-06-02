@@ -3,6 +3,7 @@ package co.runed.bolster.util.registries;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.game.GameMode;
+import co.runed.bolster.game.shop.Shop;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
 import co.runed.bolster.status.StatusEffect;
@@ -24,4 +25,5 @@ public final class Registries
     public static final Registry<Property<?>> SETTINGS = new Registry<>(Bolster.getInstance());
     public static final Registry<Property<?>> TRAITS = new Registry<>(Bolster.getInstance());
     public static final Registry<GameMode> GAME_MODES = new Registry<>(Bolster.getInstance());
+    public static final Registry<Shop> SHOPS = new Registry<>(Bolster.getInstance());
 }

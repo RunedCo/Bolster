@@ -1,13 +1,14 @@
 package co.runed.bolster.game.shop;
 
+import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.PlayerManager;
+import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Shop
+public class Shop implements IRegisterable
 {
     String id;
     String name;
@@ -20,14 +21,22 @@ public class Shop
         this.name = name;
     }
 
+    @Override
     public String getId()
     {
         return id;
     }
 
+    @Override
     public String getName()
     {
         return name;
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return null;
     }
 
     public void addItem(ShopItem item)
@@ -47,31 +56,26 @@ public class Shop
         return items;
     }
 
-    public int getNormalCost(String id)
+    public int getBuyCost(Currency currency, String id)
     {
         ShopItem item = this.getItem(id);
 
         if (item == null) return -1;
 
-        return item.getNormalCost();
+        return item.getBuyCost(currency);
     }
 
-    public int getPremiumCost(String id)
+    public int getSellCost(Currency currency, String id)
     {
         ShopItem item = this.getItem(id);
 
         if (item == null) return -1;
 
-        return item.getPremiumCost();
+        return item.getSellCost(currency);
     }
 
     public boolean isUnlocked(Player player, String id)
     {
-        return PlayerManager.getInstance().getPlayerData(player).isShopItemUnlocked(this.getId(), id);
-    }
-
-    public void unlockItem(Player player, String id)
-    {
-        PlayerManager.getInstance().getPlayerData(player).unlockShopItem(this.getId(), id);
+        return this.items.get(id).isUnlocked(player);
     }
 }

@@ -3,7 +3,10 @@ package co.runed.bolster.gui;
 import co.runed.bolster.util.ItemBuilder;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.mask.BinaryMask;
@@ -39,16 +42,7 @@ public class GuiConfirm extends Gui
                 .title(this.getTitle(player))
                 .redraw(true);
 
-        ItemStackTemplate confirmTemplate = new StaticItemTemplate(
-                new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
-                        .setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "CONFIRM")
-                        .build()
-        );
-
-        Mask confirmMask = BinaryMask.builder(pageTemplate.getDimensions())
-                .pattern("000001111")
-                .item(confirmTemplate)
-                .build();
+        Menu menu = pageTemplate.build();
 
         ItemStackTemplate declineTemplate = new StaticItemTemplate(
                 new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
@@ -56,24 +50,46 @@ public class GuiConfirm extends Gui
                         .build()
         );
 
-        Mask declineMask = BinaryMask.builder(pageTemplate.getDimensions())
-                .pattern("111100000")
-                .item(declineTemplate)
-                .build();
+        for (int i = 0; i < 4; i++)
+        {
+            SlotSettings settings = SlotSettings.builder()
+                    .itemTemplate(declineTemplate)
+                    .clickHandler((p, info) -> {
+                        menu.close(p);
+                        if (this.previousGui != null) this.previousGui.show(p);
+                    })
+                    .build();
 
-        Menu menu = pageTemplate.build();
+            menu.getSlot(i).setSettings(settings);
+        }
+
+        ItemStackTemplate confirmTemplate = new StaticItemTemplate(
+                new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
+                        .setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "CONFIRM")
+                        .build()
+        );
+
+        for (int i = 5; i < 9; i++)
+        {
+            SlotSettings settings = SlotSettings.builder()
+                    .itemTemplate(confirmTemplate)
+                    .clickHandler((p, info) -> {
+                        if (info.getAction() == InventoryAction.PICKUP_ALL)
+                        {
+                            this.onConfirm.run();
+                            menu.close(p);
+                            if (this.previousGui != null) this.previousGui.show(p);
+                        }
+                    })
+                    .build();
+
+            menu.getSlot(i).setSettings(settings);
+        }
 
         menu.getSlot(4).setSettings(
                 SlotSettings.builder()
                         .itemTemplate(new StaticItemTemplate(this.icon))
                         .build());
-
-        confirmMask.apply(menu);
-        declineMask.apply(menu);
-
-        menu.setCloseHandler((p, m) -> {
-            if (this.previousGui != null) this.previousGui.show(p);
-        });
 
         return menu;
     }

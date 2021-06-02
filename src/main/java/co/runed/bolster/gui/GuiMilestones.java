@@ -142,11 +142,10 @@ public class GuiMilestones extends Gui
                 int costNumber = Integer.parseInt(splitCost[0]);
                 String costId = splitCost[1];
                 Currency currency = Registries.CURRENCIES.get(costId);
-                String costName = currency.getName() + (currency.shouldPluralize() ? "s" : "");
 
                 CostData data = new CostData(currency, costNumber);
 
-                builder = builder.addBullet((data.canAfford(this.player) ? ChatColor.GREEN : ChatColor.RED) + (costNumber + " " + costName));
+                builder = builder.addBullet((data.canAfford(this.player) ? ChatColor.GREEN : ChatColor.RED) + (costNumber + " " + currency.getPluralisedName()));
 
                 this.costs.add(data);
             }

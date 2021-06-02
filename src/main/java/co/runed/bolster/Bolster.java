@@ -118,12 +118,12 @@ public class Bolster extends JavaPlugin implements Listener
         this.commandManager.add(new CommandBecomeGUI());
         this.commandManager.add(new CommandMana());
         this.commandManager.add(new CommandSummonDummy());
-        this.commandManager.add(new CommandConfirm());
         this.commandManager.add(new CommandSetItemLevel());
         this.commandManager.add(new CommandLevelItem());
         this.commandManager.add(new CommandPause());
         this.commandManager.add(new CommandCurrency());
         this.commandManager.add(new CommandLoadGameMode());
+        this.commandManager.add(new CommandShop());
 
         // REGISTER PLUGIN CHANNELS
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");

@@ -47,6 +47,8 @@ public class CommandCurrency extends CommandBase
 
                             Currency currency = Registries.CURRENCIES.get(id);
                             PlayerManager.getInstance().getPlayerData(player).addCurrency(currency, amount);
+
+                            sender.sendMessage("Added " + amount + " " + currency.getPluralisedName() + " to " + player.getDisplayName());
                         })
                 ).withSubcommand(new CommandAPICommand("remove")
                         .withArguments(
@@ -67,6 +69,8 @@ public class CommandCurrency extends CommandBase
 
                             Currency currency = Registries.CURRENCIES.get(id);
                             PlayerManager.getInstance().getPlayerData(player).addCurrency(currency, -amount);
+
+                            sender.sendMessage("Removed " + amount + " " + currency.getPluralisedName() + " from " + player.getDisplayName());
                         })
                 ).withSubcommand(new CommandAPICommand("set")
                         .withArguments(
@@ -87,6 +91,8 @@ public class CommandCurrency extends CommandBase
 
                             Currency currency = Registries.CURRENCIES.get(id);
                             PlayerManager.getInstance().getPlayerData(player).setCurrency(currency, amount);
+
+                            sender.sendMessage("Set " + currency.getPluralisedName() + " to " + amount + " for " + player.getDisplayName());
                         })
                 )
                 .withSubcommand(new CommandAPICommand("get")
@@ -106,7 +112,7 @@ public class CommandCurrency extends CommandBase
 
                             Currency currency = Registries.CURRENCIES.get(id);
                             int amount = PlayerManager.getInstance().getPlayerData(player).getCurrency(currency);
-                            sender.sendMessage(player.getName() + " has " + amount + " " + currency.getName() + (currency.shouldPluralize() ? "s" : ""));
+                            sender.sendMessage(player.getName() + " has " + amount + " " + currency.getPluralisedName());
                         })
                 );
     }

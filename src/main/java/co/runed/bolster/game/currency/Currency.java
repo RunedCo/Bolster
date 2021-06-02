@@ -43,6 +43,11 @@ public class Currency implements IRegisterable, ICategorised, IConfigurable
         return name;
     }
 
+    public String getPluralisedName()
+    {
+        return this.getName() + (this.shouldPluralize() ? "s" : "");
+    }
+
     public String getShortName()
     {
         return shortName;
