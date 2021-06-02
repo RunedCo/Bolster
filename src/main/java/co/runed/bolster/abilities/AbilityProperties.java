@@ -6,6 +6,7 @@ import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.properties.FunctionProperty;
 import co.runed.bolster.util.properties.Property;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -15,6 +16,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
@@ -53,6 +55,12 @@ public class AbilityProperties
     // PROJECTILE PROPERTIES
     public static final Property<Float> FORCE = new Property<>("force", 0.0f);
     public static final Property<Vector> VELOCITY = new Property<>("velocity", new Vector());
+    public static final Property<Boolean> CONSUME_ITEM_ON_SHOOT = new FunctionProperty<>("consume_item",
+            (p) -> p.get(EVENT) instanceof EntityShootBowEvent && ((EntityShootBowEvent) p.get(EVENT)).shouldConsumeItem(),
+            (p, v) -> {
+                if (p.get(EVENT) instanceof EntityShootBowEvent) ((EntityShootBowEvent) p.get(EVENT)).setConsumeItem(v);
+            }
+    );
 
     // FISHING PROPERTIES
     public static final Property<Entity> CAUGHT = new Property<>("caught");
