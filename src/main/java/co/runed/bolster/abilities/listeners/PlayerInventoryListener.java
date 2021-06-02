@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +28,9 @@ public class PlayerInventoryListener implements Listener
         ItemStack stack = event.getClickedInventory().getItem(event.getSlot());
 
         if (stack != null && ChatColor.stripColor(stack.getItemMeta().getDisplayName()).equals(""))
+        {
             event.setResult(Event.Result.DENY);
+        }
 
         Properties properties = new Properties();
         properties.set(AbilityProperties.ITEM_STACK, stack);
@@ -52,6 +55,18 @@ public class PlayerInventoryListener implements Listener
         properties.set(AbilityProperties.INVENTORY, event.getInventory());
         properties.set(AbilityProperties.EVENT, event);
 
-        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_CLICK_INVENTORY, properties);
+        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_OPEN_INVENTORY, properties);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private void onPlayerCloseInventory(InventoryCloseEvent event)
+    {
+        Player player = (Player) event.getPlayer();
+
+        Properties properties = new Properties();
+        properties.set(AbilityProperties.INVENTORY, event.getInventory());
+        properties.set(AbilityProperties.EVENT, event);
+
+        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_CLOSE_INVENTORY, properties);
     }
 }
