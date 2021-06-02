@@ -176,6 +176,12 @@ public class ItemBuilder
         return new ItemBuilder(this.itemStack);
     }
 
+    public ItemBuilder setAmount(int amount)
+    {
+        this.itemStack.setAmount(amount);
+        return new ItemBuilder(this.itemStack);
+    }
+
     public ItemBuilder hideName()
     {
         return this.setDisplayName(ChatColor.RESET + "");

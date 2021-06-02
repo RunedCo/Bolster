@@ -9,6 +9,7 @@ import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
+import co.runed.bolster.v1_16_R3.CraftUtil;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -267,6 +268,39 @@ public class ItemManager extends Manager
         }
 
         return false;
+    }
+
+    public int getItemCount(Inventory inventory, String itemId)
+    {
+        int numberFound = 0;
+
+        for (ItemStack stack : inventory)
+        {
+            String stackItemId = this.getItemIdFromStack(stack);
+
+            if (stackItemId == null) continue;
+
+            if (stackItemId.equals(itemId)) numberFound += stack.getAmount();
+        }
+
+        return numberFound;
+    }
+
+    public int getAllInventoryItemCount(LivingEntity entity, Class<? extends Item> itemId)
+    {
+        return this.getAllInventoryItemCount(entity, Registries.ITEMS.getId(itemId));
+    }
+
+    public int getAllInventoryItemCount(LivingEntity entity, String itemId)
+    {
+        int numberFound = 0;
+
+        for (Inventory inventory : BolsterEntity.from(entity).getInventories())
+        {
+            numberFound += getItemCount(inventory, itemId);
+        }
+
+        return numberFound;
     }
 
     public boolean anyInventoryContainsAtLeast(LivingEntity entity, String itemId, int count)
