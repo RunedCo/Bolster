@@ -10,6 +10,7 @@ import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.v1_16_R3.CraftUtil;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -432,6 +433,7 @@ public class ItemManager extends Manager
     public String getItemIdFromStack(ItemStack stack)
     {
         if (stack == null) return null;
+        if (stack.getType() == Material.AIR) return null;
         if (!stack.hasItemMeta()) return null;
 
         ItemMeta meta = stack.getItemMeta();
