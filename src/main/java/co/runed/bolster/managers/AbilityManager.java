@@ -53,7 +53,7 @@ public class AbilityManager extends Manager
         Bukkit.getPluginManager().registerEvents(new PlayerInteractAtEntityListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerSelectListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerPortalListener(), plugin);
-        Bukkit.getPluginManager().registerEvents(new PlayerInventoryClickListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new PlayerInventoryListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new PlayerConnectListener(), plugin);
     }
 

@@ -49,6 +49,7 @@ public class AbilityTrigger
     public static final AbilityTrigger ON_ENTER_PORTAL = new AbilityTrigger("on_enter_portal", "Passive", true);
     public static final AbilityTrigger ON_EQUIP_ARMOR = new AbilityTrigger("on_equip_armor", "Passive", true);
     public static final AbilityTrigger ON_UNEQUIP_ARMOR = new AbilityTrigger("on_unequip", "Passive", true);
+    public static final AbilityTrigger ON_OPEN_INVENTORY = new AbilityTrigger("on_open_inventory", "Passive", true);
     public static final AbilityTrigger ON_CLICK_INVENTORY = new AbilityTrigger("on_click_inventory", "Passive", true);
     public static final AbilityTrigger ON_CONNECT = new AbilityTrigger("on_connect", "Passive", true);
     public static final AbilityTrigger ON_DISCONNECT = new AbilityTrigger("on_disconnect", "Passive", true);

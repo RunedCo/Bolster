@@ -11,9 +11,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class PlayerInventoryClickListener implements Listener
+public class PlayerInventoryListener implements Listener
 {
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerClickInventory(InventoryClickEvent event)
@@ -36,6 +38,18 @@ public class PlayerInventoryClickListener implements Listener
         properties.set(AbilityProperties.CLICK_TYPE, event.getClick());
         properties.set(AbilityProperties.INVENTORY_ACTION, event.getAction());
         properties.set(AbilityProperties.INVENTORY, event.getClickedInventory());
+        properties.set(AbilityProperties.EVENT, event);
+
+        AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_CLICK_INVENTORY, properties);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private void onPlayerOpenInventory(InventoryOpenEvent event)
+    {
+        Player player = (Player) event.getPlayer();
+
+        Properties properties = new Properties();
+        properties.set(AbilityProperties.INVENTORY, event.getInventory());
         properties.set(AbilityProperties.EVENT, event);
 
         AbilityManager.getInstance().trigger(player, AbilityTrigger.ON_CLICK_INVENTORY, properties);
