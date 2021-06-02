@@ -31,6 +31,7 @@ public class AbilityTrigger
     public static final AbilityTrigger ON_DROP_ITEM = new AbilityTrigger("on_drop_item", "Q", false);
     public static final AbilityTrigger ON_SNEAK = new AbilityTrigger("on_sneak", "Shift", false);
     public static final AbilityTrigger ON_BREAK_BLOCK = new AbilityTrigger("on_break_block", "L-Click", false);
+    public static final AbilityTrigger ON_DAMAGE_BLOCK = new AbilityTrigger("on_damage_block", "L-Click", false);
     public static final AbilityTrigger ON_CONSUME_ITEM = new AbilityTrigger("on_consume_item", "R-Click", false);
     public static final AbilityTrigger ON_CATCH_FISH = new AbilityTrigger("on_catch_fish", "R-Click", false);
 
@@ -72,7 +73,6 @@ public class AbilityTrigger
     public static final AbilityTrigger ON_CAST_ABILITY = new AbilityTrigger("on_cast_ability", "Passive", true);
     public static final AbilityTrigger ENABLE = new AbilityTrigger("enable", "Passive", true);
     public static final AbilityTrigger DISABLE = new AbilityTrigger("disable", "Passive", true);
-
 
     // PASSIVE ACTIONS
     public static final AbilityTrigger TICK = new AbilityTrigger("tick", "Passive", true);
