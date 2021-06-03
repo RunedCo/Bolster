@@ -69,11 +69,11 @@ public class GuiShop extends Gui
 
             if (item.isUnlockable() && item.isUnlocked(player))
             {
-                itemBuilder = itemBuilder.addLore(ChatColor.GREEN + "" + ChatColor.BOLD + "OWNED");
+                itemBuilder = itemBuilder.addLore(GuiConstants.UNLOCKED);
             }
             else if (item.canAfford(player))
             {
-                itemBuilder = itemBuilder.addLore(ChatColor.GREEN + "" + Glyphs.ARROW + " Click to buy");
+                itemBuilder = itemBuilder.addLore(GuiConstants.CLICK_TO + "buy");
             }
             else
             {
@@ -82,7 +82,7 @@ public class GuiShop extends Gui
 
             if (item.canSell())
             {
-                itemBuilder = itemBuilder.addLore(ChatColor.RED + "" + Glyphs.ARROW + " Right click to sell");
+                itemBuilder = itemBuilder.addLore(GuiConstants.RIGHT_CLICK_TO + "sell");
             }
 
             SlotSettings settings = SlotSettings.builder()
