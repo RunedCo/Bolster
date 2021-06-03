@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class ShopItem implements IRegisterable
 {
@@ -29,13 +28,11 @@ public class ShopItem implements IRegisterable
     ItemStack icon;
     boolean unlockable = false;
     boolean shouldConfirm = false;
+    boolean enabled = true;
     Shop parentShop;
 
     Map<Currency, Integer> buyCosts = new HashMap<>();
     Map<Currency, Integer> sellCosts = new HashMap<>();
-//
-//    Consumer<Player> onPurchase = null;
-//    Consumer<Player> onSell = null;
 
     public ShopItem(String id, String name, ItemStack icon)
     {
@@ -87,7 +84,7 @@ public class ShopItem implements IRegisterable
         List<String> shopTooltip = new ArrayList<>();
 
         shopTooltip.add("");
-        shopTooltip.add(ChatColor.GRAY + "Buy Cost:");
+        shopTooltip.add(ChatColor.GRAY + "Buy For:");
 
         for (Map.Entry<Currency, Integer> entry : this.getBuyCosts().entrySet())
         {
@@ -97,10 +94,10 @@ public class ShopItem implements IRegisterable
             shopTooltip.addAll(StringUtil.formatBullet(ChatColor.GOLD + (entry.getValue() + " " + costName)));
         }
 
-        if (canSell())
+        if (isSellable())
         {
             shopTooltip.add("");
-            shopTooltip.add(ChatColor.GRAY + "Sell Price:");
+            shopTooltip.add(ChatColor.GRAY + "Sell For:");
 
             for (Map.Entry<Currency, Integer> entry : this.getSellCosts().entrySet())
             {
@@ -136,9 +133,13 @@ public class ShopItem implements IRegisterable
     {
         List<String> tooltip = new ArrayList<>();
 
-        if (canSell())
+        if (isSellable() && canSell(player))
         {
             tooltip.add(GuiConstants.RIGHT_CLICK_TO + "sell");
+        }
+        else
+        {
+            tooltip.add(ChatColor.RED + "You cannot sell this!");
         }
 
         return tooltip;
@@ -154,16 +155,6 @@ public class ShopItem implements IRegisterable
         return parentShop;
     }
 
-//    public void onSell(Consumer<Player> onSell)
-//    {
-//        this.onSell = onSell;
-//    }
-//
-//    public void onPurchase(Consumer<Player> onPurchase)
-//    {
-//        this.onPurchase = onPurchase;
-//    }
-
     public boolean isUnlockable()
     {
         return unlockable;
@@ -174,7 +165,12 @@ public class ShopItem implements IRegisterable
         this.unlockable = unlockable;
     }
 
-    public void setBuyCost(Currency currency, int cost)
+    public void setBuyCosts(Map<Currency, Integer> buyCosts)
+    {
+        this.buyCosts = buyCosts;
+    }
+
+    public void addBuyCost(Currency currency, int cost)
     {
         this.buyCosts.put(currency, cost);
     }
@@ -191,7 +187,12 @@ public class ShopItem implements IRegisterable
         return buyCosts;
     }
 
-    public void setSellCost(Currency currency, int cost)
+    public void setSellCosts(Map<Currency, Integer> sellCosts)
+    {
+        this.sellCosts = sellCosts;
+    }
+
+    public void addSellCost(Currency currency, int cost)
     {
         this.sellCosts.put(currency, cost);
     }
@@ -235,9 +236,24 @@ public class ShopItem implements IRegisterable
         return true;
     }
 
-    public boolean canSell()
+    public boolean isSellable()
     {
         return this.getSellCosts().size() > 0;
+    }
+
+    public boolean canSell(Player player)
+    {
+        return true;
+    }
+
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
     }
 
     public void onLeftClick(Gui gui, Player player)
@@ -255,6 +271,7 @@ public class ShopItem implements IRegisterable
             else
             {
                 buy(player);
+                gui.show(player);
             }
         }
         else
@@ -269,7 +286,7 @@ public class ShopItem implements IRegisterable
         {
             player.sendMessage(ChatColor.RED + "You don't own this!");
         }
-        else if (canSell())
+        else if (isSellable() && canSell(player))
         {
             if (shouldConfirm())
             {
@@ -278,33 +295,44 @@ public class ShopItem implements IRegisterable
             else
             {
                 sell(player);
+                gui.show(player);
             }
+        }
+        else
+        {
+            player.sendMessage(ChatColor.RED + "You cannot sell this!");
         }
     }
 
-    public void buy(Player player)
+    public void unlock(Player player)
     {
-        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1, 1);
-
         PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
 
         if (isUnlockable())
         {
             playerData.setShopItemUnlocked(this.getParentShop().getId(), id, true);
         }
+    }
+
+    public void buy(Player player)
+    {
+        player.sendMessage(ChatColor.GREEN + (isUnlockable() ? "Unlocked" : "Bought") + " " + this.getName());
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1, 1);
+
+        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+
+        unlock(player);
 
         for (Map.Entry<Currency, Integer> entry : this.getBuyCosts().entrySet())
         {
             playerData.addCurrency(entry.getKey(), -entry.getValue());
         }
-
-//        if (this.onPurchase == null) return;
-//
-//        this.onPurchase.accept(player);
     }
 
     public void sell(Player player)
     {
+        player.sendMessage(ChatColor.GREEN + "Sold " + this.getName());
+
         PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
 
         if (isUnlockable())
@@ -316,9 +344,5 @@ public class ShopItem implements IRegisterable
         {
             playerData.addCurrency(entry.getKey(), entry.getValue());
         }
-
-//        if (this.onSell == null) return;
-//
-//        this.onSell.accept(player);
     }
 }

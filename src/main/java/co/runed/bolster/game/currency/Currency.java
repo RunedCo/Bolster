@@ -2,21 +2,27 @@ package co.runed.bolster.game.currency;
 
 import co.runed.bolster.util.ICategorised;
 import co.runed.bolster.util.IConfigurable;
+import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-public class Currency implements IRegisterable, ICategorised, IConfigurable
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Currency implements IRegisterable, ICategorised
 {
     String id;
     String name;
     String shortName;
-    ItemStack icon = new ItemStack(Material.GOLD_INGOT);
-    boolean isItem = false;
+    ItemStack icon;
+    boolean isItem;
     boolean pluralize;
-    
+
     public Currency(String id, String name, String shortName, ItemStack itemStack, boolean pluralize, boolean isItem)
     {
         this.id = id;
@@ -71,7 +77,11 @@ public class Currency implements IRegisterable, ICategorised, IConfigurable
     @Override
     public ItemStack getIcon()
     {
-        return icon;
+        ItemBuilder builder = new ItemBuilder(icon)
+                .addAllItemFlags()
+                .setDisplayName(ChatColor.WHITE + this.getName());
+
+        return builder.build();
     }
 
     @Override
@@ -80,9 +90,22 @@ public class Currency implements IRegisterable, ICategorised, IConfigurable
         return null;
     }
 
-    @Override
-    public void create(ConfigurationSection config)
+    public static Map<Currency, Integer> fromList(List<String> costs)
     {
+        Map<Currency, Integer> output = new HashMap<>();
 
+        if (costs == null) return output;
+
+        for (String cost : costs)
+        {
+            String[] splitCost = cost.split(" ");
+            int amount = Integer.parseInt(splitCost[0]);
+            String costId = splitCost[1];
+            Currency currency = Registries.CURRENCIES.get(costId);
+
+            output.put(currency, amount);
+        }
+
+        return output;
     }
 }

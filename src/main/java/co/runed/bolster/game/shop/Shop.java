@@ -2,13 +2,15 @@ package co.runed.bolster.game.shop;
 
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.PlayerManager;
+import co.runed.bolster.util.IConfigurable;
 import co.runed.bolster.util.registries.IRegisterable;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Shop implements IRegisterable
+public class Shop implements IRegisterable, IConfigurable
 {
     String id;
     String name;
@@ -79,5 +81,33 @@ public class Shop implements IRegisterable
     public boolean isUnlocked(Player player, String id)
     {
         return this.items.get(id).isUnlocked(player);
+    }
+
+    @Override
+    public void create(ConfigurationSection config)
+    {
+        for (String key : config.getKeys(false))
+        {
+            if (this.getItem(key) == null) continue;
+            if (!config.isConfigurationSection(key)) continue;
+
+            ShopItem item = this.getItem(key);
+            ConfigurationSection sec = config.getConfigurationSection(key);
+
+            if (sec.isList("sell-costs"))
+            {
+                item.setSellCosts(Currency.fromList(sec.getStringList("sell-costs")));
+            }
+
+            if (sec.isList("buy-costs"))
+            {
+                item.setBuyCosts(Currency.fromList(sec.getStringList("buy-costs")));
+            }
+
+            item.setEnabled(sec.getBoolean("enabled", item.isEnabled()));
+            item.setShouldConfirm(sec.getBoolean("confirm", item.shouldConfirm()));
+            item.setUnlockable(sec.getBoolean("unlockable", item.isUnlockable()));
+            item.setDescription(sec.getString("description", item.getDescription()));
+        }
     }
 }

@@ -64,15 +64,12 @@ public class GuiShop extends Gui
 
         for (ShopItem item : shopItems)
         {
+            if (!item.isEnabled() || (item.getSellCosts().isEmpty() && item.getBuyCosts().isEmpty())) continue;
+
             ItemBuilder itemBuilder = new ItemBuilder(item.getIcon())
                     .addLore("")
                     .addLore(item.getLeftClickTooltip(player))
                     .addLore(item.getRightClickTooltip(player));
-
-            if (item.canSell())
-            {
-                itemBuilder = itemBuilder.addLore(GuiConstants.RIGHT_CLICK_TO + "sell");
-            }
 
             SlotSettings settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(itemBuilder.build()))

@@ -25,5 +25,5 @@ public final class Registries
     public static final Registry<Property<?>> SETTINGS = new Registry<>(Bolster.getInstance());
     public static final Registry<Property<?>> TRAITS = new Registry<>(Bolster.getInstance());
     public static final Registry<GameMode> GAME_MODES = new Registry<>(Bolster.getInstance());
-    public static final Registry<Shop> SHOPS = new Registry<>(Bolster.getInstance());
+    public static final Registry<Shop> SHOPS = new Registry<>(Bolster.getInstance(), "shops");
 }
