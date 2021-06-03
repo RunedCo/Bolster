@@ -65,20 +65,9 @@ public class GuiShop extends Gui
         for (ShopItem item : shopItems)
         {
             ItemBuilder itemBuilder = new ItemBuilder(item.getIcon())
-                    .addLore("");
-
-            if (item.isUnlockable() && item.isUnlocked(player))
-            {
-                itemBuilder = itemBuilder.addLore(GuiConstants.UNLOCKED);
-            }
-            else if (item.canAfford(player))
-            {
-                itemBuilder = itemBuilder.addLore(GuiConstants.CLICK_TO + "buy");
-            }
-            else
-            {
-                itemBuilder = itemBuilder.addLore(ChatColor.RED + "You cannot afford this!");
-            }
+                    .addLore("")
+                    .addLore(item.getLeftClickTooltip(player))
+                    .addLore(item.getRightClickTooltip(player));
 
             if (item.canSell())
             {
@@ -90,30 +79,11 @@ public class GuiShop extends Gui
                     .clickHandler((p, info) -> {
                         if (info.getAction() == InventoryAction.PICKUP_ALL)
                         {
-                            if (item.isUnlockable() && item.isUnlocked(player))
-                            {
-                                p.sendMessage(ChatColor.RED + "You already own this!");
-                            }
-                            else if (item.canAfford(p))
-                            {
-                                if (item.shouldConfirm())
-                                {
-                                    new GuiConfirm(this, item.getIcon(), () -> doBuy(p, item)).show(p);
-                                }
-                                else
-                                {
-                                    doBuy(p, item);
-                                }
-                            }
-                            else
-                            {
-                                p.sendMessage(ChatColor.RED + "You cannot afford this!");
-                            }
+                            item.onLeftClick(this, p);
                         }
-                        else if (info.getAction() == InventoryAction.PICKUP_HALF && item.canSell())
+                        else if (info.getAction() == InventoryAction.PICKUP_HALF)
                         {
-                            item.sell(p);
-                            p.sendMessage(ChatColor.GREEN + "Sold " + item.getName());
+                            item.onRightClick(this, p);
                         }
                     })
                     .build();
@@ -124,11 +94,5 @@ public class GuiShop extends Gui
         List<Menu> pages = builder.build();
 
         return pages.get(0);
-    }
-
-    private void doBuy(Player player, ShopItem item)
-    {
-        item.buy(player);
-        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1, 1);
     }
 }

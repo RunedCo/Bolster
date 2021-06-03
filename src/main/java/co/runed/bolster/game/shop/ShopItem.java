@@ -2,11 +2,16 @@ package co.runed.bolster.game.shop;
 
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.game.currency.Currency;
+import co.runed.bolster.gui.Gui;
+import co.runed.bolster.gui.GuiConfirm;
+import co.runed.bolster.gui.GuiConstants;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,9 +33,9 @@ public class ShopItem implements IRegisterable
 
     Map<Currency, Integer> buyCosts = new HashMap<>();
     Map<Currency, Integer> sellCosts = new HashMap<>();
-
-    Consumer<Player> onPurchase = null;
-    Consumer<Player> onSell = null;
+//
+//    Consumer<Player> onPurchase = null;
+//    Consumer<Player> onSell = null;
 
     public ShopItem(String id, String name, ItemStack icon)
     {
@@ -107,6 +112,38 @@ public class ShopItem implements IRegisterable
         return shopTooltip;
     }
 
+    public List<String> getLeftClickTooltip(Player player)
+    {
+        List<String> tooltip = new ArrayList<>();
+
+        if (isUnlockable() && isUnlocked(player))
+        {
+            tooltip.add(GuiConstants.UNLOCKED);
+        }
+        else if (canAfford(player))
+        {
+            tooltip.add(GuiConstants.CLICK_TO + "buy");
+        }
+        else
+        {
+            tooltip.add(ChatColor.RED + "You cannot afford this!");
+        }
+
+        return tooltip;
+    }
+
+    public List<String> getRightClickTooltip(Player player)
+    {
+        List<String> tooltip = new ArrayList<>();
+
+        if (canSell())
+        {
+            tooltip.add(GuiConstants.RIGHT_CLICK_TO + "sell");
+        }
+
+        return tooltip;
+    }
+
     public void setParentShop(Shop parentShop)
     {
         this.parentShop = parentShop;
@@ -117,15 +154,15 @@ public class ShopItem implements IRegisterable
         return parentShop;
     }
 
-    public void onSell(Consumer<Player> onSell)
-    {
-        this.onSell = onSell;
-    }
-
-    public void onPurchase(Consumer<Player> onPurchase)
-    {
-        this.onPurchase = onPurchase;
-    }
+//    public void onSell(Consumer<Player> onSell)
+//    {
+//        this.onSell = onSell;
+//    }
+//
+//    public void onPurchase(Consumer<Player> onPurchase)
+//    {
+//        this.onPurchase = onPurchase;
+//    }
 
     public boolean isUnlockable()
     {
@@ -203,8 +240,42 @@ public class ShopItem implements IRegisterable
         return this.getSellCosts().size() > 0;
     }
 
+    public void onLeftClick(Gui gui, Player player)
+    {
+        if (isUnlockable() && isUnlocked(player))
+        {
+            player.sendMessage(ChatColor.RED + "You already own this!");
+        }
+        else if (canAfford(player))
+        {
+            if (shouldConfirm())
+            {
+                new GuiConfirm(gui, getIcon(), () -> buy(player)).show(player);
+            }
+            else
+            {
+                buy(player);
+            }
+        }
+        else
+        {
+            player.sendMessage(ChatColor.RED + "You cannot afford this!");
+        }
+    }
+
+    public void onRightClick(Gui gui, Player player)
+    {
+        if (canSell())
+        {
+            this.sell(player);
+            player.sendMessage(ChatColor.GREEN + "Sold " + getName());
+        }
+    }
+
     public void buy(Player player)
     {
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1, 1);
+
         PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
 
         if (isUnlockable())
@@ -217,9 +288,9 @@ public class ShopItem implements IRegisterable
             playerData.addCurrency(entry.getKey(), -entry.getValue());
         }
 
-        if (this.onPurchase == null) return;
-
-        this.onPurchase.accept(player);
+//        if (this.onPurchase == null) return;
+//
+//        this.onPurchase.accept(player);
     }
 
     public void sell(Player player)
@@ -236,8 +307,8 @@ public class ShopItem implements IRegisterable
             playerData.addCurrency(entry.getKey(), entry.getValue());
         }
 
-        if (this.onSell == null) return;
-
-        this.onSell.accept(player);
+//        if (this.onSell == null) return;
+//
+//        this.onSell.accept(player);
     }
 }
