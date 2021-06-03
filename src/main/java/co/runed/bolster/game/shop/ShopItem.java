@@ -28,6 +28,7 @@ public class ShopItem implements IRegisterable
     ItemStack icon;
     boolean unlockable = false;
     boolean shouldConfirm = false;
+    Shop parentShop;
 
     Map<Currency, Integer> buyCosts = new HashMap<>();
     Map<Currency, Integer> sellCosts = new HashMap<>();
@@ -112,6 +113,16 @@ public class ShopItem implements IRegisterable
         return shopTooltip;
     }
 
+    public void setParentShop(Shop parentShop)
+    {
+        this.parentShop = parentShop;
+    }
+
+    public Shop getParentShop()
+    {
+        return parentShop;
+    }
+
     public void onSell(Consumer<Player> onSell)
     {
         this.onSell = onSell;
@@ -178,7 +189,7 @@ public class ShopItem implements IRegisterable
 
     public boolean isUnlocked(Player player)
     {
-        return isUnlockable() && PlayerManager.getInstance().getPlayerData(player).isShopItemUnlocked(this.getId(), id);
+        return isUnlockable() && PlayerManager.getInstance().getPlayerData(player).isShopItemUnlocked(this.getParentShop().getId(), id);
     }
 
     public boolean canAfford(Player player)

@@ -41,6 +41,8 @@ public class Shop implements IRegisterable
 
     public void addItem(ShopItem item)
     {
+        item.setParentShop(this);
+
         this.items.put(item.getId(), item);
     }
 

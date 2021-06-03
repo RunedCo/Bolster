@@ -117,6 +117,11 @@ public abstract class LevelableItem extends Item
 
     public void setLevel(int level)
     {
+        this.setLevel(level, false);
+    }
+
+    public void setLevel(int level, boolean isTemporary)
+    {
         int previousLevel = this.level;
 
         level = Math.max(0, Math.min(level, this.levels.size() - 1));
@@ -134,7 +139,7 @@ public abstract class LevelableItem extends Item
             }
         }
 
-        if (this.getEntity() instanceof Player)
+        if (this.getEntity() instanceof Player && !isTemporary)
         {
             Player player = (Player) this.getEntity();
 
