@@ -40,37 +40,6 @@ public class ItemCost extends Cost
     public boolean evaluate(Properties properties)
     {
         return this.condition.evaluate(null, properties);
-
-//        LivingEntity caster = properties.get(AbilityProperties.CASTER).getBukkit();
-//
-//        if (!(caster instanceof Player)) return false;
-//
-//        Player player = (Player) caster;
-//
-//        // If player is in creative don't remove items
-//        if (player.getGameMode().equals(GameMode.CREATIVE)) return true;
-//
-//        Item item;
-//
-//        if (this.itemClass == null)
-//        {
-//            item = properties.get(AbilityProperties.ITEM);
-//
-//            if (item == null) return false;
-//        }
-//        else
-//        {
-//            item = ItemManager.getInstance().createItem(player, this.itemClass);
-//        }
-//
-//        int count = this.count;
-//
-//        if (count == -1 && properties.contains(AbilityProperties.ITEM_STACK))
-//        {
-//            count = properties.get(AbilityProperties.ITEM_STACK).getAmount();
-//        }
-//
-//        return ItemManager.getInstance().inventoryContainsAtLeast(player.getInventory(), item.getId(), count);
     }
 
     @Override
@@ -109,5 +78,11 @@ public class ItemCost extends Cost
         }
 
         return false;
+    }
+
+    @Override
+    public String getErrorMessage(Properties properties)
+    {
+        return null;
     }
 }

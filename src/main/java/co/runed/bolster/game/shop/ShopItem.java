@@ -265,10 +265,20 @@ public class ShopItem implements IRegisterable
 
     public void onRightClick(Gui gui, Player player)
     {
-        if (canSell())
+        if (isUnlockable() && !isUnlocked(player))
         {
-            this.sell(player);
-            player.sendMessage(ChatColor.GREEN + "Sold " + getName());
+            player.sendMessage(ChatColor.RED + "You don't own this!");
+        }
+        else if (canSell())
+        {
+            if (shouldConfirm())
+            {
+                new GuiConfirm(gui, getIcon(), () -> sell(player)).show(player);
+            }
+            else
+            {
+                sell(player);
+            }
         }
     }
 

@@ -13,6 +13,7 @@ import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -546,17 +547,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
             {
                 condition.onFail(this, properties, false);
 
-                if (this.shouldShowErrorMessages())
-                {
-                    String error = condition.getErrorMessage(this, properties, false);
-
-                    if (error != null && System.currentTimeMillis() - this.lastErrorTime >= 750)
-                    {
-                        this.getCaster().sendMessage(error);
-                        //BolsterEntity.from(this.getCaster()).sendActionBar(error);
-                        this.lastErrorTime = System.currentTimeMillis();
-                    }
-                }
+                sendErrorMessage(condition.getErrorMessage(this, properties, false));
 
                 return false;
             }
@@ -577,11 +568,26 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
 
             if (!result)
             {
+                sendErrorMessage(cost.getErrorMessage(properties));
+
                 return false;
             }
         }
 
         return true;
+    }
+
+    private void sendErrorMessage(String error)
+    {
+        if (this.shouldShowErrorMessages())
+        {
+            if (error != null && System.currentTimeMillis() - this.lastErrorTime >= 750)
+            {
+                this.getCaster().sendMessage(ChatColor.RED + error);
+                //BolsterEntity.from(this.getCaster()).sendActionBar(error);
+                this.lastErrorTime = System.currentTimeMillis();
+            }
+        }
     }
 
     public boolean canActivate(Properties properties)

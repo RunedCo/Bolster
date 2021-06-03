@@ -37,4 +37,10 @@ public class ManaCost extends Cost
 
         return true;
     }
+
+    @Override
+    public String getErrorMessage(Properties properties)
+    {
+        return "You don't have enough mana!";
+    }
 }
