@@ -16,21 +16,15 @@ public class Currency implements IRegisterable, ICategorised, IConfigurable
     ItemStack icon = new ItemStack(Material.GOLD_INGOT);
     boolean isItem = false;
     boolean pluralize;
-
-    public Currency(String id, String name, boolean pluralize, ItemStack itemStack)
-    {
-        this(id, name, name, pluralize);
-
-        this.icon = itemStack;
-        this.isItem = true;
-    }
-
-    public Currency(String id, String name, String shortName, boolean pluralize)
+    
+    public Currency(String id, String name, String shortName, ItemStack itemStack, boolean pluralize, boolean isItem)
     {
         this.id = id;
         this.name = name;
         this.shortName = shortName;
         this.pluralize = pluralize;
+        this.icon = itemStack;
+        this.isItem = isItem;
     }
 
     public void setName(String name)
