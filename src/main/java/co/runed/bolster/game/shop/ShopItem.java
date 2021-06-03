@@ -1,9 +1,7 @@
 package co.runed.bolster.game.shop;
 
-import co.runed.bolster.fx.Glyphs;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.game.currency.Currency;
-import co.runed.bolster.gui.GuiMilestones;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
@@ -11,8 +9,6 @@ import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,8 +66,6 @@ public class ShopItem implements IRegisterable
     public ItemStack getIcon()
     {
         ItemBuilder builder = new ItemBuilder(icon);
-
-        builder = builder.setLore((List<String>) null);
 
         if (this.getDescription() != null)
         {
@@ -215,7 +209,7 @@ public class ShopItem implements IRegisterable
 
         if (isUnlockable())
         {
-            playerData.setShopItemUnlocked(this.getId(), id, true);
+            playerData.setShopItemUnlocked(this.getParentShop().getId(), id, true);
         }
 
         for (Map.Entry<Currency, Integer> entry : this.getBuyCosts().entrySet())
@@ -234,7 +228,7 @@ public class ShopItem implements IRegisterable
 
         if (isUnlockable())
         {
-            playerData.setShopItemUnlocked(this.getId(), id, false);
+            playerData.setShopItemUnlocked(this.getParentShop().getId(), id, false);
         }
 
         for (Map.Entry<Currency, Integer> entry : this.getSellCosts().entrySet())
