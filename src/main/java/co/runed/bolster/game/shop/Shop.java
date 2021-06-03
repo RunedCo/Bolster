@@ -94,20 +94,7 @@ public class Shop implements IRegisterable, IConfigurable
             ShopItem item = this.getItem(key);
             ConfigurationSection sec = config.getConfigurationSection(key);
 
-            if (sec.isList("sell-costs"))
-            {
-                item.setSellCosts(Currency.fromList(sec.getStringList("sell-costs")));
-            }
-
-            if (sec.isList("buy-costs"))
-            {
-                item.setBuyCosts(Currency.fromList(sec.getStringList("buy-costs")));
-            }
-
-            item.setEnabled(sec.getBoolean("enabled", item.isEnabled()));
-            item.setShouldConfirm(sec.getBoolean("confirm", item.shouldConfirm()));
-            item.setUnlockable(sec.getBoolean("unlockable", item.isUnlockable()));
-            item.setDescription(sec.getString("description", item.getDescription()));
+            item.loadFromConfig(sec);
         }
     }
 }

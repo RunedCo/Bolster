@@ -12,6 +12,7 @@ import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,6 +40,24 @@ public class ShopItem implements IRegisterable
         this.id = id;
         this.name = name;
         this.icon = icon;
+    }
+
+    public void loadFromConfig(ConfigurationSection config)
+    {
+        if (config.isList("sell-costs"))
+        {
+            this.setSellCosts(Currency.fromList(config.getStringList("sell-costs")));
+        }
+
+        if (config.isList("buy-costs"))
+        {
+            this.setBuyCosts(Currency.fromList(config.getStringList("buy-costs")));
+        }
+
+        this.setEnabled(config.getBoolean("enabled", this.isEnabled()));
+        this.setShouldConfirm(config.getBoolean("confirm", this.shouldConfirm()));
+        this.setUnlockable(config.getBoolean("unlockable", this.isUnlockable()));
+        this.setDescription(config.getString("description", this.getDescription()));
     }
 
     @Override
