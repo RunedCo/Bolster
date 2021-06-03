@@ -15,6 +15,7 @@ import java.util.UUID;
 public class PlayerData
 {
     //ObjectId _id;
+    String name;
     UUID uuid;
 
     public String activeParticleSet;
@@ -32,6 +33,11 @@ public class PlayerData
     public void onLoad()
     {
 
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
     }
 
     public void setUuid(UUID uuid)

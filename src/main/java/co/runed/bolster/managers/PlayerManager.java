@@ -134,7 +134,10 @@ public class PlayerManager extends Manager
 
     public void save(Player player)
     {
-        this.save(PlayerManager.getInstance().getPlayerData(player));
+        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+        playerData.setName(player.getName());
+
+        this.save(playerData);
     }
 
     // TODO move to mongodb update vs just straight upsert (maybe via api)
