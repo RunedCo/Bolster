@@ -18,6 +18,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
@@ -52,13 +53,8 @@ public class GameProperties extends Properties implements Listener
     public static final Property<Boolean> ENABLE_LOG_STRIP = new Property<>("enable_log_strip", true);
     public static final Property<Boolean> ENABLE_GRASS_PATH = new Property<>("enable_grass_path", true);
 
-    public static final Property<Boolean> ENABLE_POTION_STACKING = new Property<>("enable_potion_stacking", false);
-
-
     private static final Set<Material> SHOVELS = EnumSet.of(Material.STONE_SHOVEL, Material.DIAMOND_SHOVEL, Material.GOLDEN_SHOVEL, Material.IRON_SHOVEL, Material.NETHERITE_SHOVEL, Material.WOODEN_SHOVEL);
     private static final Set<Material> AXES = EnumSet.of(Material.STONE_AXE, Material.DIAMOND_AXE, Material.GOLDEN_AXE, Material.IRON_AXE, Material.NETHERITE_AXE, Material.WOODEN_AXE);
-
-    Map<UUID, HashMap<PotionEffectType, List<PotionEffectData>>> potionEffects = new HashMap<>();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onEntityTakeDamage(EntityDamageEvent event)
@@ -120,8 +116,11 @@ public class GameProperties extends Properties implements Listener
     {
         if (!this.get(GameProperties.ENABLE_OFFHAND))
         {
-            if (event.getRawSlot() == 45 || event.getClick() == ClickType.SWAP_OFFHAND)
+            if (event.getClickedInventory() == null) return;
+
+            if ((event.getClickedInventory().getType() == InventoryType.PLAYER && event.getSlot() == 40) || event.getClick() == ClickType.SWAP_OFFHAND)
             {
+                event.setResult(Event.Result.DENY);
                 event.setCancelled(true);
             }
         }
@@ -174,6 +173,7 @@ public class GameProperties extends Properties implements Listener
                     {
                         e.setUseInteractedBlock(Event.Result.ALLOW);
                         e.setUseItemInHand(Event.Result.DENY);
+                        e.setCancelled(true);
                     }
                 }
             }
@@ -186,116 +186,10 @@ public class GameProperties extends Properties implements Listener
                     {
                         e.setUseInteractedBlock(Event.Result.ALLOW);
                         e.setUseItemInHand(Event.Result.DENY);
+                        e.setCancelled(true);
                     }
                 }
             }
-        }
-    }
-
-    // TODO MAKE SURE WORKS
-    // TODO DOES NOT WORK IF YOU ALREADY HAVE STATUS EFFECT SET (try setting speed 1 for 100 seconds and then speed 9 for 10 seconds)
-    //@EventHandler
-    private void onPotionAdded(EntityPotionEffectEvent event)
-    {
-        if (!this.get(GameProperties.ENABLE_POTION_STACKING)) return;
-        if (!(event.getEntity() instanceof LivingEntity)) return;
-
-        EntityPotionEffectEvent.Cause cause = event.getCause();
-        EntityPotionEffectEvent.Action action = event.getAction();
-        LivingEntity entity = (LivingEntity) event.getEntity();
-
-        PotionEffect oldEffect = event.getOldEffect();
-        PotionEffect newEffect = event.getNewEffect();
-        PotionEffectType type = oldEffect == null ? newEffect.getType() : oldEffect.getType();
-
-        this.potionEffects.putIfAbsent(entity.getUniqueId(), new HashMap<>());
-        this.potionEffects.get(entity.getUniqueId()).putIfAbsent(type, new ArrayList<>());
-
-        List<PotionEffectData> effects = this.potionEffects.get(entity.getUniqueId()).get(type);
-
-        if (action == EntityPotionEffectEvent.Action.ADDED)
-        {
-            PotionEffectData wrappedNewEffect = effects.stream().filter(e -> e.getEffect() == newEffect).findFirst().orElse(null);
-            effects.remove(wrappedNewEffect);
-
-            List<PotionEffectData> toRemove = effects.stream().filter(e -> e.isFinished() || (e.getEffect().getDuration() <= newEffect.getDuration() && e.getEffect().getAmplifier() <= newEffect.getAmplifier())).collect(Collectors.toList());
-            effects.removeAll(toRemove);
-        }
-        else if (action == EntityPotionEffectEvent.Action.CHANGED)
-        {
-            if (oldEffect == null) return;
-            if (effects.stream().anyMatch(e -> e.getEffect() == newEffect)) return;
-
-            if (newEffect.getDuration() > oldEffect.getDuration() && newEffect.getAmplifier() <= oldEffect.getAmplifier())
-            {
-                PotionEffectData data = new PotionEffectData(newEffect);
-                effects.add(data);
-
-                effects.sort((e1, e2) -> e2.getEffect().getDuration() - e1.getEffect().getDuration());
-                effects.sort((e1, e2) -> e2.getEffect().getAmplifier() - e1.getEffect().getAmplifier());
-
-                int index = effects.indexOf(data);
-                PotionEffectData oldData = index == 0 ? new PotionEffectData(oldEffect) : effects.get(index - 1);
-
-                data.duration = newEffect.getDuration() - oldData.getEffect().getDuration();
-            }
-
-//            if (newEffect.getDuration() < oldEffect.getDuration() && newEffect.getAmplifier() >= oldEffect.getAmplifier())
-//            {
-//                PotionEffectData data = new PotionEffectData(newEffect);
-//                effects.add(data);
-//
-//                PotionEffectData oldData = new PotionEffectData(oldEffect);
-//                oldData.duration = oldData.duration - data.duration;
-//                effects.add(oldData);
-//
-//                //entity.removePotionEffect(oldEffect.getType());
-//
-//                data.getEffect().apply(entity);
-//            }
-        }
-        else
-        {
-            if (effects.size() <= 0) return;
-
-            PotionEffectData wrappedOldEffect = effects.stream().filter(e -> e.getEffect() == oldEffect).findFirst().orElse(null);
-            effects.remove(wrappedOldEffect);
-
-            PotionEffectData effectData = effects.stream().min((e1, e2) -> e2.getEffect().getAmplifier() - e1.getEffect().getAmplifier()).orElse(null);
-
-            if (effectData == null) return;
-
-            PotionEffect effect = effectData.getEffect();
-            effectData.effect = new PotionEffect(effect.getType(), effectData.duration, effect.getAmplifier(), effect.isAmbient(), effect.hasParticles(), effect.hasIcon());
-            effectData.effect.apply(entity);
-        }
-    }
-
-    private static class PotionEffectData
-    {
-        PotionEffect effect;
-        Instant startTime = Instant.now();
-        int duration;
-
-        private PotionEffectData(PotionEffect effect)
-        {
-            this.effect = effect;
-        }
-
-        public PotionEffect getEffect()
-        {
-            return effect;
-        }
-
-        private boolean isFinished()
-        {
-            return Instant.now().isAfter(TimeUtil.addSeconds(this.startTime, effect.getDuration() / 20f));
-        }
-
-        @Override
-        public String toString()
-        {
-            return this.effect.toString() + " (st: " + this.startTime + ")";
         }
     }
 }
