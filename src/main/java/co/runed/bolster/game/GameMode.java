@@ -1,20 +1,28 @@
 package co.runed.bolster.game;
 
+import co.runed.bolster.Bolster;
+import co.runed.bolster.Config;
 import co.runed.bolster.events.GameModePauseChangeEvent;
 import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
+import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.IConfigurable;
 import co.runed.bolster.managers.Manager;
+import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.plugin.Plugin;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -172,6 +180,34 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         if (event.getStatus() == PlayerResourcePackStatusEvent.Status.DECLINED || event.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD)
         {
             event.getPlayer().kickPlayer("You need to enable resource packs.");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event)
+    {
+        Config bolsterConfig = Bolster.getBolsterConfig();
+        Player player = event.getPlayer();
+
+        player.setPlayerListHeader(ChatColor.YELLOW + "  Welcome to " + bolsterConfig.longGameName + "  \n");
+
+        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+        if (playerData.isPremium())
+        {
+            Instant expiryTime = playerData.getPremiumExpiryTime();
+            String footer = ChatColor.AQUA + "  Thank you for supporting the server!  ";
+
+            if (expiryTime.isAfter(Instant.now()))
+            {
+                footer += "\n\nYour " + bolsterConfig.premiumMembershipName + " expires in\n";
+                footer += TimeUtil.formatInstantAsPrettyTimeLeft(expiryTime);
+            }
+
+            player.setPlayerListFooter("\n" + footer);
+        }
+        else
+        {
+            player.setPlayerListFooter("\n" + ChatColor.AQUA + "Support the server at " + ChatColor.GOLD + ChatColor.BOLD + bolsterConfig.storeUrl + "!");
         }
     }
 }

@@ -170,6 +170,11 @@ public class PlayerData
     {
 //        if (this.getPlayer().hasPermission("bolster.premium")) return Instant.now().plus(Duration.ofDays(365));
 
+        if (premiumExpiryTime.isBefore(Instant.now()))
+        {
+            return Instant.now();
+        }
+
         return premiumExpiryTime;
     }
 

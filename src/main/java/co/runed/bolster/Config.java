@@ -1,5 +1,6 @@
 package co.runed.bolster;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -21,6 +22,16 @@ public class Config
     public String gameMode;
 
     public boolean debugMode = false;
+
+    public String gameName;
+    public String shortGameName;
+    public String longGameName;
+    public String websiteUrl;
+    public String storeUrl;
+
+    public String premiumMembershipName;
+
+    public int premiumSlots = 10;
 
     public Config() throws IOException, InvalidConfigurationException
     {
@@ -47,6 +58,15 @@ public class Config
         this.gameMode = this.config.getString("gamemode", "bolster");
 
         this.debugMode = this.config.getBoolean("debug", this.debugMode);
+
+        this.gameName = ChatColor.translateAlternateColorCodes('&', this.config.getString("game-name", this.gameName));
+        this.shortGameName = ChatColor.translateAlternateColorCodes('&', this.config.getString("short-game-name", this.shortGameName));
+        this.longGameName = ChatColor.translateAlternateColorCodes('&', this.config.getString("long-game-name", this.longGameName));
+        this.websiteUrl = ChatColor.translateAlternateColorCodes('&', this.config.getString("website-url", this.websiteUrl));
+        this.storeUrl = ChatColor.translateAlternateColorCodes('&', this.config.getString("store-url", this.storeUrl));
+
+        this.premiumMembershipName = ChatColor.translateAlternateColorCodes('&', this.config.getString("premium-member-name", this.premiumMembershipName));
+        this.premiumSlots = this.config.getInt("premium-slots", this.premiumSlots);
     }
 
     public Configuration getRawConfig()

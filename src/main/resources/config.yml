@@ -4,4 +4,19 @@ database:
   username: admin
   password: password
   database: bolster
+
+# Active gamemode
 gamemode: bolster
+
+# Common text
+game-name: Bolster
+short-game-name: Bolster
+long-game-name: Bolster
+website-url: runed.co
+store-url: runed.co
+
+# Premium
+premium-member-name: Super Jimmy
+
+# Available slots for premium members
+premium-slots: 10

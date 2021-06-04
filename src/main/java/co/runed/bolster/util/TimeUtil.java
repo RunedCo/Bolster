@@ -1,7 +1,11 @@
 package co.runed.bolster.util;
 
+import org.apache.commons.lang.time.DurationFormatUtils;
+
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Date;
 
 public class TimeUtil
 {
@@ -27,6 +31,18 @@ public class TimeUtil
         }
 
         return seconds < 0 ? "-" + positive : positive;
+    }
+
+    public static String formatInstantAsDate(Instant instant)
+    {
+        Date expiryDate = Date.from(instant);
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d yyyy hh:mm a");
+        return formatter.format(expiryDate);
+    }
+
+    public static String formatInstantAsPrettyTimeLeft(Instant instant)
+    {
+        return DurationFormatUtils.formatDurationWords(Duration.between(Instant.now(), instant).toMillis(), true, true);
     }
 
     public static long toTicks(Duration duration)

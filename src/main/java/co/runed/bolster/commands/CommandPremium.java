@@ -3,6 +3,7 @@ package co.runed.bolster.commands;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.PlayerManager;
+import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.registries.Registries;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.IntegerArgument;
@@ -124,11 +125,8 @@ public class CommandPremium extends CommandBase
                                 return;
                             }
 
-                            String formattedHours = DurationFormatUtils.formatDurationWords(Duration.between(Instant.now(), expiryTime).toMillis(), true, true);
-
-                            Date expiryDate = Date.from(expiryTime);
-                            SimpleDateFormat formatter = new SimpleDateFormat("MMM d yyyy hh:mm a");
-                            String formattedDate = formatter.format(expiryDate);
+                            String formattedDate = TimeUtil.formatInstantAsDate(expiryTime);
+                            String formattedHours = TimeUtil.formatInstantAsPrettyTimeLeft(expiryTime);
 
                             sender.sendMessage(player.getName() + "'s premium time will expire in " + ChatColor.YELLOW + formattedHours + ChatColor.WHITE + " (" + ChatColor.GREEN + formattedDate + ChatColor.WHITE + ")");
                         })
