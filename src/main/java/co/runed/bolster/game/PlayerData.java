@@ -7,6 +7,8 @@ import co.runed.bolster.fx.particles.ParticleSet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +21,8 @@ public class PlayerData
     UUID uuid;
 
     public String activeParticleSet;
+
+    Instant premiumExpiryTime = Instant.now();
 
     HashMap<String, Integer> currencies = new HashMap<>();
     HashMap<String, Integer> itemLevels = new HashMap<>();
@@ -153,5 +157,29 @@ public class PlayerData
     public boolean isShopItemUnlocked(String shopId, String itemId)
     {
         return this.getUnlockedShopItems(shopId).contains(itemId);
+    }
+
+    public boolean isPremium()
+    {
+        if (this.getPlayer().hasPermission("bolster.premium")) return true;
+
+        return getPremiumExpiryTime().isAfter(Instant.now());
+    }
+
+    public Instant getPremiumExpiryTime()
+    {
+//        if (this.getPlayer().hasPermission("bolster.premium")) return Instant.now().plus(Duration.ofDays(365));
+
+        return premiumExpiryTime;
+    }
+
+    public void addPremiumExpiryTime(Duration duration)
+    {
+        this.premiumExpiryTime = this.premiumExpiryTime.plus(duration);
+    }
+
+    public void setPremiumExpiryTime(Instant instant)
+    {
+        this.premiumExpiryTime = instant;
     }
 }
