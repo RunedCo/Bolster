@@ -26,6 +26,7 @@ public class Config
     public String gameName;
     public String shortGameName;
     public String longGameName;
+    public String ipAddress;
     public String websiteUrl;
     public String storeUrl;
 
@@ -62,6 +63,7 @@ public class Config
         this.gameName = ChatColor.translateAlternateColorCodes('&', this.config.getString("game-name", this.gameName));
         this.shortGameName = ChatColor.translateAlternateColorCodes('&', this.config.getString("short-game-name", this.shortGameName));
         this.longGameName = ChatColor.translateAlternateColorCodes('&', this.config.getString("long-game-name", this.longGameName));
+        this.ipAddress = ChatColor.translateAlternateColorCodes('&', this.config.getString("ip-address", this.ipAddress));
         this.websiteUrl = ChatColor.translateAlternateColorCodes('&', this.config.getString("website-url", this.websiteUrl));
         this.storeUrl = ChatColor.translateAlternateColorCodes('&', this.config.getString("store-url", this.storeUrl));
 
