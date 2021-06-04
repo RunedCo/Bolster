@@ -186,6 +186,11 @@ public class PlayerData
         }
 
         this.premiumExpiryTime = this.premiumExpiryTime.plus(duration);
+
+        if (this.premiumExpiryTime.isBefore(ZonedDateTime.now(Clock.systemUTC())))
+        {
+            this.premiumExpiryTime = null;
+        }
     }
 
     public void setPremiumExpiryTime(ZonedDateTime date)
