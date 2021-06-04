@@ -4,7 +4,6 @@ import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.TimeUtil;
 import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.EntitySelectorArgument;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
@@ -59,7 +58,7 @@ public class CommandPremium extends CommandBase
                 .withPermission("bolster.commands.premium")
                 .withSubcommand(new CommandAPICommand("add")
                         .withArguments(
-                                new EntitySelectorArgument("player", EntitySelectorArgument.EntitySelector.ONE_PLAYER),
+                                new PlayerArgument("player"),
                                 new IntegerArgument("time", -999999999, 999999999),
                                 new StringArgument("unit").overrideSuggestions(this::getSuggestions)
                         )
@@ -74,7 +73,7 @@ public class CommandPremium extends CommandBase
                         })
                 ).withSubcommand(new CommandAPICommand("remove")
                         .withArguments(
-                                new EntitySelectorArgument("player", EntitySelectorArgument.EntitySelector.ONE_PLAYER),
+                                new PlayerArgument("player"),
                                 new IntegerArgument("time"),
                                 new StringArgument("unit").overrideSuggestions(this::getSuggestions)
                         )
@@ -89,7 +88,7 @@ public class CommandPremium extends CommandBase
                         })
                 ).withSubcommand(new CommandAPICommand("set")
                         .withArguments(
-                                new EntitySelectorArgument("player", EntitySelectorArgument.EntitySelector.ONE_PLAYER),
+                                new PlayerArgument("player"),
                                 new IntegerArgument("time"),
                                 new StringArgument("unit").overrideSuggestions(this::getSuggestions)
                         )
@@ -105,7 +104,7 @@ public class CommandPremium extends CommandBase
                 )
                 .withSubcommand(new CommandAPICommand("get")
                         .withArguments(
-                                new EntitySelectorArgument("player", EntitySelectorArgument.EntitySelector.ONE_PLAYER)
+                                new PlayerArgument("player")
                         )
                         .executes((sender, args) -> {
                             Player player = (Player) args[0];
