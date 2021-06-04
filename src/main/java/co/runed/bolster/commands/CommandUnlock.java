@@ -25,16 +25,23 @@ public class CommandUnlock extends CommandBase
         return Registries.SHOPS.getEntries().values().stream().map(Registry.Entry::getId).toArray(String[]::new);
     }
 
-    private String[] getItemSuggestions(CommandSender sender)
+    private String[] getItemSuggestions(CommandSender sender, Object[] args)
     {
-        List<String> allItems = new ArrayList<>();
-
-        for (Shop shop : Registries.SHOPS.getEntries().values().stream().map(Registry.Entry::create).toArray(Shop[]::new))
+        if (args == null)
         {
-            allItems.addAll(shop.getItems().keySet());
+            List<String> allItems = new ArrayList<>();
+
+            for (Shop shop : Registries.SHOPS.getEntries().values().stream().map(Registry.Entry::create).toArray(Shop[]::new))
+            {
+                allItems.addAll(shop.getItems().keySet());
+            }
+
+            return allItems.toArray(new String[0]);
         }
 
-        return allItems.toArray(new String[0]);
+        Shop shop = Registries.SHOPS.get((String) args[1]);
+
+        return shop.getItems().keySet().toArray(new String[0]);
     }
 
     @Override

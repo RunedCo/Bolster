@@ -35,8 +35,8 @@
         </repository>
 
         <repository>
-            <id>commandapi</id>
-            <url>https://raw.githubusercontent.com/JorelAli/CommandAPI/mvn-repo/</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
 
         <repository>
@@ -93,9 +93,16 @@
         </dependency>
 
         <dependency>
-            <groupId>dev.jorel</groupId>
+            <groupId>dev.jorel.CommandAPI</groupId>
             <artifactId>commandapi-core</artifactId>
-            <version>5.8</version>
+            <version>5.12</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.jorel.CommandAPI</groupId>
+            <artifactId>commandapi-annotations</artifactId>
+            <version>5.12</version>
             <scope>provided</scope>
         </dependency>
 
@@ -147,10 +154,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>dev.jorel.CommandAPI</groupId>
+                            <artifactId>commandapi-annotations</artifactId>
+                            <version>5.12</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>

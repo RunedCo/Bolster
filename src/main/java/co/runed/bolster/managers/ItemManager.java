@@ -220,6 +220,8 @@ public class ItemManager extends Manager
                 this.clearItem(entity, item);
             }
 
+            inventory.removeItem(stack);
+
             return false;
         }
 
