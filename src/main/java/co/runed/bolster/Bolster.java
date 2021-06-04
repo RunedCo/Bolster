@@ -260,6 +260,8 @@ public class Bolster extends JavaPlugin implements Listener
         {
             bolster.getLogger().info("Unloading GameMode '" + bolster.activeGameMode.getId() + "'");
 
+            bolster.activeGameMode.stop();
+
             HandlerList.unregisterAll(bolster.activeGameMode.getProperties());
             HandlerList.unregisterAll(bolster.activeGameMode);
         }

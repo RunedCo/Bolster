@@ -3,8 +3,10 @@ package co.runed.bolster.util;
 import org.apache.commons.lang.time.DurationFormatUtils;
 
 import java.text.SimpleDateFormat;
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class TimeUtil
@@ -33,16 +35,29 @@ public class TimeUtil
         return seconds < 0 ? "-" + positive : positive;
     }
 
-    public static String formatInstantAsDate(Instant instant)
+    public static String formatDate(ZonedDateTime date)
     {
-        Date expiryDate = Date.from(instant);
         SimpleDateFormat formatter = new SimpleDateFormat("MMM d yyyy hh:mm a");
-        return formatter.format(expiryDate);
+        return formatter.format(date);
     }
 
-    public static String formatInstantAsPrettyTimeLeft(Instant instant)
+    private static String formatMsPretty(long ms)
     {
-        return DurationFormatUtils.formatDurationWords(Duration.between(Instant.now(), instant).toMillis(), true, true);
+        return DurationFormatUtils.formatDurationWords(ms, true, true);
+    }
+
+    public static String formatDateRemainingPretty(ZonedDateTime date)
+    {
+        return formatMsPretty(Duration.between(Instant.now(), date).toMillis());
+    }
+
+    public static String formatDatePrettyRounded(ZonedDateTime date)
+    {
+        long ms = Duration.between(ZonedDateTime.now(Clock.systemUTC()), date).toMillis();
+        // floor divide by duration of hour in ms to not show hours, mins, or seconds
+        ms = Math.max(1, Math.floorDiv(ms, 3600000L)) * 3600000L;
+
+        return formatMsPretty(ms);
     }
 
     public static long toTicks(Duration duration)

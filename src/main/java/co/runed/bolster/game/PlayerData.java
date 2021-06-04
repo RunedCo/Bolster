@@ -7,12 +7,12 @@ import co.runed.bolster.fx.particles.ParticleSet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAmount;
+import java.util.*;
 
 public class PlayerData
 {
@@ -22,7 +22,7 @@ public class PlayerData
 
     public String activeParticleSet;
 
-    Instant premiumExpiryTime = Instant.now();
+    ZonedDateTime premiumExpiryTime = null;
 
     HashMap<String, Integer> currencies = new HashMap<>();
     HashMap<String, Integer> itemLevels = new HashMap<>();
@@ -163,28 +163,33 @@ public class PlayerData
     {
         if (this.getPlayer().hasPermission("bolster.premium")) return true;
 
-        return getPremiumExpiryTime().isAfter(Instant.now());
+        return getPremiumExpiryTime().isAfter(ZonedDateTime.now(Clock.systemUTC()));
     }
 
-    public Instant getPremiumExpiryTime()
+    public ZonedDateTime getPremiumExpiryTime()
     {
 //        if (this.getPlayer().hasPermission("bolster.premium")) return Instant.now().plus(Duration.ofDays(365));
 
-        if (premiumExpiryTime.isBefore(Instant.now()))
+        if (premiumExpiryTime == null || premiumExpiryTime.isBefore(ZonedDateTime.now(Clock.systemUTC())))
         {
-            return Instant.now();
+            return ZonedDateTime.now(Clock.systemUTC());
         }
 
         return premiumExpiryTime;
     }
 
-    public void addPremiumExpiryTime(Duration duration)
+    public void addPremiumExpiryTime(TemporalAmount duration)
     {
+        if (this.premiumExpiryTime == null)
+        {
+            this.premiumExpiryTime = ZonedDateTime.now(Clock.systemUTC());
+        }
+
         this.premiumExpiryTime = this.premiumExpiryTime.plus(duration);
     }
 
-    public void setPremiumExpiryTime(Instant instant)
+    public void setPremiumExpiryTime(ZonedDateTime date)
     {
-        this.premiumExpiryTime = instant;
+        this.premiumExpiryTime = date;
     }
 }

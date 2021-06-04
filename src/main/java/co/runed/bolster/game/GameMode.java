@@ -17,12 +17,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.time.Instant;
+import java.time.Clock;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -43,12 +43,15 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     boolean paused = false;
     boolean requiresResourcePack = false;
 
+    BukkitTask tabMenuTask = null;
+
     public GameMode(String id, Plugin plugin)
     {
         super(plugin);
 
         this.id = id;
         this.properties = new GameProperties();
+
     }
 
     public abstract String getName();
@@ -79,6 +82,13 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
 
         this.hasStarted = true;
         this.mainState.start();
+
+        this.tabMenuTask = Bukkit.getScheduler().runTaskTimer(plugin, this::buildAllTabMenu, 0L, 20L);
+    }
+
+    public void stop()
+    {
+        if (this.tabMenuTask != null) this.tabMenuTask.cancel();
     }
 
     public boolean isPaused()
@@ -156,6 +166,40 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         this.globalStatistics.set(statistic, value + increment);
     }
 
+    public void buildAllTabMenu()
+    {
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+            this.buildTabMenu(player);
+        }
+    }
+
+    public void buildTabMenu(Player player)
+    {
+        Config bolsterConfig = Bolster.getBolsterConfig();
+
+        player.setPlayerListHeader(ChatColor.YELLOW + "  Welcome to " + bolsterConfig.longGameName + "  \n");
+
+        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+        if (playerData.isPremium())
+        {
+            ZonedDateTime expiryTime = playerData.getPremiumExpiryTime();
+            String footer = ChatColor.AQUA + "  Thank you for supporting the server!  ";
+
+            if (expiryTime.isAfter(ZonedDateTime.now(Clock.systemUTC())))
+            {
+                footer += "\n\nYour " + bolsterConfig.premiumMembershipName + " expires in\n";
+                footer += TimeUtil.formatDatePrettyRounded(expiryTime);
+            }
+
+            player.setPlayerListFooter("\n" + footer);
+        }
+        else
+        {
+            player.setPlayerListFooter("\n" + ChatColor.AQUA + "Support the server at " + ChatColor.GOLD + ChatColor.BOLD + bolsterConfig.storeUrl + "!");
+        }
+    }
+
     @Override
     public String getId()
     {
@@ -180,34 +224,6 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         if (event.getStatus() == PlayerResourcePackStatusEvent.Status.DECLINED || event.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD)
         {
             event.getPlayer().kickPlayer("You need to enable resource packs.");
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerJoin(PlayerJoinEvent event)
-    {
-        Config bolsterConfig = Bolster.getBolsterConfig();
-        Player player = event.getPlayer();
-
-        player.setPlayerListHeader(ChatColor.YELLOW + "  Welcome to " + bolsterConfig.longGameName + "  \n");
-
-        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
-        if (playerData.isPremium())
-        {
-            Instant expiryTime = playerData.getPremiumExpiryTime();
-            String footer = ChatColor.AQUA + "  Thank you for supporting the server!  ";
-
-            if (expiryTime.isAfter(Instant.now()))
-            {
-                footer += "\n\nYour " + bolsterConfig.premiumMembershipName + " expires in\n";
-                footer += TimeUtil.formatInstantAsPrettyTimeLeft(expiryTime);
-            }
-
-            player.setPlayerListFooter("\n" + footer);
-        }
-        else
-        {
-            player.setPlayerListFooter("\n" + ChatColor.AQUA + "Support the server at " + ChatColor.GOLD + ChatColor.BOLD + bolsterConfig.storeUrl + "!");
         }
     }
 }
