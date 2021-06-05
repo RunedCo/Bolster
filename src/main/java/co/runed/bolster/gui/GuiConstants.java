@@ -24,6 +24,8 @@ public class GuiConstants
 
     public static final String RIGHT_CLICK_TO = ChatColor.GREEN + "" + Glyphs.ARROW + " Right-click to ";
 
+    public static final String CANNOT_AFFORD_TO = ChatColor.RED + "You cannot afford ";
+
     public static final String LOCKED = ChatColor.RED + "" + ChatColor.BOLD + "LOCKED";
     public static final String UNLOCKED = ChatColor.GREEN + "" + ChatColor.BOLD + "UNLOCKED";
     public static final String SELECTED = ChatColor.GREEN + "" + ChatColor.BOLD + "SELECTED";

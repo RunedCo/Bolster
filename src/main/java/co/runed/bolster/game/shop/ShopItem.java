@@ -142,7 +142,7 @@ public class ShopItem implements IRegisterable
         }
         else
         {
-            tooltip.add(ChatColor.RED + "You cannot afford this!");
+            tooltip.add(GuiConstants.CANNOT_AFFORD_TO + "this!");
         }
 
         return tooltip;

@@ -1,5 +1,6 @@
 package co.runed.bolster.gui;
 
+import co.runed.bolster.game.cost.Cost;
 import co.runed.bolster.items.LevelableItem;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.fx.Glyphs;
@@ -20,9 +21,7 @@ import org.ipvp.canvas.slot.SlotSettings;
 import org.ipvp.canvas.template.StaticItemTemplate;
 import org.ipvp.canvas.type.ChestMenu;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GuiMilestones extends Gui
@@ -30,7 +29,7 @@ public class GuiMilestones extends Gui
     PlayerData playerData;
     Player player;
     LevelableItem item;
-    List<CostData> costs = new ArrayList<>();
+    Map<Currency, Integer> costs = new HashMap<>();
 
     public GuiMilestones(Gui prevGui, LevelableItem item)
     {
@@ -101,7 +100,8 @@ public class GuiMilestones extends Gui
 
     public void drawBase(Menu menu)
     {
-        this.costs.clear();
+        List<String> stringCosts = this.item.getUnmergedLevels().get(this.item.getLevel() + 1).getStringList("cost");
+        this.costs = Currency.fromList(stringCosts);
 
         Mask milestoneMask = BinaryMask.builder(menu.getDimensions())
                 .pattern("111111111")
@@ -136,29 +136,20 @@ public class GuiMilestones extends Gui
             builder = builder.addLore("")
                     .addLore(ChatColor.WHITE + "Cost to Level Up:");
 
-            for (String cost : this.item.getUnmergedLevels().get(this.item.getLevel() + 1).getStringList("cost"))
+            for (Map.Entry<Currency, Integer> cost : this.costs.entrySet())
             {
-                String[] splitCost = cost.split(" ");
-                int costNumber = Integer.parseInt(splitCost[0]);
-                String costId = splitCost[1];
-                Currency currency = Registries.CURRENCIES.get(costId);
-
-                CostData data = new CostData(currency, costNumber);
-
-                builder = builder.addBullet((data.canAfford(this.player) ? ChatColor.GREEN : ChatColor.RED) + (costNumber + " " + currency.getPluralisedName()));
-
-                this.costs.add(data);
+                builder = builder.addBullet((canAfford(this.player, cost.getKey(), cost.getValue()) ? ChatColor.GREEN : ChatColor.RED) + (cost.getValue() + " " + cost.getKey().getPluralisedName()));
             }
 
             builder = builder.addLore("");
 
             if (!this.canAfford())
             {
-                builder = builder.addLore(ChatColor.RED + "" + ChatColor.BOLD + Glyphs.CROSS + "Cannot afford to level up!");
+                builder = builder.addLore(GuiConstants.CANNOT_AFFORD_TO + "to level up!");
             }
             else
             {
-                builder = builder.addLore(ChatColor.GREEN + "" + ChatColor.BOLD + Glyphs.ARROW + "Click to level up!");
+                builder = builder.addLore(GuiConstants.CLICK_TO + "level up!");
             }
         }
 
@@ -189,23 +180,11 @@ public class GuiMilestones extends Gui
 
     private boolean canAfford()
     {
-        return this.costs.stream().allMatch((cost) -> cost.canAfford(this.player));
+        return this.costs.entrySet().stream().allMatch((cost) -> canAfford(this.player, cost.getKey(), cost.getValue()));
     }
 
-    private class CostData
+    public boolean canAfford(Player player, Currency currency, int amount)
     {
-        Currency currency;
-        int amount;
-
-        private CostData(Currency currency, int amount)
-        {
-            this.currency = currency;
-            this.amount = amount;
-        }
-
-        public boolean canAfford(Player player)
-        {
-            return PlayerManager.getInstance().getPlayerData(player).getCurrency(this.currency) >= this.amount;
-        }
+        return PlayerManager.getInstance().getPlayerData(player).getCurrency(currency) >= amount;
     }
 }
