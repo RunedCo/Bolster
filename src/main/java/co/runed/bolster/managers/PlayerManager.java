@@ -1,16 +1,22 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.events.EntitySetCooldownEvent;
+import co.runed.bolster.events.LoadPlayerDataEvent;
+import co.runed.bolster.events.SavePlayerDataEvent;
+import co.runed.bolster.game.GameMode;
+import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
-import co.runed.bolster.util.json.JsonExclude;
+import co.runed.bolster.util.json.GsonUtil;
+import co.runed.bolster.util.registries.Registries;
 import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
 import org.bson.Document;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,69 +25,46 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerManager extends Manager
 {
     private static PlayerManager _instance;
-    HashMap<UUID, PlayerData> playerData = new HashMap<>();
-    private Class<? extends PlayerData> dataClass = PlayerData.class;
+    private Map<UUID, PlayerData> playerData = new HashMap<>();
     private final Gson gson;
+    private Map<String, Class<? extends GameModeData>> gameModeDataTypes = new HashMap<>();
 
     public PlayerManager(Plugin plugin)
     {
         super(plugin);
 
-        ExclusionStrategy excludeStrategy = new ExclusionStrategy()
-        {
-            @Override
-            public boolean shouldSkipClass(Class<?> clazz)
-            {
-                return false;
-            }
-
-            @Override
-            public boolean shouldSkipField(FieldAttributes field)
-            {
-                return field.getAnnotation(JsonExclude.class) != null;
-            }
-        };
-
-        this.gson = new GsonBuilder()
-                .setExclusionStrategies(excludeStrategy)
-                .registerTypeAdapter(ZonedDateTime.class, new TypeAdapter<ZonedDateTime>()
-                {
-                    @Override
-                    public void write(JsonWriter out, ZonedDateTime value) throws IOException
-                    {
-                        out.value(value.toString());
-                    }
-
-                    @Override
-                    public ZonedDateTime read(JsonReader in) throws IOException
-                    {
-                        return ZonedDateTime.parse(in.nextString());
-                    }
-                })
-                .enableComplexMapKeySerialization()
-                .create();
+        this.gson = GsonUtil.create();
 
         _instance = this;
     }
 
-    public void setDataClass(Class<? extends PlayerData> dataClass)
+    public void addGameModeDataClass(Class<? extends GameMode> gameMode, Class<? extends GameModeData> dataClass)
     {
-        this.dataClass = dataClass;
+        this.addGameModeDataClass(Registries.GAME_MODES.getId(gameMode), dataClass);
+    }
+
+    public void addGameModeDataClass(String id, Class<? extends GameModeData> dataClass)
+    {
+        this.gameModeDataTypes.put(id, dataClass);
+    }
+
+    public Class<? extends GameModeData> getGameModeDataClass(String id)
+    {
+        if (!this.gameModeDataTypes.containsKey(id))
+            return GameModeData.class;
+
+        return this.gameModeDataTypes.get(id);
     }
 
     public PlayerData deserialize(String json)
     {
-        return this.gson.fromJson(json, dataClass);
+        return this.gson.fromJson(json, PlayerData.class);
     }
 
     public PlayerData createNew()
@@ -90,7 +73,7 @@ public class PlayerManager extends Manager
 
         try
         {
-            Constructor<? extends PlayerData> constructor = this.dataClass.getConstructor();
+            Constructor<? extends PlayerData> constructor = PlayerData.class.getConstructor();
             data = constructor.newInstance();
         }
         catch (Exception e)
@@ -123,7 +106,7 @@ public class PlayerManager extends Manager
         return this.load(player.getUniqueId());
     }
 
-    public PlayerData load(UUID uuid)
+    private PlayerData load(UUID uuid)
     {
         MongoClient mongoClient = Bolster.getMongoClient();
         MongoDatabase db = mongoClient.getDatabase(Bolster.getBolsterConfig().databaseName);
@@ -141,7 +124,10 @@ public class PlayerManager extends Manager
 
         data.setUuid(uuid);
 
-        data.onLoad();
+        /* Call Load Event */
+        LoadPlayerDataEvent event = new LoadPlayerDataEvent(data.getPlayer(), data);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        data = event.getPlayerData();
 
         this.playerData.put(uuid, data);
 
@@ -157,16 +143,23 @@ public class PlayerManager extends Manager
     }
 
     // TODO move to mongodb update vs just straight upsert (maybe via api)
-    public void save(PlayerData data)
+    private void save(PlayerData data)
     {
-        data.onSave();
+        PlayerData playerData = data;
+
+        /* Call Save Event */
+        SavePlayerDataEvent event = new SavePlayerDataEvent(playerData.getPlayer(), playerData);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        playerData = event.getPlayerData();
+
+        playerData.saveGameModeData();
 
         MongoClient mongoClient = Bolster.getMongoClient();
         MongoDatabase db = mongoClient.getDatabase(Bolster.getBolsterConfig().databaseName);
         MongoCollection<Document> collection = db.getCollection("players");
-        Document query = new Document("uuid", data.getUuid().toString());
+        Document query = new Document("uuid", playerData.getUuid().toString());
 
-        Document document = Document.parse(gson.toJson(data));
+        Document document = Document.parse(gson.toJson(playerData));
         ReplaceOptions options = new ReplaceOptions();
         options.upsert(true);
         collection.replaceOne(query, document, options);
@@ -199,12 +192,30 @@ public class PlayerManager extends Manager
         Player player = event.getPlayer();
 
         this.save(player);
+
+        this.playerData.remove(player.getUniqueId());
     }
 
     @EventHandler
     private void onWorldSave(WorldSaveEvent event)
     {
         this.saveAllPlayers();
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onSetCooldown(EntitySetCooldownEvent event)
+    {
+        LivingEntity entity = event.getEntity();
+        if (!event.isGlobal()) return;
+        if (!(entity instanceof Player)) return;
+
+        PlayerData playerData = this.getPlayerData(entity.getUniqueId());
+        List<CooldownManager.CooldownData> cooldowns = new ArrayList<>(playerData.getGlobalCooldowns());
+        cooldowns.removeIf(cd -> cd.isDone() || (cd.cooldownId.equals(event.getCooldownId()) && cd.slot == event.getSlot()));
+
+        cooldowns.add(event.getCooldownData());
+
+        playerData.setGlobalCooldowns(cooldowns);
     }
 
     public static PlayerManager getInstance()

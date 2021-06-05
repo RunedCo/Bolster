@@ -142,6 +142,11 @@ public class Registry<T extends IRegisterable>
     {
         if (this.classKeys.containsKey(entryClass)) return this.classKeys.get(entryClass);
 
+        for (Map.Entry<T, String> entry : this.objKeys.entrySet())
+        {
+            if (entry.getKey().getClass() == entryClass) return entry.getValue();
+        }
+
         return null;
     }
 
@@ -230,7 +235,8 @@ public class Registry<T extends IRegisterable>
 
             T value = this.create();
 
-            if (value != null) this.categories = value instanceof ICategorised ? ((ICategorised)value).getCategories() : new ArrayList<>();
+            if (value != null)
+                this.categories = value instanceof ICategorised ? ((ICategorised) value).getCategories() : new ArrayList<>();
         }
 
         public T create()
