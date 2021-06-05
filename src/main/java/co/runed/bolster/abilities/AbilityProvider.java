@@ -184,6 +184,11 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         ability.setTrigger(trigger);
         if (this.getEntity() != null) ability.setCaster(this.getEntity());
 
+        if (ability.getId() == null)
+        {
+            Bolster.getInstance().getLogger().severe("Ability " + ability.getName() + "(" + ability.getClass().toString() + ") from " + this.getId() + " is missing an ID...");
+        }
+
         // TODO potentially only create the AbilityData at a later point?
         AbilityProvider.AbilityData data = new AbilityProvider.AbilityData(trigger, ability);
         this.abilities.add(data);

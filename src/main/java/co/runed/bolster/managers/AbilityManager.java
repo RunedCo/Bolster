@@ -5,6 +5,7 @@ import co.runed.bolster.abilities.*;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.abilities.listeners.*;
+import co.runed.bolster.events.EntitySetCooldownEvent;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -452,6 +453,28 @@ public class AbilityManager extends Manager
                 System.out.println("Cancelled " + ability.getId() + " for " + ability.getCaster().getName() + " reason: cast");
 
                 ability2.cancel();
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onSetCooldown(EntitySetCooldownEvent event)
+    {
+        LivingEntity entity = event.getEntity();
+        for (Ability ability : this.getAbilities(entity))
+        {
+            if (!ability.getCooldownId().equals(event.getCooldownId())) continue;
+
+            ability.onToggleCooldown();
+
+            for (int i = 0; i < ability.getCharges(); i++)
+            {
+                if (i == event.getSlot() || CooldownManager.getInstance().getRemainingTime(entity, ability, i) > 0)
+                {
+                    continue;
+                }
+
+                CooldownManager.getInstance().setCooldown(entity, ability, i, 0.5, false, false);
             }
         }
     }

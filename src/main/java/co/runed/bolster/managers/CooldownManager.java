@@ -1,15 +1,25 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.events.CleanupEntityDataEvent;
+import co.runed.bolster.events.EntitySetCooldownEvent;
+import co.runed.bolster.events.LoadPlayerDataEvent;
+import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.game.Traits;
 import co.runed.bolster.util.cooldown.ICooldownSource;
+import co.runed.bolster.util.json.JsonExclude;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.Plugin;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CooldownManager extends Manager
@@ -25,11 +35,6 @@ public class CooldownManager extends Manager
         _instance = this;
     }
 
-    public void setCooldown(LivingEntity entity, ICooldownSource source, int slot, double cooldown)
-    {
-        this.setCooldown(entity, source, slot, cooldown, true);
-    }
-
     /**
      * Sets the cooldown for a specific cooldown source for an entity
      *
@@ -37,20 +42,30 @@ public class CooldownManager extends Manager
      * @param source   the source
      * @param cooldown the cooldown in seconds
      */
-    public void setCooldown(LivingEntity entity, ICooldownSource source, int slot, double cooldown, boolean trigger)
+    public void setCooldown(LivingEntity entity, ICooldownSource source, int slot, double cooldown, boolean trigger, boolean isGlobal)
+    {
+        this.setCooldown(entity, source.getCooldownId(), slot, cooldown, trigger, isGlobal);
+    }
+
+    public void setCooldown(LivingEntity entity, String cooldownId, int slot, double cooldown, boolean trigger, boolean isGlobal)
     {
         cooldown = Math.max(cooldown, 0);
 
         cooldown = cooldown * Math.max(0, 1 - BolsterEntity.from(entity).getTrait(Traits.COOLDOWN_REDUCTION_PERCENT));
 
-        this.cooldowns.removeIf(cd -> cd.source.getCooldownId().equals(source.getCooldownId()) && cd.caster.equals(entity) && cd.slot == slot);
+        this.cooldowns.removeIf(cd -> cd.cooldownId.equals(cooldownId) && cd.casterUUID.equals(entity.getUniqueId()) && cd.slot == slot);
 
-        if (this.getRemainingTime(entity, source, slot) <= 0)
+        Instant castTime = Instant.now();
+
+        if (this.getRemainingTime(entity, cooldownId, slot) <= 0)
         {
-            this.cooldowns.add(new CooldownData(entity, source, slot, Instant.now(), (long) (cooldown * 1000)));
+            this.cooldowns.add(new CooldownData(entity, cooldownId, slot, castTime, (long) (cooldown * 1000), isGlobal));
         }
 
-        if (trigger) source.onToggleCooldown();
+        if (trigger)
+        {
+            Bukkit.getServer().getPluginManager().callEvent(new EntitySetCooldownEvent(entity, castTime, cooldownId, slot, cooldown, isGlobal));
+        }
     }
 
     /**
@@ -60,11 +75,11 @@ public class CooldownManager extends Manager
      */
     public void clearAllFrom(LivingEntity entity)
     {
-        List<CooldownData> cds = this.cooldowns.stream().filter(cd -> cd.caster.equals(entity)).collect(Collectors.toList());
+        List<CooldownData> cds = this.cooldowns.stream().filter(cd -> cd.casterUUID.equals(entity.getUniqueId())).collect(Collectors.toList());
 
         for (CooldownData data : cds)
         {
-            this.clearCooldown(entity, data.source, data.slot);
+            this.clearCooldown(entity, data.cooldownId, data.slot);
         }
     }
 
@@ -73,19 +88,19 @@ public class CooldownManager extends Manager
      *
      * @param entity the entity
      */
-    public void clearOneChargeFrom(LivingEntity entity)
+    public void clearOneChargeFromAll(LivingEntity entity)
     {
         List<String> cleared = new ArrayList<>();
         // todo sort by lowest
-        List<CooldownData> cds = this.cooldowns.stream().filter(cd -> cd.caster.equals(entity)).collect(Collectors.toList());
+        List<CooldownData> cds = this.cooldowns.stream().filter(cd -> cd.casterUUID.equals(entity.getUniqueId())).collect(Collectors.toList());
 
         for (CooldownData data : cds)
         {
-            if (cleared.contains(data.source.getCooldownId())) continue;
+            if (cleared.contains(data.cooldownId)) continue;
 
-            this.clearCooldown(entity, data.source, data.slot);
+            this.clearCooldown(entity, data.cooldownId, data.slot);
 
-            cleared.add(data.source.getCooldownId());
+            cleared.add(data.cooldownId);
         }
     }
 
@@ -97,7 +112,12 @@ public class CooldownManager extends Manager
      */
     public void clearCooldown(LivingEntity entity, ICooldownSource source, int slot)
     {
-        this.setCooldown(entity, source, slot, 0);
+        clearCooldown(entity, source.getCooldownId(), slot);
+    }
+
+    public void clearCooldown(LivingEntity entity, String cooldownId, int slot)
+    {
+        this.setCooldown(entity, cooldownId, slot, 0, true, false);
     }
 
     /**
@@ -108,11 +128,16 @@ public class CooldownManager extends Manager
      */
     public void clearCooldown(LivingEntity entity, ICooldownSource source)
     {
-        List<CooldownData> cds = this.cooldowns.stream().filter(cd -> cd.caster.equals(entity) && cd.source == source).collect(Collectors.toList());
+        this.clearCooldown(entity, source.getCooldownId());
+    }
+
+    public void clearCooldown(LivingEntity entity, String cooldownId)
+    {
+        List<CooldownData> cds = this.cooldowns.stream().filter(cd -> cd.casterUUID.equals(entity.getUniqueId()) && cd.cooldownId == cooldownId).collect(Collectors.toList());
 
         for (CooldownData data : cds)
         {
-            this.clearCooldown(entity, data.source, data.slot);
+            this.clearCooldown(entity, cooldownId, data.slot);
         }
     }
 
@@ -125,9 +150,14 @@ public class CooldownManager extends Manager
      */
     public double getRemainingTime(LivingEntity entity, ICooldownSource source, int slot)
     {
+        return getRemainingTime(entity, source.getCooldownId(), slot);
+    }
+
+    public double getRemainingTime(LivingEntity entity, String cooldownId, int slot)
+    {
         for (CooldownData cd : this.cooldowns)
         {
-            if (cd.caster.equals(entity) && cd.source.getCooldownId().equals(source.getCooldownId()) && cd.slot == slot)
+            if (cd.casterUUID.equals(entity.getUniqueId()) && cd.cooldownId.equals(cooldownId) && cd.slot == slot)
             {
                 return cd.getRemainingTime() / 1000d;
             }
@@ -136,21 +166,58 @@ public class CooldownManager extends Manager
         return -1;
     }
 
-    private static class CooldownData
+    public List<CooldownData> getCooldownData(LivingEntity entity)
     {
-        private final LivingEntity caster;
-        private final ICooldownSource source;
-        private final Instant castTime;
-        private final long cooldown;
-        private int slot = 0;
+        return this.cooldowns.stream().filter(cd -> cd.casterUUID.equals(entity.getUniqueId())).collect(Collectors.toList());
+    }
 
-        private CooldownData(LivingEntity entity, ICooldownSource source, int slot, Instant castTime, long cooldownMs)
+    public void cleanupAll(boolean force)
+    {
+        this.cooldowns.removeIf(cd -> cd.isGlobal || (cd.isDone() || force));
+    }
+
+    public void cleanup(LivingEntity entity, boolean force)
+    {
+        this.cooldowns.removeIf(cd -> cd.casterUUID.equals(entity.getUniqueId()) && (cd.isGlobal || (cd.isDone() || force)));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onLoadPlayer(LoadPlayerDataEvent event)
+    {
+        PlayerData playerData = event.getPlayerData();
+
+        for (CooldownData data : playerData.getGlobalCooldowns())
         {
-            this.caster = entity;
-            this.source = source;
+            data.casterUUID = playerData.getUuid();
+            this.cooldowns.add(data);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onCleanupEntity(CleanupEntityDataEvent event)
+    {
+        this.cleanup(event.getEntity(), event.isForced());
+    }
+
+    public static class CooldownData
+    {
+        @JsonExclude
+        private UUID casterUUID;
+
+        final String cooldownId;
+        final Instant castTime;
+        final long cooldown;
+        final boolean isGlobal;
+        int slot;
+
+        public CooldownData(LivingEntity entity, String cooldownId, int slot, Instant castTime, long cooldownMs, boolean isGlobal)
+        {
+            this.casterUUID = entity.getUniqueId();
+            this.cooldownId = cooldownId;
             this.castTime = castTime;
             this.cooldown = cooldownMs;
             this.slot = slot;
+            this.isGlobal = isGlobal;
         }
 
         /**
@@ -164,6 +231,11 @@ public class CooldownManager extends Manager
             Duration remaining = Duration.ofMillis(this.cooldown).minus(sinceStart);
 
             return remaining.toMillis();
+        }
+
+        public boolean isDone()
+        {
+            return this.getRemainingTime() <= 0;
         }
     }
 

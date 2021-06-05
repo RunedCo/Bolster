@@ -1,6 +1,7 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.base.DynamicParameterAbility;
 import co.runed.bolster.abilities.base.FunctionAbility;
 import co.runed.bolster.conditions.*;
@@ -36,7 +37,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     private static final long CAST_BAR_UPDATE_TICKS = 5L;
 
     private final String parentId = UUID.randomUUID().toString();
-    private String id = UUID.randomUUID().toString();
+    private String id = null;
     private String name = null;
     private String description = null;
     private double cooldown = 0;
@@ -55,7 +56,10 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     private int priority = 0;
     private boolean inProgress = false;
     private boolean skipIfCancelled = false;
+
     private boolean resetCooldownOnDeath = false;
+    private boolean globalCooldown = false;
+    private String cooldownId = null;
 
     private int charges = 1;
     private boolean cancelledByMovement = false;
@@ -452,7 +456,14 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     @Override
     public String getCooldownId()
     {
-        return this.getId();
+        return this.cooldownId == null ? this.getId() : cooldownId;
+    }
+
+    public Ability setCooldownId(String cooldownId)
+    {
+        this.cooldownId = cooldownId;
+
+        return this;
     }
 
     @Override
@@ -478,7 +489,7 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     @Override
     public void setRemainingCooldown(double cooldown)
     {
-        CooldownManager.getInstance().setCooldown(this.getCaster(), this, this.getLowestCooldownCharge(), cooldown);
+        CooldownManager.getInstance().setCooldown(this.getCaster(), this, this.getLowestCooldownCharge(), cooldown, true, this.isGlobalCooldown());
     }
 
     @Override
@@ -491,6 +502,18 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
     public boolean isOnCooldown()
     {
         return this.getRemainingCooldown() > 0;
+    }
+
+    public Ability setGlobalCooldown(boolean globalCooldown)
+    {
+        this.globalCooldown = globalCooldown;
+
+        return this;
+    }
+
+    public boolean isGlobalCooldown()
+    {
+        return globalCooldown;
     }
 
     @Override
