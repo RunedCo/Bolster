@@ -1,6 +1,5 @@
 package co.runed.bolster.conditions;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
@@ -8,7 +7,6 @@ import co.runed.bolster.wip.InventoryTracker;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
 public class IsInventoryOpenCondition extends Condition

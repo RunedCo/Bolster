@@ -1,13 +1,10 @@
 package co.runed.bolster.game.currency;
 
 import co.runed.bolster.util.ICategorised;
-import co.runed.bolster.util.IConfigurable;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;

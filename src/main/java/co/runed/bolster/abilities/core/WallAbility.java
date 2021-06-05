@@ -1,7 +1,6 @@
 package co.runed.bolster.abilities.core;
 
 import co.runed.bolster.abilities.TargetedAbility;
-import co.runed.bolster.conditions.CanPlaceBlockCondition;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.collection.RandomCollection;
 import co.runed.bolster.util.properties.Properties;

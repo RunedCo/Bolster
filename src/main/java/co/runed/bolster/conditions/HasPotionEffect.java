@@ -1,9 +1,7 @@
 package co.runed.bolster.conditions;
 
 import co.runed.bolster.BolsterEntity;
-import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.ChatColor;
 import org.bukkit.potion.PotionEffectType;

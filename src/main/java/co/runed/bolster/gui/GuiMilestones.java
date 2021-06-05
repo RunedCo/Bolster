@@ -1,13 +1,10 @@
 package co.runed.bolster.gui;
 
-import co.runed.bolster.game.cost.Cost;
+import co.runed.bolster.game.PlayerData;
+import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.items.LevelableItem;
 import co.runed.bolster.managers.PlayerManager;
-import co.runed.bolster.fx.Glyphs;
 import co.runed.bolster.util.ItemBuilder;
-import co.runed.bolster.game.PlayerData;
-import co.runed.bolster.util.registries.Registries;
-import co.runed.bolster.game.currency.Currency;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -21,7 +18,10 @@ import org.ipvp.canvas.slot.SlotSettings;
 import org.ipvp.canvas.template.StaticItemTemplate;
 import org.ipvp.canvas.type.ChestMenu;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GuiMilestones extends Gui

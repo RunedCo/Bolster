@@ -6,8 +6,6 @@ import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 
-import java.util.function.Supplier;
-
 public class RemoveStatusEffectAbility extends TargetedAbility<BolsterEntity>
 {
     Class<? extends StatusEffect> statusEffect;

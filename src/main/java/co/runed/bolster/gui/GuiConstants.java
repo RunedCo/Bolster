@@ -2,7 +2,6 @@ package co.runed.bolster.gui;
 
 import co.runed.bolster.fx.Glyphs;
 import co.runed.bolster.util.ItemBuilder;
-import org.apache.commons.compress.archivers.sevenz.CLI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

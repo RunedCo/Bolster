@@ -2,9 +2,9 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.*;
+import co.runed.bolster.abilities.listeners.*;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
-import co.runed.bolster.abilities.listeners.*;
 import co.runed.bolster.events.EntitySetCooldownEvent;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;

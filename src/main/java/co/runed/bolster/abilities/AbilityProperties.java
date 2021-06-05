@@ -6,7 +6,6 @@ import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.properties.FunctionProperty;
 import co.runed.bolster.util.properties.Property;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

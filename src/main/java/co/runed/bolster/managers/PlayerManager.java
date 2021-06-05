@@ -9,7 +9,7 @@ import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.util.json.GsonUtil;
 import co.runed.bolster.util.registries.Registries;
-import com.google.gson.*;
+import com.google.gson.Gson;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;

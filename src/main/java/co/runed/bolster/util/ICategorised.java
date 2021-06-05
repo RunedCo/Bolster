@@ -1,8 +1,5 @@
 package co.runed.bolster.util;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-
 import java.util.ArrayList;
 import java.util.Collection;
 

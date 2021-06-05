@@ -1,9 +1,6 @@
 package co.runed.bolster.v1_16_R3;
 
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.ChatMessageType;
 import net.minecraft.server.v1_16_R3.*;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -74,22 +71,26 @@ public class CraftUtil
             }
         }
     }
-    
-    public static void sendFakeSlotUpdate(Player player, int slot, ItemStack item) {
+
+    public static void sendFakeSlotUpdate(Player player, int slot, ItemStack item)
+    {
         net.minecraft.server.v1_16_R3.ItemStack nmsItem;
-        if (item != null) {
+        if (item != null)
+        {
             nmsItem = CraftItemStack.asNMSCopy(item);
-        } else {
+        }
+        else
+        {
             nmsItem = null;
         }
-        PacketPlayOutSetSlot packet = new PacketPlayOutSetSlot(0, (short)slot+36, nmsItem);
-        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+        PacketPlayOutSetSlot packet = new PacketPlayOutSetSlot(0, (short) slot + 36, nmsItem);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
     /**
      * Drop an item from a player in a realistic manner
      *
-     * @param player the player
+     * @param player    the player
      * @param itemStack the item stack
      */
     public static void dropItem(Player player, ItemStack itemStack)

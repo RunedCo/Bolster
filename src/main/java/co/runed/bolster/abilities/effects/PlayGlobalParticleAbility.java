@@ -1,11 +1,11 @@
 package co.runed.bolster.abilities.effects;
 
 import co.runed.bolster.abilities.TargetedAbility;
-import co.runed.bolster.managers.PlayerManager;
+import co.runed.bolster.fx.particles.ParticleType;
 import co.runed.bolster.game.PlayerData;
+import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
-import co.runed.bolster.fx.particles.ParticleType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 

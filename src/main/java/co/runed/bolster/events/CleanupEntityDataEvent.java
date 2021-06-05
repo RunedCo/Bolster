@@ -1,8 +1,6 @@
 package co.runed.bolster.events;
 
-import co.runed.bolster.game.PlayerData;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

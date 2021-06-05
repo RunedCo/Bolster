@@ -1,11 +1,6 @@
 package co.runed.bolster.events;
 
-import co.runed.bolster.abilities.AbilityProvider;
-import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.game.PlayerData;
-import co.runed.bolster.util.properties.Properties;
-import com.comphenix.protocol.PacketType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

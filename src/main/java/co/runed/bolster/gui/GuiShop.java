@@ -1,12 +1,8 @@
 package co.runed.bolster.gui;
 
-import co.runed.bolster.fx.Glyphs;
 import co.runed.bolster.game.shop.Shop;
 import co.runed.bolster.game.shop.ShopItem;
 import co.runed.bolster.util.ItemBuilder;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.ipvp.canvas.Menu;

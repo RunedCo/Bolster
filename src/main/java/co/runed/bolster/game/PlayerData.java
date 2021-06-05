@@ -1,5 +1,6 @@
 package co.runed.bolster.game;
 
+import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.PlayerManager;
@@ -7,13 +8,10 @@ import co.runed.bolster.util.json.GsonUtil;
 import co.runed.bolster.util.json.JsonExclude;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
-import co.runed.bolster.fx.particles.ParticleSet;
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAmount;

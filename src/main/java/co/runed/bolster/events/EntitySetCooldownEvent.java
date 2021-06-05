@@ -1,9 +1,7 @@
 package co.runed.bolster.events;
 
 import co.runed.bolster.managers.CooldownManager;
-import co.runed.bolster.util.cooldown.ICooldownSource;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

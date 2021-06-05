@@ -1,6 +1,5 @@
 package co.runed.bolster.commands;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.gui.GuiShop;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;

@@ -6,9 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class AbilityTrigger
 {
     // LEFT CLICK VARIANTS

@@ -4,7 +4,6 @@ import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.game.Team;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
-import org.bukkit.ChatColor;
 
 public class IsOnTeamCondition extends TargetedCondition<BolsterEntity>
 {

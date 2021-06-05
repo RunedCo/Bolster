@@ -10,7 +10,6 @@ import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.json.JsonExclude;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.Plugin;

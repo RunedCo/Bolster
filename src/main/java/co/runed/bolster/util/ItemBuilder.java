@@ -1,6 +1,5 @@
 package co.runed.bolster.util;
 
-import co.runed.bolster.items.Item;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;

@@ -2,7 +2,6 @@ package co.runed.bolster.events;
 
 import co.runed.bolster.abilities.Ability;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;

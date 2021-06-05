@@ -5,9 +5,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 public class RootStatusEffect extends StatusEffect
 {
     public static float DEFAULT_WALK_SPEED = 0.2f;

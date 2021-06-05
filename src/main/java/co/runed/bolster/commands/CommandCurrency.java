@@ -1,7 +1,7 @@
 package co.runed.bolster.commands;
 
-import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.game.currency.Currency;
+import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import dev.jorel.commandapi.CommandAPICommand;

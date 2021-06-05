@@ -1,7 +1,6 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.base.DynamicParameterAbility;
 import co.runed.bolster.abilities.base.FunctionAbility;
 import co.runed.bolster.conditions.*;
@@ -28,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 

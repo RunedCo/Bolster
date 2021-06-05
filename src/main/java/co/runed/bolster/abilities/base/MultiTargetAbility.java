@@ -4,15 +4,11 @@ import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.conditions.Condition;
-import co.runed.bolster.conditions.ConditionPriority;
-import co.runed.bolster.conditions.HasManaCondition;
-import co.runed.bolster.conditions.IsOffCooldownCondition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.entity.Entity;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 

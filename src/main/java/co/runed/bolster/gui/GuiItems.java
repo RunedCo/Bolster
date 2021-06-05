@@ -1,8 +1,6 @@
 package co.runed.bolster.gui;
 
 import co.runed.bolster.items.Item;
-import co.runed.bolster.items.LevelableItem;
-import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;

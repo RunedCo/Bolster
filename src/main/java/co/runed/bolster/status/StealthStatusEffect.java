@@ -1,7 +1,6 @@
 package co.runed.bolster.status;
 
 import co.runed.bolster.events.EntityTargetedEvent;
-import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.wip.CombatTracker;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

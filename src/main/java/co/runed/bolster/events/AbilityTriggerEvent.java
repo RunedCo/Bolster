@@ -1,6 +1,5 @@
 package co.runed.bolster.events;
 
-import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.util.properties.Properties;
