@@ -3,10 +3,9 @@ package co.runed.bolster.managers;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.util.json.JsonExclude;
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -20,7 +19,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.plugin.Plugin;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
@@ -53,6 +54,21 @@ public class PlayerManager extends Manager
 
         this.gson = new GsonBuilder()
                 .setExclusionStrategies(excludeStrategy)
+                .registerTypeAdapter(ZonedDateTime.class, new TypeAdapter<ZonedDateTime>()
+                {
+                    @Override
+                    public void write(JsonWriter out, ZonedDateTime value) throws IOException
+                    {
+                        out.value(value.toString());
+                    }
+
+                    @Override
+                    public ZonedDateTime read(JsonReader in) throws IOException
+                    {
+                        return ZonedDateTime.parse(in.nextString());
+                    }
+                })
+                .enableComplexMapKeySerialization()
                 .create();
 
         _instance = this;
