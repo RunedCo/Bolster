@@ -17,6 +17,7 @@ import java.util.*;
 public abstract class LevelableItem extends Item
 {
     int level = 0;
+    int tempLevel = -1;
     boolean mergeLevels = true;
 
     ConfigurationSection currentLevelConfig;
@@ -115,6 +116,13 @@ public abstract class LevelableItem extends Item
         super.create(config);
     }
 
+    public void clearTemporaryLevel()
+    {
+        this.tempLevel = -1;
+
+        this.setLevel(this.level);
+    }
+
     public void setLevel(int level)
     {
         this.setLevel(level, false);
@@ -127,6 +135,8 @@ public abstract class LevelableItem extends Item
         level = Math.max(0, Math.min(level, this.levels.size() - 1));
 
         this.level = level;
+
+        if (isTemporary) this.tempLevel = level;
 
         for (int milestoneLevel : this.milestones.keySet())
         {
@@ -219,8 +229,11 @@ public abstract class LevelableItem extends Item
         if (entity instanceof Player)
         {
             Player player = (Player) entity;
+            int level = PlayerManager.getInstance().getPlayerData(player).getItemLevel(this.getId());
 
-            this.setLevel(PlayerManager.getInstance().getPlayerData(player).getItemLevel(this.getId()));
+            if (tempLevel > -1) level = tempLevel;
+
+            this.setLevel(level, tempLevel > -1);
         }
 
         super.setEntity(entity, trigger);
