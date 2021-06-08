@@ -1,8 +1,11 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.Config;
 import co.runed.bolster.events.GameModePauseChangeEvent;
+import co.runed.bolster.events.LoadPlayerDataEvent;
+import co.runed.bolster.events.SavePlayerDataEvent;
 import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
 import co.runed.bolster.managers.Manager;
@@ -14,16 +17,20 @@ import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public abstract class GameMode extends Manager implements IRegisterable, IConfigurable
@@ -42,6 +49,7 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     boolean hasStarted = false;
     boolean paused = false;
     boolean requiresResourcePack = false;
+    boolean serializeInventories = false;
 
     BukkitTask tabMenuTask = null;
 
@@ -52,7 +60,7 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         this.id = id;
         this.properties = new GameProperties();
 
-        PlayerManager.getInstance().addGameModeDataClass(this.getId(), gameModeData);
+        if (gameModeData != null) PlayerManager.getInstance().addGameModeDataClass(this.getId(), gameModeData);
     }
 
     public abstract String getName();
@@ -103,6 +111,16 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
 
         GameModePauseChangeEvent event = new GameModePauseChangeEvent(paused);
         Bukkit.getServer().getPluginManager().callEvent(event);
+    }
+
+    public void setSerializeInventories(boolean serializeInventories)
+    {
+        this.serializeInventories = serializeInventories;
+    }
+
+    public boolean shouldSerializeInventories()
+    {
+        return serializeInventories;
     }
 
     public void setRequiresResourcePack(boolean requiresResourcePack)
@@ -225,6 +243,57 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         if (event.getStatus() == PlayerResourcePackStatusEvent.Status.DECLINED || event.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD)
         {
             event.getPlayer().kickPlayer("You need to enable resource packs.");
+        }
+    }
+
+    @EventHandler
+    public void onLoadPlayer(LoadPlayerDataEvent event)
+    {
+        if (!this.shouldSerializeInventories()) return;
+        if (event.getPlayer() == null) return;
+
+        PlayerData playerData = event.getPlayerData();
+        GameModeData gameModeData = playerData.getGameModeData(this.getId());
+        BolsterEntity entity = BolsterEntity.from(event.getPlayer());
+
+        for (Map.Entry<String, Inventory> entry : gameModeData.inventories.entrySet())
+        {
+            if (entity.hasInventory(entry.getKey()))
+            {
+                Inventory inventory = entity.getInventory(entry.getKey());
+                ItemStack[] contents = entry.getValue().getContents();
+
+                inventory.clear();
+
+                for (int i = 0; i < inventory.getContents().length; i++)
+                {
+                    ItemStack itemStack = contents[i];
+                    if (itemStack == null || itemStack.getType() == Material.AIR) continue;
+
+                    inventory.setItem(i, itemStack);
+                }
+
+                entity.setInventory(entry.getKey(), inventory);
+
+                continue;
+            }
+
+            entity.setInventory(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @EventHandler
+    public void onSavePlayer(SavePlayerDataEvent event)
+    {
+        if (!this.shouldSerializeInventories()) return;
+        if (event.getPlayer() == null) return;
+
+        PlayerData playerData = event.getPlayerData();
+        GameModeData gameModeData = playerData.getGameModeData(this.getId());
+
+        for (Map.Entry<String, Inventory> entry : BolsterEntity.from(event.getPlayer()).getInventoryMap().entrySet())
+        {
+            gameModeData.setInventory(entry.getKey(), entry.getValue());
         }
     }
 }

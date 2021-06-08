@@ -178,7 +178,7 @@ public class PlayerManager extends Manager
         return playerData.values();
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOW)
     private void onPlayerJoin(PlayerJoinEvent event)
     {
         Player player = event.getPlayer();

@@ -405,9 +405,19 @@ public class BolsterEntity extends TraitProvider
         return this.inventories.remove(id);
     }
 
+    public boolean hasInventory(String id)
+    {
+        return this.inventories.containsKey(id);
+    }
+
     public Collection<Inventory> getInventories()
     {
         return this.inventories.values();
+    }
+
+    public Map<String, Inventory> getInventoryMap()
+    {
+        return this.inventories;
     }
 
     public CompletableFuture<BolsterEntity> moveTo(Location position, Ease ease, Duration duration, double speed)

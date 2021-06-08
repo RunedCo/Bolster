@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.inventory.Inventory;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -34,7 +35,7 @@ public class GsonUtil
                     @Override
                     public void write(JsonWriter out, ZonedDateTime value) throws IOException
                     {
-                        out.value(value.toString());
+                        out.value(value == null ? null : value.toString());
                     }
 
                     @Override
@@ -44,6 +45,7 @@ public class GsonUtil
                     }
                 })
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ConfigurationSerializableAdapter())
+                .registerTypeHierarchyAdapter(Inventory.class, new InventorySerializableAdapter())
                 .enableComplexMapKeySerialization()
                 .create();
     }

@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class ConfigurationSerializableAdapter implements JsonSerializer<ConfigurationSerializable>, JsonDeserializer<ConfigurationSerializable>
 {
-
     final Type objectStringMapType = new TypeToken<Map<String, Object>>()
     {
     }.getType();
@@ -20,19 +19,22 @@ public class ConfigurationSerializableAdapter implements JsonSerializer<Configur
     public ConfigurationSerializable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
     {
         final Map<String, Object> map = new LinkedHashMap<>();
-
-        for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
+        
+        if (json.isJsonObject())
         {
-            final JsonElement value = entry.getValue();
-            final String name = entry.getKey();
+            for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
+            {
+                final JsonElement value = entry.getValue();
+                final String name = entry.getKey();
 
-            if (value.isJsonObject() && value.getAsJsonObject().has(ConfigurationSerialization.SERIALIZED_TYPE_KEY))
-            {
-                map.put(name, this.deserialize(value, value.getClass(), context));
-            }
-            else
-            {
-                map.put(name, context.deserialize(value, Object.class));
+                if (value.isJsonObject() && value.getAsJsonObject().has(ConfigurationSerialization.SERIALIZED_TYPE_KEY))
+                {
+                    map.put(name, this.deserialize(value, value.getClass(), context));
+                }
+                else
+                {
+                    map.put(name, context.deserialize(value, Object.class));
+                }
             }
         }
 

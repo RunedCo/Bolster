@@ -97,4 +97,9 @@ public class TimeUtil
     {
         return instant1.minusMillis(instant2.toEpochMilli());
     }
+
+    public static ZonedDateTime now()
+    {
+        return ZonedDateTime.now(Clock.systemUTC());
+    }
 }
