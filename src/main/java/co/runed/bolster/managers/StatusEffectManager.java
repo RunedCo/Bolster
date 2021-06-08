@@ -2,6 +2,7 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.events.CleanupEntityEvent;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.NetworkUtil;
 import co.runed.bolster.util.TimeUtil;
@@ -68,11 +69,16 @@ public class StatusEffectManager extends Manager
 
     public void clearStatusEffects(LivingEntity entity, boolean force)
     {
-        List<StatusEffect> effects = new ArrayList<>(this.getStatusEffects(entity));
+        this.clearStatusEffects(entity.getUniqueId(), force);
+    }
+
+    public void clearStatusEffects(UUID uuid, boolean force)
+    {
+        List<StatusEffect> effects = new ArrayList<>(this.getStatusEffects(uuid));
 
         for (StatusEffect effect : effects)
         {
-            this.clearStatusEffect(entity, effect.getClass(), force);
+            this.clearStatusEffect(uuid, effect.getClass(), force);
         }
     }
 
@@ -83,7 +89,12 @@ public class StatusEffectManager extends Manager
 
     public void clearStatusEffect(LivingEntity entity, Class<? extends StatusEffect> statusEffect, boolean force)
     {
-        List<StatusEffect> entityEffects = this.getStatusEffects(entity);
+        this.clearStatusEffect(entity.getUniqueId(), statusEffect, force);
+    }
+
+    public void clearStatusEffect(UUID uuid, Class<? extends StatusEffect> statusEffect, boolean force)
+    {
+        List<StatusEffect> entityEffects = this.getStatusEffects(uuid);
 
         StatusEffect effectToRemove = null;
         for (StatusEffect effect : entityEffects)
@@ -131,8 +142,11 @@ public class StatusEffectManager extends Manager
 
     public List<StatusEffect> getStatusEffects(LivingEntity entity)
     {
-        UUID uuid = entity.getUniqueId();
+        return this.getStatusEffects(entity.getUniqueId());
+    }
 
+    public List<StatusEffect> getStatusEffects(UUID uuid)
+    {
         if (!this.currentStatusEffects.containsKey(uuid))
         {
             this.currentStatusEffects.put(uuid, new ArrayList<>());
@@ -217,6 +231,15 @@ public class StatusEffectManager extends Manager
     private void onEntityDeath(EntityDeathEvent event)
     {
         this.clearStatusEffects(event.getEntity());
+    }
+
+    @EventHandler
+    private void onCleanupEntity(CleanupEntityEvent event)
+    {
+        if (event.isForced())
+        {
+            this.clearStatusEffects(event.getUniqueId(), true);
+        }
     }
 
     public static StatusEffectManager getInstance()

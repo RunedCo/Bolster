@@ -34,6 +34,9 @@ public class Config
 
     public int premiumSlots = 10;
 
+    public boolean cleanupPlayers = true;
+    public int cleanupFrequency = 12000;
+
     public Config() throws IOException, InvalidConfigurationException
     {
         Bolster bolster = Bolster.getInstance();

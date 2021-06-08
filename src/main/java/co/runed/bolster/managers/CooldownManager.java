@@ -1,7 +1,7 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.BolsterEntity;
-import co.runed.bolster.events.CleanupEntityDataEvent;
+import co.runed.bolster.events.CleanupEntityEvent;
 import co.runed.bolster.events.EntitySetCooldownEvent;
 import co.runed.bolster.events.LoadPlayerDataEvent;
 import co.runed.bolster.game.PlayerData;
@@ -177,7 +177,14 @@ public class CooldownManager extends Manager
 
     public void cleanup(LivingEntity entity, boolean force)
     {
-        this.cooldowns.removeIf(cd -> cd.casterUUID.equals(entity.getUniqueId()) && (cd.isGlobal || (cd.isDone() || force)));
+        this.cleanup(entity.getUniqueId(), force);
+    }
+
+    public void cleanup(UUID uuid, boolean force)
+    {
+        boolean isPlayerOnline = true;
+
+        this.cooldowns.removeIf(cd -> cd.casterUUID.equals(uuid) && ((cd.isGlobal && isPlayerOnline) || (cd.isDone() || force)));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -193,9 +200,9 @@ public class CooldownManager extends Manager
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onCleanupEntity(CleanupEntityDataEvent event)
+    private void onCleanupEntity(CleanupEntityEvent event)
     {
-        this.cleanup(event.getEntity(), event.isForced());
+        this.cleanup(event.getUniqueId(), event.isForced());
     }
 
     public static class CooldownData

@@ -1,6 +1,8 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.Config;
+import co.runed.bolster.events.CleanupEntityEvent;
 import co.runed.bolster.events.EntitySetCooldownEvent;
 import co.runed.bolster.events.LoadPlayerDataEvent;
 import co.runed.bolster.events.SavePlayerDataEvent;
@@ -40,6 +42,12 @@ public class PlayerManager extends Manager
         super(plugin);
 
         this.gson = GsonUtil.create();
+
+        Config config = Bolster.getBolsterConfig();
+        if (config.cleanupPlayers)
+        {
+            Bukkit.getScheduler().runTaskTimer(plugin, this::cleanupAllPlayers, 0L, config.cleanupFrequency);
+        }
 
         _instance = this;
     }
@@ -176,6 +184,15 @@ public class PlayerManager extends Manager
     public Collection<PlayerData> getAllPlayerData()
     {
         return playerData.values();
+    }
+
+    public void cleanupAllPlayers()
+    {
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+            CleanupEntityEvent cleanupEvent = new CleanupEntityEvent(player, false);
+            Bukkit.getServer().getPluginManager().callEvent(cleanupEvent);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOW)

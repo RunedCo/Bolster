@@ -1,5 +1,6 @@
 package co.runed.bolster.managers;
 
+import co.runed.bolster.events.CleanupEntityEvent;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -208,6 +209,15 @@ public class ManaManager extends Manager
         }
 
         this.updateManaDisplay(player);
+    }
+
+    @EventHandler
+    private void onCleanupEntity(CleanupEntityEvent event)
+    {
+        if (event.isForced())
+        {
+            this.manaData.remove(event.getEntity().getUniqueId());
+        }
     }
 
     private static class ManaData

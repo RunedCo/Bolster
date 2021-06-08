@@ -3,6 +3,7 @@ package co.runed.bolster.managers;
 import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.*;
 import co.runed.bolster.abilities.listeners.*;
+import co.runed.bolster.events.CleanupEntityEvent;
 import co.runed.bolster.events.EntityCastAbilityEvent;
 import co.runed.bolster.events.EntityPreCastAbilityEvent;
 import co.runed.bolster.events.EntitySetCooldownEvent;
@@ -155,8 +156,11 @@ public class AbilityManager extends Manager
 
     public List<AbilityProvider> getProviders(LivingEntity entity)
     {
-        UUID uuid = entity.getUniqueId();
+        return this.getProviders(entity.getUniqueId());
+    }
 
+    public List<AbilityProvider> getProviders(UUID uuid)
+    {
         List<AbilityProvider> providerList = new ArrayList<>();
 
         if (!this.providers.containsKey(uuid)) return providerList;
@@ -219,12 +223,17 @@ public class AbilityManager extends Manager
 
     public void destroy(LivingEntity entity)
     {
-        for (AbilityProvider provider : this.getProviders(entity))
+        this.destroy(entity.getUniqueId());
+    }
+
+    public void destroy(UUID uuid)
+    {
+        for (AbilityProvider provider : this.getProviders(uuid))
         {
             provider.destroy();
         }
 
-        this.providers.remove(entity.getUniqueId());
+        this.providers.remove(uuid);
     }
 
     public void destroy(LivingEntity entity, AbilityProviderType type)
@@ -476,6 +485,15 @@ public class AbilityManager extends Manager
 
                 CooldownManager.getInstance().setCooldown(entity, ability, i, 0.5, false, false);
             }
+        }
+    }
+
+    @EventHandler
+    private void onCleanupEntity(CleanupEntityEvent event)
+    {
+        if (event.isForced())
+        {
+            this.destroy(event.getUniqueId());
         }
     }
 

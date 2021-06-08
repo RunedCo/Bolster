@@ -1,8 +1,10 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.events.CleanupEntityEvent;
 import co.runed.bolster.game.Team;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -140,7 +142,14 @@ public class EntityManager extends Manager
 
         LivingEntity entity = (LivingEntity) event.getEntity();
 
-        this.remove(entity);
+        CleanupEntityEvent cleanupEvent = new CleanupEntityEvent(entity, true);
+        Bukkit.getServer().getPluginManager().callEvent(cleanupEvent);
+    }
+
+    @EventHandler
+    private void onCleanupEntity(CleanupEntityEvent event)
+    {
+        this.remove(event.getUniqueId());
     }
 
     public static EntityManager getInstance()

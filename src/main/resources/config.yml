@@ -1,3 +1,4 @@
+# Database
 database:
   url: localhost
   port: 27017
@@ -21,3 +22,7 @@ premium-member-name: Super Jimmy
 
 # Available slots for premium members
 premium-slots: 10
+
+# Cleanup
+cleanup-players: true
+cleanup-ticks: 12000
