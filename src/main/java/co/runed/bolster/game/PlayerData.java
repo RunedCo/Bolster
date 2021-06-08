@@ -4,6 +4,7 @@ import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.PlayerManager;
+import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.json.GsonUtil;
 import co.runed.bolster.util.json.JsonExclude;
 import co.runed.bolster.util.properties.Property;
@@ -164,16 +165,16 @@ public class PlayerData
     {
         if (this.getPlayer().hasPermission("bolster.premium")) return true;
 
-        return getPremiumExpiryTime().isAfter(ZonedDateTime.now(Clock.systemUTC()));
+        return getPremiumExpiryTime().isAfter(TimeUtil.now());
     }
 
     public ZonedDateTime getPremiumExpiryTime()
     {
 //        if (this.getPlayer().hasPermission("bolster.premium")) return Instant.now().plus(Duration.ofDays(365));
 
-        if (premiumExpiryTime == null || premiumExpiryTime.isBefore(ZonedDateTime.now(Clock.systemUTC())))
+        if (premiumExpiryTime == null || premiumExpiryTime.isBefore(TimeUtil.now()))
         {
-            return ZonedDateTime.now(Clock.systemUTC());
+            return TimeUtil.now();
         }
 
         return premiumExpiryTime;
@@ -183,14 +184,14 @@ public class PlayerData
     {
         if (this.premiumExpiryTime == null)
         {
-            this.premiumExpiryTime = ZonedDateTime.now(Clock.systemUTC());
+            this.premiumExpiryTime = TimeUtil.now();
         }
 
         this.premiumExpiryTime = this.premiumExpiryTime.plus(duration);
 
-        if (this.premiumExpiryTime.isBefore(ZonedDateTime.now(Clock.systemUTC())))
+        if (this.premiumExpiryTime.isBefore(TimeUtil.now()))
         {
-            this.premiumExpiryTime = ZonedDateTime.now(Clock.systemUTC());
+            this.premiumExpiryTime = TimeUtil.now();
         }
     }
 
