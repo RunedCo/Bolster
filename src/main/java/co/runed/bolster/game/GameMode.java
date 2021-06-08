@@ -63,7 +63,9 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         if (gameModeData != null) PlayerManager.getInstance().addGameModeDataClass(this.getId(), gameModeData);
     }
 
-    public abstract String getName();
+    public String getName() {
+        return Bolster.getBolsterConfig().gameName;
+    }
 
     public StateSeries getMainState()
     {
