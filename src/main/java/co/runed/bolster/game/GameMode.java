@@ -45,13 +45,14 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
 
     BukkitTask tabMenuTask = null;
 
-    public GameMode(String id, Plugin plugin)
+    public GameMode(String id, Class<? extends GameModeData> gameModeData, Plugin plugin)
     {
         super(plugin);
 
         this.id = id;
         this.properties = new GameProperties();
 
+        PlayerManager.getInstance().addGameModeDataClass(this.getId(), gameModeData);
     }
 
     public abstract String getName();
