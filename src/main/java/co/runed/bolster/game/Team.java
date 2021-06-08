@@ -31,8 +31,9 @@ public class Team implements Listener
     Map<UUID, Integer> kills = new HashMap<>();
     int totalKills = 0;
     boolean allowFriendlyFire;
+    boolean canSeeFriendlyInvisibles = false;
     boolean removePlayersOnDeath = true;
-    boolean createBukkitTeam;
+    boolean createBukkitTeam = false;
     List<Team> alliedTeams = new ArrayList<>();
 
     org.bukkit.scoreboard.Team scoreboardTeam = null;
@@ -218,6 +219,21 @@ public class Team implements Listener
     public boolean shouldRemovePlayersOnDeath()
     {
         return removePlayersOnDeath;
+    }
+
+    public boolean canSeeFriendlyInvisibles()
+    {
+        return canSeeFriendlyInvisibles;
+    }
+
+    public void setCanSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles)
+    {
+        this.canSeeFriendlyInvisibles = canSeeFriendlyInvisibles;
+
+        if (this.scoreboardTeam != null)
+        {
+            this.scoreboardTeam.setCanSeeFriendlyInvisibles(canSeeFriendlyInvisibles);
+        }
     }
 
     /**
