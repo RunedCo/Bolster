@@ -3,6 +3,7 @@ package co.runed.bolster.util.json;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -42,6 +43,7 @@ public class GsonUtil
                         return ZonedDateTime.parse(in.nextString());
                     }
                 })
+                .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ConfigurationSerializableAdapter())
                 .enableComplexMapKeySerialization()
                 .create();
     }
