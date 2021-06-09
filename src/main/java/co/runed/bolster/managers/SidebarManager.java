@@ -6,10 +6,11 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class SidebarManager extends Manager
 {
-    Map<Player, Sidebar> playerSidebars = new HashMap<>();
+    Map<UUID, Sidebar> playerSidebars = new HashMap<>();
 
     private static SidebarManager _instance;
 
@@ -28,9 +29,9 @@ public class SidebarManager extends Manager
      */
     public Sidebar getSidebar(Player player)
     {
-        if (!this.playerSidebars.containsKey(player)) return null;
+        if (!this.playerSidebars.containsKey(player.getUniqueId())) return null;
 
-        return this.playerSidebars.get(player);
+        return this.playerSidebars.get(player.getUniqueId());
     }
 
     /**
@@ -41,14 +42,14 @@ public class SidebarManager extends Manager
      */
     public void setSidebar(Player player, Sidebar sidebar)
     {
-        if (this.playerSidebars.containsKey(player))
+        if (this.playerSidebars.containsKey(player.getUniqueId()))
         {
-            this.playerSidebars.get(player).removePlayer(player);
+            this.playerSidebars.get(player.getUniqueId()).removePlayer(player);
         }
 
         sidebar.addPlayer(player);
 
-        this.playerSidebars.put(player, sidebar);
+        this.playerSidebars.put(player.getUniqueId(), sidebar);
     }
 
     /**
@@ -58,12 +59,12 @@ public class SidebarManager extends Manager
      */
     public void clearSidebar(Player player)
     {
-        if (this.playerSidebars.containsKey(player))
+        if (this.playerSidebars.containsKey(player.getUniqueId()))
         {
-            this.playerSidebars.get(player).removePlayer(player);
+            this.playerSidebars.get(player.getUniqueId()).removePlayer(player);
         }
 
-        this.playerSidebars.remove(player);
+        this.playerSidebars.remove(player.getUniqueId());
     }
 
     public static SidebarManager getInstance()

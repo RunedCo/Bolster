@@ -36,6 +36,7 @@ public class Config
 
     public boolean cleanupPlayers = true;
     public int cleanupFrequency = 12000;
+    public int forceCleanupTime = 72000;
 
     public Config() throws IOException, InvalidConfigurationException
     {

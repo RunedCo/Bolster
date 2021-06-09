@@ -1,5 +1,6 @@
 package co.runed.bolster.wip;
 
+import co.runed.bolster.events.CleanupEntityEvent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -56,6 +57,15 @@ public class BowTracker implements Listener
         UUID uuid = e.getPlayer().getUniqueId();
 
         drawing.remove(uuid);
+    }
+
+    @EventHandler
+    private void onCleanupEntity(CleanupEntityEvent event)
+    {
+        if (event.isForced())
+        {
+            this.drawing.remove(event.getUniqueId());
+        }
     }
 
     public boolean isDrawingBow(Player player)

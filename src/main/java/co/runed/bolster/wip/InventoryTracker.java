@@ -1,5 +1,6 @@
 package co.runed.bolster.wip;
 
+import co.runed.bolster.events.CleanupEntityEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -44,5 +45,14 @@ public class InventoryTracker implements Listener
     private void onOpenInventory(InventoryOpenEvent event)
     {
         openInventories.add(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    private void onCleanupEntity(CleanupEntityEvent event)
+    {
+        if (event.isForced())
+        {
+            openInventories.remove(event.getUniqueId());
+        }
     }
 }

@@ -1,5 +1,6 @@
 package co.runed.bolster.wip;
 
+import co.runed.bolster.events.CleanupEntityEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -89,6 +90,20 @@ public class CombatTracker implements Listener
         }
 
         targetMap.put(entity, target);
+    }
+
+    @EventHandler
+    private void onCleanupEntity(CleanupEntityEvent event)
+    {
+        if (event.isForced())
+        {
+            if (event.getEntity() instanceof Mob)
+            {
+                targetMap.remove(event.getEntity());
+            }
+
+            damageMap.remove(event.getUniqueId());
+        }
     }
 
 //    @EventHandler(priority = EventPriority.HIGH)

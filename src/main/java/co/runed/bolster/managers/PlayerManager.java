@@ -36,6 +36,7 @@ public class PlayerManager extends Manager
     private Map<UUID, PlayerData> playerData = new HashMap<>();
     private final Gson gson;
     private Map<String, Class<? extends GameModeData>> gameModeDataTypes = new HashMap<>();
+    private Map<UUID, Integer> timeSinceDisconnect = new HashMap<>();
 
     public PlayerManager(Plugin plugin)
     {
@@ -46,7 +47,7 @@ public class PlayerManager extends Manager
         Config config = Bolster.getBolsterConfig();
         if (config.cleanupPlayers)
         {
-            Bukkit.getScheduler().runTaskTimer(plugin, this::cleanupAllPlayers, 0L, config.cleanupFrequency);
+            Bukkit.getScheduler().runTaskTimer(plugin, this::cleanupPlayers, 0L, config.cleanupFrequency);
         }
 
         _instance = this;
@@ -186,12 +187,26 @@ public class PlayerManager extends Manager
         return playerData.values();
     }
 
-    public void cleanupAllPlayers()
+    public void cleanupPlayers()
     {
         for (Player player : Bukkit.getOnlinePlayers())
         {
-            CleanupEntityEvent cleanupEvent = new CleanupEntityEvent(player, false);
-            Bukkit.getServer().getPluginManager().callEvent(cleanupEvent);
+            Bukkit.getServer().getPluginManager().callEvent(new CleanupEntityEvent(player, false));
+        }
+
+        Config config = Bolster.getBolsterConfig();
+
+        for (Map.Entry<UUID, Integer> entry : new ArrayList<>(this.timeSinceDisconnect.entrySet()))
+        {
+            UUID uuid = entry.getKey();
+            int value = entry.getValue() + config.cleanupFrequency;
+
+            this.timeSinceDisconnect.put(uuid, value);
+
+            if (value >= config.forceCleanupTime)
+            {
+                Bukkit.getServer().getPluginManager().callEvent(new CleanupEntityEvent(uuid, false));
+            }
         }
     }
 
@@ -201,6 +216,8 @@ public class PlayerManager extends Manager
         Player player = event.getPlayer();
 
         this.load(player);
+
+        this.timeSinceDisconnect.remove(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -211,6 +228,8 @@ public class PlayerManager extends Manager
         this.save(player);
 
         this.playerData.remove(player.getUniqueId());
+
+        this.timeSinceDisconnect.put(player.getUniqueId(), 0);
     }
 
     @EventHandler
@@ -233,6 +252,15 @@ public class PlayerManager extends Manager
         cooldowns.add(event.getCooldownData());
 
         playerData.setGlobalCooldowns(cooldowns);
+    }
+
+    @EventHandler
+    private void onCleanupEntity(CleanupEntityEvent event)
+    {
+        if (event.isForced())
+        {
+            this.timeSinceDisconnect.remove(event.getUniqueId());
+        }
     }
 
     public static PlayerManager getInstance()
