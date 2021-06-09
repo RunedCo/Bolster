@@ -9,7 +9,6 @@ import co.runed.bolster.game.upgrade.Upgrade;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.managers.ClassManager;
 import co.runed.bolster.managers.StatusEffectManager;
-import co.runed.bolster.managers.UpgradeManager;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.properties.Properties;
@@ -192,26 +191,6 @@ public abstract class BolsterClass extends AbilityProvider
         return this.getTrait(Traits.ATTACK_DAMAGE);
     }
 
-    public void addUpgrade(Upgrade upgrade)
-    {
-        this.upgrades.add(upgrade);
-
-        if (this.getEntity() != null)
-        {
-            UpgradeManager.getInstance().addUpgrade(this.getEntity(), upgrade);
-        }
-    }
-
-    public void removeUpgrade(Upgrade upgrade)
-    {
-        this.upgrades.remove(upgrade);
-
-        if (this.getEntity() != null)
-        {
-            UpgradeManager.getInstance().removeUpgrade(this.getEntity(), upgrade);
-        }
-    }
-
     @Override
     public boolean rebuild()
     {
@@ -223,11 +202,6 @@ public abstract class BolsterClass extends AbilityProvider
         {
             PersistentDataContainer data = this.getEntity().getPersistentDataContainer();
             data.set(ClassManager.CLASS_KEY, PersistentDataType.STRING, this.getId());
-        }
-
-        for (Upgrade upgrade : this.upgrades)
-        {
-            UpgradeManager.getInstance().addUpgrade(this.getEntity(), upgrade);
         }
 
         return true;
@@ -247,11 +221,6 @@ public abstract class BolsterClass extends AbilityProvider
         if (!(this.getEntity() instanceof Player))
         {
             this.getEntity().getPersistentDataContainer().remove(ClassManager.CLASS_KEY);
-        }
-
-        for (Upgrade upgrade : this.upgrades)
-        {
-            UpgradeManager.getInstance().removeUpgrade(this.getEntity(), upgrade);
         }
 
         // REMOVE UPGRADES
