@@ -210,7 +210,7 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
 
         PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
 
-        Component footerComponent = Component.newline();
+        Component footerComponent = Component.empty().append(Component.newline());
 
         if (playerData.isPremium())
         {

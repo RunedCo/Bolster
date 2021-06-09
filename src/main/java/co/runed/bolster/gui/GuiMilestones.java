@@ -5,6 +5,9 @@ import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.items.LevelableItem;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.ItemBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -76,9 +79,9 @@ public class GuiMilestones extends Gui
             {
                 milestoneIcon = new ItemBuilder(GuiConstants.GUI_LOCK)
                         .setDisplayName(ChatColor.GOLD + milestone.getName())
-                        .setLore(milestone.getIcon().getItemMeta().getLore())
-                        .addLore("")
-                        .addLore(ChatColor.RED + "" + ChatColor.BOLD + "Unlocks at Level " + milestone.getLevel());
+                        .setLoreComponent(milestone.getIcon().getItemMeta().lore())
+                        .addLoreComponent(Component.newline())
+                        .addLoreComponent(Component.text("Unlocks at Level " + milestone.getLevel(), NamedTextColor.RED, TextDecoration.BOLD));
             }
 
             SlotSettings settings = SlotSettings.builder()

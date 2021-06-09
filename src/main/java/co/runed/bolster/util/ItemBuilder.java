@@ -1,5 +1,6 @@
 package co.runed.bolster.util;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class ItemBuilder
@@ -88,6 +90,71 @@ public class ItemBuilder
         return new ItemBuilder(this.itemStack);
     }
 
+    public ItemBuilder addLoreComponent(Component line)
+    {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        List<Component> lore = meta.lore();
+
+        if (lore == null)
+        {
+            lore = new ArrayList<>();
+        }
+
+//        List<String> formatted = StringUtil.formatLore(line);
+//
+//        lore.addAll(formatted);
+
+        lore.add(line);
+
+        meta.lore(lore);
+        this.itemStack.setItemMeta(meta);
+        return new ItemBuilder(this.itemStack);
+    }
+
+    public ItemBuilder addLoreComponent(Collection<Component> lore)
+    {
+        ItemBuilder builder = new ItemBuilder(this.itemStack);
+
+        for (Component line : lore)
+        {
+            builder = builder.addLoreComponent(line);
+        }
+
+        return builder;
+    }
+
+    public ItemBuilder addLoreComponent(List<String> lore)
+    {
+        ItemBuilder builder = new ItemBuilder(this.itemStack);
+
+        for (String line : lore)
+        {
+            builder = builder.addLoreComponent(Component.text(line));
+        }
+
+        return builder;
+    }
+
+    public ItemBuilder setLoreComponent(Collection<String> lore)
+    {
+        List<Component> components = lore.stream().map(Component::text).collect(Collectors.toList());
+
+        return this.setLoreComponent(components);
+    }
+
+    public ItemBuilder setLoreComponent(List<Component> lore)
+    {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        meta.lore(lore);
+        this.itemStack.setItemMeta(meta);
+        return new ItemBuilder(this.itemStack);
+    }
+
+    public ItemBuilder setLoreComponent(Component lore)
+    {
+        return this.setLoreComponent(Collections.singletonList(lore));
+    }
+
     public ItemBuilder addBullet(String line)
     {
         return this.addBullet(Collections.singletonList(line));
@@ -119,9 +186,7 @@ public class ItemBuilder
 
         lore.addAll(formatted);
 
-        meta.setLore(lore);
-        this.itemStack.setItemMeta(meta);
-        return new ItemBuilder(this.itemStack);
+        return this.addLoreComponent(lore);
     }
 
     public ItemBuilder addLore(Collection<String> lore)
@@ -138,10 +203,7 @@ public class ItemBuilder
 
     public ItemBuilder setLore(List<String> lore)
     {
-        ItemMeta meta = this.itemStack.getItemMeta();
-        meta.setLore(lore);
-        this.itemStack.setItemMeta(meta);
-        return new ItemBuilder(this.itemStack);
+        return this.setLoreComponent(lore);
     }
 
     public ItemBuilder setLore(String lore)
