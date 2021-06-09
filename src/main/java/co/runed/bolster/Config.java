@@ -1,17 +1,17 @@
 package co.runed.bolster;
 
-import net.md_5.bungee.api.ChatColor;
+import co.runed.bolster.util.BolsterConfiguration;
+import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 
 public class Config
 {
-    private final YamlConfiguration config;
+    private final BolsterConfiguration config;
 
     public String databaseUrl;
     public String databasePort;
@@ -25,7 +25,7 @@ public class Config
 
     public String gameName;
     public String shortGameName;
-    public String longGameName;
+    public Component longGameName;
     public String ipAddress;
     public String websiteUrl;
     public String storeUrl;
@@ -42,14 +42,12 @@ public class Config
         Bolster bolster = Bolster.getInstance();
 
         File configFile = new File(bolster.getDataFolder(), "config.yml");
-
         if (!configFile.exists())
         {
             bolster.saveDefaultConfig();
         }
 
-        this.config = new YamlConfiguration();
-
+        this.config = new BolsterConfiguration();
         this.config.load(configFile);
 
         ConfigurationSection database = this.config.getConfigurationSection("database");
@@ -63,14 +61,14 @@ public class Config
 
         this.debugMode = this.config.getBoolean("debug", this.debugMode);
 
-        this.gameName = ChatColor.translateAlternateColorCodes('&', this.config.getString("game-name", this.gameName));
-        this.shortGameName = ChatColor.translateAlternateColorCodes('&', this.config.getString("short-game-name", this.shortGameName));
-        this.longGameName = ChatColor.translateAlternateColorCodes('&', this.config.getString("long-game-name", this.longGameName));
-        this.ipAddress = ChatColor.translateAlternateColorCodes('&', this.config.getString("ip-address", this.ipAddress));
-        this.websiteUrl = ChatColor.translateAlternateColorCodes('&', this.config.getString("website-url", this.websiteUrl));
-        this.storeUrl = ChatColor.translateAlternateColorCodes('&', this.config.getString("store-url", this.storeUrl));
+        this.gameName = this.config.getColorString("game-name", this.gameName);
+        this.shortGameName = this.config.getColorString("short-game-name", this.shortGameName);
+        this.longGameName = this.config.getComponent("long-game-name", this.longGameName);
+        this.ipAddress = this.config.getColorString("ip-address", this.ipAddress);
+        this.websiteUrl = this.config.getColorString("website-url", this.websiteUrl);
+        this.storeUrl = this.config.getColorString("store-url", this.storeUrl);
 
-        this.premiumMembershipName = ChatColor.translateAlternateColorCodes('&', this.config.getString("premium-member-name", this.premiumMembershipName));
+        this.premiumMembershipName = this.config.getColorString("premium-member-name", this.premiumMembershipName);
         this.premiumSlots = this.config.getInt("premium-slots", this.premiumSlots);
     }
 

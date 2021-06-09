@@ -15,8 +15,9 @@ import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.IRegisterable;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -63,7 +64,8 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         if (gameModeData != null) PlayerManager.getInstance().addGameModeDataClass(this.getId(), gameModeData);
     }
 
-    public String getName() {
+    public String getName()
+    {
         return Bolster.getBolsterConfig().gameName;
     }
 
@@ -199,26 +201,39 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     {
         Config bolsterConfig = Bolster.getBolsterConfig();
 
-        player.setPlayerListHeader(ChatColor.YELLOW + "  Welcome to " + bolsterConfig.longGameName + "  \n");
+        Component headerComponent = Component.text("  Welcome to ", NamedTextColor.YELLOW)
+                .append(bolsterConfig.longGameName)
+                .append(Component.text("  "))
+                .append(Component.newline());
+
+        player.sendPlayerListHeader(headerComponent);
 
         PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+
+        Component footerComponent = Component.newline();
+
         if (playerData.isPremium())
         {
             ZonedDateTime expiryTime = playerData.getPremiumExpiryTime();
-            String footer = ChatColor.AQUA + "  Thank you for supporting the server!  ";
+            footerComponent = Component.text("  Thank you for supporting the server!  ", NamedTextColor.AQUA);
 
             if (expiryTime.isAfter(ZonedDateTime.now(Clock.systemUTC())))
             {
-                footer += "\n\nYour " + bolsterConfig.premiumMembershipName + " expires in\n";
-                footer += TimeUtil.formatDatePrettyRounded(expiryTime);
+                footerComponent = footerComponent.append(Component.newline())
+                        .append(Component.newline())
+                        .append(Component.text("Your " + bolsterConfig.premiumMembershipName + " expires in"))
+                        .append(Component.newline())
+                        .append(Component.text(TimeUtil.formatDatePrettyRounded(expiryTime)));
             }
-
-            player.setPlayerListFooter("\n" + footer);
         }
         else
         {
-            player.setPlayerListFooter("\n" + ChatColor.AQUA + "Support the server at " + ChatColor.GOLD + ChatColor.BOLD + bolsterConfig.storeUrl + "!");
+            footerComponent = footerComponent.append(Component.newline())
+                    .append(Component.text("Support the server at ", NamedTextColor.AQUA))
+                    .append(Component.text(bolsterConfig.storeUrl + "!", NamedTextColor.GOLD));
         }
+
+        player.sendPlayerListFooter(footerComponent);
     }
 
     @Override
