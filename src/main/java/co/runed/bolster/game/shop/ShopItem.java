@@ -93,24 +93,30 @@ public class ShopItem implements IRegisterable
             builder = builder.addLore(this.getDescription());
         }
 
-        builder = builder.addLore(this.getShopTooltip());
-
         return builder.build();
     }
 
-    public List<String> getShopTooltip()
+    public ItemStack getIcon(Player player)
+    {
+        return this.getIcon();
+    }
+
+    public List<String> getShopTooltip(Player player)
     {
         List<String> shopTooltip = new ArrayList<>();
 
-        shopTooltip.add("");
-        shopTooltip.add(ChatColor.GRAY + "Buy For:");
-
-        for (Map.Entry<Currency, Integer> entry : this.getBuyCosts().entrySet())
+        if (!isUnlockable() || !isUnlocked(player))
         {
-            Currency currency = entry.getKey();
-            String costName = currency.getName() + (currency.shouldPluralize() ? "s" : "");
+            shopTooltip.add("");
+            shopTooltip.add(ChatColor.GRAY + "Buy For:");
 
-            shopTooltip.addAll(StringUtil.formatBullet(ChatColor.GOLD + (entry.getValue() + " " + costName)));
+            for (Map.Entry<Currency, Integer> entry : this.getBuyCosts().entrySet())
+            {
+                Currency currency = entry.getKey();
+                String costName = currency.getName() + (currency.shouldPluralize() ? "s" : "");
+
+                shopTooltip.addAll(StringUtil.formatBullet(ChatColor.GOLD + (entry.getValue() + " " + costName)));
+            }
         }
 
         if (isSellable())

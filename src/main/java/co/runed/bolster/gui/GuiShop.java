@@ -62,7 +62,8 @@ public class GuiShop extends Gui
         {
             if (!item.isEnabled() || (item.getSellCosts().isEmpty() && item.getBuyCosts().isEmpty())) continue;
 
-            ItemBuilder itemBuilder = new ItemBuilder(item.getIcon())
+            ItemBuilder itemBuilder = new ItemBuilder(item.getIcon(player))
+                    .addLore(item.getShopTooltip(player))
                     .addLore("")
                     .addLore(item.getLeftClickTooltip(player))
                     .addLore(item.getRightClickTooltip(player));

@@ -20,7 +20,6 @@ public abstract class LevelableItem extends Item
     int tempLevel = -1;
     boolean mergeLevels = true;
 
-    ConfigurationSection currentLevelConfig;
     HashMap<Integer, ConfigurationSection> levels = new HashMap<>();
     HashMap<Integer, ConfigurationSection> unmergedLevels = new HashMap<>();
     HashMap<Integer, MilestoneData> milestones = new HashMap<>();

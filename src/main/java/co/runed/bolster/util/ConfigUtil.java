@@ -1,5 +1,8 @@
 package co.runed.bolster.util;
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -74,6 +77,9 @@ public class ConfigUtil
             if (value == null) continue;
 
             value = iterateVariables(value, sourceConfig);
+
+            value = LegacyComponentSerializer.legacyAmpersand().serialize(MiniMessage.get().parse(value));
+            value = ChatColor.translateAlternateColorCodes('&', value);
 
             outConfig.set(key, value);
         }

@@ -103,9 +103,6 @@ public class GuiMilestones extends Gui
 
     public void drawBase(Menu menu)
     {
-        List<String> stringCosts = this.item.getUnmergedLevels().get(this.item.getLevel() + 1).getStringList("cost");
-        this.costs = Currency.fromList(stringCosts);
-
         Mask milestoneMask = BinaryMask.builder(menu.getDimensions())
                 .pattern("111111111")
                 .pattern("111111111")
@@ -128,6 +125,12 @@ public class GuiMilestones extends Gui
 
         if (this.canUpgrade())
         {
+            List<String> stringCosts = this.item.getUnmergedLevels()
+                    .get(this.item.getLevel() + 1)
+                    .getStringList("cost");
+
+            this.costs = Currency.fromList(stringCosts);
+
             builder = builder.addLore("")
                     .addLore(ChatColor.WHITE + "Next Level:");
 

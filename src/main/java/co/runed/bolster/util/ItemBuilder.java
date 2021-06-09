@@ -174,19 +174,8 @@ public class ItemBuilder
 
     public ItemBuilder addLore(String line)
     {
-        ItemMeta meta = this.itemStack.getItemMeta();
-        List<String> lore = meta.getLore();
-
-        if (lore == null)
-        {
-            lore = new ArrayList<>();
-        }
-
         List<String> formatted = StringUtil.formatLore(line);
-
-        lore.addAll(formatted);
-
-        return this.addLoreComponent(lore);
+        return this.addLoreComponent(formatted);
     }
 
     public ItemBuilder addLore(Collection<String> lore)
