@@ -2,8 +2,8 @@ package co.runed.bolster.game.upgrade;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.util.IConfigurable;
 import co.runed.bolster.util.StringUtil;
+import co.runed.bolster.util.config.IConfigurable;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
 import org.bukkit.Material;

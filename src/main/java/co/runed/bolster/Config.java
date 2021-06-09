@@ -1,6 +1,6 @@
 package co.runed.bolster;
 
-import co.runed.bolster.util.BolsterConfiguration;
+import co.runed.bolster.util.config.BolsterConfiguration;
 import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;

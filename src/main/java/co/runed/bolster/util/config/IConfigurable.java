@@ -1,4 +1,4 @@
-package co.runed.bolster.util;
+package co.runed.bolster.util.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 

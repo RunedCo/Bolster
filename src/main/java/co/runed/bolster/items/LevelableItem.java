@@ -2,9 +2,9 @@ package co.runed.bolster.items;
 
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.Category;
-import co.runed.bolster.util.ConfigUtil;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
+import co.runed.bolster.util.config.ConfigUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;

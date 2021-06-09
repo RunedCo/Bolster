@@ -1,5 +1,6 @@
-package co.runed.bolster.util;
+package co.runed.bolster.util.config;
 
+import co.runed.bolster.util.StringUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ChatColor;

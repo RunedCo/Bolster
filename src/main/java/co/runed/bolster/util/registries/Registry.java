@@ -2,9 +2,9 @@ package co.runed.bolster.util.registries;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.util.Category;
-import co.runed.bolster.util.ConfigUtil;
 import co.runed.bolster.util.ICategorised;
-import co.runed.bolster.util.IConfigurable;
+import co.runed.bolster.util.config.ConfigUtil;
+import co.runed.bolster.util.config.IConfigurable;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;

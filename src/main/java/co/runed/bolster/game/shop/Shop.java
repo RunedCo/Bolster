@@ -1,7 +1,7 @@
 package co.runed.bolster.game.shop;
 
 import co.runed.bolster.game.currency.Currency;
-import co.runed.bolster.util.IConfigurable;
+import co.runed.bolster.util.config.IConfigurable;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

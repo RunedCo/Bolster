@@ -1,6 +1,6 @@
 package co.runed.bolster.items;
 
-import co.runed.bolster.util.IConfigurable;
+import co.runed.bolster.util.config.IConfigurable;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
 import org.bukkit.configuration.ConfigurationSection;
