@@ -37,6 +37,8 @@ public class Bolster extends JavaPlugin implements Listener
     // SINGLETON INSTANCE
     private static Bolster instance;
 
+    private Warps warps;
+
     private CommandManager commandManager;
     private CooldownManager cooldownManager;
     private ItemManager itemManager;
@@ -80,6 +82,8 @@ public class Bolster extends JavaPlugin implements Listener
             return;
         }
 
+        this.warps = new Warps(this);
+
         MongoCredential credential = MongoCredential.createCredential(this.config.databaseUsername, "admin", this.config.databasePassword.toCharArray());
         ConnectionString connectionString = new ConnectionString("mongodb://" + this.config.databaseUrl + ":" + this.config.databasePort);
         CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build());
@@ -119,14 +123,14 @@ public class Bolster extends JavaPlugin implements Listener
         this.commandManager.add(new CommandBecomeGUI());
         this.commandManager.add(new CommandMana());
         this.commandManager.add(new CommandSummonDummy());
-        this.commandManager.add(new CommandSetItemLevel());
-        this.commandManager.add(new CommandLevelItem());
-        this.commandManager.add(new CommandPause());
         this.commandManager.add(new CommandCurrency());
-        this.commandManager.add(new CommandLoadGameMode());
+        this.commandManager.add(new CommandGame());
         this.commandManager.add(new CommandShop());
         this.commandManager.add(new CommandUnlock());
         this.commandManager.add(new CommandPremium());
+
+        this.commandManager.add(new CommandWarp());
+        this.commandManager.add(new CommandWarpGUI());
 
         // REGISTER PLUGIN CHANNELS
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -248,7 +252,7 @@ public class Bolster extends JavaPlugin implements Listener
         }
         else
         {
-            bolster.getLogger().severe("Invalid GameMode '" + id + "'");
+            bolster.getLogger().severe("Invalid Game Mode '" + id + "'");
         }
     }
 
@@ -258,7 +262,7 @@ public class Bolster extends JavaPlugin implements Listener
 
         if (bolster.activeGameMode != null)
         {
-            bolster.getLogger().info("Unloading GameMode '" + bolster.activeGameMode.getId() + "'");
+            bolster.getLogger().info("Unloading Game Mode '" + bolster.activeGameMode.getId() + "'");
 
             bolster.activeGameMode.stop();
 
@@ -268,7 +272,7 @@ public class Bolster extends JavaPlugin implements Listener
 
         bolster.activeGameMode = gameMode;
 
-        bolster.getLogger().info("Loading GameMode '" + bolster.activeGameMode.getId() + "'");
+        bolster.getLogger().info("Loading Game Mode '" + bolster.activeGameMode.getId() + "'");
 
         Bukkit.getPluginManager().registerEvents(bolster.activeGameMode.getProperties(), bolster);
         Bukkit.getPluginManager().registerEvents(bolster.activeGameMode, bolster);

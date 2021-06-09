@@ -14,6 +14,7 @@ import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -69,7 +70,7 @@ public abstract class BolsterClass extends AbilityProvider
     {
         return new ItemBuilder(this.icon)
                 .setDisplayName(this.getName())
-                .setLore(this.getDescription())
+                .setLoreComponent(Component.text(this.getDescription()))
                 .build();
     }
 

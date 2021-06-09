@@ -348,6 +348,11 @@ public class BukkitUtil
         return new Location(Bukkit.getWorlds().get(0), x, y, z, yaw, pitch);
     }
 
+    public static String locationToString(Location location)
+    {
+        return String.join(",", Arrays.asList("" + location.getX(), "" + location.getY(), "" + location.getZ(), "" + location.getYaw(), "" + location.getPitch()));
+    }
+
     public static boolean addToInventory(Inventory inventory, ItemStack item, boolean stackExisting, boolean ignoreMaxStack)
     {
         int amt = item.getAmount();

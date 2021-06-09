@@ -149,6 +149,11 @@ public class EntityManager extends Manager
     @EventHandler
     private void onCleanupEntity(CleanupEntityEvent event)
     {
+        if (event.getEntity() != null && event.getEntity() instanceof Player && !event.isForced())
+        {
+            return;
+        }
+
         this.remove(event.getUniqueId());
     }
 

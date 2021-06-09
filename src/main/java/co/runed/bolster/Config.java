@@ -35,7 +35,7 @@ public class Config
     public int premiumSlots = 10;
 
     public boolean cleanupPlayers = true;
-    public int cleanupFrequency = 12000;
+    public int cleanupFrequency = 20;
 
     public Config() throws IOException, InvalidConfigurationException
     {
