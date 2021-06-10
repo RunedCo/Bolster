@@ -1,6 +1,6 @@
 package co.runed.bolster.status;
 
-import co.runed.bolster.events.EntityTargetedEvent;
+import co.runed.bolster.events.entity.EntityTargetedEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;

@@ -1,4 +1,4 @@
-package co.runed.bolster.events;
+package co.runed.bolster.events.entity;
 
 import co.runed.bolster.managers.CooldownManager;
 import org.bukkit.entity.LivingEntity;

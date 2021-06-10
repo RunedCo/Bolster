@@ -3,7 +3,7 @@ package co.runed.bolster.util;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.events.CustomCanDestroyBlockEvent;
 import co.runed.bolster.events.CustomCanPlaceBlockEvent;
-import co.runed.bolster.events.EntityTargetedEvent;
+import co.runed.bolster.events.entity.EntityTargetedEvent;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;

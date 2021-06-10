@@ -3,9 +3,9 @@ package co.runed.bolster.managers;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.Config;
 import co.runed.bolster.events.CleanupEntityEvent;
-import co.runed.bolster.events.EntitySetCooldownEvent;
 import co.runed.bolster.events.LoadPlayerDataEvent;
 import co.runed.bolster.events.SavePlayerDataEvent;
+import co.runed.bolster.events.entity.EntitySetCooldownEvent;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
@@ -220,7 +220,7 @@ public class PlayerManager extends Manager
         this.timeSinceDisconnect.remove(player.getUniqueId());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerLeave(PlayerQuitEvent event)
     {
         Player player = event.getPlayer();

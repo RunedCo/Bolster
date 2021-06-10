@@ -1,8 +1,8 @@
 package co.runed.bolster.status;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.events.EntityAddStatusEffectEvent;
-import co.runed.bolster.events.EntityRemoveStatusEffectEvent;
+import co.runed.bolster.events.entity.EntityAddStatusEffectEvent;
+import co.runed.bolster.events.entity.EntityRemoveStatusEffectEvent;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.TimeUtil;

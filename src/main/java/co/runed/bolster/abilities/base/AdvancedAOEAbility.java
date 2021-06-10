@@ -1,6 +1,6 @@
 package co.runed.bolster.abilities.base;
 
-import co.runed.bolster.events.EntityTargetedEvent;
+import co.runed.bolster.events.entity.EntityTargetedEvent;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;

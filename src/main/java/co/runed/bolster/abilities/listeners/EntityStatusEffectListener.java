@@ -2,8 +2,8 @@ package co.runed.bolster.abilities.listeners;
 
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityTrigger;
-import co.runed.bolster.events.EntityAddStatusEffectEvent;
-import co.runed.bolster.events.EntityRemoveStatusEffectEvent;
+import co.runed.bolster.events.entity.EntityAddStatusEffectEvent;
+import co.runed.bolster.events.entity.EntityRemoveStatusEffectEvent;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.entity.LivingEntity;

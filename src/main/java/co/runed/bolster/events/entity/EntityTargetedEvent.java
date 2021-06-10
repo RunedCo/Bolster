@@ -1,4 +1,4 @@
-package co.runed.bolster.events;
+package co.runed.bolster.events.entity;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;

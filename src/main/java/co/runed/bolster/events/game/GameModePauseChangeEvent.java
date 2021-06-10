@@ -1,4 +1,4 @@
-package co.runed.bolster.events;
+package co.runed.bolster.events.game;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
