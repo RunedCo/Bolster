@@ -5,7 +5,6 @@ import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityProviderType;
 import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.game.Traits;
-import co.runed.bolster.game.upgrade.Upgrade;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.managers.ClassManager;
 import co.runed.bolster.managers.StatusEffectManager;
@@ -33,7 +32,6 @@ public abstract class BolsterClass extends AbilityProvider
 {
     ItemStack icon = new ItemStack(Material.PLAYER_HEAD);
     List<Category> categories = new ArrayList<>();
-    List<Upgrade> upgrades = new ArrayList<>();
     String description;
     double maxHealth = 20;
 

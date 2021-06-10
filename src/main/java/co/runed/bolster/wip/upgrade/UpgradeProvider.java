@@ -1,4 +1,4 @@
-package co.runed.bolster.game.upgrade;
+package co.runed.bolster.wip.upgrade;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProvider;
