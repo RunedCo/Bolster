@@ -1,10 +1,12 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.events.CleanupEntityEvent;
 import co.runed.bolster.managers.EntityManager;
 import co.runed.bolster.util.BukkitUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -236,6 +238,21 @@ public class Team implements Listener
         }
     }
 
+    private void cleanup(UUID uuid)
+    {
+        this.players.remove(uuid);
+        this.members.remove(uuid);
+        this.kills.remove(uuid);
+        this.onlineMembers.remove(uuid);
+
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+
+        if (offlinePlayer.getName() != null && this.scoreboardTeam != null)
+        {
+            this.scoreboardTeam.removeEntry(offlinePlayer.getName());
+        }
+    }
+
     /**
      * Player join event that handles adding players to the team
      *
@@ -333,6 +350,15 @@ public class Team implements Listener
         if (this.isInTeam(targeter) && this.isInTeam(targeted) && !this.allowFriendlyFire())
         {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    private void onCleanupEntity(CleanupEntityEvent event)
+    {
+        if (event.isForced())
+        {
+            this.cleanup(event.getUniqueId());
         }
     }
 }

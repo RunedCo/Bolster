@@ -70,17 +70,7 @@ public class Bolster extends JavaPlugin implements Listener
     {
         super.onEnable();
 
-        try
-        {
-            this.config = new Config();
-        }
-        catch (Exception e)
-        {
-            this.getLogger().severe("FAILED TO LOAD CONFIG FILE");
-            e.printStackTrace();
-            this.setEnabled(false);
-            return;
-        }
+        this.loadConfig();
 
         this.warps = new Warps(this);
 
@@ -164,6 +154,20 @@ public class Bolster extends JavaPlugin implements Listener
     public void onPostEnable()
     {
         setActiveGameMode(this.config.gameMode);
+    }
+
+    public void loadConfig()
+    {
+        try
+        {
+            this.config = new Config();
+        }
+        catch (Exception e)
+        {
+            this.getLogger().severe("FAILED TO LOAD CONFIG FILE");
+            e.printStackTrace();
+            this.setEnabled(false);
+        }
     }
 
     // NOTE: SHIT WORKAROUND FOR CANVAS NOT TRIGERRING EVENT WHEN IN SPECTATOR

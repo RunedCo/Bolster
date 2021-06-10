@@ -128,6 +128,12 @@ public class EntityManager extends Manager
         return false;
     }
 
+    private void cleanup(UUID uuid)
+    {
+        this.remove(uuid);
+        this.teams.remove(uuid);
+    }
+
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent event)
     {
@@ -153,7 +159,7 @@ public class EntityManager extends Manager
             return;
         }
 
-        this.remove(event.getUniqueId());
+        this.cleanup(event.getUniqueId());
     }
 
     public static EntityManager getInstance()
