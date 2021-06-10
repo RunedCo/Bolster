@@ -4,7 +4,6 @@ import co.runed.bolster.events.entity.EntityTargetedEvent;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -87,8 +86,7 @@ public class AdvancedAOEAbility extends MultiTargetAbility
 
             if (target.isDead()) continue;
 
-            EntityTargetedEvent event = new EntityTargetedEvent(target, this.getCaster());
-            Bukkit.getPluginManager().callEvent(event);
+            EntityTargetedEvent event = BukkitUtil.triggerEvent(new EntityTargetedEvent(target, this.getCaster()));
 
             if (event.isCancelled()) continue;
 //            castSpells(caster, location, target, power);

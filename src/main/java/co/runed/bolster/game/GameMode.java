@@ -10,6 +10,7 @@ import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
 import co.runed.bolster.managers.Manager;
 import co.runed.bolster.managers.PlayerManager;
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.config.IConfigurable;
 import co.runed.bolster.util.properties.Properties;
@@ -113,8 +114,7 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     {
         this.paused = paused;
 
-        GameModePauseChangeEvent event = new GameModePauseChangeEvent(paused);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        BukkitUtil.triggerEvent(new GameModePauseChangeEvent(this, paused));
     }
 
     public void setSerializeInventories(boolean serializeInventories)

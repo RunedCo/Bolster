@@ -7,6 +7,7 @@ import co.runed.bolster.events.CleanupEntityEvent;
 import co.runed.bolster.events.entity.EntityCastAbilityEvent;
 import co.runed.bolster.events.entity.EntityPreCastAbilityEvent;
 import co.runed.bolster.events.entity.EntitySetCooldownEvent;
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -270,8 +271,7 @@ public class AbilityManager extends Manager
     {
         if (entity == null) return false;
 
-        EntityPreCastAbilityEvent preCastEvent = new EntityPreCastAbilityEvent(entity, provider, trigger, properties);
-        Bukkit.getPluginManager().callEvent(preCastEvent);
+        EntityPreCastAbilityEvent preCastEvent = BukkitUtil.triggerEvent(new EntityPreCastAbilityEvent(entity, provider, trigger, properties));
 
         if (preCastEvent.isCancelled()) return false;
 
@@ -304,8 +304,7 @@ public class AbilityManager extends Manager
 
             AbilityProvider abilityProvider = provider != null ? provider : ability.getAbilityProvider();
 
-            EntityCastAbilityEvent castEvent = new EntityCastAbilityEvent(entity, ability, trigger, properties);
-            Bukkit.getServer().getPluginManager().callEvent(castEvent);
+            EntityCastAbilityEvent castEvent = BukkitUtil.triggerEvent(new EntityCastAbilityEvent(entity, ability, trigger, properties));
 
             if (castEvent.isCancelled()) continue;
 

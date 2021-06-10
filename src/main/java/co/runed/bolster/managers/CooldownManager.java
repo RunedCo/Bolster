@@ -6,9 +6,9 @@ import co.runed.bolster.events.LoadPlayerDataEvent;
 import co.runed.bolster.events.entity.EntitySetCooldownEvent;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.game.Traits;
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.json.JsonExclude;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -63,7 +63,7 @@ public class CooldownManager extends Manager
 
         if (trigger)
         {
-            Bukkit.getServer().getPluginManager().callEvent(new EntitySetCooldownEvent(entity, castTime, cooldownId, slot, cooldown, isGlobal));
+            BukkitUtil.triggerEvent(new EntitySetCooldownEvent(entity, castTime, cooldownId, slot, cooldown, isGlobal));
         }
     }
 

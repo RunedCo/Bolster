@@ -9,6 +9,7 @@ import co.runed.bolster.events.entity.EntitySetCooldownEvent;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.json.GsonUtil;
 import co.runed.bolster.util.registries.Registries;
 import com.google.gson.Gson;
@@ -134,8 +135,7 @@ public class PlayerManager extends Manager
         data.setUuid(uuid);
 
         /* Call Load Event */
-        LoadPlayerDataEvent event = new LoadPlayerDataEvent(data.getPlayer(), data);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        LoadPlayerDataEvent event = BukkitUtil.triggerEvent(new LoadPlayerDataEvent(data.getPlayer(), data));
         data = event.getPlayerData();
 
         this.playerData.put(uuid, data);
@@ -157,8 +157,7 @@ public class PlayerManager extends Manager
         PlayerData playerData = data;
 
         /* Call Save Event */
-        SavePlayerDataEvent event = new SavePlayerDataEvent(playerData.getPlayer(), playerData);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        SavePlayerDataEvent event = BukkitUtil.triggerEvent(new SavePlayerDataEvent(playerData.getPlayer(), playerData));
         playerData = event.getPlayerData();
 
         playerData.saveGameModeData();
@@ -191,7 +190,7 @@ public class PlayerManager extends Manager
     {
         for (Player player : Bukkit.getOnlinePlayers())
         {
-            Bukkit.getServer().getPluginManager().callEvent(new CleanupEntityEvent(player, false));
+            BukkitUtil.triggerEvent(new CleanupEntityEvent(player, false));
         }
 
         Config config = Bolster.getBolsterConfig();
@@ -205,7 +204,7 @@ public class PlayerManager extends Manager
 
             if (value >= config.forceCleanupTime)
             {
-                Bukkit.getServer().getPluginManager().callEvent(new CleanupEntityEvent(uuid, false));
+                BukkitUtil.triggerEvent(new CleanupEntityEvent(uuid, false));
             }
         }
     }

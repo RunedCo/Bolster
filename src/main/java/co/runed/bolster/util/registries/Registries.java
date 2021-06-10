@@ -6,11 +6,11 @@ import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.game.shop.Shop;
-import co.runed.bolster.game.upgrade.Upgrade;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.items.ItemSkin;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.properties.Property;
+import co.runed.bolster.wip.upgrade.Upgrade;
 
 public final class Registries
 {

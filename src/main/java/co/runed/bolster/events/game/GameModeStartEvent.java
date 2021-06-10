@@ -4,27 +4,20 @@ import co.runed.bolster.game.GameMode;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public final class GameModePauseChangeEvent extends Event
+public final class GameModeStartEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
 
     GameMode gameMode;
-    boolean paused;
 
-    public GameModePauseChangeEvent(GameMode gameMode, boolean paused)
+    public GameModeStartEvent(GameMode gameMode)
     {
         this.gameMode = gameMode;
-        this.paused = paused;
     }
 
     public GameMode getGameMode()
     {
         return gameMode;
-    }
-
-    public boolean isPaused()
-    {
-        return paused;
     }
 
     @Override

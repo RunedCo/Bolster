@@ -4,6 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.events.entity.EntityAddStatusEffectEvent;
 import co.runed.bolster.events.entity.EntityRemoveStatusEffectEvent;
 import co.runed.bolster.managers.StatusEffectManager;
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.registries.IRegisterable;
@@ -145,10 +146,9 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
         this.startTime = Instant.now();
 
-        EntityAddStatusEffectEvent addEvent = new EntityAddStatusEffectEvent(entity, this);
-        Bukkit.getServer().getPluginManager().callEvent(addEvent);
+        EntityAddStatusEffectEvent event = BukkitUtil.triggerEvent(new EntityAddStatusEffectEvent(entity, this));
 
-        if (addEvent.isCancelled())
+        if (event.isCancelled())
         {
             this.clear(RemovalCause.CANCELLED);
             return;
@@ -179,8 +179,7 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
         if (!cleared)
         {
-            EntityRemoveStatusEffectEvent removeEvent = new EntityRemoveStatusEffectEvent(entity, this, RemovalCause.EXPIRED, null);
-            Bukkit.getServer().getPluginManager().callEvent(removeEvent);
+            BukkitUtil.triggerEvent(new EntityRemoveStatusEffectEvent(entity, this, RemovalCause.EXPIRED, null));
         }
 
         for (StatusEffectPotionData potionEffect : this.potionEffects)
@@ -217,10 +216,9 @@ public abstract class StatusEffect implements Listener, IRegisterable, Comparabl
 
         boolean forced = cause == RemovalCause.FORCE_CLEARED;
 
-        EntityRemoveStatusEffectEvent removeEvent = new EntityRemoveStatusEffectEvent(entity, this, cause, data);
-        Bukkit.getServer().getPluginManager().callEvent(removeEvent);
+        EntityRemoveStatusEffectEvent event = BukkitUtil.triggerEvent(new EntityRemoveStatusEffectEvent(entity, this, cause, data));
 
-        if (removeEvent.isCancelled() && !forced) return;
+        if (event.isCancelled() && !forced) return;
 
         this.cleared = true;
 

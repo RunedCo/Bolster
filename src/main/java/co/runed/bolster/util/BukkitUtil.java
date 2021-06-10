@@ -14,6 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
@@ -104,8 +105,7 @@ public class BukkitUtil
         Collection<Entity> entities = location.getWorld().getNearbyEntities(location, radius, radius, radius);
 
         entities.removeIf(entity -> {
-            EntityTargetedEvent event = new EntityTargetedEvent(entity);
-            Bukkit.getServer().getPluginManager().callEvent(event);
+            EntityTargetedEvent event = BukkitUtil.triggerEvent(new EntityTargetedEvent(entity));
 
             return event.isCancelled();
         });
@@ -428,8 +428,7 @@ public class BukkitUtil
     {
         Block block = location.getBlock();
 
-        CustomCanDestroyBlockEvent event = new CustomCanDestroyBlockEvent(block, entity.getEquipment().getItemInMainHand(), entity, true);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        CustomCanDestroyBlockEvent event = triggerEvent(new CustomCanDestroyBlockEvent(block, entity.getEquipment().getItemInMainHand(), entity, true));
 
         return !event.isCancelled();
     }
@@ -438,8 +437,7 @@ public class BukkitUtil
     {
         Block block = location.getBlock();
 
-        CustomCanPlaceBlockEvent event = new CustomCanPlaceBlockEvent(block, entity.getEquipment().getItemInMainHand(), entity, true);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        CustomCanPlaceBlockEvent event = triggerEvent(new CustomCanPlaceBlockEvent(block, entity.getEquipment().getItemInMainHand(), entity, true));
 
         return !event.isCancelled();
     }
@@ -454,5 +452,12 @@ public class BukkitUtil
     {
         message = message.replaceAll("%player%", player.getDisplayName());
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+    }
+
+    public static <T extends Event> T triggerEvent(T event)
+    {
+        Bukkit.getServer().getPluginManager().callEvent(event);
+
+        return event;
     }
 }
