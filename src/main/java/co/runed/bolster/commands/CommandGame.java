@@ -27,7 +27,6 @@ public class CommandGame extends CommandBase
                 .withPermission("bolster.commands.game")
                 .withSubcommand(new CommandAPICommand("pause")
                         .withPermission("bolster.commands.pause")
-                        .withArguments(new StringArgument("gamemode").overrideSuggestions(this::getGameModes))
                         .executes((sender, args) -> {
                             GameMode gameMode = Bolster.getInstance().getActiveGameMode();
                             gameMode.setPaused(!gameMode.isPaused());

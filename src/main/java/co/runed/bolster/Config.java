@@ -38,6 +38,9 @@ public class Config
     public int cleanupFrequency = 12000;
     public int forceCleanupTime = 72000;
 
+    public boolean autoSave = true;
+    public int autoSaveFrequency = 1200;
+
     public Config() throws IOException, InvalidConfigurationException
     {
         Bolster bolster = Bolster.getInstance();
@@ -71,6 +74,13 @@ public class Config
 
         this.premiumMembershipName = this.config.getColorString("premium-member-name", this.premiumMembershipName);
         this.premiumSlots = this.config.getInt("premium-slots", this.premiumSlots);
+
+        this.cleanupPlayers = this.config.getBoolean("cleanup-players", this.cleanupPlayers);
+        this.cleanupFrequency = this.config.getInt("cleanup-frequency", this.cleanupFrequency);
+        this.forceCleanupTime = this.config.getInt("force-cleanup-time", this.forceCleanupTime);
+
+        this.autoSave = this.config.getBoolean("auto-save", this.autoSave);
+        this.autoSaveFrequency = this.config.getInt("auto-save-frequency", this.autoSaveFrequency);
     }
 
     public Configuration getRawConfig()

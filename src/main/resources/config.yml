@@ -25,4 +25,9 @@ premium-slots: 10
 
 # Cleanup
 cleanup-players: true
-cleanup-ticks: 12000
+cleanup-frequency: 12000 # 10 minutes
+force-cleanup-time: 72000 # The amount of time a player has to be disconnected for to be force cleaned up (default 1 hour)
+
+# Saving
+auto-save: true
+auto-save-frequency: 1200 # Auto-save player data every x ticks (default 1 minute)

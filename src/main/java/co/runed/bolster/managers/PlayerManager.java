@@ -51,6 +51,11 @@ public class PlayerManager extends Manager
             Bukkit.getScheduler().runTaskTimer(plugin, this::cleanupPlayers, 0L, config.cleanupFrequency);
         }
 
+        if (config.autoSave)
+        {
+            Bukkit.getScheduler().runTaskTimer(plugin, this::saveAllPlayers, 0L, config.autoSaveFrequency);
+        }
+
         _instance = this;
     }
 
