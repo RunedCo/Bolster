@@ -13,11 +13,8 @@ public class Config
 {
     private final BolsterConfiguration config;
 
-    public String databaseUrl;
-    public String databasePort;
-    public String databaseUsername;
-    public String databasePassword;
-    public String databaseName;
+    public String redisHost = "127.0.0.1";
+    public String redisPort;
 
     public String gameMode;
 
@@ -54,12 +51,9 @@ public class Config
         this.config = new BolsterConfiguration();
         this.config.load(configFile);
 
-        ConfigurationSection database = this.config.getConfigurationSection("database");
-        this.databaseUrl = database.getString("url", "localhost");
-        this.databasePort = database.getString("port", "27071");
-        this.databaseUsername = database.getString("username", "admin");
-        this.databasePassword = database.getString("password", "admin");
-        this.databaseName = database.getString("database", "bolster");
+        ConfigurationSection redis = this.config.getConfigurationSection("redis");
+        this.redisHost = redis.getString("host", this.redisHost);
+        this.redisPort = redis.getString("port", this.redisPort);
 
         this.gameMode = this.config.getString("gamemode", "bolster");
 

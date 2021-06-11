@@ -13,11 +13,6 @@ import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.json.GsonUtil;
 import co.runed.bolster.util.registries.Registries;
 import com.google.gson.Gson;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.ReplaceOptions;
-import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -28,7 +23,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.lang.reflect.Constructor;
 import java.util.*;
 
 public class PlayerManager extends Manager
@@ -82,22 +76,6 @@ public class PlayerManager extends Manager
         return this.gson.fromJson(json, PlayerData.class);
     }
 
-    public PlayerData createNew()
-    {
-        PlayerData data = new PlayerData();
-
-        try
-        {
-            Constructor<? extends PlayerData> constructor = PlayerData.class.getConstructor();
-            data = constructor.newInstance();
-        }
-        catch (Exception e)
-        {
-        }
-
-        return data;
-    }
-
     public PlayerData getPlayerData(Player player)
     {
         return this.getPlayerData(player.getUniqueId());
@@ -107,7 +85,7 @@ public class PlayerManager extends Manager
     {
         if (this.playerData.containsKey(uuid)) return this.playerData.get(uuid);
 
-        PlayerData data = this.createNew();
+        PlayerData data = new PlayerData();
 
         data.setUuid(uuid);
 
@@ -123,19 +101,12 @@ public class PlayerManager extends Manager
 
     private PlayerData load(UUID uuid)
     {
-        MongoClient mongoClient = Bolster.getMongoClient();
-        MongoDatabase db = mongoClient.getDatabase(Bolster.getBolsterConfig().databaseName);
-        MongoCollection<Document> collection = db.getCollection("players");
-        Document query = new Document("uuid", uuid.toString());
+        PlayerData data = new PlayerData();
 
-        PlayerData data = this.createNew();
-
-        Document document = collection.find(query).first();
-
-        if (document != null)
-        {
-            data = this.deserialize(document.toJson());
-        }
+//        if (document != null)
+//        {
+//            data = this.deserialize(document.toJson());
+//        }
 
         data.setUuid(uuid);
 
@@ -167,15 +138,15 @@ public class PlayerManager extends Manager
 
         playerData.saveGameModeData();
 
-        MongoClient mongoClient = Bolster.getMongoClient();
-        MongoDatabase db = mongoClient.getDatabase(Bolster.getBolsterConfig().databaseName);
-        MongoCollection<Document> collection = db.getCollection("players");
-        Document query = new Document("uuid", playerData.getUuid().toString());
-
-        Document document = Document.parse(gson.toJson(playerData));
-        ReplaceOptions options = new ReplaceOptions();
-        options.upsert(true);
-        collection.replaceOne(query, document, options);
+//        MongoClient mongoClient = Bolster.getMongoClient();
+//        MongoDatabase db = mongoClient.getDatabase(Bolster.getBolsterConfig().databaseName);
+//        MongoCollection<Document> collection = db.getCollection("players");
+//        Document query = new Document("uuid", playerData.getUuid().toString());
+//
+//        Document document = Document.parse(gson.toJson(playerData));
+//        ReplaceOptions options = new ReplaceOptions();
+//        options.upsert(true);
+//        collection.replaceOne(query, document, options);
     }
 
     public void saveAllPlayers()

@@ -13,16 +13,7 @@ import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import co.runed.bolster.wip.*;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoCredential;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import de.slikey.effectlib.EffectManager;
-import org.bson.UuidRepresentation;
-import org.bson.codecs.configuration.CodecRegistries;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -57,8 +48,6 @@ public class Bolster extends JavaPlugin implements Listener
 
     private GameMode activeGameMode;
 
-    private MongoClient mongoClient;
-
     @Override
     public void onLoad()
     {
@@ -73,21 +62,6 @@ public class Bolster extends JavaPlugin implements Listener
         this.loadConfig();
 
         this.warps = new Warps(this);
-
-        MongoCredential credential = MongoCredential.createCredential(this.config.databaseUsername, "admin", this.config.databasePassword.toCharArray());
-        ConnectionString connectionString = new ConnectionString("mongodb://" + this.config.databaseUrl + ":" + this.config.databasePort);
-        CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build());
-        CodecRegistry codecRegistry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
-                pojoCodecRegistry);
-
-        MongoClientSettings clientSettings = MongoClientSettings.builder()
-                .applyConnectionString(connectionString)
-                .credential(credential)
-                .codecRegistry(codecRegistry)
-                .uuidRepresentation(UuidRepresentation.STANDARD)
-                .build();
-
-        this.mongoClient = MongoClients.create(clientSettings);
 
         // CREATE MANAGERS
         this.commandManager = new CommandManager();
@@ -233,11 +207,6 @@ public class Bolster extends JavaPlugin implements Listener
     public static EffectManager getEffectManager()
     {
         return Bolster.getInstance().effectManager;
-    }
-
-    public static MongoClient getMongoClient()
-    {
-        return Bolster.getInstance().mongoClient;
     }
 
     public static GameMode getActiveGameMode()
