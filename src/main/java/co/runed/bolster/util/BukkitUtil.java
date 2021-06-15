@@ -460,4 +460,9 @@ public class BukkitUtil
 
         return event;
     }
+
+    public static void triggerEventSync(Event event)
+    {
+        Bukkit.getScheduler().runTask(Bolster.getInstance(), () -> Bukkit.getServer().getPluginManager().callEvent(event));
+    }
 }

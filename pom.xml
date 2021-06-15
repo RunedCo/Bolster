@@ -132,6 +132,20 @@
             <version>2.6</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.6.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>2.6.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -172,8 +186,16 @@
                                     <include>org.ipvp:canvas</include>
                                     <include>net.kyori:adventure-text-minimessage</include>
                                     <include>commons-io:commons-io</include>
+                                    <include>redis.clients:jedis</include>
+                                    <include>org.apache.commons:commons-pool2</include>
                                 </includes>
                             </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>redis.clients.jedis</pattern>
+                                    <shadedPattern>co.runed.internal.jedis</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>

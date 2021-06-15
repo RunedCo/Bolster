@@ -13,10 +13,11 @@ public class Config
 {
     private final BolsterConfiguration config;
 
-    public String redisHost = "127.0.0.1";
-    public String redisPort;
+    public String redisHost = "localhost";
+    public int redisPort = 6379;
 
     public String gameMode;
+    public String serverId = "server-1";
 
     public boolean debugMode = false;
 
@@ -53,9 +54,10 @@ public class Config
 
         ConfigurationSection redis = this.config.getConfigurationSection("redis");
         this.redisHost = redis.getString("host", this.redisHost);
-        this.redisPort = redis.getString("port", this.redisPort);
+        this.redisPort = redis.getInt("port", this.redisPort);
 
         this.gameMode = this.config.getString("gamemode", "bolster");
+        this.serverId = this.config.getString("server-id", this.serverId);
 
         this.debugMode = this.config.getBoolean("debug", this.debugMode);
 

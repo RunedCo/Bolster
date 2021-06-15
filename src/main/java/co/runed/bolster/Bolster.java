@@ -8,6 +8,7 @@ import co.runed.bolster.game.Traits;
 import co.runed.bolster.game.currency.Currencies;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.*;
+import co.runed.bolster.network.RedisManager;
 import co.runed.bolster.status.*;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
@@ -22,11 +23,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 public class Bolster extends JavaPlugin implements Listener
 {
     // SINGLETON INSTANCE
     private static Bolster instance;
+
+    private JedisPool jedisPool;
 
     private Warps warps;
 
@@ -122,6 +127,10 @@ public class Bolster extends JavaPlugin implements Listener
         this.registerCurrencies();
         this.registerTraits();
 
+        /* Connect to Redis */
+        this.jedisPool = new JedisPool(config.redisHost, config.redisPort);
+        Bukkit.getScheduler().runTaskAsynchronously(this, this::setupRedisListener);
+
         getServer().getScheduler().scheduleSyncDelayedTask(this, this::onPostEnable);
     }
 
@@ -141,6 +150,39 @@ public class Bolster extends JavaPlugin implements Listener
             this.getLogger().severe("FAILED TO LOAD CONFIG FILE");
             e.printStackTrace();
             this.setEnabled(false);
+        }
+    }
+
+    private void setupRedisListener()
+    {
+        Jedis subRedis = null;
+        Jedis pubRedis = null;
+
+        try
+        {
+            /* Creating Jedis object for connecting with redis server */
+            subRedis = this.jedisPool.getResource();
+            pubRedis = this.jedisPool.getResource();
+
+            /* Creating JedisPubSub object for subscribing with channels */
+            RedisManager redisManager = new RedisManager(this, subRedis, pubRedis);
+        }
+
+        catch (Exception ex)
+        {
+            System.out.println("Exception : " + ex.getMessage());
+        }
+        finally
+        {
+            if (subRedis != null)
+            {
+                subRedis.close();
+            }
+
+            if (pubRedis != null)
+            {
+                pubRedis.close();
+            }
         }
     }
 
@@ -197,6 +239,11 @@ public class Bolster extends JavaPlugin implements Listener
     public static Bolster getInstance()
     {
         return instance;
+    }
+
+    public static String getServerId()
+    {
+        return Bolster.getInstance().config.serverId;
     }
 
     public static Config getBolsterConfig()

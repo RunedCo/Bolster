@@ -4,11 +4,18 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.Config;
 import co.runed.bolster.events.CleanupEntityEvent;
 import co.runed.bolster.events.LoadPlayerDataEvent;
+import co.runed.bolster.events.RedisMessageEvent;
 import co.runed.bolster.events.SavePlayerDataEvent;
 import co.runed.bolster.events.entity.EntitySetCooldownEvent;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
+import co.runed.bolster.network.RedisManager;
+import co.runed.bolster.network.redis.Payload;
+import co.runed.bolster.network.redis.RedisChannels;
+import co.runed.bolster.network.redis.request.RequestPlayerDataPayload;
+import co.runed.bolster.network.redis.request.UpdatePlayerDataPayload;
+import co.runed.bolster.network.redis.response.RequestPlayerDataResponsePayload;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.json.GsonUtil;
 import co.runed.bolster.util.registries.Registries;
@@ -76,6 +83,11 @@ public class PlayerManager extends Manager
         return this.gson.fromJson(json, PlayerData.class);
     }
 
+    public String serialize(PlayerData playerData)
+    {
+        return this.gson.toJson(playerData);
+    }
+
     public PlayerData getPlayerData(Player player)
     {
         return this.getPlayerData(player.getUniqueId());
@@ -94,29 +106,17 @@ public class PlayerManager extends Manager
         return data;
     }
 
-    public PlayerData load(Player player)
+    public void load(Player player)
     {
-        return this.load(player.getUniqueId());
+        this.load(player.getUniqueId());
     }
 
-    private PlayerData load(UUID uuid)
+    private void load(UUID uuid)
     {
-        PlayerData data = new PlayerData();
+        RequestPlayerDataPayload payload = new RequestPlayerDataPayload();
+        payload.uuid = uuid;
 
-//        if (document != null)
-//        {
-//            data = this.deserialize(document.toJson());
-//        }
-
-        data.setUuid(uuid);
-
-        /* Call Load Event */
-        LoadPlayerDataEvent event = BukkitUtil.triggerEvent(new LoadPlayerDataEvent(data.getPlayer(), data));
-        data = event.getPlayerData();
-
-        this.playerData.put(uuid, data);
-
-        return data;
+        RedisManager.getInstance().publish(RedisChannels.REQUEST_PLAYER_DATA, payload);
     }
 
     public void save(Player player)
@@ -137,6 +137,12 @@ public class PlayerManager extends Manager
         playerData = event.getPlayerData();
 
         playerData.saveGameModeData();
+
+        UpdatePlayerDataPayload payload = new UpdatePlayerDataPayload();
+        payload.uuid = playerData.getUuid();
+        payload.playerData = this.serialize(playerData);
+
+        RedisManager.getInstance().publish(RedisChannels.UPDATE_PLAYER_DATA, payload);
 
 //        MongoClient mongoClient = Bolster.getMongoClient();
 //        MongoDatabase db = mongoClient.getDatabase(Bolster.getBolsterConfig().databaseName);
@@ -182,6 +188,22 @@ public class PlayerManager extends Manager
             {
                 BukkitUtil.triggerEvent(new CleanupEntityEvent(uuid, false));
             }
+        }
+    }
+
+    @EventHandler
+    private void onRedisMessage(RedisMessageEvent event)
+    {
+        if (event.getChannel().equals(RedisChannels.REQUEST_PLAYER_DATA_RESPONSE))
+        {
+            RequestPlayerDataResponsePayload payload = Payload.fromJson(event.getMessage(), RequestPlayerDataResponsePayload.class);
+            PlayerData playerData = this.deserialize(payload.playerData);
+
+            /* Call Load Event */
+            LoadPlayerDataEvent loadEvent = BukkitUtil.triggerEvent(new LoadPlayerDataEvent(playerData.getPlayer(), playerData));
+            playerData = loadEvent.getPlayerData();
+
+            this.playerData.put(playerData.getUuid(), playerData);
         }
     }
 

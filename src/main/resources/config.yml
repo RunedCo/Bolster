@@ -1,10 +1,11 @@
 # Redis
 redis:
   host: 127.0.0.1
-  port: "6379"
+  port: 6379
 
 # Active gamemode
 gamemode: bolster
+server-id: bolster
 
 # Common text
 game-name: Bolster
