@@ -2,9 +2,9 @@ package co.runed.bolster.network;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.events.RedisMessageEvent;
-import co.runed.bolster.network.redis.Payload;
-import co.runed.bolster.network.redis.RedisChannels;
 import co.runed.bolster.util.BukkitUtil;
+import co.runed.redismessaging.RedisChannels;
+import co.runed.redismessaging.payload.Payload;
 import org.bukkit.plugin.Plugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
