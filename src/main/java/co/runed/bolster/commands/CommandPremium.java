@@ -16,9 +16,13 @@ import java.time.Duration;
 import java.time.Period;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAmount;
+import java.util.Arrays;
+import java.util.List;
 
 public class CommandPremium extends CommandBase
 {
+    List<String> units = Arrays.asList("hours", "days", "months", "years");
+
     public CommandPremium()
     {
         super("premium");
@@ -26,7 +30,7 @@ public class CommandPremium extends CommandBase
 
     private String[] getSuggestions(CommandSender sender)
     {
-        return new String[]{"hours", "days", "months", "years"};
+        return units.toArray(new String[0]);
     }
 
     private TemporalAmount fromString(long amount, String unit)
@@ -70,6 +74,12 @@ public class CommandPremium extends CommandBase
                             int amount = (int) args[1];
                             String unit = (String) args[2];
 
+                            if (!units.contains(unit))
+                            {
+                                sender.sendMessage("Invalid unit '" + unit + "'");
+                                return;
+                            }
+
                             PlayerManager.getInstance().getPlayerData(player).addPremiumExpiryTime(this.fromString(amount, unit));
 
                             sender.sendMessage("Added " + amount + " " + unit + " to " + player.getDisplayName());
@@ -84,6 +94,12 @@ public class CommandPremium extends CommandBase
                             Player player = (Player) args[0];
                             int amount = (int) args[1];
                             String unit = (String) args[2];
+
+                            if (!units.contains(unit))
+                            {
+                                sender.sendMessage("Invalid unit '" + unit + "'");
+                                return;
+                            }
 
                             PlayerManager.getInstance().getPlayerData(player).addPremiumExpiryTime(this.fromString(-amount, unit));
 
@@ -100,9 +116,15 @@ public class CommandPremium extends CommandBase
                             int amount = (int) args[1];
                             String unit = (String) args[2];
 
+                            if (!units.contains(unit))
+                            {
+                                sender.sendMessage("Invalid unit '" + unit + "'");
+                                return;
+                            }
+
                             PlayerManager.getInstance().getPlayerData(player).setPremiumExpiryTime(ZonedDateTime.now(Clock.systemUTC()).plus(this.fromString(amount, unit)));
 
-                            sender.sendMessage("Set premium time to " + amount + unit + " for " + player.getDisplayName());
+                            sender.sendMessage("Set premium time to " + amount + " " + unit + " for " + player.getDisplayName());
                         })
                 )
                 .withSubcommand(new CommandAPICommand("get")

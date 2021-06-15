@@ -2,11 +2,11 @@ package co.runed.bolster.util;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
 
-import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class TimeUtil
 {
@@ -36,7 +36,7 @@ public class TimeUtil
 
     public static String formatDate(ZonedDateTime date)
     {
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM d yyyy hh:mm a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a");
         return formatter.format(date);
     }
 
