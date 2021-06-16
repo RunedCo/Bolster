@@ -5,6 +5,7 @@ import co.runed.bolster.commands.*;
 import co.runed.bolster.common.redis.RedisChannels;
 import co.runed.bolster.common.redis.payload.Payload;
 import co.runed.bolster.common.redis.request.RegisterServerPayload;
+import co.runed.bolster.common.redis.request.UnregisterServerPayload;
 import co.runed.bolster.common.redis.response.RegisterServerResponsePayload;
 import co.runed.bolster.events.RedisMessageEvent;
 import co.runed.bolster.fx.particles.ParticleSet;
@@ -250,6 +251,11 @@ public class Bolster extends JavaPlugin implements Listener
     public void onDisable()
     {
         super.onDisable();
+
+        UnregisterServerPayload payload = new UnregisterServerPayload();
+        payload.serverId = this.serverId;
+        
+        RedisManager.getInstance().publish(RedisChannels.UNREGISTER_SERVER, payload);
 
         PlayerManager.getInstance().saveAllPlayers();
     }
