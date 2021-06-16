@@ -58,7 +58,7 @@
     <dependencies>
         <dependency>
             <groupId>co.runed</groupId>
-            <artifactId>redismessaging</artifactId>
+            <artifactId>bolstercommon</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
@@ -195,7 +195,7 @@
                                     <include>commons-io:commons-io</include>
                                     <include>redis.clients:jedis</include>
                                     <include>org.apache.commons:commons-pool2</include>
-                                    <include>co.runed:redismessaging</include>
+                                    <include>co.runed:bolstercommon</include>
                                 </includes>
                             </artifactSet>
                             <relocations>

@@ -1,13 +1,14 @@
 package co.runed.bolster.network;
 
-import co.runed.bolster.Bolster;
+import co.runed.bolster.common.redis.RedisChannels;
+import co.runed.bolster.common.redis.payload.Payload;
 import co.runed.bolster.events.RedisMessageEvent;
 import co.runed.bolster.util.BukkitUtil;
-import co.runed.redismessaging.RedisChannels;
-import co.runed.redismessaging.payload.Payload;
 import org.bukkit.plugin.Plugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
+
+import java.util.UUID;
 
 public class RedisManager extends JedisPubSub
 {
@@ -16,6 +17,8 @@ public class RedisManager extends JedisPubSub
     Plugin plugin;
     Jedis subRedis;
     Jedis pubRedis;
+
+    String senderId = UUID.randomUUID().toString();
 
     public RedisManager(Plugin plugin, Jedis subRedis, Jedis pubRedis)
     {
@@ -27,7 +30,17 @@ public class RedisManager extends JedisPubSub
         this.subRedis = subRedis;
         this.pubRedis = pubRedis;
 
-        subRedis.subscribe(this, RedisChannels.REQUEST_SERVERS_RESPONSE, RedisChannels.REQUEST_PLAYER_DATA_RESPONSE);
+        subRedis.subscribe(this, RedisChannels.REQUEST_SERVERS_RESPONSE, RedisChannels.REQUEST_PLAYER_DATA_RESPONSE, RedisChannels.REGISTER_SERVER_RESPONSE);
+    }
+
+    public void setSenderId(String senderId)
+    {
+        this.senderId = senderId;
+    }
+
+    public String getSenderId()
+    {
+        return senderId;
     }
 
     @Override
@@ -35,7 +48,7 @@ public class RedisManager extends JedisPubSub
     {
         Payload payload = Payload.fromJson(message, PayloadImpl.class);
 
-        if (payload.target == null || !payload.target.equals(Bolster.getServerId())) return;
+        if (payload.target == null || !payload.target.equals(senderId)) return;
 
         System.out.println("Channel " + channel + " has sent a message from " + payload.sender);
 
@@ -58,7 +71,7 @@ public class RedisManager extends JedisPubSub
 
     public void publish(String channel, Payload payload)
     {
-        payload.sender = Bolster.getServerId();
+        payload.sender = this.getSenderId();
         payload.target = "proxy";
 
         pubRedis.publish(channel, payload.toJson());

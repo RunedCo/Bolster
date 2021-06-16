@@ -2,6 +2,11 @@ package co.runed.bolster;
 
 import co.runed.bolster.classes.TargetDummyClass;
 import co.runed.bolster.commands.*;
+import co.runed.bolster.common.redis.RedisChannels;
+import co.runed.bolster.common.redis.payload.Payload;
+import co.runed.bolster.common.redis.request.RegisterServerPayload;
+import co.runed.bolster.common.redis.response.RegisterServerResponsePayload;
+import co.runed.bolster.events.RedisMessageEvent;
 import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.Traits;
@@ -52,6 +57,7 @@ public class Bolster extends JavaPlugin implements Listener
     private Config config;
 
     private GameMode activeGameMode;
+    public String serverId = null;
 
     @Override
     public void onLoad()
@@ -137,6 +143,18 @@ public class Bolster extends JavaPlugin implements Listener
     public void onPostEnable()
     {
         setActiveGameMode(this.config.gameMode);
+
+        GameMode gameMode = getActiveGameMode();
+
+        RegisterServerPayload registerPayload = new RegisterServerPayload();
+        registerPayload.serverId = this.serverId;
+        registerPayload.status = gameMode.getStatus();
+        registerPayload.gameMode = gameMode.getId();
+        registerPayload.name = this.serverId;
+        registerPayload.ipAddress = getServer().getIp();
+        registerPayload.port = getServer().getPort();
+
+        RedisManager.getInstance().publish(RedisChannels.REGISTER_SERVER, registerPayload);
     }
 
     public void loadConfig()
@@ -144,6 +162,8 @@ public class Bolster extends JavaPlugin implements Listener
         try
         {
             this.config = new Config();
+
+            serverId = Bolster.getInstance().config.serverId;
         }
         catch (Exception e)
         {
@@ -235,15 +255,33 @@ public class Bolster extends JavaPlugin implements Listener
         PlayerManager.getInstance().saveAllPlayers();
     }
 
+    @EventHandler
+    private void onRedisMessage(RedisMessageEvent event)
+    {
+        if (event.getChannel().equals(RedisChannels.REGISTER_SERVER_RESPONSE))
+        {
+            RegisterServerResponsePayload payload = Payload.fromJson(event.getMessage(), RegisterServerResponsePayload.class);
+
+            this.setServerId(payload.serverId);
+
+            RedisManager.getInstance().setSenderId(this.getServerId());
+        }
+    }
+
+    public void setServerId(String id)
+    {
+        serverId = id;
+    }
+
+    public String getServerId()
+    {
+        return serverId;
+    }
+
     // SINGLETON GETTERS
     public static Bolster getInstance()
     {
         return instance;
-    }
-
-    public static String getServerId()
-    {
-        return Bolster.getInstance().config.serverId;
     }
 
     public static Config getBolsterConfig()

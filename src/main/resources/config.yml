@@ -5,7 +5,6 @@ redis:
 
 # Active gamemode
 gamemode: bolster
-server-id: bolster
 
 # Common text
 game-name: Bolster

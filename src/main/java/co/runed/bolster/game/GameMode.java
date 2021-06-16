@@ -95,7 +95,7 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         if (this.hasStarted) return;
 
         this.hasStarted = true;
-        this.mainState.start();
+        if (this.mainState != null) this.mainState.start();
 
         this.tabMenuTask = Bukkit.getScheduler().runTaskTimer(plugin, this::buildAllTabMenu, 0L, 20L);
     }
@@ -140,6 +140,11 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     public boolean hasStarted()
     {
         return hasStarted;
+    }
+
+    public String getStatus()
+    {
+        return "";
     }
 
     public GameProperties getProperties()

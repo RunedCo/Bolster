@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class Config
     public int redisPort = 6379;
 
     public String gameMode;
-    public String serverId = "server-1";
+    public String serverId = null;
 
     public boolean debugMode = false;
 
@@ -51,6 +52,19 @@ public class Config
 
         this.config = new BolsterConfiguration();
         this.config.load(configFile);
+
+        File overridesFile = new File(bolster.getDataFolder(), "overrides.yml");
+        if (overridesFile.exists())
+        {
+            YamlConfiguration defaults = YamlConfiguration.loadConfiguration(overridesFile);
+            for (String key : defaults.getKeys(false))
+            {
+                if (!config.contains(key))
+                {
+                    config.set(key, defaults.get(key));
+                }
+            }
+        }
 
         ConfigurationSection redis = this.config.getConfigurationSection("redis");
         this.redisHost = redis.getString("host", this.redisHost);
