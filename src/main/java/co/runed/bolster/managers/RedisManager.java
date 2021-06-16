@@ -1,4 +1,4 @@
-package co.runed.bolster.network;
+package co.runed.bolster.managers;
 
 import co.runed.bolster.common.redis.RedisChannels;
 import co.runed.bolster.common.redis.payload.Payload;
@@ -75,6 +75,16 @@ public class RedisManager extends JedisPubSub
         payload.target = "proxy";
 
         pubRedis.publish(channel, payload.toJson());
+    }
+
+    public String get(String key)
+    {
+        return pubRedis.get(key);
+    }
+
+    public void set(String key, String value)
+    {
+        pubRedis.set(key, value);
     }
 
     public static RedisManager getInstance()

@@ -15,7 +15,6 @@ import co.runed.bolster.events.entity.EntitySetCooldownEvent;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
-import co.runed.bolster.network.RedisManager;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.json.GsonUtil;
 import co.runed.bolster.util.registries.Registries;

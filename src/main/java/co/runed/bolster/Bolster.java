@@ -13,7 +13,6 @@ import co.runed.bolster.game.Traits;
 import co.runed.bolster.game.currency.Currencies;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.*;
-import co.runed.bolster.network.RedisManager;
 import co.runed.bolster.status.*;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
