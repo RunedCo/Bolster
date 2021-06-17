@@ -2,9 +2,10 @@ package co.runed.bolster;
 
 import co.runed.bolster.classes.TargetDummyClass;
 import co.runed.bolster.commands.*;
+import co.runed.bolster.common.ServerData;
 import co.runed.bolster.common.redis.RedisChannels;
 import co.runed.bolster.common.redis.payload.Payload;
-import co.runed.bolster.common.redis.request.RegisterServerPayload;
+import co.runed.bolster.common.redis.request.ServerDataPayload;
 import co.runed.bolster.common.redis.request.UnregisterServerPayload;
 import co.runed.bolster.common.redis.response.RegisterServerResponsePayload;
 import co.runed.bolster.events.RedisMessageEvent;
@@ -26,6 +27,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
 import redis.clients.jedis.Jedis;
@@ -140,19 +143,31 @@ public class Bolster extends JavaPlugin implements Listener
         getServer().getScheduler().scheduleSyncDelayedTask(this, this::onPostEnable);
     }
 
+    public ServerData getServerData()
+    {
+        GameMode gameMode = getActiveGameMode();
+
+        ServerData serverData = new ServerData();
+        serverData.id = this.serverId;
+        serverData.status = gameMode.getStatus();
+        serverData.gameMode = gameMode.getId();
+        serverData.name = this.serverId;
+        serverData.ipAddress = getServer().getIp();
+        serverData.port = getServer().getPort();
+
+        serverData.currentPlayers = Bukkit.getOnlinePlayers().size();
+        serverData.maxPlayers = Bukkit.getMaxPlayers();
+        serverData.maxPremiumPlayers = config.premiumSlots;
+
+        return serverData;
+    }
+
     public void onPostEnable()
     {
         setActiveGameMode(this.config.gameMode);
 
-        GameMode gameMode = getActiveGameMode();
-
-        RegisterServerPayload registerPayload = new RegisterServerPayload();
-        registerPayload.serverId = this.serverId;
-        registerPayload.status = gameMode.getStatus();
-        registerPayload.gameMode = gameMode.getId();
-        registerPayload.name = this.serverId;
-        registerPayload.ipAddress = getServer().getIp();
-        registerPayload.port = getServer().getPort();
+        ServerDataPayload registerPayload = new ServerDataPayload();
+        registerPayload.serverData = this.getServerData();
 
         RedisManager.getInstance().publish(RedisChannels.REGISTER_SERVER, registerPayload);
     }
@@ -254,7 +269,7 @@ public class Bolster extends JavaPlugin implements Listener
 
         UnregisterServerPayload payload = new UnregisterServerPayload();
         payload.serverId = this.serverId;
-        
+
         RedisManager.getInstance().publish(RedisChannels.UNREGISTER_SERVER, payload);
 
         PlayerManager.getInstance().saveAllPlayers();
@@ -271,6 +286,24 @@ public class Bolster extends JavaPlugin implements Listener
 
             RedisManager.getInstance().setSenderId(this.getServerId());
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    private void onPlayerLeave(PlayerQuitEvent event)
+    {
+        ServerDataPayload payload = new ServerDataPayload();
+        payload.serverData = this.getServerData();
+
+        RedisManager.getInstance().publish(RedisChannels.UPDATE_SERVER, payload);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    private void onPlayerJoin(PlayerJoinEvent event)
+    {
+        ServerDataPayload payload = new ServerDataPayload();
+        payload.serverData = this.getServerData();
+
+        RedisManager.getInstance().publish(RedisChannels.UPDATE_SERVER, payload);
     }
 
     public void setServerId(String id)

@@ -142,20 +142,12 @@ public class PlayerManager extends Manager
         payload.playerData = this.serialize(playerData);
 
         RedisManager.getInstance().publish(RedisChannels.UPDATE_PLAYER_DATA, payload);
-
-//        MongoClient mongoClient = Bolster.getMongoClient();
-//        MongoDatabase db = mongoClient.getDatabase(Bolster.getBolsterConfig().databaseName);
-//        MongoCollection<Document> collection = db.getCollection("players");
-//        Document query = new Document("uuid", playerData.getUuid().toString());
-//
-//        Document document = Document.parse(gson.toJson(playerData));
-//        ReplaceOptions options = new ReplaceOptions();
-//        options.upsert(true);
-//        collection.replaceOne(query, document, options);
     }
 
     public void saveAllPlayers()
     {
+        if (this.playerData.size() <= 0) return;
+
         for (PlayerData data : this.playerData.values())
         {
             this.save(data);

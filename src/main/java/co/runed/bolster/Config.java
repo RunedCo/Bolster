@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Config
 {
@@ -53,15 +54,22 @@ public class Config
         this.config = new BolsterConfiguration();
         this.config.load(configFile);
 
-        File overridesFile = new File(bolster.getDataFolder(), "overrides.yml");
-        if (overridesFile.exists())
+        File overridesDir = bolster.getDataFolder();
+        File[] overrideFiles = overridesDir.listFiles((d, name) -> name.startsWith("overrides") && name.endsWith(".yml"));
+
+        if (overrideFiles != null)
         {
-            YamlConfiguration defaults = YamlConfiguration.loadConfiguration(overridesFile);
-            for (String key : defaults.getKeys(false))
+            Arrays.sort(overrideFiles);
+
+            for (File override : overrideFiles)
             {
-                if (!config.contains(key))
+                if (override.exists())
                 {
-                    config.set(key, defaults.get(key));
+                    YamlConfiguration overrideConfig = YamlConfiguration.loadConfiguration(override);
+                    for (String key : overrideConfig.getKeys(false))
+                    {
+                        config.set(key, overrideConfig.get(key));
+                    }
                 }
             }
         }

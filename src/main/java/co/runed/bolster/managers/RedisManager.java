@@ -48,7 +48,7 @@ public class RedisManager extends JedisPubSub
     {
         Payload payload = Payload.fromJson(message, PayloadImpl.class);
 
-        if (payload.target == null || !payload.target.equals(senderId)) return;
+        if (payload.target == null || !payload.target.equals(getSenderId())) return;
 
         System.out.println("Channel " + channel + " has sent a message from " + payload.sender);
 
