@@ -126,7 +126,6 @@ public class PlayerManager extends Manager
         this.save(playerData);
     }
 
-    // TODO move to mongodb update vs just straight upsert (maybe via api)
     private void save(PlayerData data)
     {
         PlayerData playerData = data;

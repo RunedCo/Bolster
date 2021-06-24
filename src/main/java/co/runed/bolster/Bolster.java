@@ -293,6 +293,7 @@ public class Bolster extends JavaPlugin implements Listener
     {
         ServerDataPayload payload = new ServerDataPayload();
         payload.serverData = this.getServerData();
+        payload.serverData.currentPlayers -= 1;
 
         RedisManager.getInstance().publish(RedisChannels.UPDATE_SERVER, payload);
     }

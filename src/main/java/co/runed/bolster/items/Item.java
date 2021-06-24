@@ -54,7 +54,7 @@ public abstract class Item extends AbilityProvider implements IRegisterable
 
     private List<String> lore = new ArrayList<>();
     private ItemStack itemStack = new ItemStack(Material.STICK);
-    private boolean droppable = true;
+    private boolean droppable = false;
     private boolean clearOnRemove = true;
 
     // attributes
