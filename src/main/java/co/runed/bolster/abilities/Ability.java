@@ -3,7 +3,11 @@ package co.runed.bolster.abilities;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.abilities.base.DynamicParameterAbility;
 import co.runed.bolster.abilities.base.FunctionAbility;
-import co.runed.bolster.conditions.*;
+import co.runed.bolster.conditions.ConditionPriority;
+import co.runed.bolster.conditions.HasManaCondition;
+import co.runed.bolster.conditions.IConditional;
+import co.runed.bolster.conditions.IsOffCooldownCondition;
+import co.runed.bolster.conditions.base.Condition;
 import co.runed.bolster.game.cost.Cost;
 import co.runed.bolster.game.cost.ManaCost;
 import co.runed.bolster.managers.CooldownManager;
@@ -30,7 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public abstract class Ability implements Listener, IConditional<Ability>, ICooldownSource<Ability>
+public class Ability implements Listener, IConditional<Ability>, ICooldownSource<Ability>
 {
     private static final long CAST_BAR_UPDATE_TICKS = 5L;
 
@@ -716,7 +720,10 @@ public abstract class Ability implements Listener, IConditional<Ability>, ICoold
         this.setInProgress(false);
     }
 
-    public abstract void onActivate(Properties properties);
+    public void onActivate(Properties properties)
+    {
+        
+    }
 
     public void onPostActivate(Properties properties)
     {

@@ -2,7 +2,7 @@ package co.runed.bolster.abilities.targeted;
 
 import co.runed.bolster.abilities.TargetedAbility;
 import co.runed.bolster.conditions.IsMaxHealthCondition;
-import co.runed.bolster.conditions.NotCondition;
+import co.runed.bolster.conditions.base.NotCondition;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;

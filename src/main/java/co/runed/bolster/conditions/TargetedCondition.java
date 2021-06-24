@@ -1,5 +1,6 @@
 package co.runed.bolster.conditions;
 
+import co.runed.bolster.conditions.base.Condition;
 import co.runed.bolster.util.target.ITargeted;
 import co.runed.bolster.util.target.Target;
 

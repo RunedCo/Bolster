@@ -2,7 +2,7 @@ package co.runed.bolster.abilities.base;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.conditions.Condition;
+import co.runed.bolster.conditions.base.Condition;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
@@ -15,7 +15,7 @@ import java.util.function.Function;
 /**
  * An ability that runs for multiple targets
  */
-public class MultiTargetAbility extends MultiAbility
+public class MultiTargetAbility extends Ability
 {
     Function<Properties, List<Entity>> entityFunction;
     int maxTargets = -1; // -1 is no limit

@@ -1,5 +1,6 @@
-package co.runed.bolster.conditions;
+package co.runed.bolster.conditions.base;
 
+import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.util.properties.Properties;
 
 public class NotCondition extends Condition

@@ -1,6 +1,7 @@
 package co.runed.bolster.conditions;
 
 import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.conditions.base.Condition;
 import co.runed.bolster.util.properties.Properties;
 
 public class AbilityInProgressCondition extends Condition

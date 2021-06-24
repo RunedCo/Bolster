@@ -13,7 +13,6 @@ import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
-import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.ChatColor;
@@ -30,7 +29,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
-public abstract class Item extends AbilityProvider implements IRegisterable
+public abstract class Item extends AbilityProvider
 {
     public static final NamespacedKey ITEM_ID_KEY = new NamespacedKey(Bolster.getInstance(), "item-id");
     public static final NamespacedKey ITEM_SKIN_KEY = new NamespacedKey(Bolster.getInstance(), "item-skin");

@@ -1,5 +1,7 @@
-package co.runed.bolster.conditions;
+package co.runed.bolster.conditions.base;
 
+import co.runed.bolster.conditions.ConditionPriority;
+import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.util.properties.Properties;
 
 public abstract class Condition
@@ -15,7 +17,8 @@ public abstract class Condition
 
     /**
      * Callback for when a condition fails
-     *  @param conditional the conditional
+     *
+     * @param conditional the conditional
      * @param properties  the conditional properties
      * @param inverted
      */
@@ -39,6 +42,21 @@ public abstract class Condition
         {
             return this.priority.compareTo(condition.priority);
         }
+    }
+
+    public static NotCondition not(Condition condition)
+    {
+        return new NotCondition(condition);
+    }
+
+    public static OrCondition or(Condition... conditions)
+    {
+        return new OrCondition(conditions);
+    }
+
+    public static AndCondition and(Condition... conditions)
+    {
+        return new AndCondition(conditions);
     }
 }
 

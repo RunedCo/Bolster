@@ -2,6 +2,7 @@ package co.runed.bolster.conditions;
 
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
+import co.runed.bolster.conditions.base.Condition;
 import co.runed.bolster.util.properties.Properties;
 
 public class ProviderEqualsCondition extends Condition

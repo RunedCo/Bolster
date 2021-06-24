@@ -1,19 +1,20 @@
-package co.runed.bolster.conditions;
+package co.runed.bolster.conditions.base;
 
+import co.runed.bolster.conditions.IConditional;
 import co.runed.bolster.util.properties.Properties;
 
 import java.util.List;
 
-public class OrCondition extends Condition
+public class AndCondition extends Condition
 {
     Condition[] conditions;
 
-    public OrCondition(List<Condition> conditions)
+    public AndCondition(List<Condition> conditions)
     {
         this(conditions.toArray(new Condition[0]));
     }
 
-    public OrCondition(Condition... conditions)
+    public AndCondition(Condition... conditions)
     {
         this.conditions = conditions;
     }
@@ -23,25 +24,21 @@ public class OrCondition extends Condition
     {
         for (Condition condition : this.conditions)
         {
-            if (condition.evaluate(conditional, properties))
+            if (!condition.evaluate(conditional, properties))
             {
-                return true;
+                condition.onFail(conditional, properties, false);
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     @Override
     public void onFail(IConditional conditional, Properties properties, boolean inverted)
     {
-        for (Condition condition : this.conditions)
-        {
-            condition.onFail(conditional, properties, inverted);
-        }
     }
 
-    // todo check which conditions failed and then run error message only for that condition
     @Override
     public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
     {
