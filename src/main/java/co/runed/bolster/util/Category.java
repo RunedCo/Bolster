@@ -41,8 +41,6 @@ public class Category
 
     public ItemStack getIcon()
     {
-
-
         return icon;
     }
 }

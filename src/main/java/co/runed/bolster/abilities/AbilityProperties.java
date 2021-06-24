@@ -54,12 +54,11 @@ public class AbilityProperties
     // PROJECTILE PROPERTIES
     public static final Property<Float> FORCE = new Property<>("force", 0.0f);
     public static final Property<Vector> VELOCITY = new Property<>("velocity", new Vector());
-    public static final Property<Boolean> CONSUME_ITEM_ON_SHOOT = new FunctionProperty<>("consume_item",
-            (p) -> p.get(EVENT) instanceof EntityShootBowEvent && ((EntityShootBowEvent) p.get(EVENT)).shouldConsumeItem(),
-            (p, v) -> {
+    public static final Property<Boolean> CONSUME_ITEM_ON_SHOOT = new FunctionProperty<Boolean>("consume_item")
+            .get((p) -> p.get(EVENT) instanceof EntityShootBowEvent && ((EntityShootBowEvent) p.get(EVENT)).shouldConsumeItem())
+            .set((p, v) -> {
                 if (p.get(EVENT) instanceof EntityShootBowEvent) ((EntityShootBowEvent) p.get(EVENT)).setConsumeItem(v);
-            }
-    );
+            });
 
     // FISHING PROPERTIES
     public static final Property<Entity> CAUGHT = new Property<>("caught");
@@ -98,11 +97,11 @@ public class AbilityProperties
     // EVENT PROPERTIES
     private static final Property<Boolean> INTERNAL_CANCELLED = new Property<>("internal_cancelled", false);
 
-    public static final Property<Boolean> IS_CANCELLED = new FunctionProperty<>("is_cancelled",
-            (p) -> (p.get(EVENT) instanceof Cancellable && ((Cancellable) p.get(EVENT)).isCancelled())
+    public static final Property<Boolean> IS_CANCELLED = new FunctionProperty<Boolean>("is_cancelled")
+            .get((p) -> (p.get(EVENT) instanceof Cancellable && ((Cancellable) p.get(EVENT)).isCancelled())
                     || (p.get(EVENT) instanceof EntityDamageEvent && ((EntityDamageEvent) p.get(EVENT)).getFinalDamage() <= 0)
-                    || p.get(INTERNAL_CANCELLED),
-            (p, c) -> {
+                    || p.get(INTERNAL_CANCELLED))
+            .set((p, c) -> {
                 if (p.get(EVENT) instanceof Cancellable) ((Cancellable) p.get(EVENT)).setCancelled(c);
                 p.set(INTERNAL_CANCELLED, c);
             });
