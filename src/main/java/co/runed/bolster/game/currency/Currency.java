@@ -81,12 +81,6 @@ public class Currency implements IRegisterable, ICategorised
         return builder.build();
     }
 
-    @Override
-    public String getDescription()
-    {
-        return null;
-    }
-
     public static Map<Currency, Integer> fromList(List<String> costs)
     {
         Map<Currency, Integer> output = new HashMap<>();

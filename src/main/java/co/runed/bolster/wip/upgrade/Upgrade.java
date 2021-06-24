@@ -2,6 +2,7 @@ package co.runed.bolster.wip.upgrade;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.util.INameable;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.config.IConfigurable;
 import co.runed.bolster.util.registries.IRegisterable;
@@ -19,7 +20,7 @@ import java.util.function.Supplier;
  * Can set name, max number of points and starting number of points + cost
  * cost units are arbitrary and should be handled by the thing using the upgrade (e.g. mana or $$$)
  */
-public class Upgrade implements IRegisterable, IConfigurable
+public class Upgrade implements IRegisterable, IConfigurable, INameable
 {
     // upgrade needs a way to add abilities, maybe have separate UpgradeInfo class that can get added
     // .addAbility(AbilityTrigger.LEFT_CLICK, () -> new DisguiseAbility(EntityType.ARMOR_STAND))
@@ -94,6 +95,7 @@ public class Upgrade implements IRegisterable, IConfigurable
         return this;
     }
 
+    @Override
     public String getName()
     {
         if (this.maxLevel <= 1)
@@ -128,12 +130,6 @@ public class Upgrade implements IRegisterable, IConfigurable
     public String getId()
     {
         return this.id;
-    }
-
-    @Override
-    public String getDescription()
-    {
-        return null;
     }
 
     @Override

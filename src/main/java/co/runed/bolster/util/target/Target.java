@@ -71,10 +71,4 @@ public class Target<T> implements IRegisterable
     {
         return this.id;
     }
-
-    @Override
-    public String getDescription()
-    {
-        return null;
-    }
 }

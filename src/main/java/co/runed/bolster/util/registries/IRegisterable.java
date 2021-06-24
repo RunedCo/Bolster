@@ -12,7 +12,7 @@ public interface IRegisterable
     default ItemStack getIcon()
     {
         return new ItemBuilder(Material.STICK)
-                .setDisplayName(this.getName())
+                .setDisplayName(this.getId())
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package co.runed.bolster.game.shop;
 
 import co.runed.bolster.game.currency.Currency;
+import co.runed.bolster.util.INameable;
 import co.runed.bolster.util.config.IConfigurable;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.configuration.ConfigurationSection;
@@ -9,7 +10,7 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Shop implements IRegisterable, IConfigurable
+public class Shop implements IRegisterable, IConfigurable, INameable
 {
     String id;
     String name;
@@ -32,12 +33,6 @@ public class Shop implements IRegisterable, IConfigurable
     public String getName()
     {
         return name;
-    }
-
-    @Override
-    public String getDescription()
-    {
-        return null;
     }
 
     public void addItem(ShopItem item)

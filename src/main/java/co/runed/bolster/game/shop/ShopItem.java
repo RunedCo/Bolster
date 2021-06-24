@@ -6,6 +6,8 @@ import co.runed.bolster.gui.Gui;
 import co.runed.bolster.gui.GuiConfirm;
 import co.runed.bolster.gui.GuiConstants;
 import co.runed.bolster.managers.PlayerManager;
+import co.runed.bolster.util.IDescribable;
+import co.runed.bolster.util.INameable;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.registries.IRegisterable;
@@ -21,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ShopItem implements IRegisterable
+public class ShopItem implements IRegisterable, INameable, IDescribable
 {
     String id;
     String name;

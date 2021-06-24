@@ -25,13 +25,7 @@ public class ItemSkin implements IRegisterable, IConfigurable
     {
         return Registries.ITEM_SKINS.getId(this);
     }
-
-    @Override
-    public String getDescription()
-    {
-        return null;
-    }
-
+    
     @Override
     public void create(ConfigurationSection config)
     {

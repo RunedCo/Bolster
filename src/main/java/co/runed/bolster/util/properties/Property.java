@@ -1,13 +1,14 @@
 package co.runed.bolster.util.properties;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.util.IDescribable;
 import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.NamespacedKey;
 
 /**
  * A property passed to an ability when cast
  */
-public class Property<T> implements IRegisterable
+public class Property<T> implements IRegisterable, IDescribable
 {
     private NamespacedKey key;
     private T defaultValue;

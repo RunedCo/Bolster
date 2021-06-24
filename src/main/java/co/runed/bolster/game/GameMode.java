@@ -248,12 +248,6 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     }
 
     @Override
-    public String getDescription()
-    {
-        return null;
-    }
-
-    @Override
     public void create(ConfigurationSection config)
     {
 

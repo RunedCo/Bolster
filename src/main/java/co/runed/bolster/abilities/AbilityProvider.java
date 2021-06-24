@@ -8,6 +8,8 @@ import co.runed.bolster.game.Traits;
 import co.runed.bolster.game.traits.TraitProvider;
 import co.runed.bolster.managers.AbilityManager;
 import co.runed.bolster.util.ICategorised;
+import co.runed.bolster.util.IDescribable;
+import co.runed.bolster.util.INameable;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.config.IConfigurable;
@@ -29,7 +31,7 @@ import java.util.function.BiConsumer;
  * Class that handles common functionality for prociding abilities
  * Used by {@link BolsterClass} and {@link co.runed.bolster.items.Item}
  */
-public abstract class AbilityProvider extends TraitProvider implements IRegisterable, IConfigurable, ICategorised
+public abstract class AbilityProvider extends TraitProvider implements IRegisterable, INameable, IDescribable, IConfigurable, ICategorised
 {
     private final List<AbilityProvider.AbilityData> abilities = new ArrayList<>();
     private LivingEntity entity;
