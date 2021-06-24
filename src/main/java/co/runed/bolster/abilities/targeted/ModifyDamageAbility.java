@@ -2,7 +2,7 @@ package co.runed.bolster.abilities.targeted;
 
 import co.runed.bolster.abilities.Ability;
 import co.runed.bolster.abilities.AbilityProperties;
-import co.runed.bolster.math.Operation;
+import co.runed.bolster.common.math.Operation;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
