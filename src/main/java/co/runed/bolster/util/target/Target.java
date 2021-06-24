@@ -1,7 +1,7 @@
 package co.runed.bolster.util.target;
 
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.AbilityProperties;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.wip.CombatTracker;

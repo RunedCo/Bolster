@@ -1,6 +1,6 @@
 package co.runed.bolster.abilities.base;
 
-import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.target.Target;
 

@@ -1,6 +1,6 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.CleanupEntityEvent;
 import co.runed.bolster.events.LoadPlayerDataEvent;
 import co.runed.bolster.events.entity.EntitySetCooldownEvent;

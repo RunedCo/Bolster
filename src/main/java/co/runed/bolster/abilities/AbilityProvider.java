@@ -1,9 +1,9 @@
 package co.runed.bolster.abilities;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.base.FunctionAbility;
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.game.Traits;
 import co.runed.bolster.game.traits.TraitProvider;
 import co.runed.bolster.managers.AbilityManager;

@@ -1,7 +1,7 @@
 package co.runed.bolster.conditions;
 
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.Ability;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;

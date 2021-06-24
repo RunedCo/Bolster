@@ -1,7 +1,7 @@
 package co.runed.bolster.commands;
 
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import dev.jorel.commandapi.CommandAPICommand;

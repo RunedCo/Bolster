@@ -1,8 +1,8 @@
 package co.runed.bolster.abilities.effects;
 
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.TargetedAbility;
 import co.runed.bolster.conditions.IsEntityTypeCondition;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.fx.particles.ParticleInfo;
 import co.runed.bolster.fx.particles.ParticleType;
 import co.runed.bolster.game.PlayerData;

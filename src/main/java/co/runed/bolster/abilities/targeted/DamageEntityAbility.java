@@ -1,7 +1,7 @@
 package co.runed.bolster.abilities.targeted;
 
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.TargetedAbility;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import co.runed.bolster.v1_16_R3.CraftUtil;

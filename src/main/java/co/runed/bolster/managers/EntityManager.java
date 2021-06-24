@@ -1,6 +1,6 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.BolsterEntity;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.CleanupEntityEvent;
 import co.runed.bolster.game.Team;
 import co.runed.bolster.util.BukkitUtil;

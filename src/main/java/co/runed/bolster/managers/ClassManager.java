@@ -1,9 +1,9 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityProviderType;
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.registries.Registries;
 import org.bukkit.Chunk;
 import org.bukkit.NamespacedKey;

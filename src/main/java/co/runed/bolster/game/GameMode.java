@@ -1,8 +1,8 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.Config;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.LoadPlayerDataEvent;
 import co.runed.bolster.events.SavePlayerDataEvent;
 import co.runed.bolster.events.game.GameModePauseChangeEvent;

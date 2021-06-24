@@ -1,10 +1,10 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.BolsterEntity;
 import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.abilities.AbilityProvider;
 import co.runed.bolster.abilities.AbilityProviderType;
 import co.runed.bolster.abilities.AbilityTrigger;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.entity.EntityCastAbilityEvent;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.properties.Properties;
