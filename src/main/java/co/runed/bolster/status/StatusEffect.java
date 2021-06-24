@@ -4,9 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.events.entity.EntityAddStatusEffectEvent;
 import co.runed.bolster.events.entity.EntityRemoveStatusEffectEvent;
 import co.runed.bolster.managers.StatusEffectManager;
-import co.runed.bolster.util.BukkitUtil;
-import co.runed.bolster.util.TaskUtil;
-import co.runed.bolster.util.TimeUtil;
+import co.runed.bolster.util.*;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.wip.PotionSystem;
@@ -26,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class StatusEffect implements Listener, IRegisterable, Comparable<StatusEffect>
+public abstract class StatusEffect implements Listener, IRegisterable, INameable, IDescribable, Comparable<StatusEffect>
 {
     private static final Collection<PotionEffectType> MAX_DURATION_EFFECTS = Arrays.asList(PotionEffectType.BLINDNESS, PotionEffectType.CONFUSION, PotionEffectType.NIGHT_VISION);
 

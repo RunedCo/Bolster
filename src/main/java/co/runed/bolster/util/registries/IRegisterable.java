@@ -9,13 +9,6 @@ public interface IRegisterable
 {
     String getId();
 
-    default String getName()
-    {
-        return this.getId();
-    }
-
-    String getDescription();
-
     default ItemStack getIcon()
     {
         return new ItemBuilder(Material.STICK)
