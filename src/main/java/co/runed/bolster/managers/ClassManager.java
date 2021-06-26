@@ -139,7 +139,7 @@ public class ClassManager extends Manager
             if (data.has(CLASS_KEY, PersistentDataType.STRING))
             {
                 String classKey = data.get(CLASS_KEY, PersistentDataType.STRING);
-                BolsterClass bolsterClass = Registries.CLASSES.get(classKey);
+                BolsterClass bolsterClass = Registries.CLASSES.get(classKey).create();
 
                 if (bolsterClass == null || BolsterEntity.from((LivingEntity) entity).getBolsterClass() != null)
                     continue;

@@ -79,7 +79,7 @@ public abstract class BolsterClass extends AbilityProvider
     @Override
     public String getId()
     {
-        return Registries.CLASSES.getId(this);
+        return Registries.CLASSES.getIdFromValue(this);
     }
 
     public void setDescription(String description)

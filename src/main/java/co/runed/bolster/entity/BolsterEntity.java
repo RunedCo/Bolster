@@ -1,6 +1,7 @@
 package co.runed.bolster.entity;
 
 import co.runed.bolster.classes.BolsterClass;
+import co.runed.bolster.classes.ClassDefinition;
 import co.runed.bolster.common.math.NumberUtil;
 import co.runed.bolster.common.math.Operation;
 import co.runed.bolster.common.math.easing.Ease;
@@ -57,6 +58,11 @@ public class BolsterEntity extends TraitProvider
     public void setBolsterClass(BolsterClass bolsterClass)
     {
         ClassManager.getInstance().setClass(this._entity, bolsterClass);
+    }
+
+    public void setBolsterClass(ClassDefinition classDefinition)
+    {
+        this.setBolsterClass(classDefinition.create());
     }
 
     public LivingEntity getBukkit()

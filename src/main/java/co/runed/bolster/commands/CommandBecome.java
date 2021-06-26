@@ -31,7 +31,7 @@ public class CommandBecome extends CommandBase
                     String id = (String) args[0];
                     if (!(sender instanceof LivingEntity)) return;
                     LivingEntity livingEntity = (LivingEntity) sender;
-                    BolsterClass bolsterClass = Registries.CLASSES.get(id);
+                    BolsterClass bolsterClass = Registries.CLASSES.get(id).create();
 
                     BolsterEntity.from(livingEntity).setBolsterClass(bolsterClass);
                     sender.sendMessage("Became " + bolsterClass.getName());

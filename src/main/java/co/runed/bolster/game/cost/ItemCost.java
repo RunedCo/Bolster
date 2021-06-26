@@ -5,6 +5,7 @@ import co.runed.bolster.conditions.HasItemCondition;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.GameMode;
@@ -14,26 +15,36 @@ import org.bukkit.inventory.Inventory;
 
 public class ItemCost extends Cost
 {
-    Class<? extends Item> itemClass;
+    Definition<Item> itemDef;
     int count;
     HasItemCondition condition;
 
     public ItemCost(int count)
     {
-        this(null, count);
+        this((Definition<Item>) null, count);
     }
 
-    public ItemCost(Class<? extends Item> itemClass)
+    public ItemCost(Item item)
     {
-        this(itemClass, 1);
+        this(item, 1);
     }
 
-    public ItemCost(Class<? extends Item> itemClass, int count)
+    public ItemCost(Item item, int count)
     {
-        this.itemClass = itemClass;
+        this(item.getDefinition(), count);
+    }
+
+    public ItemCost(Definition<Item> itemDef)
+    {
+        this(itemDef, 1);
+    }
+
+    public ItemCost(Definition<Item> itemDef, int count)
+    {
+        this.itemDef = itemDef;
         this.count = count;
 
-        this.condition = new HasItemCondition(Target.CASTER, itemClass, count);
+        this.condition = new HasItemCondition(Target.CASTER, itemDef, count);
     }
 
     @Override
@@ -52,7 +63,7 @@ public class ItemCost extends Cost
 
         Item item;
 
-        if (this.itemClass == null)
+        if (this.itemDef == null)
         {
             item = properties.get(AbilityProperties.ITEM);
 
@@ -60,7 +71,7 @@ public class ItemCost extends Cost
         }
         else
         {
-            item = ItemManager.getInstance().createItem(entity, this.itemClass);
+            item = ItemManager.getInstance().createItem(entity, this.itemDef);
         }
 
         int count = this.count;

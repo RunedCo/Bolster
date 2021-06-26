@@ -4,17 +4,23 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.conditions.base.Condition;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemStackIsItemCondition extends Condition
 {
-    Class<? extends Item> item;
+    Definition<Item> item;
 
-    public ItemStackIsItemCondition(Class<? extends Item> item)
+    public ItemStackIsItemCondition(Definition<Item> item)
     {
         this.item = item;
+    }
+
+    public ItemStackIsItemCondition(Item item)
+    {
+        this(item.getDefinition());
     }
 
     @Override

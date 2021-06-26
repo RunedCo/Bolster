@@ -4,6 +4,7 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.inventory.EquipmentSlot;
@@ -14,14 +15,14 @@ import java.util.EnumSet;
 public class IsItemEquippedCondition extends TargetedCondition<BolsterEntity>
 {
     Collection<EquipmentSlot> slots;
-    Class<? extends Item> item;
+    Definition<Item> item;
 
-    public IsItemEquippedCondition(Target<BolsterEntity> target, EquipmentSlot slot, Class<? extends Item> item)
+    public IsItemEquippedCondition(Target<BolsterEntity> target, EquipmentSlot slot, Definition<Item> item)
     {
         this(target, EnumSet.of(slot), item);
     }
 
-    public IsItemEquippedCondition(Target<BolsterEntity> target, Collection<EquipmentSlot> slots, Class<? extends Item> item)
+    public IsItemEquippedCondition(Target<BolsterEntity> target, Collection<EquipmentSlot> slots, Definition<Item> item)
     {
         super(target);
 

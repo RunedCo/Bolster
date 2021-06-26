@@ -3,12 +3,12 @@ package co.runed.bolster.util.registries;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ICategorised;
+import co.runed.bolster.util.config.BolsterConfiguration;
 import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.config.IConfigurable;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -19,12 +19,13 @@ import java.util.concurrent.Callable;
 public class Registry<T extends IRegisterable>
 {
     public Plugin plugin;
-    private final String folderName;
-    private final HashMap<String, ConfigurationSection> configs = new HashMap<>();
-    private final HashMap<String, Entry<? extends T>> entries = new HashMap<>();
+    private final List<File> configFolders = new ArrayList<>();
+    private final Map<String, ConfigurationSection> configs = new HashMap<>();
+    private final Map<String, Entry<? extends T>> entries = new HashMap<>();
 
-    private final HashMap<Class<? extends T>, String> classKeys = new HashMap<>();
-    private final HashMap<T, String> objKeys = new HashMap<>();
+    private final Map<Class<? extends T>, String> classKeys = new HashMap<>();
+    private final Map<T, String> objKeys = new HashMap<>();
+    private final Map<String, Collection<Category>> categories = new HashMap<>();
 
     public Registry(Plugin plugin)
     {
@@ -34,8 +35,6 @@ public class Registry<T extends IRegisterable>
     public Registry(Plugin plugin, String folderName)
     {
         this.plugin = plugin;
-        this.folderName = folderName;
-
         this.loadFiles(plugin, folderName);
     }
 
@@ -45,25 +44,40 @@ public class Registry<T extends IRegisterable>
         {
             File pluginDir = plugin.getDataFolder();
 
-            File specificFolder = new File(pluginDir, folderName);
+            File folder = new File(pluginDir, folderName);
 
-            if (!specificFolder.exists() && !specificFolder.isDirectory()) return;
+            if (!folder.exists() && !folder.isDirectory()) return;
 
-            for (File file : FileUtils.listFiles(specificFolder, new String[]{"yml", "yaml"}, true))
+            this.loadFiles(folder);
+        }
+    }
+
+    public void loadFiles(File folder)
+    {
+        if (!this.configFolders.contains(folder)) this.configFolders.add(folder);
+
+        for (File file : FileUtils.listFiles(folder, new String[]{"yml", "yaml"}, true))
+        {
+            Configuration config = BolsterConfiguration.loadConfiguration(file);
+
+            for (String key : config.getKeys(false))
             {
-                Configuration config = YamlConfiguration.loadConfiguration(file);
+                if (!config.isConfigurationSection(key)) continue;
 
-                for (String key : config.getKeys(false))
-                {
-                    if (!config.isConfigurationSection(key)) continue;
+                ConfigurationSection configSection = config.getConfigurationSection(key);
 
-                    ConfigurationSection configSection = config.getConfigurationSection(key);
+                Bolster.getInstance().getLogger().info("Loaded config for " + key);
 
-                    Bolster.getInstance().getLogger().info("Loaded config for " + key);
-
-                    this.configs.put(key, configSection);
-                }
+                this.configs.put(key, configSection);
             }
+        }
+    }
+
+    public void reloadFiles()
+    {
+        for (File folder : this.configFolders)
+        {
+            this.loadFiles(folder);
         }
     }
 
@@ -106,9 +120,16 @@ public class Registry<T extends IRegisterable>
         this.doRegister(id, func);
     }
 
-    private void doRegister(String id, Callable<? extends T> func)
+    protected void doRegister(String id, Callable<? extends T> func)
     {
-        this.entries.putIfAbsent(id, new Entry<>(id, func, this.getConfig(id)));
+        this.entries.putIfAbsent(id, new Entry<>(this, id, func, this.categories.getOrDefault(id, new ArrayList<>())));
+    }
+
+    public void addCategories(String id, Collection<Category> categories)
+    {
+        this.categories.putIfAbsent(id, new ArrayList<>());
+
+        this.categories.get(id).addAll(categories);
     }
 
     public boolean contains(String id)
@@ -152,6 +173,8 @@ public class Registry<T extends IRegisterable>
 
     public String getId(T obj)
     {
+        if (obj == null) return null;
+
         if (this.objKeys.containsKey(obj)) return this.objKeys.get(obj);
         if (this.classKeys.containsKey(obj.getClass())) return this.classKeys.get(obj.getClass());
 
@@ -200,16 +223,15 @@ public class Registry<T extends IRegisterable>
 
     public T get(String id)
     {
-        if (!this.entries.containsKey(id)) return null;
+        if (!this.entries.containsKey(id))
+        {
+            System.out.println("Tried to get " + id + " from registry, but the registry does not contain it. " + this);
+            return null;
+        }
 
         try
         {
-            T value = this.entries.get(id).create();
-
-            // TODO make sure id works without this set
-            //value.setId(id);
-
-            return value;
+            return this.entries.get(id).create();
         }
         catch (Exception e)
         {
@@ -219,24 +241,50 @@ public class Registry<T extends IRegisterable>
         return null;
     }
 
+    public Entry<? extends T> getEntry(String id)
+    {
+        if (!this.entries.containsKey(id)) return null;
+
+        return this.entries.get(id);
+    }
+
     public static class Entry<T extends IRegisterable>
     {
+        final Registry<T> parent;
         String id;
-        Collection<Category> categories;
+        protected Collection<Category> categories = new ArrayList<>();
         Callable<? extends T> function;
-        ConfigurationSection config;
 
-        public Entry(String id, Callable<? extends T> function, ConfigurationSection config)
+        public Entry(Registry<T> parent, String id, Callable<? extends T> function, Collection<Category> categories)
         {
+            this.parent = parent;
             this.id = id;
             this.function = function;
-            // HACKY CLONE
-            this.config = config;
 
-            T value = this.create();
+            this.categories.add(Category.ALL);
+            addCategories(categories);
 
-            if (value != null)
-                this.categories = value instanceof ICategorised ? ((ICategorised) value).getCategories() : new ArrayList<>();
+            try
+            {
+                T value = this.create();
+
+                if (value instanceof ICategorised)
+                {
+                    System.out.println(id + " is categorised. Adding...");
+
+                    for (Category category : ((ICategorised) value).getCategories())
+                    {
+                        System.out.println("    Added category " + category.getName());
+                    }
+
+                    addCategories(((ICategorised) value).getCategories());
+                }
+            }
+            catch (Exception e)
+            {
+                System.out.println("Error getting categories...");
+                e.printStackTrace();
+            }
         }
 
         public T create()
@@ -245,15 +293,7 @@ public class Registry<T extends IRegisterable>
             {
                 T value = this.function.call();
 
-                // TODO make sure works without manually setting id
-                //value.setId(this.id);
-
-                ConfigurationSection config = ConfigUtil.create();
-
-                if (this.config != null)
-                {
-                    config = this.config;
-                }
+                ConfigurationSection config = parent.getConfig(id);
 
                 // HACKY CLONE
                 config = ConfigUtil.cloneSection(config);
@@ -270,14 +310,25 @@ public class Registry<T extends IRegisterable>
             }
             catch (Exception e)
             {
+                e.printStackTrace();
             }
 
             return null;
         }
 
-        public Collection<? extends Category> getCategories()
+        public Collection<Category> getCategories()
         {
             return this.categories;
+        }
+
+        public void addCategories(Collection<Category> categories)
+        {
+            for (Category category : categories)
+            {
+                if (this.categories.contains(category)) continue;
+
+                this.categories.add(category);
+            }
         }
 
         public String getId()

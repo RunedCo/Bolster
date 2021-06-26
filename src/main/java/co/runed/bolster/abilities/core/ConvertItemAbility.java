@@ -6,6 +6,7 @@ import co.runed.bolster.conditions.IsEntityTypeCondition;
 import co.runed.bolster.game.cost.ItemCost;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.entity.EntityType;
@@ -14,16 +15,16 @@ import org.bukkit.entity.Player;
 public class ConvertItemAbility extends Ability
 {
     int inputCost;
-    Class<? extends Item> outputItemClass;
+    Definition<Item> outputItemDefinition;
     int outputCount;
 
-    public ConvertItemAbility(int inputCost, Class<? extends Item> outputItemClass, int outputItemCount)
+    public ConvertItemAbility(int inputCost, Definition<Item> outputItemDefinition, int outputItemCount)
     {
         super();
 
         this.inputCost = inputCost;
 
-        this.outputItemClass = outputItemClass;
+        this.outputItemDefinition = outputItemDefinition;
         this.outputCount = outputItemCount;
 
         this.addCost(new ItemCost(inputCost));
@@ -35,6 +36,6 @@ public class ConvertItemAbility extends Ability
     {
         Player player = (Player) properties.get(AbilityProperties.CASTER).getBukkit();
 
-        ItemManager.getInstance().giveItem(player, player.getInventory(), this.outputItemClass, this.outputCount);
+        ItemManager.getInstance().giveItem(player, player.getInventory(), this.outputItemDefinition, this.outputCount);
     }
 }

@@ -40,7 +40,7 @@ public class CommandBecomeGUI extends CommandBase
 
         for (String id : Registries.CLASSES.getEntries().keySet())
         {
-            classes.add(Registries.CLASSES.get(id));
+            classes.add(Registries.CLASSES.get(id).create());
         }
 
         ChestMenu.Builder pageTemplate = ChestMenu.builder(6).title("Classes").redraw(true);

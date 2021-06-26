@@ -5,6 +5,7 @@ import co.runed.bolster.items.LevelableItem;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.Category;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import dev.jorel.commandapi.CommandAPICommand;
@@ -36,7 +37,7 @@ public class CommandItems extends CommandBase
     {
         List<String> items = new ArrayList<>();
 
-        for (Registry.Entry<? extends Item> item : Registries.ITEMS.getEntries().values())
+        for (Registry.Entry<? extends Definition<Item>> item : Registries.ITEMS.getEntries().values())
         {
             if (!item.getCategories().contains(Category.LEVELABLE)) continue;
 
@@ -120,7 +121,7 @@ public class CommandItems extends CommandBase
                                 return;
                             }
 
-                            Item item = Registries.ITEMS.get(id);
+                            Item item = Registries.ITEMS.get(id).create();
 
                             if (item instanceof LevelableItem)
                             {

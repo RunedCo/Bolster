@@ -7,6 +7,7 @@ import co.runed.bolster.conditions.BlockIsMaterialCondition;
 import co.runed.bolster.conditions.IsEntityTypeCondition;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.target.Target;
 import org.bukkit.Material;
@@ -16,34 +17,18 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Function;
 
 public class CollectItemAbility extends Ability
 {
     Collection<Material> materials = new ArrayList<>();
-    Function<Properties, Class<? extends Item>> itemClassFunc;
+    Definition<Item> itemDefinition;
     int outputCount = 1;
 
-    public CollectItemAbility(Collection<Material> materials, Class<? extends Item> itemClass)
-    {
-        this(materials, itemClass, 1);
-    }
-
-    public CollectItemAbility(Collection<Material> materials, Class<? extends Item> itemClass, int outputCount)
-    {
-        this(materials, (properties) -> itemClass, outputCount);
-    }
-
-    public CollectItemAbility(Collection<Material> materials, Function<Properties, Class<? extends Item>>itemClassFunc)
-    {
-        this(materials, itemClassFunc, 1);
-    }
-
-    public CollectItemAbility(Collection<Material> materials, Function<Properties, Class<? extends Item>>itemClassFunc, int outputCount)
+    public CollectItemAbility(Collection<Material> materials, Definition<Item> itemDefinition, int outputCount)
     {
         super();
 
-        this.itemClassFunc = itemClassFunc;
+        this.itemDefinition = itemDefinition;
         this.materials = materials;
         this.outputCount = outputCount;
 
@@ -61,6 +46,6 @@ public class CollectItemAbility extends Ability
     {
         Player player = (Player) properties.get(AbilityProperties.CASTER).getBukkit();
 
-        ItemManager.getInstance().giveItem(player, player.getInventory(), itemClassFunc.apply(properties), outputCount);
+        ItemManager.getInstance().giveItem(player, player.getInventory(), itemDefinition, outputCount);
     }
 }

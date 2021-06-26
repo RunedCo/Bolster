@@ -14,8 +14,8 @@ import co.runed.bolster.wip.upgrade.Upgrade;
 
 public final class Registries
 {
-    public static final Registry<Item> ITEMS = new Registry<>(Bolster.getInstance(), "items");
-    public static final Registry<BolsterClass> CLASSES = new Registry<>(Bolster.getInstance(), "classes");
+    public static final DefinitionRegistry<Item> ITEMS = new DefinitionRegistry<>(Bolster.getInstance(), "items");
+    public static final DefinitionRegistry<BolsterClass> CLASSES = new DefinitionRegistry<>(Bolster.getInstance(), "classes");
     public static final Registry<ItemSkin> ITEM_SKINS = new Registry<>(Bolster.getInstance(), "skins");
     public static final Registry<ParticleSet> PARTICLE_SETS = new Registry<>(Bolster.getInstance(), "particles");
     public static final Registry<Upgrade> UPGRADES = new Registry<>(Bolster.getInstance(), "upgrades");

@@ -4,6 +4,7 @@ import co.runed.bolster.abilities.AbilityProperties;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.items.Item;
 import co.runed.bolster.managers.ItemManager;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.target.Target;
@@ -17,7 +18,7 @@ public class HasItemCondition extends TargetedCondition<BolsterEntity>
     String id;
     int count;
 
-    public HasItemCondition(Target<BolsterEntity> target, Class<? extends Item> item, int count)
+    public HasItemCondition(Target<BolsterEntity> target, Definition<Item> item, int count)
     {
         this(target, Registries.ITEMS.getId(item), count);
     }
@@ -25,6 +26,7 @@ public class HasItemCondition extends TargetedCondition<BolsterEntity>
     public HasItemCondition(Target<BolsterEntity> target, String id, int count)
     {
         super(target);
+        
         this.id = id;
         this.count = count;
     }

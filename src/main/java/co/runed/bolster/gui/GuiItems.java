@@ -2,6 +2,7 @@ package co.runed.bolster.gui;
 
 import co.runed.bolster.items.Item;
 import co.runed.bolster.util.Category;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import org.bukkit.entity.Player;
@@ -54,11 +55,11 @@ public class GuiItems extends Gui
                 .previousButton(GuiConstants.GUI_ARROW_LEFT)
                 .previousButtonSlot(47);
 
-        Map<String, Registry.Entry<? extends Item>> items = Registries.ITEMS.getEntries();
+        Map<String, Registry.Entry<? extends Definition<Item>>> items = Registries.ITEMS.getEntries();
 
-        for (Registry.Entry<? extends Item> entry : items.values())
+        for (Registry.Entry<? extends Definition<Item>> entry : items.values())
         {
-            Item item = entry.create();
+            Item item = entry.create().create();
 
             for (Category category : entry.getCategories())
             {

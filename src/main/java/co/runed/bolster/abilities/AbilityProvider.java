@@ -7,10 +7,7 @@ import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.game.Traits;
 import co.runed.bolster.game.traits.TraitProvider;
 import co.runed.bolster.managers.AbilityManager;
-import co.runed.bolster.util.ICategorised;
-import co.runed.bolster.util.IDescribable;
-import co.runed.bolster.util.INameable;
-import co.runed.bolster.util.StringUtil;
+import co.runed.bolster.util.*;
 import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.config.IConfigurable;
 import co.runed.bolster.util.json.JsonExclude;
@@ -23,6 +20,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -42,6 +40,7 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
     private boolean dirty;
     @JsonExclude
     private String tooltip;
+    private Collection<Category> categories = new ArrayList<>();
 
     public abstract AbilityProviderType getType();
 
@@ -173,6 +172,18 @@ public abstract class AbilityProvider extends TraitProvider implements IRegister
         this.parent = parent;
 
         this.setDirty();
+    }
+
+    @Override
+    public void addCategory(Category category)
+    {
+        this.categories.add(category);
+    }
+
+    @Override
+    public Collection<Category> getCategories()
+    {
+        return this.categories;
     }
 
     public void addAbility(AbilityTrigger trigger, BiConsumer<LivingEntity, Properties> lambda)

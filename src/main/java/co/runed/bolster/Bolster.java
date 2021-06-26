@@ -1,6 +1,5 @@
 package co.runed.bolster;
 
-import co.runed.bolster.classes.TargetDummyClass;
 import co.runed.bolster.commands.*;
 import co.runed.bolster.common.ServerData;
 import co.runed.bolster.common.redis.RedisChannels;
@@ -117,7 +116,6 @@ public class Bolster extends JavaPlugin implements Listener
         getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:add_status_effect");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:remove_status_effect");
 
-        Registries.CLASSES.register("target_dummy", TargetDummyClass::new);
         Registries.PARTICLE_SETS.register("bruce_test", ParticleSet::new);
 
         this.menuListener = new MenuFunctionListener();

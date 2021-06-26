@@ -11,6 +11,7 @@ import co.runed.bolster.conditions.IsItemEquippedCondition;
 import co.runed.bolster.game.Traits;
 import co.runed.bolster.managers.ItemManager;
 import co.runed.bolster.util.Category;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.registries.Registries;
@@ -103,7 +104,12 @@ public abstract class Item extends AbilityProvider
     @Override
     public String getId()
     {
-        return Registries.ITEMS.getId(this);
+        return Registries.ITEMS.getIdFromValue(this);
+    }
+
+    public Definition<Item> getDefinition()
+    {
+        return Registries.ITEMS.get(this.getId());
     }
 
     @Override
@@ -337,14 +343,14 @@ public abstract class Item extends AbilityProvider
 
         if (mustBeActive)
         {
-            ability.addCondition(new IsItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), this.getClass()), ConditionPriority.HIGHEST);
+            ability.addCondition(new IsItemEquippedCondition(Target.CASTER, EnumSet.allOf(EquipmentSlot.class), Registries.ITEMS.get(this.getId())), ConditionPriority.HIGHEST);
         }
 
         // todo make sure hasitemcondition doesn't break anything or lag server
         // only run mustBeInInventory if not already running active (if an item is active it is always in inventory)
         if (mustBeInInventory && !mustBeActive)
         {
-            ability.addCondition(new HasItemCondition(Target.CASTER, this.getClass(), 1), ConditionPriority.HIGHEST);
+            ability.addCondition(new HasItemCondition(Target.CASTER, this.getId(), 1), ConditionPriority.HIGHEST);
         }
 
         super.addAbility(trigger, ability);

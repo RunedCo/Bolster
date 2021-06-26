@@ -7,6 +7,7 @@ import co.runed.bolster.abilities.AbilityTrigger;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.entity.EntityCastAbilityEvent;
 import co.runed.bolster.items.Item;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
 import org.bukkit.Material;
@@ -42,12 +43,12 @@ public class ItemManager extends Manager
     }
 
     /**
-     * @param itemClass the class of the item as registered in {@link co.runed.bolster.util.registries.Registry<Item>}
+     * @param itemDef the definition of the item as registered in {@link co.runed.bolster.util.registries.Registry<Item>}
      * @see #getItem(LivingEntity, String)
      */
-    public Item getItem(LivingEntity entity, Class<? extends Item> itemClass)
+    public Item getItem(LivingEntity entity, Definition<Item> itemDef)
     {
-        return this.getItem(entity, Registries.ITEMS.getId(itemClass));
+        return this.getItem(entity, itemDef.getId());
     }
 
     /**
@@ -70,12 +71,12 @@ public class ItemManager extends Manager
     }
 
     /**
-     * @param itemClass the class of the item as registered in {@link co.runed.bolster.util.registries.Registry<Item>}
+     * @param itemDef the definition of the item in {@link co.runed.bolster.util.registries.Registry<Item>}
      * @see #createItem(LivingEntity, String)
      */
-    public Item createItem(LivingEntity entity, Class<? extends Item> itemClass)
+    public Item createItem(LivingEntity entity, Definition<Item> itemDef)
     {
-        return this.createItem(entity, Registries.ITEMS.getId(itemClass));
+        return this.createItem(entity, itemDef.getId());
     }
 
     /**
@@ -91,7 +92,7 @@ public class ItemManager extends Manager
         // NOTE: must not create the item instance unless there is no item instance of the same type created already
         //       if we create the item instance it causes high cpu load due to constantly remaking any ticking ability instances
         Item existingItem = (Item) AbilityManager.getInstance().getProvider(entity, AbilityProviderType.ITEM, id);
-        Item newItem = existingItem != null ? existingItem : Registries.ITEMS.get(id);
+        Item newItem = existingItem != null ? existingItem : Registries.ITEMS.get(id).create();
         Item item = (Item) AbilityManager.getInstance().addProvider(entity, newItem);
 
         if (item == null) return null;
@@ -109,9 +110,9 @@ public class ItemManager extends Manager
     /**
      * @see #setItem(LivingEntity, Inventory, int, String, int)
      */
-    public Item setItem(LivingEntity entity, Inventory inventory, int slot, Class<? extends Item> itemClass, int amount)
+    public Item setItem(LivingEntity entity, Inventory inventory, int slot, Definition<Item> itemDef, int amount)
     {
-        return this.setItem(entity, inventory, slot, Registries.ITEMS.getId(itemClass), amount);
+        return this.setItem(entity, inventory, slot, itemDef.getId(), amount);
     }
 
     /**
@@ -148,9 +149,9 @@ public class ItemManager extends Manager
     /**
      * @see #giveItem(LivingEntity, Inventory, String, int)
      */
-    public Item giveItem(LivingEntity entity, Inventory inventory, Class<? extends Item> itemClass, int amount)
+    public Item giveItem(LivingEntity entity, Inventory inventory, Definition<Item> itemDef, int amount)
     {
-        return this.giveItem(entity, inventory, Registries.ITEMS.getId(itemClass), amount);
+        return this.giveItem(entity, inventory, itemDef.getId(), amount);
     }
 
     /**
@@ -249,9 +250,9 @@ public class ItemManager extends Manager
         return true;
     }
 
-    public boolean inventoryContainsAtLeast(Inventory inventory, Class<? extends Item> item, int count)
+    public boolean inventoryContainsAtLeast(Inventory inventory, Definition<Item> itemDef, int count)
     {
-        return this.inventoryContainsAtLeast(inventory, Registries.ITEMS.getId(item), count);
+        return this.inventoryContainsAtLeast(inventory, itemDef.getId(), count);
     }
 
     public boolean inventoryContainsAtLeast(Inventory inventory, String itemId, int count)
@@ -288,9 +289,9 @@ public class ItemManager extends Manager
         return numberFound;
     }
 
-    public int getAllInventoryItemCount(LivingEntity entity, Class<? extends Item> itemId)
+    public int getAllInventoryItemCount(LivingEntity entity, Definition<Item> itemDef)
     {
-        return this.getAllInventoryItemCount(entity, Registries.ITEMS.getId(itemId));
+        return this.getAllInventoryItemCount(entity, itemDef.getId());
     }
 
     public int getAllInventoryItemCount(LivingEntity entity, String itemId)
@@ -325,9 +326,9 @@ public class ItemManager extends Manager
         }
     }
 
-    public void rebuildItemStack(LivingEntity entity, Class<? extends Item> item)
+    public void rebuildItemStack(LivingEntity entity, Definition<Item> itemDef)
     {
-        this.rebuildItemStack(entity, Registries.ITEMS.getId(item));
+        this.rebuildItemStack(entity, itemDef.getId());
     }
 
     public void rebuildItemStack(LivingEntity entity, String itemId)
@@ -467,15 +468,15 @@ public class ItemManager extends Manager
     /**
      * Check if an entity has a specific item equipped
      *
-     * @param entity the entity
-     * @param item   the item class
-     * @param slot   the slot
+     * @param entity  the entity
+     * @param itemDef the item definition
+     * @param slot    the slot
      * @return
      */
-    public boolean isItemEquipped(LivingEntity entity, Class<? extends Item> item, EquipmentSlot slot)
+    public boolean isItemEquipped(LivingEntity entity, Definition<Item> itemDef, EquipmentSlot slot)
     {
         Item itemInHand = this.getEquippedItem(entity, slot);
-        return itemInHand != null && itemInHand.getId().equals(Registries.ITEMS.getId(item));
+        return itemInHand != null && itemInHand.getId().equals(itemDef.getId());
     }
 
     public Item getEquippedItem(LivingEntity entity, EquipmentSlot slot)

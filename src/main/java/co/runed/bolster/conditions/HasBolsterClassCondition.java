@@ -2,6 +2,7 @@ package co.runed.bolster.conditions;
 
 import co.runed.bolster.classes.BolsterClass;
 import co.runed.bolster.entity.BolsterEntity;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.target.Target;
@@ -11,11 +12,9 @@ public class HasBolsterClassCondition extends TargetedCondition<BolsterEntity>
 {
     String classId;
 
-    public HasBolsterClassCondition(Target<BolsterEntity> target, Class<? extends BolsterClass> clazz)
+    public HasBolsterClassCondition(Target<BolsterEntity> target, Definition<BolsterClass> clazz)
     {
-        this(target, "");
-
-        this.classId = Registries.CLASSES.getId(clazz);
+        this(target, Registries.CLASSES.getId(clazz));
     }
 
     public HasBolsterClassCondition(Target<BolsterEntity> target, String classId)
@@ -44,7 +43,7 @@ public class HasBolsterClassCondition extends TargetedCondition<BolsterEntity>
     @Override
     public String getErrorMessage(IConditional conditional, Properties properties, boolean inverted)
     {
-        BolsterClass bolsterClass = Registries.CLASSES.get(classId);
+        BolsterClass bolsterClass = Registries.CLASSES.get(classId).create();
 
         if (inverted) return ChatColor.RED + "You must not be a " + bolsterClass.getName() + " to use this ability!";
 
