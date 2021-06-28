@@ -4,30 +4,27 @@ import co.runed.bolster.util.StringUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BolsterConfiguration extends YamlConfiguration
 {
-    public BolsterConfiguration()
-    {
-        super();
-    }
-
-    public BolsterConfiguration(ConfigurationSection configurationSection)
-    {
-        this();
-
-        for (String key : configurationSection.getKeys(true))
-        {
-            this.set(key, configurationSection.get(key));
-        }
-    }
+//    public BolsterConfiguration()
+//    {
+//        super();
+//    }
+//
+//    public BolsterConfiguration(ConfigurationSection configurationSection)
+//    {
+//        this();
+//
+//        for (String key : configurationSection.getKeys(false))
+//        {
+//            this.set(key, configurationSection.get(key));
+//        }
+//    }
 
     @Override
     public Object get(String path, Object def)
@@ -124,34 +121,34 @@ public class BolsterConfiguration extends YamlConfiguration
         return ChatColor.translateAlternateColorCodes('&', value);
     }
 
-    @Override
-    public @Nullable ConfigurationSection getConfigurationSection(@NotNull String path)
-    {
-        ConfigurationSection section = super.getConfigurationSection(path);
-
-        if (section == null) return this.createSection(path);
-
-        if (section instanceof BolsterConfiguration)
-        {
-            return section;
-        }
-
-        BolsterConfiguration value = new BolsterConfiguration(section);
-
-        this.set(path, value);
-
-        return value;
-    }
-
-    @Override
-    public @NotNull ConfigurationSection createSection(@NotNull String path)
-    {
-        BolsterConfiguration value = new BolsterConfiguration(super.createSection(path));
-
-        this.set(path, value);
-
-        return value;
-    }
+//    @Override
+//    public @Nullable ConfigurationSection getConfigurationSection(@NotNull String path)
+//    {
+//        ConfigurationSection section = super.getConfigurationSection(path);
+//
+//        if (section == null) return this.createSection(path);
+//
+//        if (section instanceof BolsterConfiguration)
+//        {
+//            return section;
+//        }
+//
+//        BolsterConfiguration value = new BolsterConfiguration(section);
+//
+//        this.set(path, value);
+//
+//        return value;
+//    }
+//
+//    @Override
+//    public @NotNull ConfigurationSection createSection(@NotNull String path)
+//    {
+//        BolsterConfiguration value = new BolsterConfiguration(super.createSection(path));
+//
+//        this.set(path, value);
+//
+//        return value;
+//    }
 
     @Override
     public int getInt(String path, int def)

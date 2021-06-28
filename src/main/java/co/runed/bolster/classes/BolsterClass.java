@@ -65,9 +65,11 @@ public abstract class BolsterClass extends AbilityProvider
     @Override
     public ItemStack getIcon()
     {
+        String desc = this.getDescription();
+
         return new ItemBuilder(this.icon)
                 .setDisplayName(this.getName())
-                .setLoreComponent(Component.text(this.getDescription()))
+                .setLoreComponent(desc != null ? Component.text(desc) : Component.empty())
                 .build();
     }
 

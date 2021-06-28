@@ -8,6 +8,7 @@ import co.runed.bolster.events.entity.EntityCastAbilityEvent;
 import co.runed.bolster.events.entity.EntityPreCastAbilityEvent;
 import co.runed.bolster.events.entity.EntitySetCooldownEvent;
 import co.runed.bolster.util.BukkitUtil;
+import co.runed.bolster.util.Definition;
 import co.runed.bolster.util.properties.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -125,8 +126,24 @@ public class AbilityManager extends Manager
 
     public AbilityProvider getOrCreateProvider(LivingEntity entity, AbilityProviderType type, String id)
     {
-        // TODO check all registries and ensure type
-        return this.hasProvider(entity, type, id) ? this.getProvider(entity, type, id) : (AbilityProvider) type.getRegistries().get(0).get(id);
+        if (this.hasProvider(entity, type, id)) return this.getProvider(entity, type, id);
+
+        Object obj = type.getRegistries().get(0).get(id);
+
+        if (obj instanceof AbilityProvider)
+        {
+            return (AbilityProvider) obj;
+        }
+
+        if (obj instanceof Definition)
+        {
+            Definition definition = (Definition) obj;
+            Object out = definition.create();
+
+            if (out instanceof AbilityProvider) return (AbilityProvider) out;
+        }
+
+        return null;
     }
 
     public AbilityProvider getProvider(LivingEntity entity, AbilityProviderType type, String id)

@@ -223,11 +223,7 @@ public class Registry<T extends IRegisterable>
 
     public T get(String id)
     {
-        if (!this.entries.containsKey(id))
-        {
-            System.out.println("Tried to get " + id + " from registry, but the registry does not contain it. " + this);
-            return null;
-        }
+        if (!this.entries.containsKey(id)) return null;
 
         try
         {
@@ -270,13 +266,6 @@ public class Registry<T extends IRegisterable>
 
                 if (value instanceof ICategorised)
                 {
-                    System.out.println(id + " is categorised. Adding...");
-
-                    for (Category category : ((ICategorised) value).getCategories())
-                    {
-                        System.out.println("    Added category " + category.getName());
-                    }
-
                     addCategories(((ICategorised) value).getCategories());
                 }
             }
