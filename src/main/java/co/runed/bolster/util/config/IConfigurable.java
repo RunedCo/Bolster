@@ -20,11 +20,7 @@ public interface IConfigurable
         return true;
     }
 
-    default void create()
-    {
-        create(this.getConfig());
-    }
+    void loadConfig(ConfigurationSection config);
 
-    // TODO fix?
-    void create(ConfigurationSection config);
+    void create();
 }

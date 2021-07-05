@@ -1,6 +1,7 @@
 package co.runed.bolster.util;
 
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,7 +24,7 @@ public class Category
         this.name = name;
         this.description = description;
         this.icon = new ItemBuilder(icon)
-                .setDisplayName(ChatColor.WHITE + name)
+                .setDisplayName(Component.text(name, NamedTextColor.WHITE))
                 .setLore(this.getDescription())
                 .addAllItemFlags()
                 .build();

@@ -1,11 +1,11 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.entity.BolsterEntity;
-import co.runed.bolster.events.CleanupEntityEvent;
-import co.runed.bolster.events.LoadPlayerDataEvent;
+import co.runed.bolster.events.entity.EntityCleanupEvent;
 import co.runed.bolster.events.entity.EntitySetCooldownEvent;
+import co.runed.bolster.events.player.LoadPlayerDataEvent;
 import co.runed.bolster.game.PlayerData;
-import co.runed.bolster.game.Traits;
+import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.json.JsonExclude;
@@ -200,7 +200,7 @@ public class CooldownManager extends Manager
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onCleanupEntity(CleanupEntityEvent event)
+    private void onCleanupEntity(EntityCleanupEvent event)
     {
         this.cleanup(event.getUniqueId(), event.isForced());
     }

@@ -1,16 +1,14 @@
 package co.runed.bolster.util.properties;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.util.IDescribable;
 import co.runed.bolster.util.registries.IRegisterable;
-import org.bukkit.NamespacedKey;
 
 /**
  * A property passed to an ability when cast
  */
 public class Property<T> implements IRegisterable, IDescribable
 {
-    private NamespacedKey key;
+    private String id;
     private T defaultValue;
 
     public Property(String id)
@@ -20,18 +18,13 @@ public class Property<T> implements IRegisterable, IDescribable
 
     public Property(String id, T defaultValue)
     {
-        this.key = new NamespacedKey(Bolster.getInstance(), id);
+        this.id = id;
         this.defaultValue = defaultValue;
-    }
-
-    public NamespacedKey getKey()
-    {
-        return this.key;
     }
 
     public String toString()
     {
-        return "<Property " + this.key + ">";
+        return "<Property " + this.id + ">";
     }
 
     public Property<T> setDefault(T defaultValue)
@@ -48,13 +41,13 @@ public class Property<T> implements IRegisterable, IDescribable
 
     public void setId(String id)
     {
-        this.key = new NamespacedKey(Bolster.getInstance(), id);
+        this.id = id;
     }
 
     @Override
     public String getId()
     {
-        return this.getKey().toString();
+        return this.id;
     }
 
     @Override

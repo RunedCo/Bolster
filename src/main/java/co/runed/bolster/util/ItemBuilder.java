@@ -1,7 +1,6 @@
 package co.runed.bolster.util;
 
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -15,10 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -38,16 +34,7 @@ public class ItemBuilder
 
     public ItemBuilder addAllItemFlags()
     {
-        ItemMeta meta = this.itemStack.getItemMeta();
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        this.itemStack.setItemMeta(meta);
-
-        return new ItemBuilder(this.itemStack);
+        return this.addItemFlags(EnumSet.allOf(ItemFlag.class));
     }
 
     public ItemBuilder addItemFlags(Collection<ItemFlag> flags)
@@ -69,10 +56,10 @@ public class ItemBuilder
         return new ItemBuilder(this.itemStack);
     }
 
-    public ItemBuilder setDisplayName(String name)
+    public ItemBuilder setDisplayName(Component name)
     {
         ItemMeta meta = this.itemStack.getItemMeta();
-        meta.setDisplayName(name);
+        meta.displayName(name);
         this.itemStack.setItemMeta(meta);
         return new ItemBuilder(this.itemStack);
     }
@@ -202,10 +189,18 @@ public class ItemBuilder
         return this.setLore(StringUtil.formatLore(lore));
     }
 
-    public ItemBuilder addItemFlag(ItemFlag flag)
+    public ItemBuilder addItemFlag(ItemFlag... flag)
     {
         ItemMeta meta = this.itemStack.getItemMeta();
         meta.addItemFlags(flag);
+        this.itemStack.setItemMeta(meta);
+        return new ItemBuilder(this.itemStack);
+    }
+
+    public ItemBuilder removeItemFlag(ItemFlag flag)
+    {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        meta.removeItemFlags(flag);
         this.itemStack.setItemMeta(meta);
         return new ItemBuilder(this.itemStack);
     }
@@ -234,7 +229,7 @@ public class ItemBuilder
 
     public ItemBuilder hideName()
     {
-        return this.setDisplayName(ChatColor.RESET + "");
+        return this.setDisplayName(Component.empty());
     }
 
     public ItemBuilder addUnsafeEnchant(Enchantment ench, int level)
@@ -271,7 +266,7 @@ public class ItemBuilder
 
     public ItemBuilder setDamagePercent(double percent)
     {
-        return this.setDamage((int) (this.itemStack.getType().getMaxStackSize() * percent));
+        return this.setDamage((int) (this.itemStack.getType().getMaxDurability() * percent));
     }
 
     public ItemBuilder setDamage(int damage)

@@ -9,8 +9,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public abstract class Definition<T extends IRegisterable> implements IRegisterable, ICategorised
+public abstract class Definition<T extends IRegisterable> implements IRegisterable, ICategorised, INameable
 {
+    String name;
     String id;
     Callable<? extends T> callable;
     List<Category> categories = new ArrayList<>();
@@ -18,7 +19,15 @@ public abstract class Definition<T extends IRegisterable> implements IRegisterab
     public Definition(String id, Callable<T> callable)
     {
         this.id = id;
+        this.name = id;
         this.callable = callable;
+    }
+
+    public Definition<T> setName(String name)
+    {
+        this.name = name;
+
+        return this;
     }
 
     public Definition<T> category(Category category)
@@ -59,6 +68,12 @@ public abstract class Definition<T extends IRegisterable> implements IRegisterab
     public String getId()
     {
         return this.id;
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
     }
 
     @Override

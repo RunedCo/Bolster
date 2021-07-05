@@ -3,6 +3,7 @@ package co.runed.bolster;
 import co.runed.bolster.commands.*;
 import co.runed.bolster.common.ServerData;
 import co.runed.bolster.common.redis.RedisChannels;
+import co.runed.bolster.common.redis.RedisManager;
 import co.runed.bolster.common.redis.payload.Payload;
 import co.runed.bolster.common.redis.request.ServerDataPayload;
 import co.runed.bolster.common.redis.request.UnregisterServerPayload;
@@ -10,11 +11,12 @@ import co.runed.bolster.common.redis.response.RegisterServerResponsePayload;
 import co.runed.bolster.events.RedisMessageEvent;
 import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.GameMode;
-import co.runed.bolster.game.Traits;
 import co.runed.bolster.game.currency.Currencies;
 import co.runed.bolster.game.currency.Currency;
+import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.status.*;
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
@@ -30,8 +32,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+
+import java.util.Arrays;
 
 public class Bolster extends JavaPlugin implements Listener
 {
@@ -44,15 +47,12 @@ public class Bolster extends JavaPlugin implements Listener
 
     private CommandManager commandManager;
     private CooldownManager cooldownManager;
-    private ItemManager itemManager;
-    private AbilityManager abilityManager;
-    private ManaManager manaManager;
     private SidebarManager sidebarManager;
-    private ClassManager classManager;
     private StatusEffectManager statusEffectManager;
     private EntityManager entityManager;
     private PlayerManager playerManager;
     private EffectManager effectManager;
+    private RedisManager redisManager;
 
     private MenuFunctionListener menuListener;
 
@@ -79,27 +79,13 @@ public class Bolster extends JavaPlugin implements Listener
         // CREATE MANAGERS
         this.commandManager = new CommandManager();
         this.cooldownManager = new CooldownManager(this);
-        this.itemManager = new ItemManager(this);
-        this.abilityManager = new AbilityManager(this);
         this.sidebarManager = new SidebarManager(this);
-        this.classManager = new ClassManager(this);
-        this.manaManager = new ManaManager(this);
         this.statusEffectManager = new StatusEffectManager(this);
         this.playerManager = new PlayerManager(this);
         this.entityManager = new EntityManager(this);
         this.effectManager = new EffectManager(this);
 
-        // SET MANA MANAGER SETTINGS
-        this.manaManager.setDefaultMaximumMana(200);
-        this.manaManager.setEnableXpManaBar(true);
-
         // REGISTER COMMANDS
-        this.commandManager.add(new CommandItems());
-        this.commandManager.add(new CommandItemsGUI());
-        this.commandManager.add(new CommandBecome());
-        this.commandManager.add(new CommandBecomeGUI());
-        this.commandManager.add(new CommandMana());
-        this.commandManager.add(new CommandSummonDummy());
         this.commandManager.add(new CommandCurrency());
         this.commandManager.add(new CommandGame());
         this.commandManager.add(new CommandShop());
@@ -134,9 +120,12 @@ public class Bolster extends JavaPlugin implements Listener
         this.registerCurrencies();
         this.registerTraits();
 
-        /* Connect to Redis */
-        this.jedisPool = new JedisPool(config.redisHost, config.redisPort);
-        Bukkit.getScheduler().runTaskAsynchronously(this, this::setupRedisListener);
+        var redisChannels = Arrays.asList(RedisChannels.REQUEST_SERVERS_RESPONSE, RedisChannels.REQUEST_PLAYER_DATA_RESPONSE, RedisChannels.REGISTER_SERVER_RESPONSE);
+        this.redisManager = new RedisManager(config.redisHost, config.redisPort, null, null, redisChannels);
+        this.redisManager.setDefaultTarget("proxy");
+        this.redisManager.setMessageHandler((channel, message) -> BukkitUtil.triggerEventSync(new RedisMessageEvent(channel, message)));
+
+        Bukkit.getScheduler().runTaskAsynchronously(this, redisManager::setup);
 
         getServer().getScheduler().scheduleSyncDelayedTask(this, this::onPostEnable);
     }
@@ -183,39 +172,6 @@ public class Bolster extends JavaPlugin implements Listener
             this.getLogger().severe("FAILED TO LOAD CONFIG FILE");
             e.printStackTrace();
             this.setEnabled(false);
-        }
-    }
-
-    private void setupRedisListener()
-    {
-        Jedis subRedis = null;
-        Jedis pubRedis = null;
-
-        try
-        {
-            /* Creating Jedis object for connecting with redis server */
-            subRedis = this.jedisPool.getResource();
-            pubRedis = this.jedisPool.getResource();
-
-            /* Creating JedisPubSub object for subscribing with channels */
-            RedisManager redisManager = new RedisManager(this, subRedis, pubRedis);
-        }
-
-        catch (Exception ex)
-        {
-            System.out.println("Exception : " + ex.getMessage());
-        }
-        finally
-        {
-            if (subRedis != null)
-            {
-                subRedis.close();
-            }
-
-            if (pubRedis != null)
-            {
-                pubRedis.close();
-            }
         }
     }
 

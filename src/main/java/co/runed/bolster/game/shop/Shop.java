@@ -78,7 +78,7 @@ public class Shop implements IRegisterable, IConfigurable, INameable
     }
 
     @Override
-    public void create(ConfigurationSection config)
+    public void loadConfig(ConfigurationSection config)
     {
         for (String key : config.getKeys(false))
         {
@@ -90,5 +90,11 @@ public class Shop implements IRegisterable, IConfigurable, INameable
 
             item.loadFromConfig(sec);
         }
+    }
+
+    @Override
+    public void create()
+    {
+        
     }
 }

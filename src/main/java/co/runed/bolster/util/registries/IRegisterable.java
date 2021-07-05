@@ -1,6 +1,7 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.util.ItemBuilder;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,7 +13,7 @@ public interface IRegisterable
     default ItemStack getIcon()
     {
         return new ItemBuilder(Material.STICK)
-                .setDisplayName(this.getId())
+                .setDisplayName(Component.text(this.getId()))
                 .build();
     }
 }

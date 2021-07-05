@@ -3,9 +3,9 @@ package co.runed.bolster.game;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.Config;
 import co.runed.bolster.entity.BolsterEntity;
-import co.runed.bolster.events.LoadPlayerDataEvent;
-import co.runed.bolster.events.SavePlayerDataEvent;
 import co.runed.bolster.events.game.GameModePauseChangeEvent;
+import co.runed.bolster.events.player.LoadPlayerDataEvent;
+import co.runed.bolster.events.player.SavePlayerDataEvent;
 import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
 import co.runed.bolster.managers.Manager;
@@ -248,7 +248,13 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     }
 
     @Override
-    public void create(ConfigurationSection config)
+    public void loadConfig(ConfigurationSection config)
+    {
+
+    }
+
+    @Override
+    public void create()
     {
 
     }

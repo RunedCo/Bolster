@@ -23,5 +23,4 @@ public class Trait<T> extends Property<T>
     {
         return operation;
     }
-
 }

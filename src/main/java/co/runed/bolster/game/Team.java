@@ -1,7 +1,7 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.events.CleanupEntityEvent;
+import co.runed.bolster.events.entity.EntityCleanupEvent;
 import co.runed.bolster.managers.EntityManager;
 import co.runed.bolster.util.BukkitUtil;
 import net.md_5.bungee.api.ChatColor;
@@ -354,7 +354,7 @@ public class Team implements Listener
     }
 
     @EventHandler
-    private void onCleanupEntity(CleanupEntityEvent event)
+    private void onCleanupEntity(EntityCleanupEvent event)
     {
         if (event.isForced())
         {

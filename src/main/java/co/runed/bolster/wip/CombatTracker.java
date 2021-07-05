@@ -1,6 +1,6 @@
 package co.runed.bolster.wip;
 
-import co.runed.bolster.events.CleanupEntityEvent;
+import co.runed.bolster.events.entity.EntityCleanupEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -93,7 +93,7 @@ public class CombatTracker implements Listener
     }
 
     @EventHandler
-    private void onCleanupEntity(CleanupEntityEvent event)
+    private void onCleanupEntity(EntityCleanupEvent event)
     {
         if (event.isForced())
         {

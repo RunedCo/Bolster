@@ -3,6 +3,8 @@ package co.runed.bolster;
 import co.runed.bolster.managers.Manager;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.ItemBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -193,7 +195,7 @@ public class Warps extends Manager
         public ItemStack getIcon()
         {
             ItemBuilder builder = new ItemBuilder(this.icon)
-                    .setDisplayName(ChatColor.WHITE + (name == null ? id : name))
+                    .setDisplayName(Component.text((name == null ? id : name), NamedTextColor.WHITE))
                     .addLore(ChatColor.GRAY + "/warp " + id);
 
             return builder.build();

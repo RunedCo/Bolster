@@ -1,6 +1,6 @@
 package co.runed.bolster.wip;
 
-import co.runed.bolster.events.CleanupEntityEvent;
+import co.runed.bolster.events.entity.EntityCleanupEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -48,7 +48,7 @@ public class InventoryTracker implements Listener
     }
 
     @EventHandler
-    private void onCleanupEntity(CleanupEntityEvent event)
+    private void onCleanupEntity(EntityCleanupEvent event)
     {
         if (event.isForced())
         {

@@ -4,7 +4,8 @@ import co.runed.bolster.util.ICategorised;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -76,7 +77,7 @@ public class Currency implements IRegisterable, ICategorised
     {
         ItemBuilder builder = new ItemBuilder(icon)
                 .addAllItemFlags()
-                .setDisplayName(ChatColor.WHITE + this.getName());
+                .setDisplayName(Component.text(this.getName(), NamedTextColor.WHITE));
 
         return builder.build();
     }

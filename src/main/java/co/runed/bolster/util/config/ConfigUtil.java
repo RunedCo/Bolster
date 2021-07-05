@@ -1,6 +1,7 @@
 package co.runed.bolster.util.config;
 
 import co.runed.bolster.util.ItemBuilder;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
@@ -52,7 +53,7 @@ public class ConfigUtil
 
         ItemBuilder builder = new ItemBuilder(material);
 
-        if (config.isString("name")) builder = builder.setDisplayName(config.getString("name"));
+        if (config.isString("name")) builder = builder.setDisplayName(Component.text(config.getString("name")));
         if (config.isInt("custom-model-data")) builder = builder.setCustomModelData(config.getInt("custom-model-data"));
         if (config.isList("lore")) builder = builder.addLore(config.getStringList("lore"));
 

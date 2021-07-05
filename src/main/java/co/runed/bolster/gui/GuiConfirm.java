@@ -1,7 +1,9 @@
 package co.runed.bolster.gui;
 
 import co.runed.bolster.util.ItemBuilder;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -42,7 +44,7 @@ public class GuiConfirm extends Gui
 
         ItemStackTemplate declineTemplate = new StaticItemTemplate(
                 new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
-                        .setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "CANCEL")
+                        .setDisplayName(Component.text(GuiConstants.CANCEL, NamedTextColor.RED, TextDecoration.BOLD))
                         .build()
         );
 
@@ -61,7 +63,7 @@ public class GuiConfirm extends Gui
 
         ItemStackTemplate confirmTemplate = new StaticItemTemplate(
                 new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
-                        .setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "CONFIRM")
+                        .setDisplayName(Component.text(GuiConstants.CONFIRM, NamedTextColor.GREEN, TextDecoration.BOLD))
                         .build()
         );
 

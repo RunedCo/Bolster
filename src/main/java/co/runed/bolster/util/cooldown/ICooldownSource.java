@@ -6,7 +6,7 @@ public interface ICooldownSource<T>
 
     double getCooldown();
 
-    T setCooldown(double cooldown);
+    T cooldown(double cooldown);
 
     void setRemainingCooldown(double cooldown);
 

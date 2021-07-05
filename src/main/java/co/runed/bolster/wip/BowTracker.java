@@ -1,6 +1,6 @@
 package co.runed.bolster.wip;
 
-import co.runed.bolster.events.CleanupEntityEvent;
+import co.runed.bolster.events.entity.EntityCleanupEvent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -60,7 +60,7 @@ public class BowTracker implements Listener
     }
 
     @EventHandler
-    private void onCleanupEntity(CleanupEntityEvent event)
+    private void onCleanupEntity(EntityCleanupEvent event)
     {
         if (event.isForced())
         {

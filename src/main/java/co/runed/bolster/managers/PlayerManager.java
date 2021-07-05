@@ -3,15 +3,16 @@ package co.runed.bolster.managers;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.Config;
 import co.runed.bolster.common.redis.RedisChannels;
+import co.runed.bolster.common.redis.RedisManager;
 import co.runed.bolster.common.redis.payload.Payload;
 import co.runed.bolster.common.redis.request.RequestPlayerDataPayload;
 import co.runed.bolster.common.redis.request.UpdatePlayerDataPayload;
 import co.runed.bolster.common.redis.response.RequestPlayerDataResponsePayload;
-import co.runed.bolster.events.CleanupEntityEvent;
-import co.runed.bolster.events.LoadPlayerDataEvent;
 import co.runed.bolster.events.RedisMessageEvent;
-import co.runed.bolster.events.SavePlayerDataEvent;
+import co.runed.bolster.events.entity.EntityCleanupEvent;
 import co.runed.bolster.events.entity.EntitySetCooldownEvent;
+import co.runed.bolster.events.player.LoadPlayerDataEvent;
+import co.runed.bolster.events.player.SavePlayerDataEvent;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
@@ -162,7 +163,7 @@ public class PlayerManager extends Manager
     {
         for (Player player : Bukkit.getOnlinePlayers())
         {
-            BukkitUtil.triggerEvent(new CleanupEntityEvent(player, false));
+            BukkitUtil.triggerEvent(new EntityCleanupEvent(player, false));
         }
 
         Config config = Bolster.getBolsterConfig();
@@ -176,7 +177,7 @@ public class PlayerManager extends Manager
 
             if (value >= config.forceCleanupTime)
             {
-                BukkitUtil.triggerEvent(new CleanupEntityEvent(uuid, false));
+                BukkitUtil.triggerEvent(new EntityCleanupEvent(uuid, false));
             }
         }
     }
@@ -242,7 +243,7 @@ public class PlayerManager extends Manager
     }
 
     @EventHandler
-    private void onCleanupEntity(CleanupEntityEvent event)
+    private void onCleanupEntity(EntityCleanupEvent event)
     {
         if (event.isForced())
         {

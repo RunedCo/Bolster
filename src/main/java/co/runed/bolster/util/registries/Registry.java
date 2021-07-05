@@ -292,7 +292,8 @@ public class Registry<T extends IRegisterable>
                     IConfigurable configurable = (IConfigurable) value;
 
                     configurable.setConfig(config);
-                    configurable.create(config);
+                    configurable.loadConfig(config);
+                    configurable.create();
                 }
 
                 return value;

@@ -18,14 +18,20 @@ public class ParticleSet extends Properties implements IRegisterable, IConfigura
     }
 
     @Override
-    public void create(ConfigurationSection config)
+    public String getName()
+    {
+        return name;
+    }
+
+    @Override
+    public void loadConfig(ConfigurationSection config)
     {
         this.name = config.getString("name", "");
     }
 
     @Override
-    public String getName()
+    public void create()
     {
-        return name;
+
     }
 }

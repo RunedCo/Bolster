@@ -1,7 +1,7 @@
 package co.runed.bolster.wip;
 
-import co.runed.bolster.events.CustomCanDestroyBlockEvent;
-import co.runed.bolster.events.CustomCanPlaceBlockEvent;
+import co.runed.bolster.events.world.CustomCanDestroyBlockEvent;
+import co.runed.bolster.events.world.CustomCanPlaceBlockEvent;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;

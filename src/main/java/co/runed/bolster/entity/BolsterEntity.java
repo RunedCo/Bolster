@@ -1,14 +1,12 @@
 package co.runed.bolster.entity;
 
-import co.runed.bolster.classes.BolsterClass;
-import co.runed.bolster.classes.ClassDefinition;
 import co.runed.bolster.common.math.NumberUtil;
 import co.runed.bolster.common.math.Operation;
 import co.runed.bolster.common.math.easing.Ease;
-import co.runed.bolster.game.Traits;
+import co.runed.bolster.events.entity.EntityDestroyEvent;
 import co.runed.bolster.game.traits.Trait;
 import co.runed.bolster.game.traits.TraitProvider;
-import co.runed.bolster.managers.ClassManager;
+import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.managers.EntityManager;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.status.StatusEffect;
@@ -48,21 +46,6 @@ public class BolsterEntity extends TraitProvider
         this._entity = entity;
 
         this.setEnabled(true);
-    }
-
-    public BolsterClass getBolsterClass()
-    {
-        return ClassManager.getInstance().getClass(this._entity);
-    }
-
-    public void setBolsterClass(BolsterClass bolsterClass)
-    {
-        ClassManager.getInstance().setClass(this._entity, bolsterClass);
-    }
-
-    public void setBolsterClass(ClassDefinition classDefinition)
-    {
-        this.setBolsterClass(classDefinition.create());
     }
 
     public LivingEntity getBukkit()
@@ -460,10 +443,7 @@ public class BolsterEntity extends TraitProvider
 
     public void destroy()
     {
-        if (this.getBolsterClass() != null)
-        {
-            this.getBolsterClass().destroy();
-        }
+        BukkitUtil.triggerEvent(new EntityDestroyEvent(this));
 
         this._entity.setHealth(0);
     }

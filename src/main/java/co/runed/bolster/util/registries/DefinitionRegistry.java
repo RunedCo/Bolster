@@ -38,6 +38,24 @@ public class DefinitionRegistry<T extends IRegisterable> extends Registry<Defini
         return internalRegistry.getId(value);
     }
 
+    @Override
+    public Class<Definition<T>> getClass(String id)
+    {
+        return super.getClass(id);
+    }
+
+    @Override
+    public String getId(Class<? extends Definition<T>> entryClass)
+    {
+        return super.getId(entryClass);
+    }
+
+    @Override
+    public String getId(Definition<T> obj)
+    {
+        return super.getId(obj);
+    }
+
     public T getValue(Class<? extends T> valueClass)
     {
         return internalRegistry.get(valueClass);
