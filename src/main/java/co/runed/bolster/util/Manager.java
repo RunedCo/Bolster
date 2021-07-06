@@ -1,4 +1,4 @@
-package co.runed.bolster.managers;
+package co.runed.bolster.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;

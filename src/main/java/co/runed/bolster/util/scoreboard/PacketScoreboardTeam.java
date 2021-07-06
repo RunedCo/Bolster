@@ -25,7 +25,7 @@
 
 package co.runed.bolster.util.scoreboard;
 
-import co.runed.bolster.util.NetworkUtil;
+import co.runed.bolster.util.network.NetworkUtil;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.utility.MinecraftReflection;

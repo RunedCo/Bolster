@@ -48,7 +48,6 @@ public final class CustomCanPlaceBlockEvent extends BlockEvent implements Cancel
         return this.getBlock();
     }
 
-
     public ItemStack getItemInHand()
     {
         return this.itemInHand;

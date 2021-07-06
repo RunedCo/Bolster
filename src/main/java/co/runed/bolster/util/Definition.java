@@ -30,9 +30,12 @@ public abstract class Definition<T extends IRegisterable> implements IRegisterab
         return this;
     }
 
-    public Definition<T> category(Category category)
+    public Definition<T> category(Category... category)
     {
-        this.addCategory(category);
+        for (var cat : category)
+        {
+            this.addCategory(cat);
+        }
 
         return this;
     }

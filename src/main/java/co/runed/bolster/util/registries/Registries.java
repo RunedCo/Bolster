@@ -15,7 +15,7 @@ public final class Registries
     public static final Registry<StatusEffect> STATUS_EFFECTS = new Registry<>(Bolster.getInstance());
     public static final Registry<Currency> CURRENCIES = new Registry<>(Bolster.getInstance(), "currencies");
     public static final Registry<Property<?>> SETTINGS = new Registry<>(Bolster.getInstance());
-    public static final Registry<Property<?>> TRAITS = new Registry<>(Bolster.getInstance());
     public static final Registry<GameMode> GAME_MODES = new Registry<>(Bolster.getInstance());
     public static final Registry<Shop> SHOPS = new Registry<>(Bolster.getInstance(), "shops");
+    public static final Registry<Property<?>> TRAITS = new Registry<>(Bolster.getInstance());
 }

@@ -1,4 +1,4 @@
-package co.runed.bolster.util;
+package co.runed.bolster.util.network;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;

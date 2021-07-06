@@ -211,8 +211,8 @@ public class Bolster extends JavaPlugin implements Listener
     {
         Registry<Property<?>> registry = Registries.TRAITS;
 
-        registry.register(Traits.ATTACK_DAMAGE);
         registry.register(Traits.DEBUG_MODE);
+        registry.register(Traits.COOLDOWN_REDUCTION_PERCENT);
         registry.register(Traits.MAX_HEALTH);
     }
 

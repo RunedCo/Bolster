@@ -17,6 +17,7 @@ import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.util.BukkitUtil;
+import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.json.GsonUtil;
 import co.runed.bolster.util.registries.Registries;
 import com.google.gson.Gson;

@@ -7,6 +7,7 @@ import co.runed.bolster.events.player.LoadPlayerDataEvent;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.util.BukkitUtil;
+import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.cooldown.ICooldownSource;
 import co.runed.bolster.util.json.JsonExclude;
 import org.bukkit.entity.LivingEntity;

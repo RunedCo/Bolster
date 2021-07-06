@@ -1,6 +1,7 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.gui.sidebar.Sidebar;
+import co.runed.bolster.util.Manager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 

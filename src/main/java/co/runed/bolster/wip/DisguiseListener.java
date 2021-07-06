@@ -1,7 +1,7 @@
 package co.runed.bolster.wip;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.util.NetworkUtil;
+import co.runed.bolster.util.network.NetworkUtil;
 import com.comphenix.protocol.wrappers.WrappedBlockData;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;

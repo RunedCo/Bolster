@@ -1,8 +1,8 @@
 package co.runed.bolster;
 
-import co.runed.bolster.managers.Manager;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.ItemBuilder;
+import co.runed.bolster.util.Manager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;

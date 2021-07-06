@@ -16,6 +16,8 @@ import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.properties.Properties;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.wip.BowTracker;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -224,9 +226,9 @@ public class BolsterEntity extends TraitProvider
         return this._entity.getName();
     }
 
-    public void sendMessage(String string)
+    public void sendMessage(Component component)
     {
-        this._entity.sendMessage(string);
+        this._entity.sendMessage(component);
     }
 
     public Location getLocation()
@@ -246,7 +248,7 @@ public class BolsterEntity extends TraitProvider
 
     public boolean isOnline()
     {
-        boolean online = this._entity.getType() != EntityType.PLAYER || ((Player) this._entity).isOnline();
+        boolean online = !(this._entity instanceof Player player) || player.isOnline();
 
         return online && this._entity.isValid();
     }
@@ -322,35 +324,38 @@ public class BolsterEntity extends TraitProvider
 
     public void setFoodLevel(int foodLevel)
     {
-        if (this._entity.getType() != EntityType.PLAYER) return;
+        if (!(this._entity instanceof Player player)) return;
 
-        ((Player) this._entity).setFoodLevel(foodLevel);
+        player.setFoodLevel(foodLevel);
     }
 
     public void playSound(Sound sound, SoundCategory soundCategory, float f, float g)
     {
-        if (this._entity.getType() != EntityType.PLAYER) return;
+        if (!(this._entity instanceof Player player)) return;
 
-        ((Player) this._entity).playSound(this._entity.getLocation(), sound, soundCategory, f, g);
+        player.playSound(this._entity.getLocation(), sound, soundCategory, f, g);
     }
 
     public void playSound(Location location, Sound sound, SoundCategory soundCategory, float f, float g)
     {
-        if (this._entity.getType() != EntityType.PLAYER) return;
+        if (!(this._entity instanceof Player player)) return;
 
-        ((Player) this._entity).playSound(location, sound, soundCategory, f, g);
+        player.playSound(location, sound, soundCategory, f, g);
     }
 
-    public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut)
+    public void sendTitle(Component title, Component subtitle, Duration fadeIn, Duration stay, Duration fadeOut)
     {
-        if (this._entity.getType() != EntityType.PLAYER) return;
+        if (!(this._entity instanceof Player player)) return;
 
-        ((Player) this._entity).sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+        Title.Times times = Title.Times.of(fadeIn, stay, fadeOut);
+        Title titleInstance = Title.title(title, subtitle, times);
+
+        player.showTitle(titleInstance);
     }
 
     public void sendActionBar(String message)
     {
-        if (this._entity.getType() != EntityType.PLAYER) return;
+        if (!(this._entity instanceof Player player)) return;
 
         BukkitUtil.sendActionBar((Player) this._entity, message);
     }
@@ -457,6 +462,8 @@ public class BolsterEntity extends TraitProvider
 
     public static BolsterEntity from(LivingEntity entity)
     {
+        if (entity == null) return null;
+
         return EntityManager.getInstance().from(entity);
     }
 }
