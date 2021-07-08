@@ -1,5 +1,6 @@
 package co.runed.bolster.util.config;
 
+import co.runed.bolster.util.ComponentUtil;
 import co.runed.bolster.util.StringUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -203,7 +204,7 @@ public class BolsterConfiguration extends YamlConfiguration
 
         String serialized = this.getString(path);
 
-        return MiniMessage.get().parse(serialized);
+        return ComponentUtil.richText(serialized);
     }
 
     public void setComponent(String path, Component value)

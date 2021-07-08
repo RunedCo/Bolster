@@ -1,22 +1,38 @@
 package co.runed.bolster.util;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class ComponentUtil
 {
-    public static Component wrappedText(String text)
+    public static Collection<Component> wrappedText(String text)
     {
-        Component component = Component.empty();
+        List<Component> list = new ArrayList<>();
 
-        List<String> lore = StringUtil.formatLore(text);
+        if (text == null) return Collections.singletonList(Component.empty());
+
+        String legacyText = LegacyComponentSerializer.legacyAmpersand().serialize(richText(text));
+
+        List<String> lore = StringUtil.formatLore(legacyText);
 
         for (String line : lore)
         {
-            component = component.append(Component.text(line));
+            list.add(Component.text(line));
         }
 
-        return component;
+        return list;
+    }
+
+    public static Component richText(String text)
+    {
+        if (text == null) return Component.empty();
+
+        return MiniMessage.get().parse(text);
     }
 }

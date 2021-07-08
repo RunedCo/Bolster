@@ -1,6 +1,7 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.util.Definition;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
 import java.util.concurrent.Callable;
@@ -22,10 +23,18 @@ public class DefinitionRegistry<T extends IRegisterable> extends Registry<Defini
         loadFiles(plugin, folderName);
     }
 
+//    @Override
+//    public void loadFiles(Plugin plugin, String folderName)
+//    {
+//        if (internalRegistry != null) internalRegistry.loadFiles(plugin, folderName);
+//    }
+
     @Override
-    public void loadFiles(Plugin plugin, String folderName)
+    public void setConfig(String key, ConfigurationSection config)
     {
-        if (internalRegistry != null) internalRegistry.loadFiles(plugin, folderName);
+        if (internalRegistry != null) internalRegistry.setConfig(key, config);
+
+        super.setConfig(key, config);
     }
 
     public String getIdFromValue(Class<? extends T> value)

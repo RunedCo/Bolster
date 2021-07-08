@@ -130,29 +130,38 @@ public class PlayerManager extends Manager
 
     private void save(PlayerData data)
     {
-        PlayerData playerData = data;
-
-        /* Call Save Event */
-        SavePlayerDataEvent event = BukkitUtil.triggerEvent(new SavePlayerDataEvent(playerData.getPlayer(), playerData));
-        playerData = event.getPlayerData();
-
-        playerData.saveGameModeData();
+        PlayerData playerData = this.runSave(data);
 
         UpdatePlayerDataPayload payload = new UpdatePlayerDataPayload();
-        payload.uuid = playerData.getUuid();
-        payload.playerData = this.serialize(playerData);
+        payload.playerData.put(playerData.getUuid(), this.serialize(playerData));
 
         RedisManager.getInstance().publish(RedisChannels.UPDATE_PLAYER_DATA, payload);
+    }
+
+    private PlayerData runSave(PlayerData data)
+    {
+        /* Call Save Event */
+        SavePlayerDataEvent event = BukkitUtil.triggerEvent(new SavePlayerDataEvent(data.getPlayer(), data));
+        data = event.getPlayerData();
+
+        data.saveGameModeData();
+
+        return data;
     }
 
     public void saveAllPlayers()
     {
         if (this.playerData.size() <= 0) return;
 
+        UpdatePlayerDataPayload payload = new UpdatePlayerDataPayload();
+
         for (PlayerData data : this.playerData.values())
         {
-            this.save(data);
+            PlayerData updated = this.runSave(data);
+            payload.playerData.put(updated.getUuid(), this.serialize(updated));
         }
+
+        RedisManager.getInstance().publish(RedisChannels.UPDATE_PLAYER_DATA, payload);
     }
 
     public Collection<PlayerData> getAllPlayerData()

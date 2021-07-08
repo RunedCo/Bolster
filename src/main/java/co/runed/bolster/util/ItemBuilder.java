@@ -122,17 +122,17 @@ public class ItemBuilder
         return builder;
     }
 
-    public ItemBuilder setLoreComponent(Collection<String> lore)
-    {
-        List<Component> components = lore.stream().map(Component::text).collect(Collectors.toList());
+//    public ItemBuilder setLoreComponent(Collection<String> lore)
+//    {
+//        List<Component> components = lore.stream().map(Component::text).collect(Collectors.toList());
+//
+//        return this.setLoreComponent(components);
+//    }
 
-        return this.setLoreComponent(components);
-    }
-
-    public ItemBuilder setLoreComponent(List<Component> lore)
+    public ItemBuilder setLoreComponent(Collection<Component> lore)
     {
         ItemMeta meta = this.itemStack.getItemMeta();
-        meta.lore(lore);
+        meta.lore(lore.stream().toList());
         this.itemStack.setItemMeta(meta);
         return new ItemBuilder(this.itemStack);
     }
@@ -179,7 +179,7 @@ public class ItemBuilder
 
     public ItemBuilder setLore(List<String> lore)
     {
-        return this.setLoreComponent(lore);
+        return this.setLoreComponent(lore.stream().map(Component::text).collect(Collectors.toList()));
     }
 
     public ItemBuilder setLore(String lore)

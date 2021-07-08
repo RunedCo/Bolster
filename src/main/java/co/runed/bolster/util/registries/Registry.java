@@ -68,9 +68,14 @@ public class Registry<T extends IRegisterable>
 
                 Bolster.getInstance().getLogger().info("Loaded config for " + key);
 
-                this.configs.put(key, configSection);
+                this.setConfig(key, configSection);
             }
         }
+    }
+
+    public void setConfig(String key, ConfigurationSection config)
+    {
+        this.configs.put(key, config);
     }
 
     public void reloadFiles()

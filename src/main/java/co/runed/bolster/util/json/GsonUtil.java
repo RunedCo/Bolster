@@ -3,7 +3,6 @@ package co.runed.bolster.util.json;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.Inventory;
 
 import java.io.IOException;
@@ -29,6 +28,7 @@ public class GsonUtil
         };
 
         return new GsonBuilder()
+                .setLenient()
                 .setExclusionStrategies(excludeStrategy)
                 .registerTypeAdapter(ZonedDateTime.class, new TypeAdapter<ZonedDateTime>()
                 {
@@ -44,7 +44,7 @@ public class GsonUtil
                         return ZonedDateTime.parse(in.nextString());
                     }
                 })
-                .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ConfigurationSerializableAdapter())
+                .registerTypeAdapterFactory(BukkitAwareObjectTypeAdapter.FACTORY)
                 .registerTypeHierarchyAdapter(Inventory.class, new InventorySerializableAdapter())
                 .enableComplexMapKeySerialization()
                 .create();

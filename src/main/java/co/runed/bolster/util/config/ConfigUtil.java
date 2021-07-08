@@ -9,8 +9,11 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -149,4 +152,27 @@ public class ConfigUtil
         return original;
     }
 
+    // Mimics Bukkit's serialization. Includes the type key of the given ConfigurationSerializable.
+    public static Map<String, Object> serialize(ConfigurationSerializable serializable)
+    {
+        if (serializable == null) return null;
+        Map<String, Object> dataMap = new LinkedHashMap<>();
+        dataMap.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, ConfigurationSerialization.getAlias(serializable.getClass()));
+        dataMap.putAll(serializable.serialize());
+        return dataMap;
+    }
+
+    // Expects the Map to contain a type key.
+    public static <T extends ConfigurationSerializable> T deserialize(Map<String, Object> dataMap)
+    {
+        if (dataMap == null) return null;
+        try
+        {
+            return (T) ConfigurationSerialization.deserializeObject(dataMap);
+        }
+        catch (IllegalArgumentException ex)
+        {
+            throw new IllegalArgumentException("Could not deserialize object", ex);
+        }
+    }
 }

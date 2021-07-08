@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.yaml.snakeyaml.Yaml;
 
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
@@ -15,13 +16,19 @@ public class ConfigurationSerializableAdapter implements JsonSerializer<Configur
     {
     }.getType();
 
+    Yaml yaml = new Yaml();
+
     @Override
     public ConfigurationSerializable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
     {
-        final Map<String, Object> map = new LinkedHashMap<>();
-        
+        Map<String, Object> map = new LinkedHashMap<>();
+
         if (json.isJsonObject())
         {
+            String jsonString = json.toString();
+
+            map = yaml.load(jsonString);
+
             for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
             {
                 final JsonElement value = entry.getValue();
