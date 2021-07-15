@@ -16,17 +16,25 @@ import org.ipvp.canvas.template.StaticItemTemplate;
 import org.ipvp.canvas.type.ChestMenu;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GuiServers extends Gui
 {
-    String gameMode;
+    List<String> gameModes = new ArrayList<>();
 
     public GuiServers(Gui previousGui, String gameMode)
     {
+        this(previousGui, Arrays.asList(gameMode));
+    }
+
+
+    public GuiServers(Gui previousGui, List<String> gameModes)
+    {
         super(previousGui);
 
-        this.gameMode = gameMode;
+        this.gameModes.addAll(gameModes);
     }
 
     @Override
@@ -65,7 +73,7 @@ public class GuiServers extends Gui
             ServerData server = entry.getValue();
 
             if (server.id.equals(Bolster.getInstance().getServerId())) continue;
-            if (gameMode != null && !gameMode.equals(server.gameMode)) continue;
+            if (gameModes.size() > 0 && !gameModes.contains(server.gameMode)) continue;
             if (server.restricted && !player.hasPermission("bolster.servers.restricted")) continue;
 
             ItemBuilder itemBuilder = new ItemBuilder(Material.valueOf(server.iconMaterial))

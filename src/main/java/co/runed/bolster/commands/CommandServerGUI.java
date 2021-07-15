@@ -15,7 +15,7 @@ public class CommandServerGUI extends CommandBase
     {
         return new CommandAPICommand(this.command)
                 .executesPlayer(((sender, args) -> {
-                    new GuiServers(null, null).show(sender);
+                    new GuiServers(null, (String) null).show(sender);
                 }));
     }
 }
