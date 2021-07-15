@@ -1,6 +1,6 @@
 package co.runed.bolster.game.traits;
 
-import co.runed.bolster.util.json.JsonExclude;
+import co.runed.bolster.common.gson.JsonExclude;
 import co.runed.bolster.util.properties.Properties;
 
 public abstract class TraitProvider

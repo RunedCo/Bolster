@@ -2,6 +2,7 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.Config;
+import co.runed.bolster.common.gson.GsonUtil;
 import co.runed.bolster.common.redis.RedisChannels;
 import co.runed.bolster.common.redis.RedisManager;
 import co.runed.bolster.common.redis.payload.Payload;
@@ -18,7 +19,6 @@ import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.Manager;
-import co.runed.bolster.util.json.GsonUtil;
 import co.runed.bolster.util.registries.Registries;
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;

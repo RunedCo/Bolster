@@ -148,6 +148,13 @@ public class TaskUtil
         long duration = 0;
         boolean cancelled = false;
 
+        public TaskSeries delay(long delay)
+        {
+            this.duration += delay;
+
+            return this;
+        }
+
         public TaskSeries add(Runnable task)
         {
             return this.add(task, 0);
@@ -173,6 +180,13 @@ public class TaskUtil
             this.duration += duration;
 
             return this;
+        }
+
+        public TaskSeries addAndCancel(Runnable task)
+        {
+            this.add(task);
+
+            return this.onCancel(task);
         }
 
         public TaskSeries onCancel(Runnable task)

@@ -1,5 +1,6 @@
 package co.runed.bolster.managers;
 
+import co.runed.bolster.common.gson.JsonExclude;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.entity.EntityCleanupEvent;
 import co.runed.bolster.events.entity.EntitySetCooldownEvent;
@@ -9,7 +10,6 @@ import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.cooldown.ICooldownSource;
-import co.runed.bolster.util.json.JsonExclude;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

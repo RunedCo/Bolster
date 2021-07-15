@@ -2,11 +2,13 @@ package co.runed.bolster;
 
 import co.runed.bolster.commands.*;
 import co.runed.bolster.common.ServerData;
+import co.runed.bolster.common.gson.GsonUtil;
 import co.runed.bolster.common.redis.RedisChannels;
 import co.runed.bolster.common.redis.RedisManager;
 import co.runed.bolster.common.redis.payload.Payload;
 import co.runed.bolster.common.redis.request.ServerDataPayload;
 import co.runed.bolster.common.redis.request.UnregisterServerPayload;
+import co.runed.bolster.common.redis.response.ListServersResponsePayload;
 import co.runed.bolster.common.redis.response.RegisterServerResponsePayload;
 import co.runed.bolster.events.RedisMessageEvent;
 import co.runed.bolster.fx.particles.ParticleSet;
@@ -17,6 +19,8 @@ import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.status.*;
 import co.runed.bolster.util.BukkitUtil;
+import co.runed.bolster.util.json.BukkitAwareObjectTypeAdapter;
+import co.runed.bolster.util.json.InventorySerializableAdapter;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
@@ -30,11 +34,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Bolster extends JavaPlugin implements Listener
 {
@@ -60,6 +68,7 @@ public class Bolster extends JavaPlugin implements Listener
 
     private GameMode activeGameMode;
     public String serverId = null;
+    private Map<String, ServerData> servers = new HashMap<>();
 
     @Override
     public void onLoad()
@@ -73,6 +82,8 @@ public class Bolster extends JavaPlugin implements Listener
         super.onEnable();
 
         this.loadConfig();
+
+        this.setupGson();
 
         this.warps = new Warps(this);
 
@@ -94,6 +105,8 @@ public class Bolster extends JavaPlugin implements Listener
 
         this.commandManager.add(new CommandWarp());
         this.commandManager.add(new CommandWarpGUI());
+
+        this.commandManager.add(new CommandServerGUI());
 
         // REGISTER PLUGIN CHANNELS
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -120,7 +133,7 @@ public class Bolster extends JavaPlugin implements Listener
         this.registerCurrencies();
         this.registerTraits();
 
-        var redisChannels = Arrays.asList(RedisChannels.REQUEST_SERVERS_RESPONSE, RedisChannels.REQUEST_PLAYER_DATA_RESPONSE, RedisChannels.REGISTER_SERVER_RESPONSE);
+        var redisChannels = Arrays.asList(RedisChannels.LIST_SERVERS_RESPONSE, RedisChannels.REQUEST_PLAYER_DATA_RESPONSE, RedisChannels.REGISTER_SERVER_RESPONSE);
         this.redisManager = new RedisManager(config.redisHost, config.redisPort, null, null, redisChannels);
         this.redisManager.setDefaultTarget("proxy");
         this.redisManager.setMessageHandler((channel, message) -> BukkitUtil.triggerEventSync(new RedisMessageEvent(channel, message)));
@@ -128,6 +141,14 @@ public class Bolster extends JavaPlugin implements Listener
         Bukkit.getScheduler().runTaskAsynchronously(this, redisManager::setup);
 
         getServer().getScheduler().scheduleSyncDelayedTask(this, this::onPostEnable);
+    }
+
+    private void setupGson()
+    {
+        GsonUtil.addBuilderFunction((gsonBuilder -> {
+            return gsonBuilder.registerTypeAdapterFactory(BukkitAwareObjectTypeAdapter.FACTORY)
+                    .registerTypeHierarchyAdapter(Inventory.class, new InventorySerializableAdapter());
+        }));
     }
 
     public ServerData getServerData()
@@ -240,6 +261,12 @@ public class Bolster extends JavaPlugin implements Listener
 
             RedisManager.getInstance().setSenderId(this.getServerId());
         }
+
+        if (event.getChannel().equals(RedisChannels.LIST_SERVERS_RESPONSE))
+        {
+            ListServersResponsePayload payload = Payload.fromJson(event.getMessage(), ListServersResponsePayload.class);
+            this.servers = payload.servers;
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -269,6 +296,11 @@ public class Bolster extends JavaPlugin implements Listener
     public String getServerId()
     {
         return serverId;
+    }
+
+    public Map<String, ServerData> getServers()
+    {
+        return Collections.unmodifiableMap(servers);
     }
 
     // SINGLETON GETTERS

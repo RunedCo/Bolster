@@ -1,12 +1,12 @@
 package co.runed.bolster.game;
 
+import co.runed.bolster.common.gson.GsonUtil;
+import co.runed.bolster.common.gson.JsonExclude;
 import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.TimeUtil;
-import co.runed.bolster.util.json.GsonUtil;
-import co.runed.bolster.util.json.JsonExclude;
 import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
 import com.google.gson.Gson;
