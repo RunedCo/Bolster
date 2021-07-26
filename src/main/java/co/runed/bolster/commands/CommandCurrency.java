@@ -1,5 +1,6 @@
 package co.runed.bolster.commands;
 
+import co.runed.bolster.Permissions;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.registries.Registries;
@@ -27,7 +28,7 @@ public class CommandCurrency extends CommandBase
     public CommandAPICommand build()
     {
         return new CommandAPICommand(this.command)
-                .withPermission("bolster.commands.currency")
+                .withPermission(Permissions.COMMAND_CURRENCY)
                 .withSubcommand(new CommandAPICommand("add")
                         .withArguments(
                                 new PlayerArgument("player"),

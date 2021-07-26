@@ -1,6 +1,7 @@
 package co.runed.bolster.commands;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.Permissions;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
@@ -24,7 +25,7 @@ public class CommandGame extends CommandBase
     public CommandAPICommand build()
     {
         return new CommandAPICommand(this.command)
-                .withPermission("bolster.commands.game")
+                .withPermission(Permissions.COMMAND_GAME)
                 .withSubcommand(new CommandAPICommand("pause")
                         .withPermission("bolster.commands.pause")
                         .executes((sender, args) -> {

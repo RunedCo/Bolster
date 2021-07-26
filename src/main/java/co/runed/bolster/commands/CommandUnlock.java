@@ -1,5 +1,6 @@
 package co.runed.bolster.commands;
 
+import co.runed.bolster.Permissions;
 import co.runed.bolster.game.shop.Shop;
 import co.runed.bolster.game.shop.ShopItem;
 import co.runed.bolster.util.registries.Registries;
@@ -48,7 +49,7 @@ public class CommandUnlock extends CommandBase
     public CommandAPICommand build()
     {
         return new CommandAPICommand(this.command)
-                .withPermission("bolster.commands.unlock")
+                .withPermission(Permissions.COMMAND_UNLOCK)
                 .withArguments(new PlayerArgument("player"))
                 .withArguments(new StringArgument("shop").overrideSuggestions(this::getShopSuggestions))
                 .withArguments(new StringArgument("shop_item").overrideSuggestions(this::getItemSuggestions))

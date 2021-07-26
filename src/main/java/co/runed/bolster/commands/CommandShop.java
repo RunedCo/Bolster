@@ -1,5 +1,6 @@
 package co.runed.bolster.commands;
 
+import co.runed.bolster.Permissions;
 import co.runed.bolster.gui.GuiShop;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
@@ -23,7 +24,7 @@ public class CommandShop extends CommandBase
     public CommandAPICommand build()
     {
         return new CommandAPICommand(this.command)
-                .withPermission("bolster.commands.shop")
+                .withPermission(Permissions.COMMAND_SHOP)
                 .withArguments(new StringArgument("shop").overrideSuggestions(this::getSuggestions))
                 .executesPlayer((sender, args) -> {
                     String id = (String) args[0];

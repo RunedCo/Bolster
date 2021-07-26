@@ -1,5 +1,6 @@
 package co.runed.bolster.commands;
 
+import co.runed.bolster.Permissions;
 import co.runed.bolster.gui.GuiWarps;
 import dev.jorel.commandapi.CommandAPICommand;
 
@@ -14,7 +15,7 @@ public class CommandWarpGUI extends CommandBase
     public CommandAPICommand build()
     {
         return new CommandAPICommand(this.command)
-                .withPermission("bolster.commands.warp")
+                .withPermission(Permissions.COMMAND_WARP_GUI)
                 .executesPlayer(((sender, args) -> {
                     new GuiWarps(null).show(sender);
                 }));

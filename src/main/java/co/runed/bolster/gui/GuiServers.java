@@ -1,6 +1,7 @@
 package co.runed.bolster.gui;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.Permissions;
 import co.runed.bolster.common.ServerData;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.ItemBuilder;
@@ -29,10 +30,11 @@ public class GuiServers extends Gui
         this(previousGui, Arrays.asList(gameMode));
     }
 
-
     public GuiServers(Gui previousGui, List<String> gameModes)
     {
         super(previousGui);
+
+        if (gameModes.size() == 1 && gameModes.get(0) == null) return;
 
         this.gameModes.addAll(gameModes);
     }
@@ -74,7 +76,7 @@ public class GuiServers extends Gui
 
             if (server.id.equals(Bolster.getInstance().getServerId())) continue;
             if (gameModes.size() > 0 && !gameModes.contains(server.gameMode)) continue;
-            if (server.restricted && !player.hasPermission("bolster.servers.restricted")) continue;
+            if (server.restricted && !player.hasPermission(Permissions.RESTRICTED_SERVERS)) continue;
 
             ItemBuilder itemBuilder = new ItemBuilder(Material.valueOf(server.iconMaterial))
                     .setDisplayName(Component.text(server.name))

@@ -1,5 +1,6 @@
 package co.runed.bolster.game;
 
+import co.runed.bolster.Permissions;
 import co.runed.bolster.common.gson.GsonUtil;
 import co.runed.bolster.common.gson.JsonExclude;
 import co.runed.bolster.fx.particles.ParticleSet;
@@ -162,7 +163,7 @@ public class PlayerData
 
     public boolean isPremium()
     {
-        if (this.getPlayer().hasPermission("bolster.premium")) return true;
+        if (this.getPlayer().hasPermission(Permissions.PREMIUM)) return true;
 
         return getPremiumExpiryTime().isAfter(TimeUtil.now());
     }

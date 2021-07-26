@@ -1,5 +1,6 @@
 package co.runed.bolster.commands;
 
+import co.runed.bolster.Permissions;
 import co.runed.bolster.Warps;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.StringArgument;
@@ -21,7 +22,7 @@ public class CommandWarp extends CommandBase
     public CommandAPICommand build()
     {
         return new CommandAPICommand(this.command)
-                .withPermission("bolster.commands.warp")
+                .withPermission(Permissions.COMMAND_WARP)
                 .withArguments(new StringArgument("warp").overrideSuggestions(this::getSuggestions))
                 .executesPlayer(((sender, args) -> {
                     String warpId = (String) args[0];

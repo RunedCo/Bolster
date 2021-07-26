@@ -1,5 +1,6 @@
 package co.runed.bolster.commands;
 
+import co.runed.bolster.Permissions;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.TimeUtil;
@@ -62,7 +63,7 @@ public class CommandPremium extends CommandBase
     public CommandAPICommand build()
     {
         return new CommandAPICommand(this.command)
-                .withPermission("bolster.commands.premium")
+                .withPermission(Permissions.COMMAND_PREMIUM)
                 .withSubcommand(new CommandAPICommand("add")
                         .withArguments(
                                 new PlayerArgument("player"),
