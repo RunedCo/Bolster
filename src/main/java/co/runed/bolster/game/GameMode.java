@@ -3,7 +3,7 @@ package co.runed.bolster.game;
 import co.runed.bolster.Bolster;
 import co.runed.bolster.Config;
 import co.runed.bolster.entity.BolsterEntity;
-import co.runed.bolster.events.game.GameModePauseChangeEvent;
+import co.runed.bolster.events.game.GameModePauseEvent;
 import co.runed.bolster.events.player.LoadPlayerDataEvent;
 import co.runed.bolster.events.player.SavePlayerDataEvent;
 import co.runed.bolster.game.state.State;
@@ -114,7 +114,7 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     {
         this.paused = paused;
 
-        BukkitUtil.triggerEvent(new GameModePauseChangeEvent(this, paused));
+        BukkitUtil.triggerEvent(new GameModePauseEvent(this, paused));
     }
 
     public void setSerializeInventories(boolean serializeInventories)

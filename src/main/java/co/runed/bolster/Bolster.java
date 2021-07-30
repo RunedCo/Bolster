@@ -1,6 +1,7 @@
 package co.runed.bolster;
 
 import co.runed.bolster.commands.*;
+import co.runed.bolster.common.BasicPlayerInfo;
 import co.runed.bolster.common.ServerData;
 import co.runed.bolster.common.gson.GsonUtil;
 import co.runed.bolster.common.redis.RedisChannels;
@@ -10,7 +11,8 @@ import co.runed.bolster.common.redis.request.ServerDataPayload;
 import co.runed.bolster.common.redis.request.UnregisterServerPayload;
 import co.runed.bolster.common.redis.response.ListServersResponsePayload;
 import co.runed.bolster.common.redis.response.RegisterServerResponsePayload;
-import co.runed.bolster.events.RedisMessageEvent;
+import co.runed.bolster.events.server.RedisMessageEvent;
+import co.runed.bolster.events.server.ReloadConfigEvent;
 import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.currency.Currencies;
@@ -25,7 +27,10 @@ import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import co.runed.bolster.wip.*;
+import com.comphenix.protocol.wrappers.WrappedGameProfile;
+import com.mojang.authlib.properties.PropertyMap;
 import de.slikey.effectlib.EffectManager;
+import me.libraryaddict.disguise.utilities.json.SerializerGameProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -61,6 +66,7 @@ public class Bolster extends JavaPlugin implements Listener
     private PlayerManager playerManager;
     private EffectManager effectManager;
     private RedisManager redisManager;
+    private NPCManager npcManager;
 
     private MenuFunctionListener menuListener;
 
@@ -95,8 +101,11 @@ public class Bolster extends JavaPlugin implements Listener
         this.playerManager = new PlayerManager(this);
         this.entityManager = new EntityManager(this);
         this.effectManager = new EffectManager(this);
+        this.npcManager = new NPCManager(this);
 
         // REGISTER COMMANDS
+        this.commandManager.add(new CommandBolster());
+
         this.commandManager.add(new CommandCurrency());
         this.commandManager.add(new CommandGame());
         this.commandManager.add(new CommandShop());
@@ -145,10 +154,12 @@ public class Bolster extends JavaPlugin implements Listener
 
     private void setupGson()
     {
-        GsonUtil.addBuilderFunction((gsonBuilder -> {
-            return gsonBuilder.registerTypeAdapterFactory(BukkitAwareObjectTypeAdapter.FACTORY)
-                    .registerTypeHierarchyAdapter(Inventory.class, new InventorySerializableAdapter());
-        }));
+        GsonUtil.addBuilderFunction((gsonBuilder ->
+                gsonBuilder.registerTypeAdapterFactory(BukkitAwareObjectTypeAdapter.FACTORY)
+                        .registerTypeHierarchyAdapter(Inventory.class, new InventorySerializableAdapter())
+                        .registerTypeAdapter(WrappedGameProfile.class, new SerializerGameProfile())
+                        .registerTypeAdapter(PropertyMap.class, new PropertyMap.Serializer()))
+        );
     }
 
     public ServerData getServerData()
@@ -163,7 +174,11 @@ public class Bolster extends JavaPlugin implements Listener
         serverData.ipAddress = getServer().getIp();
         serverData.port = getServer().getPort();
 
-        serverData.currentPlayers = Bukkit.getOnlinePlayers().size();
+        for (var player : Bukkit.getOnlinePlayers())
+        {
+            serverData.onlinePlayers.add(new BasicPlayerInfo(player.getUniqueId(), player.getName()));
+        }
+
         serverData.maxPlayers = Bukkit.getMaxPlayers();
         serverData.maxPremiumPlayers = config.premiumSlots;
 
@@ -274,7 +289,7 @@ public class Bolster extends JavaPlugin implements Listener
     {
         ServerDataPayload payload = new ServerDataPayload();
         payload.serverData = this.getServerData();
-        payload.serverData.currentPlayers -= 1;
+        payload.serverData.onlinePlayers.removeIf(data -> data.uuid.equals(event.getPlayer().getUniqueId()));
 
         RedisManager.getInstance().publish(RedisChannels.UPDATE_SERVER, payload);
     }
@@ -376,5 +391,10 @@ public class Bolster extends JavaPlugin implements Listener
         Bukkit.getPluginManager().registerEvents(bolster.activeGameMode, bolster);
 
         bolster.activeGameMode.start();
+    }
+
+    public static void reload()
+    {
+        BukkitUtil.triggerEvent(new ReloadConfigEvent());
     }
 }

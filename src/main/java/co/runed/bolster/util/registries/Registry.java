@@ -1,14 +1,18 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.events.server.ReloadConfigEvent;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ICategorised;
 import co.runed.bolster.util.config.BolsterConfiguration;
 import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.config.IConfigurable;
 import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -16,7 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.concurrent.Callable;
 
-public class Registry<T extends IRegisterable>
+public class Registry<T extends IRegisterable> implements Listener
 {
     public Plugin plugin;
     private final List<File> configFolders = new ArrayList<>();
@@ -36,6 +40,8 @@ public class Registry<T extends IRegisterable>
     {
         this.plugin = plugin;
         this.loadFiles(plugin, folderName);
+
+        Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
     }
 
     public void loadFiles(Plugin plugin, String folderName)
@@ -80,6 +86,8 @@ public class Registry<T extends IRegisterable>
 
     public void reloadFiles()
     {
+        this.configs.clear();
+
         for (File folder : this.configFolders)
         {
             this.loadFiles(folder);
@@ -247,6 +255,12 @@ public class Registry<T extends IRegisterable>
         if (!this.entries.containsKey(id)) return null;
 
         return this.entries.get(id);
+    }
+
+    @EventHandler
+    private void onReload(ReloadConfigEvent event)
+    {
+        this.reloadFiles();
     }
 
     public static class Entry<T extends IRegisterable>

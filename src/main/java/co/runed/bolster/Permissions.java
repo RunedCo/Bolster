@@ -6,6 +6,7 @@ public class Permissions
 
     /* Commands */
     private static final String COMMANDS = BASE + ".commands";
+    public static final String COMMAND_BOLSTER = COMMANDS + ".bolster";
     public static final String COMMAND_CURRENCY = COMMANDS + ".currency";
     public static final String COMMAND_SERVERS = COMMANDS + ".servers";
     public static final String COMMAND_GAME = COMMANDS + ".game";

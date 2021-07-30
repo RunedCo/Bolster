@@ -6,6 +6,7 @@ import co.runed.bolster.common.ServerData;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.ItemBuilder;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.ipvp.canvas.Menu;
@@ -79,10 +80,10 @@ public class GuiServers extends Gui
             if (server.restricted && !player.hasPermission(Permissions.RESTRICTED_SERVERS)) continue;
 
             ItemBuilder itemBuilder = new ItemBuilder(Material.valueOf(server.iconMaterial))
-                    .setDisplayName(Component.text(server.name))
-                    .addLoreComponent(Component.text("/server " + server.id))
-                    .addLoreComponent(Component.text(server.gameMode))
-                    .addLoreComponent(Component.text(server.status));
+                    .setDisplayName(Component.text(server.name, NamedTextColor.WHITE))
+                    .addLoreComponent(Component.text("/server " + server.id, NamedTextColor.WHITE))
+                    .addLoreComponent(Component.text(server.gameMode, NamedTextColor.WHITE))
+                    .addLoreComponent(Component.text(server.status, NamedTextColor.WHITE));
 
             SlotSettings settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(itemBuilder.build()))
