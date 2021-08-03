@@ -1,16 +1,22 @@
 package co.runed.bolster.game.shop;
 
+import co.runed.bolster.Bolster;
+import co.runed.bolster.events.player.SavePlayerDataEvent;
+import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.util.INameable;
 import co.runed.bolster.util.config.IConfigurable;
 import co.runed.bolster.util.registries.IRegisterable;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Shop implements IRegisterable, IConfigurable, INameable
+public class Shop implements IRegisterable, IConfigurable, INameable, Listener
 {
     String id;
     String name;
@@ -21,6 +27,8 @@ public class Shop implements IRegisterable, IConfigurable, INameable
     {
         this.id = id;
         this.name = name;
+
+        Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
     }
 
     @Override
@@ -95,6 +103,20 @@ public class Shop implements IRegisterable, IConfigurable, INameable
     @Override
     public void create()
     {
-        
+
+    }
+
+    @EventHandler
+    private void onSavePlayer(SavePlayerDataEvent event)
+    {
+        PlayerData playerData = event.getPlayerData();
+
+        for (String item : this.getItems().keySet())
+        {
+            if (!this.isUnlocked(event.getPlayer(), item))
+            {
+                playerData.setShopItemUnlocked(this.getId(), item, false);
+            }
+        }
     }
 }

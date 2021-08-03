@@ -26,12 +26,14 @@ public class PlayerData
 
     public String activeParticleSet;
 
-    ZonedDateTime premiumExpiryTime = null;
+    ZonedDateTime joinTime = TimeUtil.now();
+    public ZonedDateTime lastJoinTime;
+    ZonedDateTime premiumExpiryTime = TimeUtil.now();
 
     HashMap<String, Integer> currencies = new HashMap<>();
     HashMap<String, Integer> itemLevels = new HashMap<>();
     HashMap<String, Object> settings = new HashMap<>();
-    HashMap<String, List<String>> shopUnlocks = new HashMap<>();
+    HashMap<String, Map<String, Boolean>> shopUnlocks = new HashMap<>();
     List<CooldownManager.CooldownData> globalCooldowns = new ArrayList<>();
 
     HashMap<String, Map> gameModeData = new HashMap<>();
@@ -139,21 +141,14 @@ public class PlayerData
     {
         if (!shopUnlocks.containsKey(shopId)) return new ArrayList<>();
 
-        return shopUnlocks.get(shopId);
+        return shopUnlocks.get(shopId).entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).toList();
     }
 
     public void setShopItemUnlocked(String shopId, String itemId, boolean unlocked)
     {
-        if (!shopUnlocks.containsKey(shopId)) shopUnlocks.put(shopId, new ArrayList<>());
+        if (!shopUnlocks.containsKey(shopId)) shopUnlocks.put(shopId, new HashMap<>());
 
-        if (unlocked)
-        {
-            if (!shopUnlocks.get(shopId).contains(itemId)) shopUnlocks.get(shopId).add(itemId);
-        }
-        else
-        {
-            shopUnlocks.get(shopId).remove(itemId);
-        }
+        shopUnlocks.get(shopId).put(itemId, unlocked);
     }
 
     public boolean isShopItemUnlocked(String shopId, String itemId)

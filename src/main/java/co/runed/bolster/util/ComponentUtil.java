@@ -6,7 +6,6 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class ComponentUtil
@@ -15,7 +14,7 @@ public class ComponentUtil
     {
         List<Component> list = new ArrayList<>();
 
-        if (text == null) return Collections.singletonList(Component.empty());
+        if (text == null) return new ArrayList<>();
 
         String legacyText = LegacyComponentSerializer.legacyAmpersand().serialize(richText(text));
 

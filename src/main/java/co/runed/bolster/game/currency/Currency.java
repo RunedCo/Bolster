@@ -1,18 +1,24 @@
 package co.runed.bolster.game.currency;
 
+import co.runed.bolster.Bolster;
+import co.runed.bolster.events.player.SavePlayerDataEvent;
+import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.util.ICategorised;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Currency implements IRegisterable, ICategorised
+public class Currency implements IRegisterable, ICategorised, Listener
 {
     String id;
     String name;
@@ -29,6 +35,8 @@ public class Currency implements IRegisterable, ICategorised
         this.pluralize = pluralize;
         this.icon = itemStack;
         this.isItem = isItem;
+
+        Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
     }
 
     public void setName(String name)
@@ -99,5 +107,13 @@ public class Currency implements IRegisterable, ICategorised
         }
 
         return output;
+    }
+
+    @EventHandler
+    private void onSavePlayer(SavePlayerDataEvent event)
+    {
+        PlayerData playerData = event.getPlayerData();
+
+        playerData.setCurrency(this, playerData.getCurrency(this));
     }
 }

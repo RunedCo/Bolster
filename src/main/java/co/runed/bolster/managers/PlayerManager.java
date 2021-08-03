@@ -19,6 +19,7 @@ import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.Manager;
+import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.registries.Registries;
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
@@ -203,6 +204,8 @@ public class PlayerManager extends Manager
             /* Call Load Event */
             LoadPlayerDataEvent loadEvent = BukkitUtil.triggerEvent(new LoadPlayerDataEvent(playerData.getPlayer(), playerData));
             playerData = loadEvent.getPlayerData();
+
+            playerData.lastJoinTime = TimeUtil.now();
 
             this.playerData.put(playerData.getUuid(), playerData);
         }
