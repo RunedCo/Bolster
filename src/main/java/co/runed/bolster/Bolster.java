@@ -297,10 +297,7 @@ public class Bolster extends JavaPlugin implements Listener
     @EventHandler(priority = EventPriority.MONITOR)
     private void onPlayerJoin(PlayerJoinEvent event)
     {
-        ServerDataPayload payload = new ServerDataPayload();
-        payload.serverData = this.getServerData();
-
-        RedisManager.getInstance().publish(RedisChannels.UPDATE_SERVER, payload);
+        Bolster.updateServer();
     }
 
     public void setServerId(String id)
@@ -391,6 +388,14 @@ public class Bolster extends JavaPlugin implements Listener
         Bukkit.getPluginManager().registerEvents(bolster.activeGameMode, bolster);
 
         bolster.activeGameMode.start();
+    }
+
+    public static void updateServer()
+    {
+        ServerDataPayload payload = new ServerDataPayload();
+        payload.serverData = Bolster.getInstance().getServerData();
+
+        RedisManager.getInstance().publish(RedisChannels.UPDATE_SERVER, payload);
     }
 
     public static void reload()

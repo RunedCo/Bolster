@@ -48,6 +48,7 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     HashMap<UUID, Properties> statistics = new HashMap<>();
     Properties globalStatistics = new Properties();
 
+    String status;
     boolean hasStarted = false;
     boolean paused = false;
     boolean requiresResourcePack = false;
@@ -144,7 +145,14 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
 
     public String getStatus()
     {
-        return "";
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
+
+        Bolster.updateServer();
     }
 
     public GameProperties getProperties()
