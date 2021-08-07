@@ -4,6 +4,7 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.events.server.ReloadConfigEvent;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ICategorised;
+import co.runed.bolster.util.IIdentifiable;
 import co.runed.bolster.util.config.BolsterConfiguration;
 import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.config.IConfigurable;
@@ -20,7 +21,7 @@ import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.concurrent.Callable;
 
-public class Registry<T extends IRegisterable> implements Listener
+public class Registry<T extends IIdentifiable> implements Listener
 {
     public Plugin plugin;
     private final List<File> configFolders = new ArrayList<>();
@@ -263,7 +264,7 @@ public class Registry<T extends IRegisterable> implements Listener
         this.reloadFiles();
     }
 
-    public static class Entry<T extends IRegisterable>
+    public static class Entry<T extends IIdentifiable>
     {
         final Registry<T> parent;
         String id;

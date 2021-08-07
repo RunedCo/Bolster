@@ -1,12 +1,13 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.util.Definition;
+import co.runed.bolster.util.IIdentifiable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
 import java.util.concurrent.Callable;
 
-public class DefinitionRegistry<T extends IRegisterable> extends Registry<Definition<T>>
+public class DefinitionRegistry<T extends IIdentifiable> extends Registry<Definition<T>>
 {
     private final Registry<T> internalRegistry;
 

@@ -1,12 +1,12 @@
 package co.runed.bolster.util.properties;
 
 import co.runed.bolster.util.IDescribable;
-import co.runed.bolster.util.registries.IRegisterable;
+import co.runed.bolster.util.IIdentifiable;
 
 /**
  * A property passed to an ability when cast
  */
-public class Property<T> implements IRegisterable, IDescribable
+public class Property<T> implements IIdentifiable, IDescribable
 {
     private String id;
     private T defaultValue;

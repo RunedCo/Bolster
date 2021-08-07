@@ -1,7 +1,6 @@
 package co.runed.bolster.util;
 
 import co.runed.bolster.util.registries.DefinitionRegistry;
-import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registry;
 
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public abstract class Definition<T extends IRegisterable> implements IRegisterable, ICategorised, INameable
+public abstract class Definition<T extends IIdentifiable> implements IIdentifiable, ICategorised, INameable
 {
     String name;
     String id;

@@ -4,9 +4,9 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.events.player.SavePlayerDataEvent;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.game.currency.Currency;
+import co.runed.bolster.util.IIdentifiable;
 import co.runed.bolster.util.INameable;
 import co.runed.bolster.util.config.IConfigurable;
-import co.runed.bolster.util.registries.IRegisterable;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -16,7 +16,7 @@ import org.bukkit.event.Listener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Shop implements IRegisterable, IConfigurable, INameable, Listener
+public class Shop implements IIdentifiable, IConfigurable, INameable, Listener
 {
     String id;
     String name;

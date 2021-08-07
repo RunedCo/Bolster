@@ -4,8 +4,8 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.events.player.SavePlayerDataEvent;
 import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.util.ICategorised;
+import co.runed.bolster.util.IIdentifiable;
 import co.runed.bolster.util.ItemBuilder;
-import co.runed.bolster.util.registries.IRegisterable;
 import co.runed.bolster.util.registries.Registries;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Currency implements IRegisterable, ICategorised, Listener
+public class Currency implements IIdentifiable, ICategorised, Listener
 {
     String id;
     String name;

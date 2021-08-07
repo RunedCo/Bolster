@@ -6,11 +6,7 @@ import co.runed.bolster.gui.Gui;
 import co.runed.bolster.gui.GuiConfirm;
 import co.runed.bolster.gui.GuiConstants;
 import co.runed.bolster.managers.PlayerManager;
-import co.runed.bolster.util.IDescribable;
-import co.runed.bolster.util.INameable;
-import co.runed.bolster.util.ItemBuilder;
-import co.runed.bolster.util.StringUtil;
-import co.runed.bolster.util.registries.IRegisterable;
+import co.runed.bolster.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -23,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ShopItem implements IRegisterable, INameable, IDescribable
+public class ShopItem implements IIdentifiable, INameable, IDescribable
 {
     String id;
     String name;
