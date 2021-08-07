@@ -228,12 +228,11 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         if (playerData.isPremium())
         {
             ZonedDateTime expiryTime = playerData.getPremiumExpiryTime();
-            footerComponent = Component.text("  Thank you for supporting the server!  ", NamedTextColor.AQUA);
+            footerComponent = footerComponent.append(Component.text("  Thank you for supporting the server!  ", NamedTextColor.AQUA));
 
             if (expiryTime.isAfter(ZonedDateTime.now(Clock.systemUTC())))
             {
-                footerComponent = footerComponent.append(Component.newline())
-                        .append(Component.newline())
+                footerComponent = footerComponent
                         .append(Component.text("Your " + bolsterConfig.premiumMembershipName + " expires in"))
                         .append(Component.newline())
                         .append(Component.text(TimeUtil.formatDatePrettyRounded(expiryTime)));
@@ -241,7 +240,7 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         }
         else
         {
-            footerComponent = footerComponent.append(Component.newline())
+            footerComponent = footerComponent
                     .append(Component.text("Support the server at ", NamedTextColor.AQUA))
                     .append(Component.text(bolsterConfig.storeUrl + "!", NamedTextColor.GOLD));
         }

@@ -30,6 +30,7 @@ public class ShopItem implements IRegisterable, INameable, IDescribable
     String description = null;
     ItemStack icon;
     boolean unlockable = false;
+    boolean defaultUnlocked = false;
     boolean shouldConfirm = false;
     boolean enabled = true;
     Shop parentShop;
@@ -59,6 +60,7 @@ public class ShopItem implements IRegisterable, INameable, IDescribable
         this.setEnabled(config.getBoolean("enabled", this.isEnabled()));
         this.setShouldConfirm(config.getBoolean("confirm", this.shouldConfirm()));
         this.setUnlockable(config.getBoolean("unlockable", this.isUnlockable()));
+        this.setUnlockable(config.getBoolean("unlocked-default", this.isDefaultUnlocked()));
         this.setDescription(config.getString("description", this.getDescription()));
     }
 
@@ -190,6 +192,16 @@ public class ShopItem implements IRegisterable, INameable, IDescribable
     public void setUnlockable(boolean unlockable)
     {
         this.unlockable = unlockable;
+    }
+
+    public void setDefaultUnlocked(boolean defaultUnlocked)
+    {
+        this.defaultUnlocked = defaultUnlocked;
+    }
+
+    public boolean isDefaultUnlocked()
+    {
+        return defaultUnlocked;
     }
 
     public void setBuyCosts(Map<Currency, Integer> buyCosts)
