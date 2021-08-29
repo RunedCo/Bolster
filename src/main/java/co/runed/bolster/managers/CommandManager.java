@@ -6,14 +6,12 @@ import dev.jorel.commandapi.CommandAPI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandManager
-{
+public class CommandManager {
     private final List<CommandBase> commands;
 
     private static CommandManager _instance;
 
-    public CommandManager()
-    {
+    public CommandManager() {
         this.commands = new ArrayList<>();
 
         _instance = this;
@@ -24,8 +22,7 @@ public class CommandManager
      *
      * @param command the command
      */
-    public void add(CommandBase command)
-    {
+    public void add(CommandBase command) {
         this.commands.add(command);
 
         command.build().register();
@@ -34,18 +31,15 @@ public class CommandManager
     /**
      * Deregister all commands
      */
-    public void deregisterCommands()
-    {
-        for (CommandBase command : this.commands)
-        {
+    public void deregisterCommands() {
+        for (var command : this.commands) {
             CommandAPI.unregister(command.command);
         }
 
         this.commands.clear();
     }
 
-    public static CommandManager getInstance()
-    {
+    public static CommandManager getInstance() {
         return _instance;
     }
 }

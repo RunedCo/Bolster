@@ -4,6 +4,8 @@ import co.runed.bolster.game.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class SavePlayerDataEvent extends Event
 {
@@ -12,7 +14,7 @@ public final class SavePlayerDataEvent extends Event
     Player player;
     PlayerData playerData;
 
-    public SavePlayerDataEvent(Player player, PlayerData playerData)
+    public SavePlayerDataEvent(@Nullable Player player, @NotNull PlayerData playerData)
     {
         super();
 
@@ -20,11 +22,13 @@ public final class SavePlayerDataEvent extends Event
         this.playerData = playerData;
     }
 
+    @Nullable
     public Player getPlayer()
     {
         return player;
     }
 
+    @NotNull
     public PlayerData getPlayerData()
     {
         return playerData;

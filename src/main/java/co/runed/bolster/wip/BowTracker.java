@@ -14,67 +14,55 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class BowTracker implements Listener
-{
+public class BowTracker implements Listener {
     private final Set<UUID> drawing = new HashSet<>();
 
     private static BowTracker _instance;
 
-    public BowTracker()
-    {
+    public BowTracker() {
         _instance = this;
     }
 
     @EventHandler
-    public void onDraw(PlayerInteractEvent e)
-    {
-        Player player = e.getPlayer();
+    public void onDraw(PlayerInteractEvent e) {
+        var player = e.getPlayer();
 
         //On interact
-        if (e.getItem() != null && e.getItem().getType() == Material.BOW && player.getInventory().contains(Material.ARROW))
-        {
-            if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
-            {
+        if (e.getItem() != null && e.getItem().getType() == Material.BOW && player.getInventory().contains(Material.ARROW)) {
+            if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 drawing.add(player.getUniqueId());
             }
         }
     }
 
     @EventHandler
-    public void onShoot(EntityShootBowEvent e)
-    {
-        if (e.getEntity() instanceof Player)
-        {
-            UUID uuid = e.getEntity().getUniqueId();
+    public void onShoot(EntityShootBowEvent e) {
+        if (e.getEntity() instanceof Player) {
+            var uuid = e.getEntity().getUniqueId();
 
             drawing.remove(uuid);
         }
     }
 
     @EventHandler
-    public void onChangeSlot(PlayerItemHeldEvent e)
-    {
-        UUID uuid = e.getPlayer().getUniqueId();
+    public void onChangeSlot(PlayerItemHeldEvent e) {
+        var uuid = e.getPlayer().getUniqueId();
 
         drawing.remove(uuid);
     }
 
     @EventHandler
-    private void onCleanupEntity(EntityCleanupEvent event)
-    {
-        if (event.isForced())
-        {
+    private void onCleanupEntity(EntityCleanupEvent event) {
+        if (event.isForced()) {
             this.drawing.remove(event.getUniqueId());
         }
     }
 
-    public boolean isDrawingBow(Player player)
-    {
+    public boolean isDrawingBow(Player player) {
         return this.drawing.contains(player.getUniqueId());
     }
 
-    public static BowTracker getInstance()
-    {
+    public static BowTracker getInstance() {
         return _instance;
     }
 }

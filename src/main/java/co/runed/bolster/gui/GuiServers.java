@@ -2,7 +2,6 @@ package co.runed.bolster.gui;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.Permissions;
-import co.runed.bolster.common.ServerData;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.ItemBuilder;
 import net.kyori.adventure.text.Component;
@@ -22,17 +21,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GuiServers extends Gui
-{
+public class GuiServers extends Gui {
     List<String> gameModes = new ArrayList<>();
 
-    public GuiServers(Gui previousGui, String gameMode)
-    {
+    public GuiServers(Gui previousGui, String gameMode) {
         this(previousGui, Arrays.asList(gameMode));
     }
 
-    public GuiServers(Gui previousGui, List<String> gameModes)
-    {
+    public GuiServers(Gui previousGui, List<String> gameModes) {
         super(previousGui);
 
         if (gameModes.size() == 1 && gameModes.get(0) == null) return;
@@ -41,15 +37,13 @@ public class GuiServers extends Gui
     }
 
     @Override
-    public String getTitle(Player player)
-    {
+    public String getTitle(Player player) {
         return "Servers";
     }
 
     @Override
-    public Menu draw(Player player)
-    {
-        ChestMenu.Builder pageTemplate = ChestMenu.builder(6)
+    public Menu draw(Player player) {
+        var pageTemplate = ChestMenu.builder(6)
                 .title(this.getTitle(player))
                 .redraw(true);
 
@@ -62,7 +56,7 @@ public class GuiServers extends Gui
                 .pattern("000000000")
                 .build();
 
-        PaginatedMenuBuilder builder = PaginatedMenuBuilder.builder(pageTemplate)
+        var builder = PaginatedMenuBuilder.builder(pageTemplate)
                 .slots(itemSlots)
                 .nextButton(GuiConstants.GUI_ARROW_RIGHT)
                 .nextButtonSlot(51)
@@ -71,29 +65,26 @@ public class GuiServers extends Gui
 
         var servers = Bolster.getInstance().getServers();
 
-        for (var entry : servers.entrySet())
-        {
-            ServerData server = entry.getValue();
+        for (var entry : servers.entrySet()) {
+            var server = entry.getValue();
 
             if (server.id.equals(Bolster.getInstance().getServerId())) continue;
             if (gameModes.size() > 0 && !gameModes.contains(server.gameMode)) continue;
             if (server.restricted && !player.hasPermission(Permissions.RESTRICTED_SERVERS)) continue;
 
-            ItemBuilder itemBuilder = new ItemBuilder(Material.valueOf(server.iconMaterial))
+            var itemBuilder = new ItemBuilder(Material.valueOf(server.iconMaterial))
                     .setDisplayName(Component.text(server.name, NamedTextColor.WHITE))
                     .addLoreComponent(Component.text("/server " + server.id, NamedTextColor.WHITE))
                     .addLoreComponent(Component.text(server.gameMode, NamedTextColor.WHITE))
                     .addLoreComponent(Component.text(server.status, NamedTextColor.WHITE));
 
-            SlotSettings settings = SlotSettings.builder()
+            var settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(itemBuilder.build()))
                     .clickHandler((p, info) -> {
-                        try
-                        {
+                        try {
                             BukkitUtil.sendPlayerToServer(p, server.id);
                         }
-                        catch (IOException e)
-                        {
+                        catch (IOException e) {
                             e.printStackTrace();
                         }
 
@@ -104,7 +95,7 @@ public class GuiServers extends Gui
             builder.addItem(settings);
         }
 
-        List<Menu> pages = builder.build();
+        var pages = builder.build();
 
         return pages.get(0);
     }

@@ -10,22 +10,18 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
-public final class NetworkUtil
-{
+public final class NetworkUtil {
     /**
      * Sends a packet to the given player.
      *
      * @param player the player
      * @param packet the packet
      */
-    public static void sendPacket(@Nonnull Player player, @Nonnull PacketContainer packet)
-    {
-        try
-        {
+    public static void sendPacket(@Nonnull Player player, @Nonnull PacketContainer packet) {
+        try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
         }
-        catch (InvocationTargetException e)
-        {
+        catch (InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -35,8 +31,7 @@ public final class NetworkUtil
      *
      * @param packet the packet
      */
-    public static void broadcastPacket(@Nonnull PacketContainer packet)
-    {
+    public static void broadcastPacket(@Nonnull PacketContainer packet) {
         ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
     }
 
@@ -46,18 +41,14 @@ public final class NetworkUtil
      * @param players the players
      * @param packet  the packet
      */
-    public static void broadcastPacket(@Nonnull Iterable<Player> players, @Nonnull PacketContainer packet)
-    {
-        for (Player player : players)
-        {
+    public static void broadcastPacket(@Nonnull Iterable<Player> players, @Nonnull PacketContainer packet) {
+        for (var player : players) {
             sendPacket(player, packet);
         }
     }
 
-    public static void writeVarInt(ByteBuf buf, int i)
-    {
-        while ((i & -128) != 0)
-        {
+    public static void writeVarInt(ByteBuf buf, int i) {
+        while ((i & -128) != 0) {
             buf.writeByte(i & 127 | 128);
             i >>>= 7;
         }
@@ -65,20 +56,16 @@ public final class NetworkUtil
         buf.writeByte(i);
     }
 
-    public static void writeString(ByteBuf buf, String string)
-    {
+    public static void writeString(ByteBuf buf, String string) {
         writeString(buf, string, 32767);
     }
 
-    public static void writeString(ByteBuf buf, String string, int i)
-    {
-        byte[] bs = string.getBytes(StandardCharsets.UTF_8);
-        if (bs.length > i)
-        {
+    public static void writeString(ByteBuf buf, String string, int i) {
+        var bs = string.getBytes(StandardCharsets.UTF_8);
+        if (bs.length > i) {
             throw new EncoderException("String too big (was " + bs.length + " bytes encoded, max " + i + ")");
         }
-        else
-        {
+        else {
             writeVarInt(buf, bs.length);
             buf.writeBytes(bs);
         }

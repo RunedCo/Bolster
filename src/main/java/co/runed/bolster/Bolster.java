@@ -1,9 +1,9 @@
 package co.runed.bolster;
 
 import co.runed.bolster.commands.*;
-import co.runed.bolster.common.BasicPlayerInfo;
 import co.runed.bolster.common.ServerData;
 import co.runed.bolster.common.gson.GsonUtil;
+import co.runed.bolster.common.player.BasicPlayerInfo;
 import co.runed.bolster.common.redis.RedisChannels;
 import co.runed.bolster.common.redis.RedisManager;
 import co.runed.bolster.common.redis.payload.Payload;
@@ -16,16 +16,13 @@ import co.runed.bolster.events.server.ReloadConfigEvent;
 import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.currency.Currencies;
-import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.status.*;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.json.BukkitAwareObjectTypeAdapter;
 import co.runed.bolster.util.json.InventorySerializableAdapter;
-import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.util.registries.Registries;
-import co.runed.bolster.util.registries.Registry;
 import co.runed.bolster.wip.*;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.mojang.authlib.properties.PropertyMap;
@@ -49,8 +46,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Bolster extends JavaPlugin implements Listener
-{
+public class Bolster extends JavaPlugin implements Listener {
     // SINGLETON INSTANCE
     private static Bolster instance;
 
@@ -77,14 +73,12 @@ public class Bolster extends JavaPlugin implements Listener
     private Map<String, ServerData> servers = new HashMap<>();
 
     @Override
-    public void onLoad()
-    {
+    public void onLoad() {
         instance = this;
     }
 
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         super.onEnable();
 
         this.loadConfig();
@@ -152,8 +146,7 @@ public class Bolster extends JavaPlugin implements Listener
         getServer().getScheduler().scheduleSyncDelayedTask(this, this::onPostEnable);
     }
 
-    private void setupGson()
-    {
+    private void setupGson() {
         GsonUtil.addBuilderFunction((gsonBuilder ->
                 gsonBuilder.registerTypeAdapterFactory(BukkitAwareObjectTypeAdapter.FACTORY)
                         .registerTypeHierarchyAdapter(Inventory.class, new InventorySerializableAdapter())
@@ -162,11 +155,10 @@ public class Bolster extends JavaPlugin implements Listener
         );
     }
 
-    public ServerData getServerData()
-    {
-        GameMode gameMode = getActiveGameMode();
+    public ServerData getServerData() {
+        var gameMode = getActiveGameMode();
 
-        ServerData serverData = new ServerData();
+        var serverData = new ServerData();
         serverData.id = this.serverId;
         serverData.status = gameMode.getStatus();
         serverData.gameMode = gameMode.getId();
@@ -174,8 +166,7 @@ public class Bolster extends JavaPlugin implements Listener
         serverData.ipAddress = getServer().getIp();
         serverData.port = getServer().getPort();
 
-        for (var player : Bukkit.getOnlinePlayers())
-        {
+        for (var player : Bukkit.getOnlinePlayers()) {
             serverData.onlinePlayers.add(new BasicPlayerInfo(player.getUniqueId(), player.getName()));
         }
 
@@ -185,26 +176,22 @@ public class Bolster extends JavaPlugin implements Listener
         return serverData;
     }
 
-    public void onPostEnable()
-    {
+    public void onPostEnable() {
         setActiveGameMode(this.config.gameMode);
 
-        ServerDataPayload registerPayload = new ServerDataPayload();
+        var registerPayload = new ServerDataPayload();
         registerPayload.serverData = this.getServerData();
 
         RedisManager.getInstance().publish(RedisChannels.REGISTER_SERVER, registerPayload);
     }
 
-    public void loadConfig()
-    {
-        try
-        {
+    public void loadConfig() {
+        try {
             this.config = new Config();
 
             serverId = Bolster.getInstance().config.serverId;
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             this.getLogger().severe("FAILED TO LOAD CONFIG FILE");
             e.printStackTrace();
             this.setEnabled(false);
@@ -213,16 +200,14 @@ public class Bolster extends JavaPlugin implements Listener
 
     // NOTE: SHIT WORKAROUND FOR CANVAS NOT TRIGERRING EVENT WHEN IN SPECTATOR
     @EventHandler(priority = EventPriority.HIGH)
-    private void onInventoryClick(InventoryClickEvent event)
-    {
+    private void onInventoryClick(InventoryClickEvent event) {
         if (!event.isCancelled()) return;
 
         this.menuListener.handleGuiClick(event);
     }
 
-    private void registerStatusEffects()
-    {
-        Registry<StatusEffect> statusEffectRegistry = Registries.STATUS_EFFECTS;
+    private void registerStatusEffects() {
+        var statusEffectRegistry = Registries.STATUS_EFFECTS;
 
         statusEffectRegistry.register("blind", BlindStatusEffect.class);
         statusEffectRegistry.register("grounded", GroundedStatusEffect.class);
@@ -234,18 +219,16 @@ public class Bolster extends JavaPlugin implements Listener
         statusEffectRegistry.register("vulnerable", VulnerableStatusEffect.class);
     }
 
-    private void registerCurrencies()
-    {
-        Registry<Currency> currencyRegistry = Registries.CURRENCIES;
+    private void registerCurrencies() {
+        var currencyRegistry = Registries.CURRENCIES;
 
         currencyRegistry.register(Currencies.DIAMOND);
         currencyRegistry.register(Currencies.EMERALD);
         currencyRegistry.register(Currencies.GOLD);
     }
 
-    private void registerTraits()
-    {
-        Registry<Property<?>> registry = Registries.TRAITS;
+    private void registerTraits() {
+        var registry = Registries.TRAITS;
 
         registry.register(Traits.DEBUG_MODE);
         registry.register(Traits.COOLDOWN_REDUCTION_PERCENT);
@@ -253,11 +236,10 @@ public class Bolster extends JavaPlugin implements Listener
     }
 
     @Override
-    public void onDisable()
-    {
+    public void onDisable() {
         super.onDisable();
 
-        UnregisterServerPayload payload = new UnregisterServerPayload();
+        var payload = new UnregisterServerPayload();
         payload.serverId = this.serverId;
 
         RedisManager.getInstance().publish(RedisChannels.UNREGISTER_SERVER, payload);
@@ -266,28 +248,24 @@ public class Bolster extends JavaPlugin implements Listener
     }
 
     @EventHandler
-    private void onRedisMessage(RedisMessageEvent event)
-    {
-        if (event.getChannel().equals(RedisChannels.REGISTER_SERVER_RESPONSE))
-        {
-            RegisterServerResponsePayload payload = Payload.fromJson(event.getMessage(), RegisterServerResponsePayload.class);
+    private void onRedisMessage(RedisMessageEvent event) {
+        if (event.getChannel().equals(RedisChannels.REGISTER_SERVER_RESPONSE)) {
+            var payload = Payload.fromJson(event.getMessage(), RegisterServerResponsePayload.class);
 
             this.setServerId(payload.serverId);
 
             RedisManager.getInstance().setSenderId(this.getServerId());
         }
 
-        if (event.getChannel().equals(RedisChannels.LIST_SERVERS_RESPONSE))
-        {
-            ListServersResponsePayload payload = Payload.fromJson(event.getMessage(), ListServersResponsePayload.class);
+        if (event.getChannel().equals(RedisChannels.LIST_SERVERS_RESPONSE)) {
+            var payload = Payload.fromJson(event.getMessage(), ListServersResponsePayload.class);
             this.servers = payload.servers;
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    private void onPlayerLeave(PlayerQuitEvent event)
-    {
-        ServerDataPayload payload = new ServerDataPayload();
+    private void onPlayerLeave(PlayerQuitEvent event) {
+        var payload = new ServerDataPayload();
         payload.serverData = this.getServerData();
         payload.serverData.onlinePlayers.removeIf(data -> data.uuid.equals(event.getPlayer().getUniqueId()));
 
@@ -295,83 +273,68 @@ public class Bolster extends JavaPlugin implements Listener
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    private void onPlayerJoin(PlayerJoinEvent event)
-    {
+    private void onPlayerJoin(PlayerJoinEvent event) {
         Bolster.updateServer();
     }
 
-    public void setServerId(String id)
-    {
+    public void setServerId(String id) {
         serverId = id;
     }
 
-    public String getServerId()
-    {
+    public String getServerId() {
         return serverId;
     }
 
-    public Map<String, ServerData> getServers()
-    {
+    public Map<String, ServerData> getServers() {
         return Collections.unmodifiableMap(servers);
     }
 
     // SINGLETON GETTERS
-    public static Bolster getInstance()
-    {
+    public static Bolster getInstance() {
         return instance;
     }
 
-    public static Config getBolsterConfig()
-    {
+    public static Config getBolsterConfig() {
         return Bolster.getInstance().config;
     }
 
-    public static EffectManager getEffectManager()
-    {
+    public static EffectManager getEffectManager() {
         return Bolster.getInstance().effectManager;
     }
 
-    public static boolean isActiveGameMode(Class<? extends GameMode> gameMode)
-    {
+    public static boolean isActiveGameMode(Class<? extends GameMode> gameMode) {
         return isActiveGameMode(Registries.GAME_MODES.getId(gameMode));
     }
 
-    public static boolean isActiveGameMode(String gameMode)
-    {
-        String activeId = Bolster.getBolsterConfig().gameMode;
-        GameMode active = getActiveGameMode();
+    public static boolean isActiveGameMode(String gameMode) {
+        var activeId = Bolster.getBolsterConfig().gameMode;
+        var active = getActiveGameMode();
 
         if (active != null) activeId = active.getId();
 
         return activeId != null && activeId.equals(gameMode);
     }
 
-    public static GameMode getActiveGameMode()
-    {
+    public static GameMode getActiveGameMode() {
         return Bolster.getInstance().activeGameMode;
     }
 
-    public static void setActiveGameMode(String id)
-    {
-        Bolster bolster = Bolster.getInstance();
-        GameMode gameMode = Registries.GAME_MODES.get(id);
+    public static void setActiveGameMode(String id) {
+        var bolster = Bolster.getInstance();
+        var gameMode = Registries.GAME_MODES.get(id);
 
-        if (gameMode != null)
-        {
+        if (gameMode != null) {
             setActiveGameMode(gameMode);
         }
-        else
-        {
+        else {
             bolster.getLogger().severe("Invalid Game Mode '" + id + "'");
         }
     }
 
-    public static void setActiveGameMode(GameMode gameMode)
-    {
-        Bolster bolster = Bolster.getInstance();
+    public static void setActiveGameMode(GameMode gameMode) {
+        var bolster = Bolster.getInstance();
 
-        if (bolster.activeGameMode != null)
-        {
+        if (bolster.activeGameMode != null) {
             bolster.getLogger().info("Unloading Game Mode '" + bolster.activeGameMode.getId() + "'");
 
             bolster.activeGameMode.stop();
@@ -390,16 +353,16 @@ public class Bolster extends JavaPlugin implements Listener
         bolster.activeGameMode.start();
     }
 
-    public static void updateServer()
-    {
-        ServerDataPayload payload = new ServerDataPayload();
+    public static void updateServer() {
+        if (getActiveGameMode() == null) return;
+
+        var payload = new ServerDataPayload();
         payload.serverData = Bolster.getInstance().getServerData();
 
         RedisManager.getInstance().publish(RedisChannels.UPDATE_SERVER, payload);
     }
 
-    public static void reload()
-    {
+    public static void reload() {
         BukkitUtil.triggerEvent(new ReloadConfigEvent());
     }
 }

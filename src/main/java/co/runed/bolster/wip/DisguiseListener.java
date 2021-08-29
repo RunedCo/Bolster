@@ -8,7 +8,6 @@ import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.authlib.properties.PropertyMap;
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import me.libraryaddict.disguise.disguisetypes.Disguise;
 import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
@@ -16,19 +15,16 @@ import me.libraryaddict.disguise.disguisetypes.MetaIndex;
 import me.libraryaddict.disguise.events.DisguiseEvent;
 import me.libraryaddict.disguise.events.UndisguiseEvent;
 import me.libraryaddict.disguise.utilities.json.*;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
-public class DisguiseListener implements Listener
-{
+public class DisguiseListener implements Listener {
     private static Gson gson;
 
-    public DisguiseListener()
-    {
-        GsonBuilder gsonBuilder = new GsonBuilder();
+    public DisguiseListener() {
+        var gsonBuilder = new GsonBuilder();
         gsonBuilder.disableHtmlEscaping();
 
         gsonBuilder.registerTypeAdapter(MetaIndex.class, new SerializerMetaIndex());
@@ -45,14 +41,13 @@ public class DisguiseListener implements Listener
     }
 
     @EventHandler
-    private void onDisguise(DisguiseEvent event)
-    {
+    private void onDisguise(DisguiseEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
 
-        Player player = (Player) event.getEntity();
-        EntityType entityType = event.getDisguise().getType().getEntityType();
+        var player = (Player) event.getEntity();
+        var entityType = event.getDisguise().getType().getEntityType();
 
-        ByteBuf byteBuf = Unpooled.buffer();
+        var byteBuf = Unpooled.buffer();
         NetworkUtil.writeString(byteBuf, entityType.getKey().toString());
         NetworkUtil.writeString(byteBuf, gson.toJson(event.getDisguise()));
 
@@ -60,16 +55,14 @@ public class DisguiseListener implements Listener
     }
 
     @EventHandler
-    private void onUndisguise(UndisguiseEvent event)
-    {
+    private void onUndisguise(UndisguiseEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
 
-        Player player = (Player) event.getEntity();
+        var player = (Player) event.getEntity();
 
         player.sendPluginMessage(Bolster.getInstance(), "bolster:undisguise", new byte[0]);
     }
 
-    private static void serializeDisguise(Disguise disguise)
-    {
+    private static void serializeDisguise(Disguise disguise) {
     }
 }

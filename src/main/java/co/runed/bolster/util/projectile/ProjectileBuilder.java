@@ -9,37 +9,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ProjectileBuilder
-{
+public class ProjectileBuilder {
     Entity projectile;
     LivingEntity caster;
     List<Supplier<LivingEntity>> onHitEntity = new ArrayList<>();
     List<Supplier<Block>> onHitBlock = new ArrayList<>();
 
-    public ProjectileBuilder projectile(Entity projectile)
-    {
+    public ProjectileBuilder projectile(Entity projectile) {
         this.projectile = projectile;
 
         return this;
     }
 
-    public ProjectileBuilder onHitEntity(Supplier<LivingEntity> onHit)
-    {
+    public ProjectileBuilder onHitEntity(Supplier<LivingEntity> onHit) {
         this.onHitEntity.add(onHit);
 
         return this;
     }
 
-    public ProjectileBuilder onHitBlock(Supplier<Block> onHit)
-    {
+    public ProjectileBuilder onHitBlock(Supplier<Block> onHit) {
         this.onHitBlock.add(onHit);
 
         return this;
     }
 
-    public EntityProjectile build()
-    {
-        EntityProjectile entityProjectile = new EntityProjectile(Bolster.getInstance(), caster, projectile);
+    public EntityProjectile build() {
+        var entityProjectile = new EntityProjectile(Bolster.getInstance(), caster, projectile);
 
         return entityProjectile;
     }

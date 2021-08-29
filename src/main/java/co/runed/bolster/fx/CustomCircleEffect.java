@@ -4,12 +4,10 @@ import de.slikey.effectlib.Effect;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.util.VectorUtils;
-import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
-public class CustomCircleEffect extends Effect
-{
+public class CustomCircleEffect extends Effect {
     public Particle particle;
     public double xRotation;
     public double yRotation;
@@ -26,8 +24,7 @@ public class CustomCircleEffect extends Effect
     public int particles;
     public boolean wholeCircle;
 
-    public CustomCircleEffect(EffectManager effectManager)
-    {
+    public CustomCircleEffect(EffectManager effectManager) {
         super(effectManager);
         this.particle = Particle.VILLAGER_HAPPY;
         this.zRotation = 0.0D;
@@ -44,27 +41,23 @@ public class CustomCircleEffect extends Effect
         this.iterations = 50;
     }
 
-    public void reset()
-    {
+    public void reset() {
         this.step = 0.0F;
     }
 
-    public void onRun()
-    {
-        Location location = this.getLocation();
+    public void onRun() {
+        var location = this.getLocation();
         location.subtract(this.xSubtract, this.ySubtract, this.zSubtract);
-        double inc = 6.283185307179586D / (double) this.particles;
-        int steps = this.wholeCircle ? this.particles : 1;
+        var inc = 6.283185307179586D / (double) this.particles;
+        var steps = this.wholeCircle ? this.particles : 1;
 
-        for (int i = 0; i < steps; ++i)
-        {
-            double angle = (double) this.step * inc;
-            Vector v = new Vector();
+        for (var i = 0; i < steps; ++i) {
+            var angle = (double) this.step * inc;
+            var v = new Vector();
             v.setX(Math.cos(angle) * (double) this.radius);
             v.setZ(Math.sin(angle) * (double) this.radius);
             VectorUtils.rotateVector(v, this.xRotation, this.yRotation, this.zRotation);
-            if (this.enableRotation)
-            {
+            if (this.enableRotation) {
                 VectorUtils.rotateVector(v, this.angularVelocityX * (double) this.step, this.angularVelocityY * (double) this.step, this.angularVelocityZ * (double) this.step);
             }
 

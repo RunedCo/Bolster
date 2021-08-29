@@ -2,40 +2,34 @@ package co.runed.bolster.status;
 
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 
-public class KnockbackResistanceStatusEffect extends StatusEffect
-{
+public class KnockbackResistanceStatusEffect extends StatusEffect {
     private AttributeModifier attributeModifier;
 
     private double resistanceAmount = 1;
 
-    public KnockbackResistanceStatusEffect(double duration, double resistanceAmount)
-    {
+    public KnockbackResistanceStatusEffect(double duration, double resistanceAmount) {
         super(duration);
 
         this.resistanceAmount = resistanceAmount;
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "Knockback Resistance";
     }
 
     @Override
-    public ChatColor getColor()
-    {
+    public ChatColor getColor() {
         return ChatColor.GOLD;
     }
 
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         this.attributeModifier = new AttributeModifier("knockback_resistance_status", this.resistanceAmount, AttributeModifier.Operation.ADD_NUMBER);
 
-        AttributeInstance attr = this.getEntity().getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+        var attr = this.getEntity().getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
 
         if (attr == null) return;
 
@@ -43,9 +37,8 @@ public class KnockbackResistanceStatusEffect extends StatusEffect
     }
 
     @Override
-    public void onEnd()
-    {
-        AttributeInstance attr = this.getEntity().getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+    public void onEnd() {
+        var attr = this.getEntity().getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
 
         if (attr == null) return;
 
@@ -53,8 +46,7 @@ public class KnockbackResistanceStatusEffect extends StatusEffect
     }
 
     @Override
-    public void onTick()
-    {
+    public void onTick() {
 
     }
 }

@@ -13,22 +13,19 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PotionSystem implements Listener
-{
+public class PotionSystem implements Listener {
     Map<UUID, Map<PotionEffectType, Boolean>> blockNextRemoval = new HashMap<>();
     List<PotionEffectContainer> activeEffects = new ArrayList<>();
     List<PotionEffectContainer> pendingEffects = new ArrayList<>();
 
     private static PotionSystem _instance;
 
-    public PotionSystem()
-    {
+    public PotionSystem() {
         _instance = this;
     }
 
-    public static PotionEffectContainer addPotionEffect(LivingEntity entity, PotionEffect effect)
-    {
-        PotionEffectContainer container = _instance.addEffectToQueue(entity, effect);
+    public static PotionEffectContainer addPotionEffect(LivingEntity entity, PotionEffect effect) {
+        var container = _instance.addEffectToQueue(entity, effect);
         // block next removal event for this type and entity
 
         _instance.setBlockNextRemoval(entity, effect.getType(), true);
@@ -41,18 +38,15 @@ public class PotionSystem implements Listener
         return container;
     }
 
-    public static void removeExactPotionEffect(LivingEntity entity, PotionEffectContainer effect)
-    {
+    public static void removeExactPotionEffect(LivingEntity entity, PotionEffectContainer effect) {
         _instance.removeExactPotionEffectInternal(entity, effect.activeEffect);
     }
 
-    public static void removeExactPotionEffect(LivingEntity entity, PotionEffect effect)
-    {
+    public static void removeExactPotionEffect(LivingEntity entity, PotionEffect effect) {
         _instance.removeExactPotionEffectInternal(entity, effect);
     }
 
-    private void removeExactPotionEffectInternal(LivingEntity entity, PotionEffect effect)
-    {
+    private void removeExactPotionEffectInternal(LivingEntity entity, PotionEffect effect) {
         //PotionEffectContainer active = this.getActiveEffect(entity, effect.getType());
 
         this.activeEffects.removeIf(e -> e != null && e.owner == entity.getUniqueId() && e.is(effect));
@@ -67,53 +61,45 @@ public class PotionSystem implements Listener
         this.update(entity, effect.getType());
     }
 
-    private void setBlockNextRemoval(LivingEntity entity, PotionEffectType type, boolean block)
-    {
-        UUID uuid = entity.getUniqueId();
+    private void setBlockNextRemoval(LivingEntity entity, PotionEffectType type, boolean block) {
+        var uuid = entity.getUniqueId();
 
         this.blockNextRemoval.putIfAbsent(uuid, new HashMap<>());
         this.blockNextRemoval.get(uuid).put(type, block);
     }
 
-    private boolean shouldBlockNextRemoval(LivingEntity entity, PotionEffectType type)
-    {
-        UUID uuid = entity.getUniqueId();
+    private boolean shouldBlockNextRemoval(LivingEntity entity, PotionEffectType type) {
+        var uuid = entity.getUniqueId();
 
         return this.blockNextRemoval.containsKey(uuid) && this.blockNextRemoval.get(uuid).containsKey(type) && this.blockNextRemoval.get(uuid).get(type);
     }
 
-    private void setActiveEffect(LivingEntity entity, PotionEffectContainer effect)
-    {
+    private void setActiveEffect(LivingEntity entity, PotionEffectContainer effect) {
         this.clearActiveEffect(entity, effect.type);
         this.activeEffects.add(effect);
     }
 
-    private PotionEffectContainer getActiveEffect(LivingEntity entity, PotionEffectType type)
-    {
+    private PotionEffectContainer getActiveEffect(LivingEntity entity, PotionEffectType type) {
         return activeEffects.stream().filter(e -> e.owner == entity.getUniqueId() && e.type.equals(type)).findFirst().orElse(null);
     }
 
-    private void clearActiveEffect(LivingEntity entity, PotionEffectType type)
-    {
+    private void clearActiveEffect(LivingEntity entity, PotionEffectType type) {
         this.activeEffects.remove(this.getActiveEffect(entity, type));
     }
 
-    private PotionEffectContainer getNextEffect(LivingEntity entity, PotionEffectType type)
-    {
+    private PotionEffectContainer getNextEffect(LivingEntity entity, PotionEffectType type) {
         return this.getEffectQueue(entity, type).stream().findFirst().orElse(null);
     }
 
-    private PotionEffectContainer addEffectToQueue(LivingEntity entity, PotionEffect newEffect)
-    {
-        PotionEffectContainer container = new PotionEffectContainer(entity.getUniqueId(), newEffect);
+    private PotionEffectContainer addEffectToQueue(LivingEntity entity, PotionEffect newEffect) {
+        var container = new PotionEffectContainer(entity.getUniqueId(), newEffect);
 
         this.pendingEffects.add(container);
 
         return container;
     }
 
-    private List<PotionEffectContainer> getEffectQueue(LivingEntity entity, PotionEffectType type)
-    {
+    private List<PotionEffectContainer> getEffectQueue(LivingEntity entity, PotionEffectType type) {
         return pendingEffects.stream()
                 .filter(e -> e != null && e.type.equals(type) && e.owner == entity.getUniqueId())
                 .sorted((e1, e2) -> e2.duration - e1.duration)
@@ -121,16 +107,13 @@ public class PotionSystem implements Listener
                 .collect(Collectors.toList());
     }
 
-    private void update(LivingEntity entity, PotionEffectType type)
-    {
-        PotionEffectContainer nextEffect = this.getNextEffect(entity, type);
-        PotionEffectContainer activeEffect = this.getActiveEffect(entity, type);
-        PotionEffectContainer effectToAdd = activeEffect == null || (nextEffect != null && nextEffect.amplifier > activeEffect.amplifier) ? nextEffect : activeEffect;
+    private void update(LivingEntity entity, PotionEffectType type) {
+        var nextEffect = this.getNextEffect(entity, type);
+        var activeEffect = this.getActiveEffect(entity, type);
+        var effectToAdd = activeEffect == null || (nextEffect != null && nextEffect.amplifier > activeEffect.amplifier) ? nextEffect : activeEffect;
 
-        if (effectToAdd != null)
-        {
-            if (effectToAdd != activeEffect)
-            {
+        if (effectToAdd != null) {
+            if (effectToAdd != activeEffect) {
                 this.pendingEffects.add(activeEffect);
                 this.pendingEffects.remove(nextEffect);
 
@@ -143,8 +126,7 @@ public class PotionSystem implements Listener
         //entity.sendMessage("NEXT: " + nextEffect + " ACTIVE: " + activeEffect);
     }
 
-    private void clear(LivingEntity entity, PotionEffectType type)
-    {
+    private void clear(LivingEntity entity, PotionEffectType type) {
         this.pendingEffects.removeIf(e -> e.type.equals(type) && e.owner == entity.getUniqueId());
 
         this.clearActiveEffect(entity, type);
@@ -158,34 +140,30 @@ public class PotionSystem implements Listener
         THEN ON REMOVE ADD NEXT POTION EFFECT
      */
     @EventHandler
-    private void onPotionAdded(EntityPotionEffectEvent event)
-    {
+    private void onPotionAdded(EntityPotionEffectEvent event) {
         if (!(event.getEntity() instanceof LivingEntity)) return;
 
-        EntityPotionEffectEvent.Cause cause = event.getCause();
-        EntityPotionEffectEvent.Action action = event.getAction();
-        LivingEntity entity = (LivingEntity) event.getEntity();
+        var cause = event.getCause();
+        var action = event.getAction();
+        var entity = (LivingEntity) event.getEntity();
 
-        PotionEffect oldEffect = event.getOldEffect();
-        PotionEffect newEffect = event.getNewEffect();
-        PotionEffectType type = oldEffect == null ? newEffect.getType() : oldEffect.getType();
+        var oldEffect = event.getOldEffect();
+        var newEffect = event.getNewEffect();
+        var type = oldEffect == null ? newEffect.getType() : oldEffect.getType();
 
         pendingEffects.removeIf(e -> e == null || e.getRemainingDurationTicks() <= 0);
 
         // WHEN EFFECT ADDED USE DEFAULT BEHAVIOUR (+ LOGGING)
-        if (action == EntityPotionEffectEvent.Action.ADDED)
-        {
+        if (action == EntityPotionEffectEvent.Action.ADDED) {
             //event.getEntity().sendMessage(ChatColor.GREEN + "ADDED " + newEffect + " O: " + oldEffect);
 
-            if (this.getEffectQueue(entity, type).size() <= 0 && this.getActiveEffect(entity, type) == null)
-            {
+            if (this.getEffectQueue(entity, type).size() <= 0 && this.getActiveEffect(entity, type) == null) {
                 this.setActiveEffect(entity, new PotionEffectContainer(entity.getUniqueId(), newEffect));
             }
         }
 
         // WHEN EFFECT CHANGED (AN EFFECT IS ADDED WHILE AN EXISTING EFFECT IS IN PROGRESS), ADD NEW EFFECT TO QUEUE, REMOVE POTION EFFECTS OF THAT TYPE, AND UPDATE
-        if (action == EntityPotionEffectEvent.Action.CHANGED)
-        {
+        if (action == EntityPotionEffectEvent.Action.CHANGED) {
             //entity.sendMessage(ChatColor.YELLOW + "CHANGED " + oldEffect + " N: " + newEffect);
 
             // when changed add to pending
@@ -203,12 +181,10 @@ public class PotionSystem implements Listener
 
         // WHEN EFFECT REMOVED BY EXPIRATION, UPDATE
         // TODO check whether removePotionEffect triggers this or clear (pretty sure it is this)
-        if (action == EntityPotionEffectEvent.Action.REMOVED)
-        {
+        if (action == EntityPotionEffectEvent.Action.REMOVED) {
             //entity.sendMessage(ChatColor.RED + "REMOVED " + oldEffect + " N: " + newEffect);
 
-            if (cause == EntityPotionEffectEvent.Cause.PLUGIN && this.shouldBlockNextRemoval(entity, type))
-            {
+            if (cause == EntityPotionEffectEvent.Cause.PLUGIN && this.shouldBlockNextRemoval(entity, type)) {
                 this.setBlockNextRemoval(entity, type, false);
                 return;
             }
@@ -220,8 +196,7 @@ public class PotionSystem implements Listener
             this.update(entity, type);
         }
 
-        if (action == EntityPotionEffectEvent.Action.CLEARED)
-        {
+        if (action == EntityPotionEffectEvent.Action.CLEARED) {
             //entity.sendMessage(ChatColor.AQUA + "CLEARED " + oldEffect + " N: " + newEffect);
 
             // when clear event triggered always clear both pending and active
@@ -229,8 +204,7 @@ public class PotionSystem implements Listener
         }
     }
 
-    public static class PotionEffectContainer
-    {
+    public static class PotionEffectContainer {
         UUID owner;
 
         public PotionEffectType type;
@@ -244,8 +218,7 @@ public class PotionSystem implements Listener
         PotionEffect baseEffect;
         PotionEffect activeEffect;
 
-        public PotionEffectContainer(UUID owner, PotionEffect effect)
-        {
+        public PotionEffectContainer(UUID owner, PotionEffect effect) {
             this.owner = owner;
             this.type = effect.getType();
             this.duration = effect.getDuration();
@@ -258,31 +231,27 @@ public class PotionSystem implements Listener
             this.baseEffect = effect;
         }
 
-        public Duration getRemainingDuration()
-        {
+        public Duration getRemainingDuration() {
             if (this.duration == Integer.MAX_VALUE) return Duration.ofSeconds(Long.MAX_VALUE);
 
-            Duration sinceStart = Duration.between(startTime, Instant.now());
-            Duration remaining = TimeUtil.fromSeconds((double) (this.duration) / 20d).minus(sinceStart);
+            var sinceStart = Duration.between(startTime, Instant.now());
+            var remaining = TimeUtil.fromSeconds((double) (this.duration) / 20d).minus(sinceStart);
             return remaining.isNegative() ? Duration.ZERO : remaining;
         }
 
-        public long getRemainingDurationMs()
-        {
+        public long getRemainingDurationMs() {
             if (this.duration == Integer.MAX_VALUE) return this.duration;
 
             return this.getRemainingDuration().toMillis();
         }
 
-        public long getRemainingDurationTicks()
-        {
+        public long getRemainingDurationTicks() {
             if (this.duration == Integer.MAX_VALUE) return this.duration;
 
             return TimeUtil.toTicks(this.getRemainingDuration());
         }
 
-        public void start(LivingEntity entity)
-        {
+        public void start(LivingEntity entity) {
             this.activeEffect = this.toEffect();
 
 //            this.startTime = Instant.now();
@@ -291,13 +260,11 @@ public class PotionSystem implements Listener
             entity.addPotionEffect(this.activeEffect);
         }
 
-        public PotionEffect toEffect()
-        {
+        public PotionEffect toEffect() {
             return new PotionEffect(type, (int) this.getRemainingDurationTicks(), amplifier, ambient, particles, icon);
         }
 
-        public boolean is(PotionEffect effect)
-        {
+        public boolean is(PotionEffect effect) {
             return this.type.equals(effect.getType())
                     && (this.duration == effect.getDuration() || this.activeEffect.getDuration() == effect.getDuration())
                     && this.amplifier == effect.getAmplifier()
@@ -307,14 +274,12 @@ public class PotionSystem implements Listener
         }
 
         @Override
-        public String toString()
-        {
+        public String toString() {
             return baseEffect.toString() + "{rd: " + this.getRemainingDurationMs() + ", st: " + this.startTime + "}";
         }
     }
 
-    public static long round20(long b)
-    {
+    public static long round20(long b) {
         return (long) (Math.ceil(b / 20d) * 20);
     }
 }

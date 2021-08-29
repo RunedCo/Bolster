@@ -6,7 +6,7 @@ import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.game.shop.Shop;
 import co.runed.bolster.status.StatusEffect;
-import co.runed.bolster.util.properties.Property;
+import co.runed.bolster.common.properties.Property;
 
 public final class Registries
 {

@@ -14,13 +14,11 @@ import org.ipvp.canvas.template.ItemStackTemplate;
 import org.ipvp.canvas.template.StaticItemTemplate;
 import org.ipvp.canvas.type.ChestMenu;
 
-public class GuiConfirm extends Gui
-{
+public class GuiConfirm extends Gui {
     ItemStack icon;
     Runnable onConfirm;
 
-    public GuiConfirm(Gui previousGui, ItemStack icon, Runnable onConfirm)
-    {
+    public GuiConfirm(Gui previousGui, ItemStack icon, Runnable onConfirm) {
         super(previousGui);
 
         this.icon = icon;
@@ -28,15 +26,13 @@ public class GuiConfirm extends Gui
     }
 
     @Override
-    public String getTitle(Player player)
-    {
+    public String getTitle(Player player) {
         return "Confirm";
     }
 
     @Override
-    public Menu draw(Player player)
-    {
-        ChestMenu.Builder pageTemplate = ChestMenu.builder(1)
+    public Menu draw(Player player) {
+        var pageTemplate = ChestMenu.builder(1)
                 .title(this.getTitle(player))
                 .redraw(true);
 
@@ -48,9 +44,8 @@ public class GuiConfirm extends Gui
                         .build()
         );
 
-        for (int i = 0; i < 4; i++)
-        {
-            SlotSettings settings = SlotSettings.builder()
+        for (var i = 0; i < 4; i++) {
+            var settings = SlotSettings.builder()
                     .itemTemplate(declineTemplate)
                     .clickHandler((p, info) -> {
                         menu.close(p);
@@ -67,13 +62,11 @@ public class GuiConfirm extends Gui
                         .build()
         );
 
-        for (int i = 5; i < 9; i++)
-        {
-            SlotSettings settings = SlotSettings.builder()
+        for (var i = 5; i < 9; i++) {
+            var settings = SlotSettings.builder()
                     .itemTemplate(confirmTemplate)
                     .clickHandler((p, info) -> {
-                        if (info.getAction() == InventoryAction.PICKUP_ALL)
-                        {
+                        if (info.getAction() == InventoryAction.PICKUP_ALL) {
                             this.onConfirm.run();
                             menu.close(p);
                             if (this.previousGui != null) this.previousGui.show(p);

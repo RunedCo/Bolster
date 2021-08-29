@@ -1,7 +1,6 @@
 package co.runed.bolster.gui;
 
 import co.runed.bolster.game.shop.Shop;
-import co.runed.bolster.game.shop.ShopItem;
 import co.runed.bolster.util.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -13,32 +12,25 @@ import org.ipvp.canvas.slot.SlotSettings;
 import org.ipvp.canvas.template.StaticItemTemplate;
 import org.ipvp.canvas.type.ChestMenu;
 
-import java.util.Collection;
-import java.util.List;
-
-public class GuiShop extends Gui
-{
+public class GuiShop extends Gui {
     Shop shop;
 
-    public GuiShop(Gui previousGui, Shop shop)
-    {
+    public GuiShop(Gui previousGui, Shop shop) {
         super(previousGui);
 
         this.shop = shop;
     }
 
     @Override
-    public String getTitle(Player player)
-    {
+    public String getTitle(Player player) {
         return shop.getName();
     }
 
     @Override
-    protected Menu draw(Player player)
-    {
-        Collection<ShopItem> shopItems = this.shop.getItems().values();
+    protected Menu draw(Player player) {
+        var shopItems = this.shop.getItems().values();
 
-        ChestMenu.Builder pageTemplate = ChestMenu.builder(6)
+        var pageTemplate = ChestMenu.builder(6)
                 .title(this.getTitle(player))
                 .redraw(true);
 
@@ -51,32 +43,29 @@ public class GuiShop extends Gui
                 .pattern("000000000")
                 .build();
 
-        PaginatedMenuBuilder builder = PaginatedMenuBuilder.builder(pageTemplate)
+        var builder = PaginatedMenuBuilder.builder(pageTemplate)
                 .slots(itemSlots)
                 .nextButton(GuiConstants.GUI_ARROW_RIGHT)
                 .nextButtonSlot(51)
                 .previousButton(GuiConstants.GUI_ARROW_LEFT)
                 .previousButtonSlot(47);
 
-        for (ShopItem item : shopItems)
-        {
+        for (var item : shopItems) {
             if (!item.isEnabled() || (item.getSellCosts().isEmpty() && item.getBuyCosts().isEmpty())) continue;
 
-            ItemBuilder itemBuilder = new ItemBuilder(item.getIcon(player))
+            var itemBuilder = new ItemBuilder(item.getIcon(player))
                     .addLore(item.getShopTooltip(player))
                     .addLore("")
                     .addLore(item.getLeftClickTooltip(player))
                     .addLore(item.getRightClickTooltip(player));
 
-            SlotSettings settings = SlotSettings.builder()
+            var settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(itemBuilder.build()))
                     .clickHandler((p, info) -> {
-                        if (info.getAction() == InventoryAction.PICKUP_ALL)
-                        {
+                        if (info.getAction() == InventoryAction.PICKUP_ALL) {
                             item.onLeftClick(this, p);
                         }
-                        else if (info.getAction() == InventoryAction.PICKUP_HALF)
-                        {
+                        else if (info.getAction() == InventoryAction.PICKUP_HALF) {
                             item.onRightClick(this, p);
                         }
                     })
@@ -85,7 +74,7 @@ public class GuiShop extends Gui
             builder.addItem(settings);
         }
 
-        List<Menu> pages = builder.build();
+        var pages = builder.build();
 
         return pages.get(0);
     }

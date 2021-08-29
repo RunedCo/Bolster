@@ -1,7 +1,6 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.Config;
 import co.runed.bolster.common.gson.GsonUtil;
 import co.runed.bolster.common.redis.RedisChannels;
 import co.runed.bolster.common.redis.RedisManager;
@@ -17,13 +16,13 @@ import co.runed.bolster.events.server.RedisMessageEvent;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
+import co.runed.bolster.match.PlayerConnectMatchHistoryEvent;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.registries.Registries;
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -34,72 +33,66 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
-public class PlayerManager extends Manager
-{
+public class PlayerManager extends Manager {
     private static PlayerManager _instance;
     private Map<UUID, PlayerData> playerData = new HashMap<>();
     private final Gson gson;
     private Map<String, Class<? extends GameModeData>> gameModeDataTypes = new HashMap<>();
     private Map<UUID, Integer> timeSinceDisconnect = new HashMap<>();
+    private Map<UUID, Integer> playTime = new HashMap<>();
 
-    public PlayerManager(Plugin plugin)
-    {
+    private final long playTimeFrequency = 20L * 10;
+
+    public PlayerManager(Plugin plugin) {
         super(plugin);
 
         this.gson = GsonUtil.create();
 
-        Config config = Bolster.getBolsterConfig();
-        if (config.cleanupPlayers)
-        {
+        var config = Bolster.getBolsterConfig();
+        if (config.cleanupPlayers) {
             Bukkit.getScheduler().runTaskTimer(plugin, this::cleanupPlayers, 0L, config.cleanupFrequency);
         }
 
-        if (config.autoSave)
-        {
+        if (config.autoSave) {
             Bukkit.getScheduler().runTaskTimer(plugin, this::saveAllPlayers, 0L, config.autoSaveFrequency);
         }
+
+        Bukkit.getScheduler().runTaskTimer(plugin, this::updatePlayTime, 0L, playTimeFrequency);
 
         _instance = this;
     }
 
-    public void addGameModeDataClass(Class<? extends GameMode> gameMode, Class<? extends GameModeData> dataClass)
-    {
+    public void addGameModeDataClass(Class<? extends GameMode> gameMode, Class<? extends GameModeData> dataClass) {
         this.addGameModeDataClass(Registries.GAME_MODES.getId(gameMode), dataClass);
     }
 
-    public void addGameModeDataClass(String id, Class<? extends GameModeData> dataClass)
-    {
+    public void addGameModeDataClass(String id, Class<? extends GameModeData> dataClass) {
         this.gameModeDataTypes.put(id, dataClass);
     }
 
-    public Class<? extends GameModeData> getGameModeDataClass(String id)
-    {
+    public Class<? extends GameModeData> getGameModeDataClass(String id) {
         if (!this.gameModeDataTypes.containsKey(id))
             return GameModeData.class;
 
         return this.gameModeDataTypes.get(id);
     }
 
-    public PlayerData deserialize(String json)
-    {
+    public PlayerData deserialize(String json) {
         return this.gson.fromJson(json, PlayerData.class);
     }
 
-    public String serialize(PlayerData playerData)
-    {
+    public String serialize(PlayerData playerData) {
         return this.gson.toJson(playerData);
     }
 
-    public PlayerData getPlayerData(Player player)
-    {
+    public PlayerData getPlayerData(Player player) {
         return this.getPlayerData(player.getUniqueId());
     }
 
-    public PlayerData getPlayerData(UUID uuid)
-    {
+    public PlayerData getPlayerData(UUID uuid) {
         if (this.playerData.containsKey(uuid)) return this.playerData.get(uuid);
 
-        PlayerData data = new PlayerData();
+        var data = new PlayerData();
 
         data.setUuid(uuid);
 
@@ -108,41 +101,36 @@ public class PlayerManager extends Manager
         return data;
     }
 
-    public void load(Player player)
-    {
+    public void load(Player player) {
         this.load(player.getUniqueId());
     }
 
-    private void load(UUID uuid)
-    {
-        RequestPlayerDataPayload payload = new RequestPlayerDataPayload();
+    private void load(UUID uuid) {
+        var payload = new RequestPlayerDataPayload();
         payload.uuid = uuid;
 
         RedisManager.getInstance().publish(RedisChannels.REQUEST_PLAYER_DATA, payload);
     }
 
-    public void save(Player player)
-    {
-        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+    public void save(Player player) {
+        var playerData = PlayerManager.getInstance().getPlayerData(player);
         playerData.setName(player.getName());
 
         this.save(playerData);
     }
 
-    private void save(PlayerData data)
-    {
-        PlayerData playerData = this.runSave(data);
+    private void save(PlayerData data) {
+        var playerData = this.runSave(data);
 
-        UpdatePlayerDataPayload payload = new UpdatePlayerDataPayload();
+        var payload = new UpdatePlayerDataPayload();
         payload.playerData.put(playerData.getUuid(), this.serialize(playerData));
 
         RedisManager.getInstance().publish(RedisChannels.UPDATE_PLAYER_DATA, payload);
     }
 
-    private PlayerData runSave(PlayerData data)
-    {
+    private PlayerData runSave(PlayerData data) {
         /* Call Save Event */
-        SavePlayerDataEvent event = BukkitUtil.triggerEvent(new SavePlayerDataEvent(data.getPlayer(), data));
+        var event = BukkitUtil.triggerEvent(new SavePlayerDataEvent(data.getPlayer(), data));
         data = event.getPlayerData();
 
         data.saveGameModeData();
@@ -150,59 +138,64 @@ public class PlayerManager extends Manager
         return data;
     }
 
-    public void saveAllPlayers()
-    {
+    public void saveAllPlayers() {
         if (this.playerData.size() <= 0) return;
 
-        UpdatePlayerDataPayload payload = new UpdatePlayerDataPayload();
+        var payload = new UpdatePlayerDataPayload();
 
-        for (PlayerData data : this.playerData.values())
-        {
-            PlayerData updated = this.runSave(data);
+        for (var data : this.playerData.values()) {
+            var updated = this.runSave(data);
             payload.playerData.put(updated.getUuid(), this.serialize(updated));
         }
 
         RedisManager.getInstance().publish(RedisChannels.UPDATE_PLAYER_DATA, payload);
     }
 
-    public Collection<PlayerData> getAllPlayerData()
-    {
+    public Collection<PlayerData> getAllPlayerData() {
         return playerData.values();
     }
 
-    public void cleanupPlayers()
-    {
-        for (Player player : Bukkit.getOnlinePlayers())
-        {
+    public void cleanupPlayers() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             BukkitUtil.triggerEvent(new EntityCleanupEvent(player, false));
         }
 
-        Config config = Bolster.getBolsterConfig();
+        var config = Bolster.getBolsterConfig();
 
-        for (Map.Entry<UUID, Integer> entry : new ArrayList<>(this.timeSinceDisconnect.entrySet()))
-        {
-            UUID uuid = entry.getKey();
-            int value = entry.getValue() + config.cleanupFrequency;
+        for (var entry : new ArrayList<>(this.timeSinceDisconnect.entrySet())) {
+            var uuid = entry.getKey();
+            var value = entry.getValue() + config.cleanupFrequency;
 
             this.timeSinceDisconnect.put(uuid, value);
 
-            if (value >= config.forceCleanupTime)
-            {
+            if (value >= config.forceCleanupTime) {
                 BukkitUtil.triggerEvent(new EntityCleanupEvent(uuid, false));
             }
         }
     }
 
+    public int getTimeSinceDisconnect(Player player) {
+        return this.timeSinceDisconnect.getOrDefault(player.getUniqueId(), 0);
+    }
+
+    public int getPlayTime(Player player) {
+        return playTime.getOrDefault(player.getUniqueId(), 0);
+    }
+
+    private void updatePlayTime() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            this.playTime.put(player.getUniqueId(), (int) (playTime.getOrDefault(player.getUniqueId(), 0) + playTimeFrequency));
+        }
+    }
+
     @EventHandler
-    private void onRedisMessage(RedisMessageEvent event)
-    {
-        if (event.getChannel().equals(RedisChannels.REQUEST_PLAYER_DATA_RESPONSE))
-        {
-            RequestPlayerDataResponsePayload payload = Payload.fromJson(event.getMessage(), RequestPlayerDataResponsePayload.class);
-            PlayerData playerData = this.deserialize(payload.playerData);
+    private void onRedisMessage(RedisMessageEvent event) {
+        if (event.getChannel().equals(RedisChannels.REQUEST_PLAYER_DATA_RESPONSE)) {
+            var payload = Payload.fromJson(event.getMessage(), RequestPlayerDataResponsePayload.class);
+            var playerData = this.deserialize(payload.playerData);
 
             /* Call Load Event */
-            LoadPlayerDataEvent loadEvent = BukkitUtil.triggerEvent(new LoadPlayerDataEvent(playerData.getPlayer(), playerData));
+            var loadEvent = BukkitUtil.triggerEvent(new LoadPlayerDataEvent(playerData.getPlayer(), playerData));
             playerData = loadEvent.getPlayerData();
 
             playerData.lastJoinTime = TimeUtil.now();
@@ -212,19 +205,28 @@ public class PlayerManager extends Manager
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    private void onPlayerJoin(PlayerJoinEvent event)
-    {
-        Player player = event.getPlayer();
+    private void onPlayerJoin(PlayerJoinEvent event) {
+        var player = event.getPlayer();
 
         this.load(player);
+
+        Bolster.getActiveGameMode().getMatchHistory().addEvent(new PlayerConnectMatchHistoryEvent(player));
+
+//        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+//        Bukkit.getServer().dispatchCommand(console, "/luckperms ");
+//
+//        PermissionAttachment attachment = player.addAttachment(this.plugin);
+//        permissions.put(player.getUniqueId(), attachment);
+//
+//        PermissionUtil.setPermissionWithCase(attachment, "suffix.0.the Paladin ", true);
+//        attachment.setPermission("group.premium", true);
 
         this.timeSinceDisconnect.remove(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onPlayerLeave(PlayerQuitEvent event)
-    {
-        Player player = event.getPlayer();
+    private void onPlayerLeave(PlayerQuitEvent event) {
+        var player = event.getPlayer();
 
         this.save(player);
 
@@ -234,19 +236,17 @@ public class PlayerManager extends Manager
     }
 
     @EventHandler
-    private void onWorldSave(WorldSaveEvent event)
-    {
+    private void onWorldSave(WorldSaveEvent event) {
         this.saveAllPlayers();
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onSetCooldown(EntitySetCooldownEvent event)
-    {
-        LivingEntity entity = event.getEntity();
+    private void onSetCooldown(EntitySetCooldownEvent event) {
+        var entity = event.getEntity();
         if (!event.isGlobal()) return;
         if (!(entity instanceof Player)) return;
 
-        PlayerData playerData = this.getPlayerData(entity.getUniqueId());
+        var playerData = this.getPlayerData(entity.getUniqueId());
         List<CooldownManager.CooldownData> cooldowns = new ArrayList<>(playerData.getGlobalCooldowns());
         cooldowns.removeIf(cd -> cd.isDone() || (cd.cooldownId.equals(event.getCooldownId()) && cd.slot == event.getSlot()));
 
@@ -256,16 +256,13 @@ public class PlayerManager extends Manager
     }
 
     @EventHandler
-    private void onCleanupEntity(EntityCleanupEvent event)
-    {
-        if (event.isForced())
-        {
+    private void onCleanupEntity(EntityCleanupEvent event) {
+        if (event.isForced()) {
             this.timeSinceDisconnect.remove(event.getUniqueId());
         }
     }
 
-    public static PlayerManager getInstance()
-    {
+    public static PlayerManager getInstance() {
         return _instance;
     }
 }

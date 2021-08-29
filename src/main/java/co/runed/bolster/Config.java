@@ -3,7 +3,6 @@ package co.runed.bolster;
 import co.runed.bolster.util.config.BolsterConfiguration;
 import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -11,8 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class Config
-{
+public class Config {
     private final BolsterConfiguration config;
 
     public String redisHost = "localhost";
@@ -41,40 +39,34 @@ public class Config
     public boolean autoSave = true;
     public int autoSaveFrequency = 1200;
 
-    public Config() throws IOException, InvalidConfigurationException
-    {
-        Bolster bolster = Bolster.getInstance();
+    public Config() throws IOException, InvalidConfigurationException {
+        var bolster = Bolster.getInstance();
 
-        File configFile = new File(bolster.getDataFolder(), "config.yml");
-        if (!configFile.exists())
-        {
+        var configFile = new File(bolster.getDataFolder(), "config.yml");
+        if (!configFile.exists()) {
             bolster.saveDefaultConfig();
         }
 
         this.config = new BolsterConfiguration();
         this.config.load(configFile);
 
-        File overridesDir = bolster.getDataFolder();
-        File[] overrideFiles = overridesDir.listFiles((d, name) -> name.startsWith("overrides") && name.endsWith(".yml"));
+        var overridesDir = bolster.getDataFolder();
+        var overrideFiles = overridesDir.listFiles((d, name) -> name.startsWith("overrides") && name.endsWith(".yml"));
 
-        if (overrideFiles != null)
-        {
+        if (overrideFiles != null) {
             Arrays.sort(overrideFiles);
 
-            for (File override : overrideFiles)
-            {
-                if (override.exists())
-                {
-                    YamlConfiguration overrideConfig = YamlConfiguration.loadConfiguration(override);
-                    for (String key : overrideConfig.getKeys(false))
-                    {
+            for (var override : overrideFiles) {
+                if (override.exists()) {
+                    var overrideConfig = YamlConfiguration.loadConfiguration(override);
+                    for (var key : overrideConfig.getKeys(false)) {
                         config.set(key, overrideConfig.get(key));
                     }
                 }
             }
         }
 
-        ConfigurationSection redis = this.config.getConfigurationSection("redis");
+        var redis = this.config.getConfigurationSection("redis");
         this.redisHost = redis.getString("host", this.redisHost);
         this.redisPort = redis.getInt("port", this.redisPort);
 
@@ -101,8 +93,7 @@ public class Config
         this.autoSaveFrequency = this.config.getInt("auto-save-frequency", this.autoSaveFrequency);
     }
 
-    public Configuration getRawConfig()
-    {
+    public Configuration getRawConfig() {
         return config;
     }
 }

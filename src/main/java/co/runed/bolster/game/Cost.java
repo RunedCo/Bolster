@@ -1,6 +1,6 @@
 package co.runed.bolster.game;
 
-import co.runed.bolster.util.properties.Properties;
+import co.runed.bolster.common.properties.Properties;
 
 public abstract class Cost
 {

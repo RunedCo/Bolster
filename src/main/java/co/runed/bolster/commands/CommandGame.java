@@ -2,34 +2,29 @@ package co.runed.bolster.commands;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.Permissions;
-import co.runed.bolster.game.GameMode;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.util.registries.Registry;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.StringArgument;
 import org.bukkit.command.CommandSender;
 
-public class CommandGame extends CommandBase
-{
-    public CommandGame()
-    {
+public class CommandGame extends CommandBase {
+    public CommandGame() {
         super("game");
     }
 
-    private String[] getGameModes(CommandSender sender)
-    {
+    private String[] getGameModes(CommandSender sender) {
         return Registries.GAME_MODES.getEntries().values().stream().map(Registry.Entry::getId).toArray(String[]::new);
     }
 
     @Override
-    public CommandAPICommand build()
-    {
+    public CommandAPICommand build() {
         return new CommandAPICommand(this.command)
                 .withPermission(Permissions.COMMAND_GAME)
                 .withSubcommand(new CommandAPICommand("pause")
                         .withPermission("bolster.commands.pause")
                         .executes((sender, args) -> {
-                            GameMode gameMode = Bolster.getInstance().getActiveGameMode();
+                            var gameMode = Bolster.getInstance().getActiveGameMode();
                             gameMode.setPaused(!gameMode.isPaused());
 
                             sender.sendMessage("Set Game Mode " + gameMode.getName() + " to be " + (gameMode.isPaused() ? "paused" : "unpaused"));
@@ -38,7 +33,7 @@ public class CommandGame extends CommandBase
                         .withPermission("bolster.commands.loadgamemode")
                         .withArguments(new StringArgument("gamemode").overrideSuggestions(this::getGameModes))
                         .executes((sender, args) -> {
-                            String id = (String) args[0];
+                            var id = (String) args[0];
 
                             Bolster.setActiveGameMode(id);
 

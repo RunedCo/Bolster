@@ -8,28 +8,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ComponentUtil
-{
-    public static Collection<Component> wrappedText(String text)
-    {
+public class ComponentUtil {
+    public static Collection<Component> wrappedText(String text) {
         List<Component> list = new ArrayList<>();
 
         if (text == null) return new ArrayList<>();
 
-        String legacyText = LegacyComponentSerializer.legacyAmpersand().serialize(richText(text));
+        var legacyText = LegacyComponentSerializer.legacyAmpersand().serialize(richText(text));
 
-        List<String> lore = StringUtil.formatLore(legacyText);
+        var lore = StringUtil.formatLore(legacyText);
 
-        for (String line : lore)
-        {
+        for (var line : lore) {
             list.add(Component.text(line));
         }
 
         return list;
     }
 
-    public static Component richText(String text)
-    {
+    public static Component richText(String text) {
         if (text == null) return Component.empty();
 
         return MiniMessage.get().parse(text);

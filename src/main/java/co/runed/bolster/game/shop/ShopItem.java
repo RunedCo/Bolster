@@ -1,12 +1,16 @@
 package co.runed.bolster.game.shop;
 
-import co.runed.bolster.game.PlayerData;
+import co.runed.bolster.common.util.Describable;
+import co.runed.bolster.common.util.Identifiable;
+import co.runed.bolster.common.util.Nameable;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.gui.Gui;
 import co.runed.bolster.gui.GuiConfirm;
 import co.runed.bolster.gui.GuiConstants;
 import co.runed.bolster.managers.PlayerManager;
-import co.runed.bolster.util.*;
+import co.runed.bolster.util.IconPreview;
+import co.runed.bolster.util.ItemBuilder;
+import co.runed.bolster.util.StringUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -14,13 +18,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class ShopItem implements IIdentifiable, INameable, IDescribable
-{
+public class ShopItem implements Identifiable, Nameable, IconPreview, Describable {
     String id;
     String name;
     String description = null;
@@ -34,22 +34,18 @@ public class ShopItem implements IIdentifiable, INameable, IDescribable
     Map<Currency, Integer> buyCosts = new HashMap<>();
     Map<Currency, Integer> sellCosts = new HashMap<>();
 
-    public ShopItem(String id, String name, ItemStack icon)
-    {
+    public ShopItem(String id, String name, ItemStack icon) {
         this.id = id;
         this.name = name;
         this.icon = icon;
     }
 
-    public void loadFromConfig(ConfigurationSection config)
-    {
-        if (config.isList("sell-costs"))
-        {
+    public void loadFromConfig(ConfigurationSection config) {
+        if (config.isList("sell-costs")) {
             this.setSellCosts(Currency.fromList(config.getStringList("sell-costs")));
         }
 
-        if (config.isList("buy-costs"))
-        {
+        if (config.isList("buy-costs")) {
             this.setBuyCosts(Currency.fromList(config.getStringList("buy-costs")));
         }
 
@@ -61,72 +57,60 @@ public class ShopItem implements IIdentifiable, INameable, IDescribable
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return this.name;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
     @Override
-    public String getDescription()
-    {
+    public String getDescription() {
         return this.description;
     }
 
     @Override
-    public String getId()
-    {
+    public String getId() {
         return id;
     }
 
     @Override
-    public ItemStack getIcon()
-    {
-        ItemBuilder builder = new ItemBuilder(icon);
+    public ItemStack getIcon() {
+        var builder = new ItemBuilder(icon);
 
-        if (this.getDescription() != null)
-        {
+        if (this.getDescription() != null) {
             builder = builder.addLore(this.getDescription());
         }
 
         return builder.build();
     }
 
-    public ItemStack getIcon(Player player)
-    {
+    public ItemStack getIcon(Player player) {
         return this.getIcon();
     }
 
-    public List<String> getShopTooltip(Player player)
-    {
+    public List<String> getShopTooltip(Player player) {
         List<String> shopTooltip = new ArrayList<>();
 
-        if (!isUnlockable() || !isUnlocked(player))
-        {
+        if (!isUnlockable() || !isUnlocked(player)) {
             shopTooltip.add("");
             shopTooltip.add(ChatColor.GRAY + "Buy For:");
 
-            for (Map.Entry<Currency, Integer> entry : this.getBuyCosts().entrySet())
-            {
-                Currency currency = entry.getKey();
-                String costName = currency.getName() + (currency.shouldPluralize() ? "s" : "");
+            for (var entry : this.getBuyCosts().entrySet()) {
+                var currency = entry.getKey();
+                var costName = currency.getName() + (currency.shouldPluralize() ? "s" : "");
 
                 shopTooltip.addAll(StringUtil.formatBullet(ChatColor.GOLD + (entry.getValue() + " " + costName)));
             }
         }
 
-        if (isSellable())
-        {
+        if (isSellable()) {
             shopTooltip.add("");
             shopTooltip.add(ChatColor.GRAY + "Sell For:");
 
-            for (Map.Entry<Currency, Integer> entry : this.getSellCosts().entrySet())
-            {
-                Currency currency = entry.getKey();
+            for (var entry : this.getSellCosts().entrySet()) {
+                var currency = entry.getKey();
                 shopTooltip.addAll(StringUtil.formatBullet(ChatColor.GOLD + (entry.getValue() + " " + currency.getPluralisedName())));
             }
         }
@@ -134,136 +118,114 @@ public class ShopItem implements IIdentifiable, INameable, IDescribable
         return shopTooltip;
     }
 
-    public List<String> getLeftClickTooltip(Player player)
-    {
+    public List<String> getLeftClickTooltip(Player player) {
         List<String> tooltip = new ArrayList<>();
 
-        if (isUnlockable() && isUnlocked(player))
-        {
+        if (isUnlockable() && isUnlocked(player)) {
             tooltip.add(GuiConstants.UNLOCKED);
         }
-        else if (canAfford(player))
-        {
+        else if (canAfford(player)) {
             tooltip.add(GuiConstants.CLICK_TO + "buy");
         }
-        else
-        {
+        else {
             tooltip.add(GuiConstants.CANNOT_AFFORD_TO + "this!");
         }
 
         return tooltip;
     }
 
-    public List<String> getRightClickTooltip(Player player)
-    {
+    public List<String> getRightClickTooltip(Player player) {
         List<String> tooltip = new ArrayList<>();
 
-        if (isSellable() && canSell(player))
-        {
+        if (isSellable() && canSell(player)) {
             tooltip.add(GuiConstants.RIGHT_CLICK_TO + "sell");
         }
-        else
-        {
+        else {
             tooltip.add(ChatColor.RED + "You cannot sell this!");
         }
 
         return tooltip;
     }
 
-    public void setParentShop(Shop parentShop)
-    {
+    public void setParentShop(Shop parentShop) {
         this.parentShop = parentShop;
     }
 
-    public Shop getParentShop()
-    {
+    public Shop getParentShop() {
         return parentShop;
     }
 
-    public boolean isUnlockable()
-    {
+    public boolean isUnlockable() {
         return unlockable;
     }
 
-    public void setUnlockable(boolean unlockable)
-    {
+    public void setUnlockable(boolean unlockable) {
         this.unlockable = unlockable;
     }
 
-    public void setDefaultUnlocked(boolean defaultUnlocked)
-    {
+    public void setDefaultUnlocked(boolean defaultUnlocked) {
         this.defaultUnlocked = defaultUnlocked;
     }
 
-    public boolean isDefaultUnlocked()
-    {
+    public boolean isDefaultUnlocked() {
         return defaultUnlocked;
     }
 
-    public void setBuyCosts(Map<Currency, Integer> buyCosts)
-    {
+    public void setBuyCosts(Map<Currency, Integer> buyCosts) {
         this.buyCosts = buyCosts;
     }
 
-    public void addBuyCost(Currency currency, int cost)
-    {
+    public void addBuyCost(Currency currency, int cost) {
         this.buyCosts.put(currency, cost);
     }
 
-    public int getBuyCost(Currency currency)
-    {
+    public int getBuyCost(Currency currency) {
         if (!buyCosts.containsKey(currency)) return -1;
 
         return buyCosts.get(currency);
     }
 
-    public Map<Currency, Integer> getBuyCosts()
-    {
+    public Map<Currency, Integer> getBuyCosts() {
         return buyCosts;
     }
 
-    public void setSellCosts(Map<Currency, Integer> sellCosts)
-    {
+    public void setSellCosts(Map<Currency, Integer> sellCosts) {
         this.sellCosts = sellCosts;
     }
 
-    public void addSellCost(Currency currency, int cost)
-    {
+    public void addSellCost(Currency currency, int cost) {
         this.sellCosts.put(currency, cost);
     }
 
-    public int getSellCost(Currency currency)
-    {
+    public int getSellCost(Currency currency) {
         if (!sellCosts.containsKey(currency)) return -1;
 
         return sellCosts.get(currency);
     }
 
-    public Map<Currency, Integer> getSellCosts()
-    {
+    public Map<Currency, Integer> getSellCosts() {
         return sellCosts;
     }
 
-    public void setShouldConfirm(boolean shouldConfirm)
-    {
+    public void setShouldConfirm(boolean shouldConfirm) {
         this.shouldConfirm = shouldConfirm;
     }
 
-    public boolean shouldConfirm()
-    {
+    public boolean shouldConfirm() {
         return shouldConfirm;
     }
 
-    public boolean isUnlocked(Player player)
-    {
-        return isUnlockable() && PlayerManager.getInstance().getPlayerData(player).isShopItemUnlocked(this.getParentShop().getId(), id);
+    public boolean isUnlocked(Player player) {
+        return isUnlocked(player.getUniqueId());
     }
 
-    public boolean canAfford(Player player)
-    {
-        for (Map.Entry<Currency, Integer> entry : this.getBuyCosts().entrySet())
-        {
-            boolean canAfford = PlayerManager.getInstance().getPlayerData(player).getCurrency(entry.getKey()) >= entry.getValue();
+    public boolean isUnlocked(UUID uuid) {
+        return isUnlockable() && (isDefaultUnlocked() || PlayerManager.getInstance().getPlayerData(uuid).isShopItemUnlocked(this.getParentShop().getId(), id));
+    }
+
+    public boolean canAfford(Player player) {
+        for (var entry : this.getBuyCosts().entrySet()) {
+            var canAfford = PlayerManager.getInstance().getPlayerData(player).getCurrency(entry.getKey()) >= entry.getValue();
 
             if (!canAfford) return false;
         }
@@ -271,112 +233,89 @@ public class ShopItem implements IIdentifiable, INameable, IDescribable
         return true;
     }
 
-    public boolean isSellable()
-    {
+    public boolean isSellable() {
         return this.getSellCosts().size() > 0;
     }
 
-    public boolean canSell(Player player)
-    {
+    public boolean canSell(Player player) {
         return true;
     }
 
-    public boolean isEnabled()
-    {
+    public boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled)
-    {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    public void onLeftClick(Gui gui, Player player)
-    {
-        if (isUnlockable() && isUnlocked(player))
-        {
+    public void onLeftClick(Gui gui, Player player) {
+        if (isUnlockable() && isUnlocked(player)) {
             player.sendMessage(ChatColor.RED + "You already own this!");
         }
-        else if (canAfford(player))
-        {
-            if (shouldConfirm())
-            {
-                new GuiConfirm(gui, getIcon(), () -> buy(player)).show(player);
+        else if (canAfford(player)) {
+            if (shouldConfirm()) {
+                new GuiConfirm(gui, getIcon(player), () -> buy(player)).show(player);
             }
-            else
-            {
+            else {
                 buy(player);
                 gui.show(player);
             }
         }
-        else
-        {
+        else {
             player.sendMessage(ChatColor.RED + "You cannot afford this!");
         }
     }
 
-    public void onRightClick(Gui gui, Player player)
-    {
-        if (isUnlockable() && !isUnlocked(player))
-        {
+    public void onRightClick(Gui gui, Player player) {
+        if (isUnlockable() && !isUnlocked(player)) {
             player.sendMessage(ChatColor.RED + "You don't own this!");
         }
-        else if (isSellable() && canSell(player))
-        {
-            if (shouldConfirm())
-            {
-                new GuiConfirm(gui, getIcon(), () -> sell(player)).show(player);
+        else if (isSellable() && canSell(player)) {
+            if (shouldConfirm()) {
+                new GuiConfirm(gui, getIcon(player), () -> sell(player)).show(player);
             }
-            else
-            {
+            else {
                 sell(player);
                 gui.show(player);
             }
         }
-        else
-        {
+        else {
             player.sendMessage(ChatColor.RED + "You cannot sell this!");
         }
     }
 
-    public void unlock(Player player)
-    {
-        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+    public void unlock(Player player) {
+        var playerData = PlayerManager.getInstance().getPlayerData(player);
 
-        if (isUnlockable())
-        {
+        if (isUnlockable()) {
             playerData.setShopItemUnlocked(this.getParentShop().getId(), id, true);
         }
     }
 
-    public void buy(Player player)
-    {
+    public void buy(Player player) {
         player.sendMessage(ChatColor.GREEN + (isUnlockable() ? "Unlocked" : "Bought") + " " + this.getName());
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1, 1);
 
-        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+        var playerData = PlayerManager.getInstance().getPlayerData(player);
 
         unlock(player);
 
-        for (Map.Entry<Currency, Integer> entry : this.getBuyCosts().entrySet())
-        {
+        for (var entry : this.getBuyCosts().entrySet()) {
             playerData.addCurrency(entry.getKey(), -entry.getValue());
         }
     }
 
-    public void sell(Player player)
-    {
+    public void sell(Player player) {
         player.sendMessage(ChatColor.GREEN + "Sold " + this.getName());
 
-        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+        var playerData = PlayerManager.getInstance().getPlayerData(player);
 
-        if (isUnlockable())
-        {
+        if (isUnlockable()) {
             playerData.setShopItemUnlocked(this.getParentShop().getId(), id, false);
         }
 
-        for (Map.Entry<Currency, Integer> entry : this.getSellCosts().entrySet())
-        {
+        for (var entry : this.getSellCosts().entrySet()) {
             playerData.addCurrency(entry.getKey(), entry.getValue());
         }
     }

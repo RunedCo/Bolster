@@ -3,6 +3,8 @@ package co.runed.bolster.entity;
 import co.runed.bolster.common.math.NumberUtil;
 import co.runed.bolster.common.math.Operation;
 import co.runed.bolster.common.math.easing.Ease;
+import co.runed.bolster.common.properties.Properties;
+import co.runed.bolster.common.util.Enableable;
 import co.runed.bolster.events.entity.EntityDestroyEvent;
 import co.runed.bolster.game.traits.Trait;
 import co.runed.bolster.game.traits.TraitProvider;
@@ -13,8 +15,6 @@ import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.TimeUtil;
-import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.util.properties.Property;
 import co.runed.bolster.wip.BowTracker;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -35,32 +35,28 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-public class BolsterEntity extends TraitProvider
-{
+public class BolsterEntity extends TraitProvider implements Enableable {
     private LivingEntity _entity;
-    List<TraitProvider> traitProviders = new ArrayList<>();
-    Map<String, Inventory> inventories = new TreeMap<>();
+    private List<TraitProvider> traitProviders = new ArrayList<>();
+    private Map<String, Inventory> inventories = new TreeMap<>();
+    private boolean enabled = true;
 
     private static final String PLAYER_INVENTORY_KEY = "_player_inventory";
 
-    public BolsterEntity(LivingEntity entity)
-    {
+    public BolsterEntity(LivingEntity entity) {
         this._entity = entity;
 
         this.setEnabled(true);
     }
 
-    public LivingEntity getBukkit()
-    {
+    public LivingEntity getEntity() {
         return this._entity;
     }
 
-    public void setBukkit(LivingEntity entity)
-    {
-        Inventory inventory = Bukkit.createInventory(null, InventoryType.PLAYER);
+    public void setEntity(LivingEntity entity) {
+        var inventory = Bukkit.createInventory(null, InventoryType.PLAYER);
 
-        if (entity instanceof Player)
-        {
+        if (entity instanceof Player) {
             inventory = ((Player) entity).getInventory();
         }
 
@@ -69,62 +65,50 @@ public class BolsterEntity extends TraitProvider
         this._entity = entity;
     }
 
-    public Properties getTraits()
-    {
-        Properties traits = new Properties();
+    public Properties getTraits() {
+        var traits = new Properties();
 
-        for (TraitProvider traitProvider : this.traitProviders)
-        {
-            if (!traitProvider.isEnabled()) continue;
+        for (var traitProvider : this.traitProviders) {
+            if (traitProvider instanceof Enableable enableable && !enableable.isEnabled()) continue;
 
-            Properties next = traitProvider == this ? super.getTraits() : traitProvider.getTraits();
+            var next = traitProvider == this ? super.getTraits() : traitProvider.getTraits();
 
-            for (Property exProp : next.getAll().keySet())
-            {
+            for (var exProp : next.getAll().keySet()) {
                 if (!(exProp instanceof Trait)) continue;
 
-                Trait trait = (Trait) exProp;
-                Object exValue = traits.get(trait);
-                Object nextValue = next.get(trait);
+                var trait = (Trait) exProp;
+                var exValue = traits.get(trait);
+                var nextValue = next.get(trait);
 
-                if (traits.contains(exProp))
-                {
-                    if (exValue instanceof Number && trait.getOperation() != Operation.SET)
-                    {
-                        Number exNumber = (Number) exValue;
+                if (traits.contains(exProp)) {
+                    if (exValue instanceof Number && trait.getOperation() != Operation.SET) {
+                        var exNumber = (Number) exValue;
 
-                        switch (trait.getOperation())
-                        {
-                            case ADD:
-                            {
+                        switch (trait.getOperation()) {
+                            case ADD: {
                                 exValue = NumberUtil.addNumbers(exNumber, (Number) nextValue);
                                 break;
                             }
-                            case SUBTRACT:
-                            {
+                            case SUBTRACT: {
                                 exValue = NumberUtil.subtractNumbers(exNumber, (Number) nextValue);
                                 break;
                             }
-                            case MULTIPLY:
-                            {
+                            case MULTIPLY: {
                                 exValue = NumberUtil.multiplyNumbers(exNumber, (Number) nextValue);
                                 break;
                             }
-                            case DIVIDE:
-                            {
+                            case DIVIDE: {
                                 exValue = NumberUtil.divideNumbers(exNumber, (Number) nextValue);
                                 break;
                             }
                         }
                     }
 
-                    if (trait.getOperation() == Operation.SET && nextValue != trait.getDefault())
-                    {
+                    if (trait.getOperation() == Operation.SET && nextValue != trait.getDefault()) {
                         exValue = nextValue;
                     }
                 }
-                else
-                {
+                else {
                     exValue = nextValue;
                 }
 
@@ -136,170 +120,140 @@ public class BolsterEntity extends TraitProvider
     }
 
     @Override
-    public <T> void setTrait(Trait<T> key, T value)
-    {
+    public <T> void setTrait(Trait<T> key, T value) {
         super.setTrait(key, value);
 
         if (!this.traitProviders.contains(this)) this.traitProviders.add(this);
     }
 
-    public <T> void setTrait(TraitProvider provider, Trait<T> key, T value)
-    {
+    public <T> void setTrait(TraitProvider provider, Trait<T> key, T value) {
         provider.setTrait(key, value);
 
         if (!this.traitProviders.contains(provider)) this.traitProviders.add(provider);
     }
 
     @Override
-    public <T> T getTrait(Trait<T> key)
-    {
+    public <T> T getTrait(Trait<T> key) {
         return this.getTraits().get(key);
     }
 
-    public <T> T getTrait(TraitProvider provider, Trait<T> key)
-    {
+    public <T> T getTrait(TraitProvider provider, Trait<T> key) {
         return this.traitProviders.stream().filter(p -> p == provider).findFirst().get().getTrait(key);
     }
 
-    public void addTraitProvider(TraitProvider provider)
-    {
+    public void addTraitProvider(TraitProvider provider) {
         if (this.traitProviders.contains(provider)) return;
 
         this.traitProviders.add(provider);
     }
 
-    public void removeTraitProvider(TraitProvider provider)
-    {
+    public void removeTraitProvider(TraitProvider provider) {
         this.traitProviders.remove(provider);
     }
 
-    public List<TraitProvider> getTraitProviders()
-    {
+    public List<TraitProvider> getTraitProviders() {
         return this.traitProviders;
     }
 
-    public void setAbsorption(double health)
-    {
+    public void setAbsorption(double health) {
         this._entity.setAbsorptionAmount(health);
     }
 
-    public double getAbsorption()
-    {
+    public double getAbsorption() {
         return this._entity.getAbsorptionAmount();
     }
 
-    public double getMaxHealth()
-    {
+    public double getMaxHealth() {
         return this._entity.getMaxHealth();
     }
 
-    public double getHealth()
-    {
+    public double getHealth() {
         return this._entity.getHealth();
     }
 
-    public void addHealth(double amount)
-    {
+    public void addHealth(double amount) {
         this.addHealth(amount, false);
     }
 
-    public void addHealth(double amount, boolean overheal)
-    {
-        double maxHealth = this.getMaxHealth();
+    public void addHealth(double amount, boolean overheal) {
+        var maxHealth = this.getMaxHealth();
 
         if (amount < 0) amount = maxHealth - this.getHealth();
 
-        double overhealAmount = Math.max(0, amount - maxHealth);
+        var overhealAmount = Math.max(0, amount - maxHealth);
 
         if (overheal) this._entity.setAbsorptionAmount(this._entity.getAbsorptionAmount() + overhealAmount);
 
         this.setHealth(Math.min(this.getHealth() + amount, maxHealth));
     }
 
-    public World getWorld()
-    {
+    public World getWorld() {
         return this._entity.getWorld();
     }
 
-    public String getName()
-    {
+    public String getName() {
         return this._entity.getName();
     }
 
-    public void sendMessage(Component component)
-    {
+    public void sendMessage(Component component) {
         this._entity.sendMessage(component);
     }
 
-    public Location getLocation()
-    {
+    public Location getLocation() {
         return this._entity.getLocation();
     }
 
-    public Location getEyeLocation()
-    {
+    public Location getEyeLocation() {
         return this._entity.getEyeLocation();
     }
 
-    public boolean teleport(Location location)
-    {
+    public boolean teleport(Location location) {
         return this._entity.teleport(location);
     }
 
-    public boolean isOnline()
-    {
-        boolean online = !(this._entity instanceof Player player) || player.isOnline();
+    public boolean isOnline() {
+        var online = !(this._entity instanceof Player player) || player.isOnline();
 
         return online && this._entity.isValid();
     }
 
-    public void setFireTicks(int ticks)
-    {
+    public void setFireTicks(int ticks) {
         this._entity.setFireTicks(ticks);
     }
 
-    public void setHealth(double health)
-    {
+    public void setHealth(double health) {
         this._entity.setHealth(health);
     }
 
-    public void setMaxHealth(double health)
-    {
+    public void setMaxHealth(double health) {
         this._entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
     }
 
-    public void damage(double damage, Entity source, EntityDamageEvent.DamageCause damageCause)
-    {
-        this.getBukkit().damage(damage, source);
+    public void damage(double damage, Entity source, EntityDamageEvent.DamageCause damageCause) {
+        this.getEntity().damage(damage, source);
     }
 
-    public void setVelocity(Vector vector)
-    {
+    public void setVelocity(Vector vector) {
         this._entity.setVelocity(vector);
     }
 
-    public void addStatusEffect(StatusEffect statusEffect)
-    {
+    public void addStatusEffect(StatusEffect statusEffect) {
         StatusEffectManager.getInstance().addStatusEffect(this._entity, statusEffect);
     }
 
-    public void clearStatusEffect(Class<? extends StatusEffect> statusEffect)
-    {
+    public void clearStatusEffect(Class<? extends StatusEffect> statusEffect) {
         this.clearStatusEffect(statusEffect, false);
     }
 
-    public void clearStatusEffect(Class<? extends StatusEffect> statusEffect, boolean force)
-    {
+    public void clearStatusEffect(Class<? extends StatusEffect> statusEffect, boolean force) {
         StatusEffectManager.getInstance().clearStatusEffect(this._entity, statusEffect, force);
     }
 
-    public boolean hasStatusEffect(Class<? extends StatusEffect> statusEffect)
-    {
+    public boolean hasStatusEffect(Class<? extends StatusEffect> statusEffect) {
         return StatusEffectManager.getInstance().hasStatusEffect(this._entity, statusEffect);
     }
 
-    public StatusEffect getStatusEffect(Class<? extends StatusEffect> statusEffect)
-    {
+    public StatusEffect getStatusEffect(Class<? extends StatusEffect> statusEffect) {
         if (!this.hasStatusEffect(statusEffect)) return null;
 
         return StatusEffectManager.getInstance().getStatusEffects(this._entity).stream()
@@ -308,127 +262,108 @@ public class BolsterEntity extends TraitProvider
                 .get();
     }
 
-    public EntityEquipment getEquipment()
-    {
+    public EntityEquipment getEquipment() {
         return this._entity.getEquipment();
     }
 
     /* PLAYER EXCLUSIVE METHODS */
 
-    public boolean isDrawingBow()
-    {
+    public boolean isDrawingBow() {
         if (this._entity.getType() != EntityType.PLAYER) return false;
 
-        return BowTracker.getInstance().isDrawingBow((Player) this.getBukkit());
+        return BowTracker.getInstance().isDrawingBow((Player) this.getEntity());
     }
 
-    public void setFoodLevel(int foodLevel)
-    {
+    public void setFoodLevel(int foodLevel) {
         if (!(this._entity instanceof Player player)) return;
 
         player.setFoodLevel(foodLevel);
     }
 
-    public void playSound(Sound sound, SoundCategory soundCategory, float f, float g)
-    {
+    public void playSound(Sound sound, SoundCategory soundCategory, float f, float g) {
         if (!(this._entity instanceof Player player)) return;
 
         player.playSound(this._entity.getLocation(), sound, soundCategory, f, g);
     }
 
-    public void playSound(Location location, Sound sound, SoundCategory soundCategory, float f, float g)
-    {
+    public void playSound(Location location, Sound sound, SoundCategory soundCategory, float f, float g) {
         if (!(this._entity instanceof Player player)) return;
 
         player.playSound(location, sound, soundCategory, f, g);
     }
 
-    public void sendTitle(Component title, Component subtitle, Duration fadeIn, Duration stay, Duration fadeOut)
-    {
+    public void sendTitle(Component title, Component subtitle, Duration fadeIn, Duration stay, Duration fadeOut) {
         if (!(this._entity instanceof Player player)) return;
 
-        Title.Times times = Title.Times.of(fadeIn, stay, fadeOut);
-        Title titleInstance = Title.title(title, subtitle, times);
+        var times = Title.Times.of(fadeIn, stay, fadeOut);
+        var titleInstance = Title.title(title, subtitle, times);
 
         player.showTitle(titleInstance);
     }
 
-    public void sendActionBar(String message)
-    {
+    public void sendActionBar(String message) {
         if (!(this._entity instanceof Player player)) return;
 
         BukkitUtil.sendActionBar((Player) this._entity, message);
     }
 
-    public EntityType getType()
-    {
+    public EntityType getType() {
         return this._entity.getType();
     }
 
-    public UUID getUniqueId()
-    {
+    public UUID getUniqueId() {
         return this._entity.getUniqueId();
     }
 
-    public void updateHealth()
-    {
+    public void updateHealth() {
         this.setMaxHealth(this.getTrait(Traits.MAX_HEALTH));
     }
 
-    public Inventory getPlayerInventory()
-    {
+    public Inventory getPlayerInventory() {
         return this.getInventory(PLAYER_INVENTORY_KEY);
     }
 
-    public void setInventory(String id, Inventory inventory)
-    {
+    public void setInventory(String id, Inventory inventory) {
         this.inventories.put(id, inventory);
     }
 
-    public Inventory getInventory(String id)
-    {
+    public Inventory getInventory(String id) {
         if (!this.inventories.containsKey(id)) return null;
 
         return this.inventories.get(id);
     }
 
-    public Inventory removeInventory(String id)
-    {
+    public Inventory removeInventory(String id) {
         if (!this.inventories.containsKey(id)) return null;
 
         return this.inventories.remove(id);
     }
 
-    public boolean hasInventory(String id)
-    {
+    public boolean hasInventory(String id) {
         return this.inventories.containsKey(id);
     }
 
-    public Collection<Inventory> getInventories()
-    {
+    public Collection<Inventory> getInventories() {
         return this.inventories.values();
     }
 
-    public Map<String, Inventory> getInventoryMap()
-    {
+    public Map<String, Inventory> getInventoryMap() {
         return this.inventories;
     }
 
-    public CompletableFuture<BolsterEntity> moveTo(Location position, Ease ease, Duration duration, double speed)
-    {
-        CompletableFuture<BolsterEntity> completableFuture = new CompletableFuture<>();
-        LivingEntity entity = this.getBukkit();
-        Instant startTime = Instant.now();
+    public CompletableFuture<BolsterEntity> moveTo(Location position, Ease ease, Duration duration, double speed) {
+        var completableFuture = new CompletableFuture<BolsterEntity>();
+        var entity = this.getEntity();
+        var startTime = Instant.now();
 
-        TaskUtil.TaskSeries task = new TaskUtil.TaskSeries();
+        var task = new TaskUtil.TaskSeries();
 
         task.addRepeating(() -> {
-            double sinceStart = TimeUtil.toSeconds(Duration.between(startTime, Instant.now()));
-            double durationSeconds = TimeUtil.toSeconds(duration);
-            double time = sinceStart / durationSeconds;
+            var sinceStart = TimeUtil.toSeconds(Duration.between(startTime, Instant.now()));
+            var durationSeconds = TimeUtil.toSeconds(duration);
+            var time = sinceStart / durationSeconds;
 
-            if (completableFuture.isCancelled())
-            {
+            if (completableFuture.isCancelled()) {
                 if (!task.isCancelled()) task.cancel();
                 return;
             }
@@ -441,29 +376,35 @@ public class BolsterEntity extends TraitProvider
         return completableFuture;
     }
 
-    public void remove()
-    {
+    public void remove() {
         this._entity.remove();
     }
 
-    public void destroy()
-    {
+    public void destroy() {
         BukkitUtil.triggerEvent(new EntityDestroyEvent(this));
 
         this._entity.setHealth(0);
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         //TODO OVERRIDE EQUALS FUNCTION
         return super.equals(obj);
     }
 
-    public static BolsterEntity from(LivingEntity entity)
-    {
+    public static BolsterEntity from(LivingEntity entity) {
         if (entity == null) return null;
 
         return EntityManager.getInstance().from(entity);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

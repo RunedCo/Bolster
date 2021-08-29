@@ -8,26 +8,22 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.StringArgument;
 import org.bukkit.command.CommandSender;
 
-public class CommandShop extends CommandBase
-{
-    public CommandShop()
-    {
+public class CommandShop extends CommandBase {
+    public CommandShop() {
         super("shop");
     }
 
-    private String[] getSuggestions(CommandSender sender)
-    {
+    private String[] getSuggestions(CommandSender sender) {
         return Registries.SHOPS.getEntries().values().stream().map(Registry.Entry::getId).toArray(String[]::new);
     }
 
     @Override
-    public CommandAPICommand build()
-    {
+    public CommandAPICommand build() {
         return new CommandAPICommand(this.command)
                 .withPermission(Permissions.COMMAND_SHOP)
                 .withArguments(new StringArgument("shop").overrideSuggestions(this::getSuggestions))
                 .executesPlayer((sender, args) -> {
-                    String id = (String) args[0];
+                    var id = (String) args[0];
 
                     new GuiShop(null, Registries.SHOPS.get(id)).show(sender);
                 });

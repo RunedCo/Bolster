@@ -1,7 +1,6 @@
 package co.runed.bolster.wip;
 
 import co.runed.bolster.events.entity.EntityCleanupEvent;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.event.EventHandler;
@@ -15,34 +14,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class CombatTracker implements Listener
-{
+public class CombatTracker implements Listener {
     private static Map<UUID, LivingEntity> damageMap = new HashMap<>();
     //    private static Map<UUID, List<Mob>> targetedByMap = new HashMap<>();
     private static Map<Mob, LivingEntity> targetMap = new HashMap<>();
 
     // returns the last entity hit by another entity, does not check that they did damage, reset on death
-    public static LivingEntity getLastHit(LivingEntity damager)
-    {
+    public static LivingEntity getLastHit(LivingEntity damager) {
         if (!damageMap.containsKey(damager.getUniqueId())) return null;
 
         return damageMap.get(damager.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    private void onDamageEntity(EntityDamageByEntityEvent event)
-    {
-        Entity damager = event.getDamager();
+    private void onDamageEntity(EntityDamageByEntityEvent event) {
+        var damager = event.getDamager();
 
-        if (damager instanceof LivingEntity && event.getEntity() instanceof LivingEntity)
-        {
+        if (damager instanceof LivingEntity && event.getEntity() instanceof LivingEntity) {
             damageMap.put(damager.getUniqueId(), (LivingEntity) event.getEntity());
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    private void onEntityDie(EntityDeathEvent event)
-    {
+    private void onEntityDie(EntityDeathEvent event) {
         damageMap.remove(event.getEntity().getUniqueId());
     }
 
@@ -65,12 +59,10 @@ public class CombatTracker implements Listener
 //        targeters.remove(uuid);
 //    }
 
-    public static void clearAggro(LivingEntity entity)
-    {
-        UUID uuid = entity.getUniqueId();
+    public static void clearAggro(LivingEntity entity) {
+        var uuid = entity.getUniqueId();
 
-        for (Map.Entry<Mob, LivingEntity> targetInfo : targetMap.entrySet())
-        {
+        for (var targetInfo : targetMap.entrySet()) {
             if (!targetInfo.getValue().getUniqueId().equals(uuid)) continue;
 
             targetInfo.getKey().setTarget(null);
@@ -78,13 +70,11 @@ public class CombatTracker implements Listener
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onEntityTarget(EntityTargetLivingEntityEvent event)
-    {
-        Mob entity = (Mob) event.getEntity();
-        LivingEntity target = event.getTarget();
+    private void onEntityTarget(EntityTargetLivingEntityEvent event) {
+        var entity = (Mob) event.getEntity();
+        var target = event.getTarget();
 
-        if (target == null)
-        {
+        if (target == null) {
             targetMap.remove(entity);
             return;
         }
@@ -93,12 +83,9 @@ public class CombatTracker implements Listener
     }
 
     @EventHandler
-    private void onCleanupEntity(EntityCleanupEvent event)
-    {
-        if (event.isForced())
-        {
-            if (event.getEntity() instanceof Mob)
-            {
+    private void onCleanupEntity(EntityCleanupEvent event) {
+        if (event.isForced()) {
+            if (event.getEntity() instanceof Mob) {
                 targetMap.remove(event.getEntity());
             }
 

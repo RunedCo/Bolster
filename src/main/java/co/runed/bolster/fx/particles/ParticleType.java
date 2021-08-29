@@ -1,6 +1,6 @@
 package co.runed.bolster.fx.particles;
 
-import co.runed.bolster.util.properties.Property;
+import co.runed.bolster.common.properties.Property;
 
 public class ParticleType extends Property<ParticleInfo>
 {

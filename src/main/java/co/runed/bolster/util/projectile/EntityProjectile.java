@@ -8,13 +8,10 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
-import java.util.List;
 import java.util.Random;
 
-public class EntityProjectile extends BukkitRunnable
-{
+public class EntityProjectile extends BukkitRunnable {
 
     protected Plugin plugin;
     protected LivingEntity firer;
@@ -39,53 +36,45 @@ public class EntityProjectile extends BukkitRunnable
 
     private Random random = new Random();
 
-    public EntityProjectile(Plugin plugin, LivingEntity firer, Entity projectile)
-    {
+    public EntityProjectile(Plugin plugin, LivingEntity firer, Entity projectile) {
         this.plugin = plugin;
         this.firer = firer;
         this.projectile = projectile;
     }
 
-    public double getRandomVariation()
-    {
-        double variation = getVariation();
-        double randomAngle = Math.random() * variation / 2;
+    public double getRandomVariation() {
+        var variation = getVariation();
+        var randomAngle = Math.random() * variation / 2;
 
-        if (random.nextBoolean())
-        {
+        if (random.nextBoolean()) {
             randomAngle *= -1;
         }
 
         return randomAngle * Math.PI / 180;
     }
 
-    public void launch()
-    {
-        if (duration > 0)
-        {
+    public void launch() {
+        if (duration > 0) {
             Bukkit.getScheduler().runTaskLater(plugin, projectile::remove, (long) (duration * 20));
         }
 
         if (fired) return;
 
-        if (getOverridePosition() == null)
-        {
+        if (getOverridePosition() == null) {
             setOverridePosition(firer.getEyeLocation());
         }
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> projectile.teleport(getOverridePosition()), 2L);
 
-        if (projectile instanceof Item)
-        {
-            Item item = (Item) projectile;
+        if (projectile instanceof Item) {
+            var item = (Item) projectile;
             item.setPickupDelay(1000000);
         }
 
-        double magnitude = getSpeed();
-        Vector direction = firer.getLocation().getDirection();
+        var magnitude = getSpeed();
+        var direction = firer.getLocation().getDirection();
 
-        if (getFireOpposite())
-        {
+        if (getFireOpposite()) {
             direction.multiply(-1);
         }
 
@@ -93,12 +82,10 @@ public class EntityProjectile extends BukkitRunnable
         direction.rotateAroundY(getRandomVariation());
         direction.rotateAroundZ(getRandomVariation());
 
-        if (direct)
-        {
+        if (direct) {
             projectile.setVelocity(direction.multiply(magnitude).setY(0).normalize());
         }
-        else
-        {
+        else {
             projectile.setVelocity(direction.multiply(magnitude));
         }
 
@@ -107,52 +94,46 @@ public class EntityProjectile extends BukkitRunnable
     }
 
     @Override
-    public void run()
-    {
-        if (projectile.isDead() || !projectile.isDead() && projectile.isOnGround())
-        {
+    public void run() {
+        if (projectile.isDead() || !projectile.isDead() && projectile.isOnGround()) {
             onHit(null);
             this.cancel();
             return;
         }
 
-        double hitboxRange = getHitboxSize();
+        var hitboxRange = getHitboxSize();
 
-        List<Entity> canHit = projectile.getNearbyEntities(hitboxRange, hitboxRange, hitboxRange);
+        var canHit = projectile.getNearbyEntities(hitboxRange, hitboxRange, hitboxRange);
         canHit.remove(projectile);
         canHit.remove(firer);
 
         if (canHit.size() <= 0) return;
 
-        for (Entity entity : canHit)
-        {
+        for (var entity : canHit) {
             if (!(entity instanceof LivingEntity)) continue;
             if (entity.getUniqueId().equals(projectile.getUniqueId())) continue;
 
-            LivingEntity target = (LivingEntity) canHit.get(0);
+            var target = (LivingEntity) canHit.get(0);
             onHit(target);
             break;
         }
     }
 
-    public boolean onHit(LivingEntity target)
-    {
-        boolean hitEntity = target != null;
+    public boolean onHit(LivingEntity target) {
+        var hitEntity = target != null;
 
-        if (hitEntity)
-        {
-            if (target.getNoDamageTicks() > 1)
-            {
+        if (hitEntity) {
+            if (target.getNoDamageTicks() > 1) {
                 target.setNoDamageTicks(0);
             }
 
-            double damage = getDamage();
+            var damage = getDamage();
 //            DamageUtil.dealDamage(firer, target, damage, true, expAdd);
 
-            double knockbackResistance = target.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getValue();
-            double knockback = getKnockback();
-            double upwardKnockback = getUpwardKnockback();
-            Vector velocity = projectile.getVelocity().clone();
+            var knockbackResistance = target.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getValue();
+            var knockback = getKnockback();
+            var upwardKnockback = getUpwardKnockback();
+            var velocity = projectile.getVelocity().clone();
 
             velocity = velocity.normalize().multiply(knockback);
             if (upwardKnockback > 0) velocity = velocity.setY(upwardKnockback);
@@ -161,33 +142,27 @@ public class EntityProjectile extends BukkitRunnable
 
             target.setVelocity(velocity);
         }
-        else
-        {
-            if (!lastsOnGround)
-            {
+        else {
+            if (!lastsOnGround) {
                 projectile.remove();
             }
 
             onBlockHit();
         }
 
-        if (!piercing)
-        {
+        if (!piercing) {
             clearProjectile();
         }
 
         return hitEntity;
     }
 
-    public void onBlockHit()
-    {
+    public void onBlockHit() {
 
     }
 
-    public boolean clearProjectile()
-    {
-        if (getClearOnFinish())
-        {
+    public boolean clearProjectile() {
+        if (getClearOnFinish()) {
             projectile.remove();
             return true;
         }
@@ -195,138 +170,111 @@ public class EntityProjectile extends BukkitRunnable
         return false;
     }
 
-    public void setOverridePosition(Location overridePosition)
-    {
+    public void setOverridePosition(Location overridePosition) {
         this.overridePosition = overridePosition;
     }
 
-    public Location getOverridePosition()
-    {
+    public Location getOverridePosition() {
         return overridePosition;
     }
 
-    public void setFireOpposite(boolean fireOpposite)
-    {
+    public void setFireOpposite(boolean fireOpposite) {
         this.fireOpposite = fireOpposite;
     }
 
-    public boolean getFireOpposite()
-    {
+    public boolean getFireOpposite() {
         return fireOpposite;
     }
 
-    public void setClearOnFinish(boolean clearOnFinish)
-    {
+    public void setClearOnFinish(boolean clearOnFinish) {
         this.clearOnFinish = clearOnFinish;
     }
 
-    public boolean getClearOnFinish()
-    {
+    public boolean getClearOnFinish() {
         return clearOnFinish;
     }
 
-    public void setDamage(double damage)
-    {
+    public void setDamage(double damage) {
         this.damage = damage;
     }
 
-    public double getDamage()
-    {
+    public double getDamage() {
         return damage;
     }
 
-    public void setSpeed(double speed)
-    {
+    public void setSpeed(double speed) {
         this.speed = speed;
     }
 
-    public double getSpeed()
-    {
+    public double getSpeed() {
         return speed;
     }
 
-    public void setKnockback(double knockback)
-    {
+    public void setKnockback(double knockback) {
         this.knockback = knockback;
     }
 
-    public double getKnockback()
-    {
+    public double getKnockback() {
         return knockback;
     }
 
-    public void setUpwardKnockback(double upwardKnockback)
-    {
+    public void setUpwardKnockback(double upwardKnockback) {
         this.upwardKnockback = upwardKnockback;
     }
 
-    public double getUpwardKnockback()
-    {
+    public double getUpwardKnockback() {
         return upwardKnockback;
     }
 
-    public void setHitboxSize(double hitboxSize)
-    {
+    public void setHitboxSize(double hitboxSize) {
         this.hitboxSize = hitboxSize;
     }
 
-    public double getHitboxSize()
-    {
+    public double getHitboxSize() {
         return hitboxSize;
     }
 
-    public void setVariation(double variation)
-    {
+    public void setVariation(double variation) {
         this.variation = variation;
     }
 
-    public double getVariation()
-    {
+    public double getVariation() {
         return variation;
     }
 
-    public boolean getExpAdd()
-    {
+    public boolean getExpAdd() {
         return expAdd;
     }
 
-    public void setExpAdd(boolean expAdd1)
-    {
+    public void setExpAdd(boolean expAdd1) {
         expAdd = expAdd1;
     }
 
-    public boolean getPiercing()
-    {
+    public boolean getPiercing() {
         return piercing;
     }
 
-    public void setPiercing(boolean piercing)
-    {
+    public void setPiercing(boolean piercing) {
         this.piercing = piercing;
     }
 
-    public boolean getLastsOnGround()
-    {
+    public boolean getLastsOnGround() {
         return lastsOnGround;
     }
 
-    public void setLastsOnGround(boolean lastsOnGround1)
-    {
+    public void setLastsOnGround(boolean lastsOnGround1) {
         lastsOnGround = lastsOnGround1;
     }
 
-    public double getDuration()
-    {
+    public double getDuration() {
         return duration;
     }
 
-    public void setDuration(double time1)
-    {
+    public void setDuration(double time1) {
         duration = time1;
     }
 
-    public void setDirect(boolean direct1)
-    {
+    public void setDirect(boolean direct1) {
         direct = direct1;
     }
 }
