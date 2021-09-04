@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -300,6 +301,21 @@ public class Team implements Listener {
         var targeted = event.getTarget();
 
         if (this.isInTeam(targeter) && this.isInTeam(targeted) && !this.allowFriendlyFire()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    private void onProjectileHit(ProjectileHitEvent event) {
+        var entity = event.getHitEntity();
+        var proj = event.getEntity();
+        var shooter = proj.getShooter();
+
+        if (entity == null || shooter == null) return;
+        if (!(entity instanceof LivingEntity leHit)) return;
+        if (!(shooter instanceof LivingEntity leShooter)) return;
+
+        if (this.isInTeam(leHit) && this.isInTeam(leShooter) && !this.allowFriendlyFire()) {
             event.setCancelled(true);
         }
     }

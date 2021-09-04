@@ -3,9 +3,12 @@ package co.runed.bolster.fx.particles;
 import co.runed.bolster.common.properties.Properties;
 import co.runed.bolster.common.util.Identifiable;
 import co.runed.bolster.common.util.Nameable;
+import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.config.Configurable;
 import co.runed.bolster.util.registries.Registries;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 public class ParticleSet extends Properties implements Identifiable, Configurable, Nameable {
     String name;
@@ -25,4 +28,11 @@ public class ParticleSet extends Properties implements Identifiable, Configurabl
         this.name = config.getString("name", "");
     }
 
+    public static ParticleSet getActive(LivingEntity entity) {
+        if (entity instanceof Player player) {
+            return PlayerManager.getInstance().getPlayerData(player).getActiveParticleSet();
+        }
+
+        return new ParticleSet();
+    }
 }
