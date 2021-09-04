@@ -1,6 +1,6 @@
 package co.runed.bolster.game.traits;
 
-import co.runed.bolster.common.math.Operation;
+import co.runed.dayroom.math.Operation;
 
 public class Traits {
     public static final Trait<Boolean> DEBUG_MODE = new Trait<>("debug_mode", false, Operation.SET);

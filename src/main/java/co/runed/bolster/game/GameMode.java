@@ -1,9 +1,9 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.common.properties.Properties;
-import co.runed.bolster.common.properties.Property;
-import co.runed.bolster.common.util.Identifiable;
+import co.runed.dayroom.properties.Properties;
+import co.runed.dayroom.properties.Property;
+import co.runed.dayroom.util.Identifiable;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.game.GameModePauseEvent;
 import co.runed.bolster.events.player.LoadPlayerDataEvent;

@@ -1,10 +1,10 @@
 package co.runed.bolster.entity;
 
-import co.runed.bolster.common.math.NumberUtil;
-import co.runed.bolster.common.math.Operation;
-import co.runed.bolster.common.math.easing.Ease;
-import co.runed.bolster.common.properties.Properties;
-import co.runed.bolster.common.util.Enableable;
+import co.runed.dayroom.math.NumberUtil;
+import co.runed.dayroom.math.Operation;
+import co.runed.dayroom.math.easing.Ease;
+import co.runed.dayroom.properties.Properties;
+import co.runed.dayroom.util.Enableable;
 import co.runed.bolster.damage.DamageSource;
 import co.runed.bolster.events.entity.EntityDestroyEvent;
 import co.runed.bolster.game.traits.Trait;

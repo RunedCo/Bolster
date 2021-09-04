@@ -1,7 +1,7 @@
 package co.runed.bolster.game;
 
-import co.runed.bolster.common.properties.Properties;
-import co.runed.bolster.common.properties.Property;
+import co.runed.dayroom.properties.Properties;
+import co.runed.dayroom.properties.Property;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.EntityType;

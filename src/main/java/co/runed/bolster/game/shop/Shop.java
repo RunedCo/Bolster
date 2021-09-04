@@ -1,8 +1,8 @@
 package co.runed.bolster.game.shop;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.common.util.Identifiable;
-import co.runed.bolster.common.util.Nameable;
+import co.runed.dayroom.util.Identifiable;
+import co.runed.dayroom.util.Nameable;
 import co.runed.bolster.events.player.SavePlayerDataEvent;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.util.config.Configurable;

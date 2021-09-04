@@ -1,7 +1,7 @@
 package co.runed.bolster.game.traits;
 
-import co.runed.bolster.common.math.Operation;
-import co.runed.bolster.common.properties.Property;
+import co.runed.dayroom.math.Operation;
+import co.runed.dayroom.properties.Property;
 
 public class Trait<T> extends Property<T> {
     Operation operation;

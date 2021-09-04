@@ -1,8 +1,8 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.common.util.Identifiable;
-import co.runed.bolster.common.util.Nameable;
+import co.runed.dayroom.util.Identifiable;
+import co.runed.dayroom.util.Nameable;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ICategorised;
 import co.runed.bolster.util.IconPreview;

@@ -1,8 +1,8 @@
 package co.runed.bolster.fx.particles;
 
-import co.runed.bolster.common.properties.Properties;
-import co.runed.bolster.common.util.Identifiable;
-import co.runed.bolster.common.util.Nameable;
+import co.runed.dayroom.properties.Properties;
+import co.runed.dayroom.util.Identifiable;
+import co.runed.dayroom.util.Nameable;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.config.Configurable;
 import co.runed.bolster.util.registries.Registries;

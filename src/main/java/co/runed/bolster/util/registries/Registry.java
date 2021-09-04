@@ -1,7 +1,7 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.common.util.Identifiable;
+import co.runed.dayroom.util.Identifiable;
 import co.runed.bolster.events.server.ReloadConfigEvent;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.ICategorised;

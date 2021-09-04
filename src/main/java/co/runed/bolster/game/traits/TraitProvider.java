@@ -1,7 +1,7 @@
 package co.runed.bolster.game.traits;
 
-import co.runed.bolster.common.gson.JsonExclude;
-import co.runed.bolster.common.properties.Properties;
+import co.runed.dayroom.gson.JsonExclude;
+import co.runed.dayroom.properties.Properties;
 
 public abstract class TraitProvider {
     @JsonExclude

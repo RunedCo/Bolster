@@ -1,6 +1,6 @@
 package co.runed.bolster.managers;
 
-import co.runed.bolster.common.gson.JsonExclude;
+import co.runed.dayroom.gson.JsonExclude;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.entity.EntityCleanupEvent;
 import co.runed.bolster.events.entity.EntitySetCooldownEvent;

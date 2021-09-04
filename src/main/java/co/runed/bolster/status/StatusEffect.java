@@ -1,9 +1,9 @@
 package co.runed.bolster.status;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.common.util.Describable;
-import co.runed.bolster.common.util.Identifiable;
-import co.runed.bolster.common.util.Nameable;
+import co.runed.dayroom.util.Describable;
+import co.runed.dayroom.util.Identifiable;
+import co.runed.dayroom.util.Nameable;
 import co.runed.bolster.events.entity.EntityAddStatusEffectEvent;
 import co.runed.bolster.events.entity.EntityRemoveStatusEffectEvent;
 import co.runed.bolster.managers.StatusEffectManager;

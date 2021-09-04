@@ -1,8 +1,8 @@
 package co.runed.bolster.game.shop;
 
-import co.runed.bolster.common.util.Describable;
-import co.runed.bolster.common.util.Identifiable;
-import co.runed.bolster.common.util.Nameable;
+import co.runed.dayroom.util.Describable;
+import co.runed.dayroom.util.Identifiable;
+import co.runed.dayroom.util.Nameable;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.gui.Gui;
 import co.runed.bolster.gui.GuiConfirm;

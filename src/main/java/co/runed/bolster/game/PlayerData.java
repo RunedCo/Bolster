@@ -1,9 +1,9 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.Permissions;
-import co.runed.bolster.common.gson.GsonUtil;
-import co.runed.bolster.common.gson.JsonExclude;
-import co.runed.bolster.common.properties.Property;
+import co.runed.dayroom.gson.GsonUtil;
+import co.runed.dayroom.gson.JsonExclude;
+import co.runed.dayroom.properties.Property;
 import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.CooldownManager;

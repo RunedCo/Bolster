@@ -1,6 +1,6 @@
 package co.runed.bolster.match;
 
-import co.runed.bolster.common.gson.JsonExclude;
+import co.runed.dayroom.gson.JsonExclude;
 import co.runed.bolster.events.game.MatchHistoryAddedEvent;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.util.BukkitUtil;

@@ -1,7 +1,7 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.common.properties.Property;
+import co.runed.dayroom.properties.Property;
 import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.currency.Currency;

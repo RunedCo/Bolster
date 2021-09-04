@@ -1,16 +1,16 @@
 package co.runed.bolster;
 
 import co.runed.bolster.commands.*;
-import co.runed.bolster.common.ServerData;
-import co.runed.bolster.common.gson.GsonUtil;
-import co.runed.bolster.common.player.BasicPlayerInfo;
-import co.runed.bolster.common.redis.RedisChannels;
-import co.runed.bolster.common.redis.RedisManager;
-import co.runed.bolster.common.redis.payload.Payload;
-import co.runed.bolster.common.redis.request.ServerDataPayload;
-import co.runed.bolster.common.redis.request.UnregisterServerPayload;
-import co.runed.bolster.common.redis.response.ListServersResponsePayload;
-import co.runed.bolster.common.redis.response.RegisterServerResponsePayload;
+import co.runed.dayroom.ServerData;
+import co.runed.dayroom.gson.GsonUtil;
+import co.runed.dayroom.player.BasicPlayerInfo;
+import co.runed.dayroom.redis.RedisChannels;
+import co.runed.dayroom.redis.RedisManager;
+import co.runed.dayroom.redis.payload.Payload;
+import co.runed.dayroom.redis.request.ServerDataPayload;
+import co.runed.dayroom.redis.request.UnregisterServerPayload;
+import co.runed.dayroom.redis.response.ListServersResponsePayload;
+import co.runed.dayroom.redis.response.RegisterServerResponsePayload;
 import co.runed.bolster.events.server.RedisMessageEvent;
 import co.runed.bolster.events.server.ReloadConfigEvent;
 import co.runed.bolster.fx.particles.ParticleSet;

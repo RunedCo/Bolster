@@ -1,6 +1,6 @@
 package co.runed.bolster.match;
 
-import co.runed.bolster.common.util.Identifiable;
+import co.runed.dayroom.util.Identifiable;
 import co.runed.bolster.util.TimeUtil;
 
 import java.time.ZonedDateTime;
