@@ -55,8 +55,7 @@ public class ParticleInfo {
         effect.setEntity(player);
         effect.setLocation(location);
 
-        if (data instanceof Particle.DustOptions) {
-            var dustOptions = (Particle.DustOptions) data;
+        if (data instanceof Particle.DustOptions dustOptions) {
             effect.particleSize = dustOptions.getSize();
             effect.color = dustOptions.getColor();
         }

@@ -4,7 +4,6 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.entity.EntityCleanupEvent;
 import co.runed.bolster.status.StatusEffect;
-import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.network.NetworkUtil;
 import io.netty.buffer.Unpooled;

@@ -271,4 +271,8 @@ public class CraftUtil {
 
         nmsEntity.damageEntity(source, (float) damage);
     }
+
+    public static void hideEntity(Player player, Entity entity) {
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(((CraftEntity) entity).getHandle().getId()));
+    }
 }

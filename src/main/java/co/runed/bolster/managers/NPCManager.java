@@ -2,7 +2,6 @@ package co.runed.bolster.managers;
 
 import co.runed.bolster.common.gson.GsonUtil;
 import co.runed.bolster.events.server.ReloadConfigEvent;
-import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.NPC;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import me.libraryaddict.disguise.utilities.DisguiseUtilities;

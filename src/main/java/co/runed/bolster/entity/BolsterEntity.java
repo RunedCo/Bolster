@@ -5,6 +5,7 @@ import co.runed.bolster.common.math.Operation;
 import co.runed.bolster.common.math.easing.Ease;
 import co.runed.bolster.common.properties.Properties;
 import co.runed.bolster.common.util.Enableable;
+import co.runed.bolster.damage.DamageSource;
 import co.runed.bolster.events.entity.EntityDestroyEvent;
 import co.runed.bolster.game.traits.Trait;
 import co.runed.bolster.game.traits.TraitProvider;
@@ -35,7 +36,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-public class BolsterEntity extends TraitProvider implements Enableable {
+public class BolsterEntity extends TraitProvider implements Enableable, DamageSource {
     private LivingEntity _entity;
     private List<TraitProvider> traitProviders = new ArrayList<>();
     private Map<String, Inventory> inventories = new TreeMap<>();

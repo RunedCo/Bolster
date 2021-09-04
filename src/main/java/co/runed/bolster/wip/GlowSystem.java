@@ -1,6 +1,6 @@
 package co.runed.bolster.wip;
 
-import co.runed.bolster.util.Manager;
+import co.runed.bolster.managers.Manager;
 import co.runed.bolster.util.network.WrapperPlayServerEntityMetadata;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.Bukkit;

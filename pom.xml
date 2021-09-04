@@ -157,13 +157,6 @@
             <version>2.6</version>
             <scope>compile</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.26-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -205,7 +198,6 @@
                                     <include>net.kyori:adventure-text-minimessage</include>
                                     <include>commons-io:commons-io</include>
                                     <include>co.runed:bolstercommon</include>
-                                    <inclue>org.snamekyaml:snakeyaml</inclue>
                                 </includes>
                             </artifactSet>
                             <filters>

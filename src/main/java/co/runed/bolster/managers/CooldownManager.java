@@ -7,7 +7,6 @@ import co.runed.bolster.events.entity.EntitySetCooldownEvent;
 import co.runed.bolster.events.player.LoadPlayerDataEvent;
 import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.util.BukkitUtil;
-import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.cooldown.CooldownSource;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;

@@ -4,7 +4,6 @@ import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.entity.EntityCleanupEvent;
 import co.runed.bolster.game.Team;
 import co.runed.bolster.util.BukkitUtil;
-import co.runed.bolster.util.Manager;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
