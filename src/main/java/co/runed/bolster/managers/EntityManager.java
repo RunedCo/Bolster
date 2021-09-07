@@ -5,6 +5,7 @@ import co.runed.bolster.events.entity.EntityCleanupEvent;
 import co.runed.bolster.game.Team;
 import co.runed.bolster.util.BukkitUtil;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -102,9 +103,12 @@ public class EntityManager extends Manager {
     }
 
     // return true if any of entity1's teams are allied with entity2's teams
-    public boolean areEntitiesAllied(LivingEntity entity1, LivingEntity entity2) {
-        for (var team1 : this.getJoinedTeams(entity1)) {
-            for (var team2 : this.getJoinedTeams(entity2)) {
+    public boolean areEntitiesAllied(Entity entity1, Entity entity2) {
+        if (!(entity1 instanceof LivingEntity le1)) return false;
+        if (!(entity2 instanceof LivingEntity le2)) return false;
+
+        for (var team1 : this.getJoinedTeams(le1)) {
+            for (var team2 : this.getJoinedTeams(le2)) {
                 if (team1.equals(team2) || team1.isAlliedTeam(team2)) return true;
             }
         }
