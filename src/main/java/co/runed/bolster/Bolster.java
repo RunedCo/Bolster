@@ -1,16 +1,6 @@
 package co.runed.bolster;
 
 import co.runed.bolster.commands.*;
-import co.runed.dayroom.ServerData;
-import co.runed.dayroom.gson.GsonUtil;
-import co.runed.dayroom.player.BasicPlayerInfo;
-import co.runed.dayroom.redis.RedisChannels;
-import co.runed.dayroom.redis.RedisManager;
-import co.runed.dayroom.redis.payload.Payload;
-import co.runed.dayroom.redis.request.ServerDataPayload;
-import co.runed.dayroom.redis.request.UnregisterServerPayload;
-import co.runed.dayroom.redis.response.ListServersResponsePayload;
-import co.runed.dayroom.redis.response.RegisterServerResponsePayload;
 import co.runed.bolster.events.server.RedisMessageEvent;
 import co.runed.bolster.events.server.ReloadConfigEvent;
 import co.runed.bolster.fx.particles.ParticleSet;
@@ -24,11 +14,23 @@ import co.runed.bolster.util.json.BukkitAwareObjectTypeAdapter;
 import co.runed.bolster.util.json.InventorySerializableAdapter;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.wip.*;
+import co.runed.dayroom.ServerData;
+import co.runed.dayroom.gson.GsonUtil;
+import co.runed.dayroom.player.BasicPlayerInfo;
+import co.runed.dayroom.redis.RedisChannels;
+import co.runed.dayroom.redis.RedisManager;
+import co.runed.dayroom.redis.payload.Payload;
+import co.runed.dayroom.redis.request.ServerDataPayload;
+import co.runed.dayroom.redis.request.UnregisterServerPayload;
+import co.runed.dayroom.redis.response.ListServersResponsePayload;
+import co.runed.dayroom.redis.response.RegisterServerResponsePayload;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.mojang.authlib.properties.PropertyMap;
 import de.slikey.effectlib.EffectManager;
 import me.libraryaddict.disguise.utilities.json.SerializerGameProfile;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -37,10 +39,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
 import redis.clients.jedis.JedisPool;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -67,9 +72,10 @@ public class Bolster extends JavaPlugin implements Listener {
     private MenuFunctionListener menuListener;
 
     private Config config;
+    private Map<String, String> lang = new HashMap<>();
 
     private GameMode activeGameMode;
-    public String serverId = null;
+    private String serverId = null;
     private Map<String, ServerData> servers = new HashMap<>();
 
     @Override
@@ -82,6 +88,8 @@ public class Bolster extends JavaPlugin implements Listener {
         super.onEnable();
 
         this.loadConfig();
+
+        loadLang(this);
 
         this.setupGson();
 
@@ -287,6 +295,24 @@ public class Bolster extends JavaPlugin implements Listener {
 
     public Map<String, ServerData> getServers() {
         return Collections.unmodifiableMap(servers);
+    }
+
+    public void loadLang(Plugin plugin) {
+        try {
+            var langFile = new File(plugin.getDataFolder(), "lang.yml");
+
+            if (!langFile.exists()) plugin.saveResource("lang.yml", false);
+
+            var langConfig = new YamlConfiguration();
+            langConfig.load(langFile);
+        }
+        catch (IOException | InvalidConfigurationException e) {
+            getLogger().severe("Error loading lang file for plugin " + plugin.getName());
+        }
+    }
+
+    public Map<String, String> getLang() {
+        return Collections.unmodifiableMap(lang);
     }
 
     // SINGLETON GETTERS

@@ -13,6 +13,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +89,16 @@ public class ConfigUtil {
         merge(out, config);
 
         return out;
+    }
+
+    public static Map<String, String> toStringMap(ConfigurationSection config, boolean deep) {
+        Map<String, String> strMap = new HashMap<>();
+
+        for (var entry : config.getValues(deep).entrySet()) {
+            strMap.put(entry.getKey(), entry.getValue().toString());
+        }
+
+        return strMap;
     }
 
     private static String iterateVariables(String value, ConfigurationSection config) {

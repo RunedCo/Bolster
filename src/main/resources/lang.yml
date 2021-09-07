@@ -1,0 +1,10 @@
+status:
+  default.name: "Status Effect"
+  blind.name: "Blinded"
+  grounded.name: "Grounded"
+  invulnerable.name: "Invulnerable"
+  root.name: "Rooted"
+  stun.name: "Stunned"
+  untargetable.name: "Untargetable"
+  knockback_resistance.name: "Knockback Resistance"
+  vulnerable.name: "Vulnerable"
