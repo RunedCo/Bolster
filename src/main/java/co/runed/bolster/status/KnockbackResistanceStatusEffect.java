@@ -16,11 +16,6 @@ public class KnockbackResistanceStatusEffect extends StatusEffect {
     }
 
     @Override
-    public String getName() {
-        return "Knockback Resistance";
-    }
-
-    @Override
     public ChatColor getColor() {
         return ChatColor.GOLD;
     }

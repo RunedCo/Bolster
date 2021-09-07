@@ -1,17 +1,18 @@
 package co.runed.bolster.status;
 
 import co.runed.bolster.Bolster;
-import co.runed.dayroom.util.Describable;
-import co.runed.dayroom.util.Identifiable;
-import co.runed.dayroom.util.Nameable;
 import co.runed.bolster.events.entity.EntityAddStatusEffectEvent;
 import co.runed.bolster.events.entity.EntityRemoveStatusEffectEvent;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.TimeUtil;
+import co.runed.bolster.util.lang.Lang;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.wip.PotionSystem;
+import co.runed.dayroom.util.Describable;
+import co.runed.dayroom.util.Identifiable;
+import co.runed.dayroom.util.Nameable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
@@ -30,7 +31,7 @@ import java.util.List;
 
 public abstract class StatusEffect implements Listener, Identifiable, Nameable, Describable, Comparable<StatusEffect> {
     private static final Collection<PotionEffectType> MAX_DURATION_EFFECTS = Arrays.asList(PotionEffectType.BLINDNESS, PotionEffectType.CONFUSION, PotionEffectType.NIGHT_VISION);
-
+    private final List<StatusEffectPotionData> potionEffects = new ArrayList<>();
     String id;
     double duration;
     LivingEntity entity;
@@ -38,10 +39,7 @@ public abstract class StatusEffect implements Listener, Identifiable, Nameable, 
     Instant startTime;
     double startingDuration;
     boolean ambient = false;
-
     boolean active;
-    private final List<StatusEffectPotionData> potionEffects = new ArrayList<>();
-
     private boolean cleared = false;
 
     public StatusEffect() {
@@ -53,7 +51,9 @@ public abstract class StatusEffect implements Listener, Identifiable, Nameable, 
         this.duration = duration;
     }
 
-    public abstract String getName();
+    public String getName() {
+        return Lang.str("status." + getId() + ".name", "status.default.name");
+    }
 
     public boolean isNegative() {
         return false;
@@ -81,10 +81,6 @@ public abstract class StatusEffect implements Listener, Identifiable, Nameable, 
         return duration;
     }
 
-    public void addDuration(double duration) {
-        this.setDuration(this.getDuration() + duration);
-    }
-
     public void setDuration(double duration) {
         this.duration = duration;
 
@@ -99,6 +95,10 @@ public abstract class StatusEffect implements Listener, Identifiable, Nameable, 
 
             data.container = PotionSystem.addPotionEffect(entity, new PotionEffect(container.type, (int) finalDuration, container.amplifier, container.ambient, container.particles, container.icon));
         }
+    }
+
+    public void addDuration(double duration) {
+        this.setDuration(this.getDuration() + duration);
     }
 
     public Duration getRemainingDuration() {
@@ -201,13 +201,13 @@ public abstract class StatusEffect implements Listener, Identifiable, Nameable, 
         this.end();
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     @Override
     public String getId() {
         return this.id != null ? this.id : Registries.STATUS_EFFECTS.getId(this);
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

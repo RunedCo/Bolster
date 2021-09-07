@@ -1,33 +1,22 @@
 package co.runed.bolster.status;
 
-public class StunStatusEffect extends StatusEffect
-{
-    public StunStatusEffect(double duration)
-    {
+public class StunStatusEffect extends StatusEffect {
+    public StunStatusEffect(double duration) {
         super(duration);
     }
 
     @Override
-    public String getName()
-    {
-        return "Stunned";
-    }
-
-    @Override
-    public void onStart()
-    {
+    public void onStart() {
 
     }
 
     @Override
-    public void onEnd()
-    {
+    public void onEnd() {
 
     }
 
     @Override
-    public void onTick()
-    {
+    public void onTick() {
 
     }
 }

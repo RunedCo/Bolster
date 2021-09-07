@@ -13,11 +13,6 @@ public class RootStatusEffect extends StatusEffect {
     }
 
     @Override
-    public String getName() {
-        return "Rooted";
-    }
-
-    @Override
     public ChatColor getColor() {
         return ChatColor.DARK_PURPLE;
     }
