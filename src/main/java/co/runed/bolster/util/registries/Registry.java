@@ -1,13 +1,13 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.Bolster;
-import co.runed.dayroom.util.Identifiable;
 import co.runed.bolster.events.server.ReloadConfigEvent;
+import co.runed.bolster.util.Categorised;
 import co.runed.bolster.util.Category;
-import co.runed.bolster.util.ICategorised;
 import co.runed.bolster.util.config.BolsterConfiguration;
 import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.config.Configurable;
+import co.runed.dayroom.util.Identifiable;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -240,8 +240,8 @@ public class Registry<T extends Identifiable> implements Listener {
             try {
                 var value = this.create();
 
-                if (value instanceof ICategorised) {
-                    addCategories(((ICategorised) value).getCategories());
+                if (value instanceof Categorised) {
+                    addCategories(((Categorised) value).getCategories());
                 }
             }
             catch (Exception e) {

@@ -1,12 +1,12 @@
 package co.runed.bolster.game.currency;
 
 import co.runed.bolster.Bolster;
-import co.runed.dayroom.util.Identifiable;
 import co.runed.bolster.events.player.SavePlayerDataEvent;
-import co.runed.bolster.util.ICategorised;
+import co.runed.bolster.util.Categorised;
 import co.runed.bolster.util.IconPreview;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.registries.Registries;
+import co.runed.dayroom.util.Identifiable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Currency implements Identifiable, ICategorised, IconPreview, Listener {
+public class Currency implements Identifiable, Categorised, IconPreview, Listener {
     String id;
     String name;
     String shortName;

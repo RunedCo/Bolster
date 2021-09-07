@@ -1,13 +1,13 @@
 package co.runed.bolster.util.registries;
 
 import co.runed.bolster.Bolster;
-import co.runed.dayroom.util.Identifiable;
-import co.runed.dayroom.util.Nameable;
+import co.runed.bolster.util.Categorised;
 import co.runed.bolster.util.Category;
-import co.runed.bolster.util.ICategorised;
 import co.runed.bolster.util.IconPreview;
 import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.config.Configurable;
+import co.runed.dayroom.util.Identifiable;
+import co.runed.dayroom.util.Nameable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-public abstract class Definition<T extends Identifiable> implements Identifiable, Nameable, Configurable, ICategorised, IconPreview {
+public abstract class Definition<T extends Identifiable> implements Identifiable, Nameable, Configurable, Categorised, IconPreview {
 
     private final String id;
     private String name;
