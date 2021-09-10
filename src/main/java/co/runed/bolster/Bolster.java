@@ -10,6 +10,7 @@ import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.status.*;
 import co.runed.bolster.util.BukkitUtil;
+import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.json.BukkitAwareObjectTypeAdapter;
 import co.runed.bolster.util.json.InventorySerializableAdapter;
 import co.runed.bolster.util.registries.Registries;
@@ -305,6 +306,8 @@ public class Bolster extends JavaPlugin implements Listener {
 
             var langConfig = new YamlConfiguration();
             langConfig.load(langFile);
+
+            lang.putAll(ConfigUtil.toStringMap(langConfig, true));
         }
         catch (IOException | InvalidConfigurationException e) {
             getLogger().severe("Error loading lang file for plugin " + plugin.getName());

@@ -13,10 +13,8 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ConfigUtil {
     public static ConfigurationSection cloneSection(ConfigurationSection config) {
@@ -72,7 +70,7 @@ public class ConfigUtil {
 
             if (value == null) continue;
 
-            value = iterateVariables(value, sourceConfig);
+            value = iterateVariables(value, toStringMap(sourceConfig, true));
 
             value = LegacyComponentSerializer.legacyAmpersand().serialize(MiniMessage.get().parse(value));
             value = ChatColor.translateAlternateColorCodes('&', value);
@@ -95,21 +93,31 @@ public class ConfigUtil {
         Map<String, String> strMap = new HashMap<>();
 
         for (var entry : config.getValues(deep).entrySet()) {
-            strMap.put(entry.getKey(), entry.getValue().toString());
+            var value = entry.getValue();
+
+            if (value instanceof ConfigurationSection) continue;
+
+            if (entry.getValue() instanceof ArrayList list) {
+                var out = (List<String>) list.stream().map(e -> e.toString()).collect(Collectors.toList());
+
+                value = String.join("\n", out);
+            }
+            
+            strMap.put(entry.getKey(), value.toString());
         }
 
         return strMap;
     }
 
-    private static String iterateVariables(String value, ConfigurationSection config) {
+    public static String iterateVariables(String value, Map<String, String> variables) {
         var matches = StringUtils.substringsBetween(value, "%", "%");
 
         if (matches != null && matches.length > 0) {
             for (var match : matches) {
-                if (config.isSet(match)) {
-                    var foundValue = String.valueOf(config.get(match));
+                if (variables.containsKey(match)) {
+                    var foundValue = String.valueOf(variables.get(match));
 
-                    value = iterateVariables(value.replaceAll("%" + match + "%", foundValue), config);
+                    value = iterateVariables(value.replaceAll("%" + match + "%", foundValue), variables);
                 }
             }
         }

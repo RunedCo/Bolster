@@ -8,3 +8,7 @@ status:
   untargetable.name: "Untargetable"
   knockback_resistance.name: "Knockback Resistance"
   vulnerable.name: "Vulnerable"
+
+test:
+  - test 1
+  - test 2

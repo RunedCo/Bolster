@@ -1,9 +1,11 @@
 package co.runed.bolster.util.lang;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.util.config.ConfigUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Lang {
@@ -28,17 +30,16 @@ public class Lang {
     }
 
     public Lang replaceAll(Map<String, String> keys) {
-        for (var entry : keys.entrySet()) {
-            replace(entry.getKey(), entry.getValue());
-        }
+        value = ConfigUtil.iterateVariables(value, keys);
 
         return this;
     }
 
     public Lang replace(String key, String value) {
-        this.value = this.value.replaceAll("%" + key + "%", value);
+        var map = new HashMap<String, String>();
+        map.put(key, value);
 
-        return this;
+        return replaceAll(map);
     }
 
     public Component toComponent() {
