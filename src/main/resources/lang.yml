@@ -1,3 +1,6 @@
+chat:
+  format: "<color:%name_color%>%rank%%name%: <color:%chat_color%>%message% <pre>test! %message%</pre> %test%"
+
 status:
   default.name: "Status Effect"
   blind.name: "Blinded"

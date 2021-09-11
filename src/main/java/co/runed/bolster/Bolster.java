@@ -10,6 +10,7 @@ import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.status.*;
 import co.runed.bolster.util.BukkitUtil;
+import co.runed.bolster.util.chat.ChatListener;
 import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.json.BukkitAwareObjectTypeAdapter;
 import co.runed.bolster.util.json.InventorySerializableAdapter;
@@ -140,6 +141,7 @@ public class Bolster extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new CombatTracker(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryTracker(), this);
         Bukkit.getPluginManager().registerEvents(new WorldGuardListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ChatListener(), this);
 
         this.registerStatusEffects();
         this.registerCurrencies();

@@ -14,6 +14,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ConfigUtil {
@@ -59,6 +60,8 @@ public class ConfigUtil {
         if (outConfig == null) outConfig = new BolsterConfiguration();
         var sourceConfig = ConfigUtil.cloneSection(outConfig);
 
+        // TODO: fix badly named variable sources e.g (.runeblade.milestone vs just milestone)
+
         for (var source : otherSources) {
             ConfigUtil.merge(sourceConfig, source);
         }
@@ -70,7 +73,7 @@ public class ConfigUtil {
 
             if (value == null) continue;
 
-            value = iterateVariables(value, toStringMap(sourceConfig, true));
+            value = iterateVariables("%", value, toStringMap(sourceConfig, true));
 
             value = LegacyComponentSerializer.legacyAmpersand().serialize(MiniMessage.get().parse(value));
             value = ChatColor.translateAlternateColorCodes('&', value);
@@ -102,27 +105,64 @@ public class ConfigUtil {
 
                 value = String.join("\n", out);
             }
-            
+
             strMap.put(entry.getKey(), value.toString());
         }
 
         return strMap;
     }
 
-    public static String iterateVariables(String value, Map<String, String> variables) {
-        var matches = StringUtils.substringsBetween(value, "%", "%");
+    // Iterates through string to replace variables from map. Doesn't include text inside of pre tags.
+    public static String iterateVariables(String token, String value, Map<String, String> variables) {
+        var preRegex = Pattern.compile("<pre\\b[^>]*>(.*?)</pre>");
+        var matcher = preRegex.matcher(value);
 
-        if (matches != null && matches.length > 0) {
-            for (var match : matches) {
-                if (variables.containsKey(match)) {
-                    var foundValue = String.valueOf(variables.get(match));
+        var sections = new LinkedHashMap<String, Boolean>();
+        var lastIndex = 0;
 
-                    value = iterateVariables(value.replaceAll("%" + match + "%", foundValue), variables);
-                }
-            }
+        // TODO: parse before and after pre sections
+        while (matcher.find()) {
+            var start = matcher.start();
+            var end = matcher.end();
+
+            sections.put(value.substring(lastIndex, start), true);
+
+            var group = matcher.group();
+            sections.put(group, false);
+
+            lastIndex = end;
         }
 
-        return value;
+        if (lastIndex < value.length()) sections.put(value.substring(lastIndex), true);
+
+        var parsedSections = new ArrayList<String>();
+
+        for (var entry : sections.entrySet()) {
+            var section = entry.getKey();
+            var parse = entry.getValue();
+
+            if (parse) {
+                var matchArray = StringUtils.substringsBetween(section, token, token);
+                var matches = Arrays.asList(matchArray == null ? new String[0] : matchArray);
+                var skip = Collections.disjoint(matches, variables.keySet()) || matches.size() <= 0;
+
+                for (var match : matches) {
+                    if (variables.containsKey(match)) {
+                        var foundValue = String.valueOf(variables.get(match));
+
+                        section = section.replaceAll(token + match + token, foundValue);
+                    }
+                }
+
+                if (!skip) {
+                    section = iterateVariables(token, section, variables);
+                }
+            }
+
+            parsedSections.add(section);
+        }
+
+        return String.join("", parsedSections);
     }
 
     // This is fancier than Map.putAll(Map)

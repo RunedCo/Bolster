@@ -11,6 +11,7 @@ import java.util.Map;
 public class Lang {
     private String key = "invalid";
     private String value;
+    private Map<String, String> replacements = new HashMap<>();
 
     public Lang(String... keys) {
         var lang = Bolster.getInstance().getLang();
@@ -30,7 +31,7 @@ public class Lang {
     }
 
     public Lang replaceAll(Map<String, String> keys) {
-        value = ConfigUtil.iterateVariables(value, keys);
+        replacements.putAll(keys);
 
         return this;
     }
@@ -42,12 +43,20 @@ public class Lang {
         return replaceAll(map);
     }
 
+    public Lang replace(String key, Component value) {
+        return replace(key, MiniMessage.get().serialize(value));
+    }
+
+    private String toFormattedString() {
+        return ConfigUtil.iterateVariables("%", value, replacements);
+    }
+
     public Component toComponent() {
-        return MiniMessage.get().parse(value);
+        return MiniMessage.get().parse(toFormattedString());
     }
 
     public String toString() {
-        return MiniMessage.get().stripTokens(value);
+        return MiniMessage.get().stripTokens(toFormattedString());
     }
 
     public static Lang key(String... key) {
