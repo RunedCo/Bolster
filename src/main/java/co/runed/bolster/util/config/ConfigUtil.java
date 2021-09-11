@@ -73,7 +73,7 @@ public class ConfigUtil {
 
             if (value == null) continue;
 
-            value = iterateVariables("%", value, toStringMap(sourceConfig, true));
+            value = iterateVariables("%", value, toStringMap(sourceConfig, true), false);
 
             value = LegacyComponentSerializer.legacyAmpersand().serialize(MiniMessage.get().parse(value));
             value = ChatColor.translateAlternateColorCodes('&', value);
@@ -113,7 +113,7 @@ public class ConfigUtil {
     }
 
     // Iterates through string to replace variables from map. Doesn't include text inside of pre tags.
-    public static String iterateVariables(String token, String value, Map<String, String> variables) {
+    public static String iterateVariables(String token, String value, Map<String, String> variables, boolean parseInsidePre) {
         var preRegex = Pattern.compile("<pre\\b[^>]*>(.*?)</pre>");
         var matcher = preRegex.matcher(value);
 
@@ -128,7 +128,7 @@ public class ConfigUtil {
             sections.put(value.substring(lastIndex, start), true);
 
             var group = matcher.group();
-            sections.put(group, false);
+            sections.put(group, parseInsidePre);
 
             lastIndex = end;
         }
@@ -155,7 +155,7 @@ public class ConfigUtil {
                 }
 
                 if (!skip) {
-                    section = iterateVariables(token, section, variables);
+                    section = iterateVariables(token, section, variables, parseInsidePre);
                 }
             }
 

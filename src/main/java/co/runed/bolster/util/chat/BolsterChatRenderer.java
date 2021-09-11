@@ -15,12 +15,12 @@ public class BolsterChatRenderer implements ChatRenderer {
         var rank = "<gold><bold>ADMIN</bold></gold> ";
 
         return Lang.key("chat.format")
-                .replace("name", source.getName())
-                .replace("message", preMessage)
-                .replace("rank", rank)
-                .replace("name_color", "#128dff")
-                .replace("chat_color", "#96cafa")
-                .replace("test", "%message%")
+                .withReplacement("name", source.getName())
+                .withReplacement("message", preMessage)
+                .withReplacement("rank", rank)
+                .withReplacement("name_color", "#128dff")
+                .withReplacement("chat_color", "#96cafa")
+                .withReplacement("test", "%message%")
                 .toComponent();
     }
 }
