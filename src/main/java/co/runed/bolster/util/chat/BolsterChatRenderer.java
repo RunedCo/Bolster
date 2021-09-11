@@ -12,7 +12,7 @@ public class BolsterChatRenderer implements ChatRenderer {
     @Override
     public @NotNull Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
         var preMessage = "<pre>" + MiniMessage.get().serialize(message) + "</pre>";
-        var rank = "<gold><bold>ADMIN</bold></gold> ";
+        var rank = "";//""<gold><bold>ADMIN</bold></gold> ";
 
         return Lang.key("chat.format")
                 .withReplacement("name", source.getName())
