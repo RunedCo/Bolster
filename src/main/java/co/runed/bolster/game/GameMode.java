@@ -1,9 +1,6 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.Bolster;
-import co.runed.dayroom.properties.Properties;
-import co.runed.dayroom.properties.Property;
-import co.runed.dayroom.util.Identifiable;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.game.GameModePauseEvent;
 import co.runed.bolster.events.player.LoadPlayerDataEvent;
@@ -16,6 +13,10 @@ import co.runed.bolster.match.MatchHistory;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.config.Configurable;
+import co.runed.bolster.util.lang.Lang;
+import co.runed.dayroom.properties.Properties;
+import co.runed.dayroom.properties.Property;
+import co.runed.dayroom.util.Identifiable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -65,7 +66,7 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
     }
 
     public String getName() {
-        return Bolster.getBolsterConfig().gameName;
+        return Lang.str("game.name");
     }
 
     public StateSeries getMainState() {
@@ -195,7 +196,7 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
         var bolsterConfig = Bolster.getBolsterConfig();
 
         Component headerComponent = Component.text("  Welcome to ", NamedTextColor.YELLOW)
-                .append(bolsterConfig.longGameName)
+                .append(Lang.simple("game.long-name"))
                 .append(Component.text("  "))
                 .append(Component.newline());
 
@@ -211,7 +212,7 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
 
             if (expiryTime.isAfter(ZonedDateTime.now(Clock.systemUTC()))) {
                 footerComponent = footerComponent
-                        .append(Component.text("Your " + bolsterConfig.premiumMembershipName + " expires in"))
+                        .append(Component.text("Your ").append(Lang.simple("premium.name")).append(Component.text(" expires in")))
                         .append(Component.newline())
                         .append(Component.text(TimeUtil.formatDatePrettyRounded(expiryTime)));
             }
@@ -219,7 +220,7 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
         else {
             footerComponent = footerComponent
                     .append(Component.text("Support the server at ", NamedTextColor.AQUA))
-                    .append(Component.text(bolsterConfig.storeUrl + "!", NamedTextColor.GOLD));
+                    .append(Lang.simple("game.store-url").append(Component.text("!", NamedTextColor.GOLD)));
         }
 
         player.sendPlayerListFooter(footerComponent);

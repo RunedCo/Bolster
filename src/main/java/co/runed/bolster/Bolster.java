@@ -71,6 +71,7 @@ public class Bolster extends JavaPlugin implements Listener {
     private RedisManager redisManager;
     private NPCManager npcManager;
     private ChatManager chatManager;
+    private GlowSystem glowSystem;
 
     private MenuFunctionListener menuListener;
 
@@ -108,6 +109,7 @@ public class Bolster extends JavaPlugin implements Listener {
         this.effectManager = new EffectManager(this);
         this.npcManager = new NPCManager(this);
         this.chatManager = new ChatManager(this);
+        this.glowSystem = new GlowSystem(this);
 
         // REGISTER COMMANDS
         this.commandManager.add(new CommandBolster());

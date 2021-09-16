@@ -12,6 +12,17 @@ status:
   knockback_resistance.name: "Knockback Resistance"
   vulnerable.name: "Vulnerable"
 
+game:
+  name: Bolster
+  short-name: Bolster
+  long-name: Bolster
+  ip-address: runed.co
+  website-url: runed.co
+  store-url: runed.co
+
+premium:
+  name: Super Jimmy
+
 test:
   - test 1
   - test 2

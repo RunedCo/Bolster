@@ -14,9 +14,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PotionSystem implements Listener {
-    Map<UUID, Map<PotionEffectType, Boolean>> blockNextRemoval = new HashMap<>();
-    List<PotionEffectContainer> activeEffects = new ArrayList<>();
-    List<PotionEffectContainer> pendingEffects = new ArrayList<>();
+    private Map<UUID, Map<PotionEffectType, Boolean>> blockNextRemoval = new HashMap<>();
+    private List<PotionEffectContainer> activeEffects = new ArrayList<>();
+    private List<PotionEffectContainer> pendingEffects = new ArrayList<>();
 
     private static PotionSystem _instance;
 
