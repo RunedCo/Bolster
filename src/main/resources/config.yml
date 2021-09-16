@@ -6,6 +6,9 @@ redis:
 # Active gamemode
 gamemode: bolster
 
+# World
+map-spawn: 0,0,0
+
 # Available slots for premium members
 premium-slots: 10
 

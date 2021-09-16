@@ -1,6 +1,8 @@
 package co.runed.bolster;
 
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.config.BolsterConfiguration;
+import org.bukkit.Location;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,6 +19,8 @@ public class Config {
 
     public String gameMode;
     public String serverId = null;
+
+    public Location mapSpawn;
 
     public boolean debugMode = false;
 
@@ -63,8 +67,13 @@ public class Config {
         this.gameMode = this.config.getString("gamemode", "bolster");
         this.serverId = this.config.getString("server-id", this.serverId);
 
+        this.mapSpawn = BukkitUtil.stringToLocation(config.getString("map-spawn", "0,0,0"));
+        Warps.getInstance().addWarp("spawn", this.mapSpawn);
+        Warps.getInstance().setName("spawn", "Map Spawn");
+        Warps.getInstance().setSave("spawn", false);
+
         this.debugMode = this.config.getBoolean("debug", this.debugMode);
-        
+
         this.premiumSlots = this.config.getInt("premium-slots", this.premiumSlots);
 
         this.cleanupPlayers = this.config.getBoolean("cleanup-players", this.cleanupPlayers);

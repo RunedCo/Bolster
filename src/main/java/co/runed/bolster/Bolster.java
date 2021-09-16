@@ -125,7 +125,7 @@ public class Bolster extends JavaPlugin implements Listener {
 
         this.commandManager.add(new CommandServerGUI());
 
-        // REGISTER PLUGIN CHANNELS
+        // Register Plugin Channels
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:disguise");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:undisguise");
@@ -134,7 +134,10 @@ public class Bolster extends JavaPlugin implements Listener {
 
         Registries.PARTICLE_SETS.register("bruce_test", ParticleSet::new);
 
+        // Gui listener
         this.menuListener = new MenuFunctionListener();
+
+        Bukkit.getWorlds().get(0).setSpawnLocation(config.mapSpawn);
 
         // REGISTER EVENTS
         Bukkit.getPluginManager().registerEvents(this, this);
@@ -150,6 +153,7 @@ public class Bolster extends JavaPlugin implements Listener {
         this.registerCurrencies();
         this.registerTraits();
 
+        // Redis
         var redisChannels = Arrays.asList(RedisChannels.LIST_SERVERS_RESPONSE, RedisChannels.REQUEST_PLAYER_DATA_RESPONSE, RedisChannels.REGISTER_SERVER_RESPONSE);
         this.redisManager = new RedisManager(config.redisHost, config.redisPort, null, null, redisChannels);
         this.redisManager.setDefaultTarget("proxy");
