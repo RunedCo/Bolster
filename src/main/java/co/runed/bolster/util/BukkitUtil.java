@@ -19,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -297,7 +298,9 @@ public class BukkitUtil {
         return (start.add((end.subtract(start)).multiply(percent)));
     }
 
-    public static Location stringToLocation(String locString) {
+    public static @Nullable Location stringToLocation(String locString) {
+        if (locString == null) return null;
+
         var coords = locString.split(",");
 
         var x = Double.parseDouble(coords[0]);

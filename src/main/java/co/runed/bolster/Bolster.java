@@ -31,6 +31,7 @@ import com.mojang.authlib.properties.PropertyMap;
 import de.slikey.effectlib.EffectManager;
 import me.libraryaddict.disguise.utilities.json.SerializerGameProfile;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
@@ -91,13 +92,13 @@ public class Bolster extends JavaPlugin implements Listener {
     public void onEnable() {
         super.onEnable();
 
+        this.warps = new Warps(this);
+
         this.loadConfig();
 
         loadLang(this);
 
         this.setupGson();
-
-        this.warps = new Warps(this);
 
         // CREATE MANAGERS
         this.commandManager = new CommandManager();
@@ -136,8 +137,6 @@ public class Bolster extends JavaPlugin implements Listener {
 
         // Gui listener
         this.menuListener = new MenuFunctionListener();
-
-        Bukkit.getWorlds().get(0).setSpawnLocation(config.mapSpawn);
 
         // REGISTER EVENTS
         Bukkit.getPluginManager().registerEvents(this, this);
@@ -195,6 +194,10 @@ public class Bolster extends JavaPlugin implements Listener {
     }
 
     public void onPostEnable() {
+        var firstWorld = Bukkit.getWorlds().get(0);
+        firstWorld.setGameRule(GameRule.SPAWN_RADIUS, 1);
+        firstWorld.setSpawnLocation(config.mapSpawn);
+
         setActiveGameMode(this.config.gameMode);
 
         var registerPayload = new ServerDataPayload();
