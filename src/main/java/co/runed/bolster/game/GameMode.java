@@ -1,21 +1,22 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.Config;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.game.GameModePauseEvent;
 import co.runed.bolster.events.player.LoadPlayerDataEvent;
 import co.runed.bolster.events.player.SavePlayerDataEvent;
 import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
+import co.runed.bolster.managers.Manager;
 import co.runed.bolster.managers.PlayerManager;
+import co.runed.bolster.match.MatchHistory;
 import co.runed.bolster.util.BukkitUtil;
-import co.runed.bolster.util.Manager;
 import co.runed.bolster.util.TimeUtil;
-import co.runed.bolster.util.config.IConfigurable;
-import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.util.properties.Property;
-import co.runed.bolster.util.registries.IRegisterable;
+import co.runed.bolster.util.config.Configurable;
+import co.runed.bolster.util.lang.Lang;
+import co.runed.dayroom.properties.Properties;
+import co.runed.dayroom.properties.Property;
+import co.runed.dayroom.util.Identifiable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -24,19 +25,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-public abstract class GameMode extends Manager implements IRegisterable, IConfigurable
-{
+public abstract class GameMode extends Manager implements Identifiable, Configurable {
     public static final Property<Double> XP_MULTIPLER = new Property<>("xp_multiplier", 1.0);
     public static final Property<Double> GOLD_MULTIPLER = new Property<>("gold_multiplier", 1.0);
     public static final Property<Double> DAMAGE_MULTIPLIER = new Property<>("damage_multiplier", 1.0);
@@ -47,6 +44,7 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     GameProperties properties;
     HashMap<UUID, Properties> statistics = new HashMap<>();
     Properties globalStatistics = new Properties();
+    MatchHistory matchHistory;
 
     String status;
     boolean hasStarted = false;
@@ -56,44 +54,41 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
 
     BukkitTask tabMenuTask = null;
 
-    public GameMode(String id, Class<? extends GameModeData> gameModeData, Plugin plugin)
-    {
+    public GameMode(String id, Class<? extends GameModeData> gameModeData, Plugin plugin) {
         super(plugin);
 
         this.id = id;
         this.properties = new GameProperties();
 
+        this.matchHistory = new MatchHistory(this);
+
         if (gameModeData != null) PlayerManager.getInstance().addGameModeDataClass(this.getId(), gameModeData);
     }
 
-    public String getName()
-    {
-        return Bolster.getBolsterConfig().gameName;
+    public String getName() {
+        return Lang.str("game.name");
     }
 
-    public StateSeries getMainState()
-    {
+    public StateSeries getMainState() {
         return this.mainState;
     }
 
-    public void setState(StateSeries mainState)
-    {
+    public void setState(StateSeries mainState) {
         this.mainState = mainState;
     }
 
-    public State getCurrentState()
-    {
+    public State getCurrentState() {
         return this.mainState.getCurrent();
     }
 
-    public boolean isCurrentState(Class<? extends State> state)
-    {
+    public boolean isCurrentState(Class<? extends State> state) {
         return this.getCurrentState().getClass() == state;
     }
 
-    public void start()
-    {
+    public void start() {
         if (this.hasStarted) return;
+
+        this.matchHistory.start();
 
         this.hasStarted = true;
         if (this.mainState != null) this.mainState.start();
@@ -101,83 +96,75 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         this.tabMenuTask = Bukkit.getScheduler().runTaskTimer(plugin, this::buildAllTabMenu, 0L, 20L);
     }
 
-    public void stop()
-    {
+    public void stop() {
         if (this.tabMenuTask != null) this.tabMenuTask.cancel();
+
+        this.matchHistory.end();
     }
 
-    public boolean isPaused()
-    {
+    public boolean isPaused() {
         return paused;
     }
 
-    public void setPaused(boolean paused)
-    {
+    public void setPaused(boolean paused) {
         this.paused = paused;
 
         BukkitUtil.triggerEvent(new GameModePauseEvent(this, paused));
     }
 
-    public void setSerializeInventories(boolean serializeInventories)
-    {
+    public void setSerializeInventories(boolean serializeInventories) {
         this.serializeInventories = serializeInventories;
     }
 
-    public boolean shouldSerializeInventories()
-    {
+    public boolean shouldSerializeInventories() {
         return serializeInventories;
     }
 
-    public void setRequiresResourcePack(boolean requiresResourcePack)
-    {
+    public void setRequiresResourcePack(boolean requiresResourcePack) {
         this.requiresResourcePack = requiresResourcePack;
     }
 
-    public boolean getRequiresResourcePack()
-    {
+    public boolean getRequiresResourcePack() {
         return requiresResourcePack;
     }
 
-    public boolean hasStarted()
-    {
+    public boolean hasStarted() {
         return hasStarted;
     }
 
-    public String getStatus()
-    {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status)
-    {
+    public void setStatus(String status) {
         this.status = status;
 
         Bolster.updateServer();
     }
 
-    public GameProperties getProperties()
-    {
+    public GameProperties getProperties() {
         return this.properties;
     }
 
-    public <T> T getStatistic(Player player, Property<T> statistic)
-    {
+    public MatchHistory getMatchHistory() {
+        return matchHistory;
+    }
+
+    public <T> T getStatistic(Player player, Property<T> statistic) {
         this.statistics.putIfAbsent(player.getUniqueId(), new Properties());
 
         return this.statistics.get(player.getUniqueId()).get(statistic);
     }
 
     // TODO better statistics?
-    public <T> void setStatistic(Player player, Property<Integer> statistic, int value)
-    {
+    public <T> void setStatistic(Player player, Property<Integer> statistic, int value) {
         this.statistics.putIfAbsent(player.getUniqueId(), new Properties());
 
         this.statistics.get(player.getUniqueId()).set(statistic, value);
     }
 
     // TODO better statistics?
-    public <T> void incrementStatistic(Player player, Property<Integer> statistic, int increment)
-    {
+    public <T> void incrementStatistic(Player player, Property<Integer> statistic, int increment) {
         this.statistics.putIfAbsent(player.getUniqueId(), new Properties());
 
         int value = this.statistics.get(player.getUniqueId()).get(statistic);
@@ -185,118 +172,95 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
         this.statistics.get(player.getUniqueId()).set(statistic, value + increment);
     }
 
-    public <T> T getGlobalStatistic(Property<T> statistic)
-    {
+    public <T> T getGlobalStatistic(Property<T> statistic) {
         return this.globalStatistics.get(statistic);
     }
 
-    public <T> void setGlobalStatistic(Property<T> statistic, T value)
-    {
+    public <T> void setGlobalStatistic(Property<T> statistic, T value) {
         this.globalStatistics.set(statistic, value);
     }
 
-    public <T> void incrementGlobalStatistic(Property<Integer> statistic, int increment)
-    {
+    public <T> void incrementGlobalStatistic(Property<Integer> statistic, int increment) {
         int value = this.globalStatistics.get(statistic);
 
         this.globalStatistics.set(statistic, value + increment);
     }
 
-    public void buildAllTabMenu()
-    {
-        for (Player player : Bukkit.getOnlinePlayers())
-        {
+    public void buildAllTabMenu() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             this.buildTabMenu(player);
         }
     }
 
-    public void buildTabMenu(Player player)
-    {
-        Config bolsterConfig = Bolster.getBolsterConfig();
+    public void buildTabMenu(Player player) {
+        var bolsterConfig = Bolster.getBolsterConfig();
 
         Component headerComponent = Component.text("  Welcome to ", NamedTextColor.YELLOW)
-                .append(bolsterConfig.longGameName)
+                .append(Lang.simple("game.long-name"))
                 .append(Component.text("  "))
                 .append(Component.newline());
 
         player.sendPlayerListHeader(headerComponent);
 
-        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+        var playerData = PlayerManager.getInstance().getPlayerData(player);
 
         Component footerComponent = Component.empty().append(Component.newline());
 
-        if (playerData.isPremium())
-        {
-            ZonedDateTime expiryTime = playerData.getPremiumExpiryTime();
+        if (playerData.isPremium()) {
+            var expiryTime = playerData.getPremiumExpiryTime();
             footerComponent = footerComponent.append(Component.text("  Thank you for supporting the server!  ", NamedTextColor.AQUA));
 
-            if (expiryTime.isAfter(ZonedDateTime.now(Clock.systemUTC())))
-            {
+            if (expiryTime.isAfter(ZonedDateTime.now(Clock.systemUTC()))) {
                 footerComponent = footerComponent
-                        .append(Component.text("Your " + bolsterConfig.premiumMembershipName + " expires in"))
+                        .append(Component.text("Your ").append(Lang.simple("premium.name")).append(Component.text(" expires in")))
                         .append(Component.newline())
                         .append(Component.text(TimeUtil.formatDatePrettyRounded(expiryTime)));
             }
         }
-        else
-        {
+        else {
             footerComponent = footerComponent
                     .append(Component.text("Support the server at ", NamedTextColor.AQUA))
-                    .append(Component.text(bolsterConfig.storeUrl + "!", NamedTextColor.GOLD));
+                    .append(Lang.simple("game.store-url").append(Component.text("!", NamedTextColor.GOLD)));
         }
 
         player.sendPlayerListFooter(footerComponent);
     }
 
     @Override
-    public String getId()
-    {
+    public String getId() {
         return this.id;
     }
 
     @Override
-    public void loadConfig(ConfigurationSection config)
-    {
-
-    }
-
-    @Override
-    public void create()
-    {
+    public void loadConfig(ConfigurationSection config) {
 
     }
 
     @EventHandler
-    public void onResourcePackFailed(PlayerResourcePackStatusEvent event)
-    {
-        if (event.getStatus() == PlayerResourcePackStatusEvent.Status.DECLINED || event.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD)
-        {
+    public void onResourcePackFailed(PlayerResourcePackStatusEvent event) {
+        if (event.getStatus() == PlayerResourcePackStatusEvent.Status.DECLINED || event.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD) {
             event.getPlayer().kickPlayer("You need to enable resource packs.");
         }
     }
 
     @EventHandler
-    public void onLoadPlayer(LoadPlayerDataEvent event)
-    {
+    public void onLoadPlayer(LoadPlayerDataEvent event) {
         if (!this.shouldSerializeInventories()) return;
         if (event.getPlayer() == null) return;
 
-        PlayerData playerData = event.getPlayerData();
-        GameModeData gameModeData = playerData.getGameModeData(this.getId());
-        BolsterEntity entity = BolsterEntity.from(event.getPlayer());
+        var playerData = event.getPlayerData();
+        var gameModeData = playerData.getGameModeData(this.getId());
+        var entity = BolsterEntity.from(event.getPlayer());
 
-        for (Map.Entry<String, Inventory> entry : gameModeData.inventories.entrySet())
-        {
-            if (entity.hasInventory(entry.getKey()))
-            {
-                Inventory inventory = entity.getInventory(entry.getKey());
-                ItemStack[] contents = entry.getValue().getContents();
+        for (var entry : gameModeData.inventories.entrySet()) {
+            if (entity.hasInventory(entry.getKey())) {
+                var inventory = entity.getInventory(entry.getKey());
+                var contents = entry.getValue().getContents();
 
                 inventory.clear();
 
-                for (int i = 0; i < inventory.getContents().length; i++)
-                {
-                    ItemStack itemStack = contents[i];
+                for (var i = 0; i < inventory.getContents().length; i++) {
+                    var itemStack = contents[i];
                     if (itemStack == null || itemStack.getType() == Material.AIR) continue;
 
                     inventory.setItem(i, itemStack);
@@ -312,16 +276,14 @@ public abstract class GameMode extends Manager implements IRegisterable, IConfig
     }
 
     @EventHandler
-    public void onSavePlayer(SavePlayerDataEvent event)
-    {
+    public void onSavePlayer(SavePlayerDataEvent event) {
         if (!this.shouldSerializeInventories()) return;
         if (event.getPlayer() == null) return;
 
-        PlayerData playerData = event.getPlayerData();
-        GameModeData gameModeData = playerData.getGameModeData(this.getId());
+        var playerData = event.getPlayerData();
+        var gameModeData = playerData.getGameModeData(this.getId());
 
-        for (Map.Entry<String, Inventory> entry : BolsterEntity.from(event.getPlayer()).getInventoryMap().entrySet())
-        {
+        for (var entry : BolsterEntity.from(event.getPlayer()).getInventoryMap().entrySet()) {
             gameModeData.setInventory(entry.getKey(), entry.getValue());
         }
     }

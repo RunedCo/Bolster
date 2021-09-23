@@ -1,7 +1,6 @@
 package co.runed.bolster.commands;
 
 import co.runed.bolster.Permissions;
-import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.TimeUtil;
 import dev.jorel.commandapi.CommandAPICommand;
@@ -20,38 +19,29 @@ import java.time.temporal.TemporalAmount;
 import java.util.Arrays;
 import java.util.List;
 
-public class CommandPremium extends CommandBase
-{
+public class CommandPremium extends CommandBase {
     List<String> units = Arrays.asList("hours", "days", "months", "years");
 
-    public CommandPremium()
-    {
+    public CommandPremium() {
         super("premium");
     }
 
-    private String[] getSuggestions(CommandSender sender)
-    {
+    private String[] getSuggestions(CommandSender sender) {
         return units.toArray(new String[0]);
     }
 
-    private TemporalAmount fromString(long amount, String unit)
-    {
-        switch (unit)
-        {
-            case "hours":
-            {
+    private TemporalAmount fromString(long amount, String unit) {
+        switch (unit) {
+            case "hours": {
                 return Duration.ofHours(amount);
             }
-            case "days":
-            {
+            case "days": {
                 return Duration.ofDays(amount);
             }
-            case "months":
-            {
+            case "months": {
                 return Period.ofMonths((int) amount);
             }
-            case "years":
-            {
+            case "years": {
                 return Period.ofYears((int) amount);
             }
         }
@@ -60,8 +50,7 @@ public class CommandPremium extends CommandBase
     }
 
     @Override
-    public CommandAPICommand build()
-    {
+    public CommandAPICommand build() {
         return new CommandAPICommand(this.command)
                 .withPermission(Permissions.COMMAND_PREMIUM)
                 .withSubcommand(new CommandAPICommand("add")
@@ -71,12 +60,11 @@ public class CommandPremium extends CommandBase
                                 new StringArgument("unit").overrideSuggestions(this::getSuggestions)
                         )
                         .executes((sender, args) -> {
-                            Player player = (Player) args[0];
-                            int amount = (int) args[1];
-                            String unit = (String) args[2];
+                            var player = (Player) args[0];
+                            var amount = (int) args[1];
+                            var unit = (String) args[2];
 
-                            if (!units.contains(unit))
-                            {
+                            if (!units.contains(unit)) {
                                 sender.sendMessage("Invalid unit '" + unit + "'");
                                 return;
                             }
@@ -92,12 +80,11 @@ public class CommandPremium extends CommandBase
                                 new StringArgument("unit").overrideSuggestions(this::getSuggestions)
                         )
                         .executes((sender, args) -> {
-                            Player player = (Player) args[0];
-                            int amount = (int) args[1];
-                            String unit = (String) args[2];
+                            var player = (Player) args[0];
+                            var amount = (int) args[1];
+                            var unit = (String) args[2];
 
-                            if (!units.contains(unit))
-                            {
+                            if (!units.contains(unit)) {
                                 sender.sendMessage("Invalid unit '" + unit + "'");
                                 return;
                             }
@@ -113,12 +100,11 @@ public class CommandPremium extends CommandBase
                                 new StringArgument("unit").overrideSuggestions(this::getSuggestions)
                         )
                         .executes((sender, args) -> {
-                            Player player = (Player) args[0];
-                            int amount = (int) args[1];
-                            String unit = (String) args[2];
+                            var player = (Player) args[0];
+                            var amount = (int) args[1];
+                            var unit = (String) args[2];
 
-                            if (!units.contains(unit))
-                            {
+                            if (!units.contains(unit)) {
                                 sender.sendMessage("Invalid unit '" + unit + "'");
                                 return;
                             }
@@ -133,19 +119,18 @@ public class CommandPremium extends CommandBase
                                 new PlayerArgument("player")
                         )
                         .executes((sender, args) -> {
-                            Player player = (Player) args[0];
+                            var player = (Player) args[0];
 
-                            PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
-                            ZonedDateTime expiryTime = playerData.getPremiumExpiryTime();
+                            var playerData = PlayerManager.getInstance().getPlayerData(player);
+                            var expiryTime = playerData.getPremiumExpiryTime();
 
-                            if (!playerData.isPremium())
-                            {
+                            if (!playerData.isPremium()) {
                                 sender.sendMessage(player.getName() + " is not a premium member!");
                                 return;
                             }
 
-                            String formattedDate = TimeUtil.formatDate(expiryTime);
-                            String formattedHours = TimeUtil.formatDateRemainingPretty(expiryTime);
+                            var formattedDate = TimeUtil.formatDate(expiryTime);
+                            var formattedHours = TimeUtil.formatDateRemainingPretty(expiryTime);
 
                             sender.sendMessage(player.getName() + "'s premium time will expire in " + ChatColor.YELLOW + formattedHours + ChatColor.WHITE + " (" + ChatColor.GREEN + formattedDate + ChatColor.WHITE + ")");
                         })

@@ -1,45 +1,39 @@
 package co.runed.bolster.game.shop;
 
-import co.runed.bolster.game.PlayerData;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.PlayerManager;
 import org.bukkit.entity.Player;
 
-public class CurrencyShopItem extends ShopItem
-{
+public class CurrencyShopItem extends ShopItem {
     Currency currency;
 
-    public CurrencyShopItem(Currency currency)
-    {
+    public CurrencyShopItem(Currency currency) {
         super(currency.getId(), currency.getName(), currency.getIcon());
 
         this.currency = currency;
     }
 
     @Override
-    public boolean canSell(Player player)
-    {
-        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+    public boolean canSell(Player player) {
+        var playerData = PlayerManager.getInstance().getPlayerData(player);
 
         return playerData.getCurrency(currency) >= 1;
     }
 
     @Override
-    public void buy(Player player)
-    {
+    public void buy(Player player) {
         super.buy(player);
 
-        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+        var playerData = PlayerManager.getInstance().getPlayerData(player);
 
         playerData.addCurrency(currency, 1);
     }
 
     @Override
-    public void sell(Player player)
-    {
+    public void sell(Player player) {
         super.sell(player);
 
-        PlayerData playerData = PlayerManager.getInstance().getPlayerData(player);
+        var playerData = PlayerManager.getInstance().getPlayerData(player);
 
         playerData.addCurrency(currency, -1);
     }

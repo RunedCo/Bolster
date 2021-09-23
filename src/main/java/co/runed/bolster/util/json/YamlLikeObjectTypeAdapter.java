@@ -5,7 +5,6 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import org.bukkit.configuration.file.YamlConstructor;
 import org.bukkit.configuration.file.YamlRepresenter;
@@ -50,10 +49,9 @@ import java.util.Map;
  * There are also other limitations that make Json less suited for the serialization of {@link ConfigurationSerializable
  * ConfigurationSerializables}: See {@link BukkitAwareObjectTypeAdapter}.
  */
-public class YamlLikeObjectTypeAdapter extends TypeAdapter<Object>
-{
+public class YamlLikeObjectTypeAdapter extends TypeAdapter<Object> {
     private static final ThreadLocal<Yaml> YAML = ThreadLocal.withInitial(() -> {
-        DumperOptions yamlOptions = new DumperOptions();
+        var yamlOptions = new DumperOptions();
         yamlOptions.setIndent(2);
         yamlOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Representer yamlRepresenter = new YamlRepresenter();
@@ -62,45 +60,37 @@ public class YamlLikeObjectTypeAdapter extends TypeAdapter<Object>
         return new Yaml(yamlConstructor, yamlRepresenter, yamlOptions);
     });
 
-    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory()
-    {
+    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() {
         @SuppressWarnings("unchecked")
         @Override
-        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type)
-        {
+        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
             // This is not actually expected to work currently, since Gson doesn't allow its default Object TypeAdapter
             // to be overridden yet.
-            if (type.getRawType() == Object.class)
-            {
+            if (type.getRawType() == Object.class) {
                 return (TypeAdapter<T>) YamlLikeObjectTypeAdapter.create(gson);
             }
             return null;
         }
     };
 
-    public static TypeAdapter<Object> create(Gson gson)
-    {
+    public static TypeAdapter<Object> create(Gson gson) {
         return new YamlLikeObjectTypeAdapter(gson);
     }
 
     private final Gson gson;
 
-    protected YamlLikeObjectTypeAdapter(Gson gson)
-    {
+    protected YamlLikeObjectTypeAdapter(Gson gson) {
         this.gson = gson;
     }
 
     @Override
-    public Object read(JsonReader in) throws IOException
-    {
-        JsonToken token = in.peek();
-        switch (token)
-        {
+    public Object read(JsonReader in) throws IOException {
+        var token = in.peek();
+        switch (token) {
             case BEGIN_ARRAY:
                 List<Object> list = new ArrayList<Object>();
                 in.beginArray();
-                while (in.hasNext())
-                {
+                while (in.hasNext()) {
                     // This recursively uses this custom Object TypeAdapter:
                     list.add(this.read(in));
                 }
@@ -110,37 +100,31 @@ public class YamlLikeObjectTypeAdapter extends TypeAdapter<Object>
                 // We use a LinkedHashMap instead of Gson's LinkedTreeMap:
                 Map<String, Object> map = new LinkedHashMap<String, Object>();
                 in.beginObject();
-                while (in.hasNext())
-                {
+                while (in.hasNext()) {
                     // This recursively uses this custom Object TypeAdapter:
                     map.put(in.nextName(), this.read(in));
                 }
                 in.endObject();
                 return map;
             case STRING:
-                String string = in.nextString();
-                if (in.isLenient())
-                {
+                var string = in.nextString();
+                if (in.isLenient()) {
                     // Check if we can parse the String as one of the special numbers (NaN and infinities):
-                    try
-                    {
-                        double number = Double.parseDouble(string);
-                        if (!Double.isFinite(number))
-                        {
+                    try {
+                        var number = Double.parseDouble(string);
+                        if (!Double.isFinite(number)) {
                             return number;
                         } // Finite numbers are not expected to be represented as String
                     }
-                    catch (NumberFormatException e)
-                    {
+                    catch (NumberFormatException e) {
                     }
                 }
                 return string;
             case NUMBER:
                 // We delegate the number parsing to the Yaml parser:
-                double number = in.nextDouble();
+                var number = in.nextDouble();
 
-                if (Math.rint(number) == number && !Double.isInfinite(number))
-                {
+                if (Math.rint(number) == number && !Double.isInfinite(number)) {
                     return (int) number;
                 }
 
@@ -157,21 +141,18 @@ public class YamlLikeObjectTypeAdapter extends TypeAdapter<Object>
 
     @SuppressWarnings("unchecked")
     @Override
-    public void write(JsonWriter out, Object value) throws IOException
-    {
-        if (value == null)
-        {
+    public void write(JsonWriter out, Object value) throws IOException {
+        if (value == null) {
             out.nullValue();
             return;
         }
 
         // Check if we find a more specific and therefore better suited TypeAdapter for the given object:
-        TypeAdapter<Object> typeAdapter = (TypeAdapter<Object>) gson.getAdapter(value.getClass());
+        var typeAdapter = (TypeAdapter<Object>) gson.getAdapter(value.getClass());
         // If there is no TypeAdapter registered that is more specific than Object, and if this custom Object
         // TypeAdapter has been registered and was able to replace Gson's default Object TypeAdapter (which is
         // not expected to be the case currently), we break the cycle and output an empty object:
-        if (typeAdapter instanceof YamlLikeObjectTypeAdapter)
-        {
+        if (typeAdapter instanceof YamlLikeObjectTypeAdapter) {
             out.beginObject();
             out.endObject();
             return;

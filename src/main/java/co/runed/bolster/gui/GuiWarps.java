@@ -10,28 +10,21 @@ import org.ipvp.canvas.slot.SlotSettings;
 import org.ipvp.canvas.template.StaticItemTemplate;
 import org.ipvp.canvas.type.ChestMenu;
 
-import java.util.List;
-import java.util.Map;
-
-public class GuiWarps extends Gui
-{
-    public GuiWarps(Gui previousGui)
-    {
+public class GuiWarps extends Gui {
+    public GuiWarps(Gui previousGui) {
         super(previousGui);
     }
 
     @Override
-    public String getTitle(Player player)
-    {
+    public String getTitle(Player player) {
         return "Warps";
     }
 
     @Override
-    public Menu draw(Player player)
-    {
-        Map<String, Warps.Warp> warps = Warps.getInstance().getWarps();
+    public Menu draw(Player player) {
+        var warps = Warps.getInstance().getWarps();
 
-        ChestMenu.Builder pageTemplate = ChestMenu.builder(6)
+        var pageTemplate = ChestMenu.builder(6)
                 .title(this.getTitle(player))
                 .redraw(true);
 
@@ -44,18 +37,17 @@ public class GuiWarps extends Gui
                 .pattern("000000000")
                 .build();
 
-        PaginatedMenuBuilder builder = PaginatedMenuBuilder.builder(pageTemplate)
+        var builder = PaginatedMenuBuilder.builder(pageTemplate)
                 .slots(itemSlots)
                 .nextButton(GuiConstants.GUI_ARROW_RIGHT)
                 .nextButtonSlot(51)
                 .previousButton(GuiConstants.GUI_ARROW_LEFT)
                 .previousButtonSlot(47);
 
-        for (Map.Entry<String, Warps.Warp> entry : warps.entrySet())
-        {
-            Warps.Warp warp = entry.getValue();
+        for (var entry : warps.entrySet()) {
+            var warp = entry.getValue();
 
-            SlotSettings settings = SlotSettings.builder()
+            var settings = SlotSettings.builder()
                     .itemTemplate(new StaticItemTemplate(warp.getIcon()))
                     .clickHandler((p, info) -> {
                         warp.teleport(p);
@@ -67,7 +59,7 @@ public class GuiWarps extends Gui
             builder.addItem(settings);
         }
 
-        List<Menu> pages = builder.build();
+        var pages = builder.build();
 
         return pages.get(0);
     }

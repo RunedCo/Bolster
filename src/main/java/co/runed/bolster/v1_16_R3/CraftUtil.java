@@ -3,8 +3,6 @@ package co.runed.bolster.v1_16_R3;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
@@ -19,11 +17,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.lang.reflect.Field;
 import java.util.Random;
 
-public class CraftUtil
-{
+public class CraftUtil {
     /**
      * Spawns entity at specified Location
      *
@@ -31,9 +27,8 @@ public class CraftUtil
      * @param loc         Location to spawn at
      * @return Reference to the spawned bukkit Entity
      */
-    public static Entity spawnEntity(EntityTypes entityTypes, Location loc)
-    {
-        net.minecraft.server.v1_16_R3.Entity nmsEntity = entityTypes.spawnCreature( // NMS method to spawn an entity from an EntityTypes
+    public static Entity spawnEntity(EntityTypes entityTypes, Location loc) {
+        var nmsEntity = entityTypes.spawnCreature( // NMS method to spawn an entity from an EntityTypes
                 ((CraftWorld) loc.getWorld()).getHandle(), // reference to the NMS world
                 null, // itemstack
                 null, // player reference. used to know if player is OP to apply EntityTag NBT compound
@@ -53,37 +48,30 @@ public class CraftUtil
      *
      * @param player the player
      */
-    public static void showScreenShake(Player player)
-    {
-        PacketPlayOutAnimation packet = new PacketPlayOutAnimation(((CraftPlayer) player).getHandle(), 3);
+    public static void showScreenShake(Player player) {
+        var packet = new PacketPlayOutAnimation(((CraftPlayer) player).getHandle(), 3);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
-    public static void playDeath(Player player)
-    {
-        net.minecraft.server.v1_16_R3.PacketPlayOutEntityStatus packet = new net.minecraft.server.v1_16_R3.PacketPlayOutEntityStatus(((CraftPlayer) player).getHandle(), (byte) 3);
+    public static void playDeath(Player player) {
+        var packet = new net.minecraft.server.v1_16_R3.PacketPlayOutEntityStatus(((CraftPlayer) player).getHandle(), (byte) 3);
 
-        for (Player p : org.bukkit.Bukkit.getOnlinePlayers())
-        {
-            if (!p.equals(player) && p.getLocation().distanceSquared(player.getLocation()) < 900.0D)
-            {
+        for (Player p : org.bukkit.Bukkit.getOnlinePlayers()) {
+            if (!p.equals(player) && p.getLocation().distanceSquared(player.getLocation()) < 900.0D) {
                 ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
             }
         }
     }
 
-    public static void sendFakeSlotUpdate(Player player, int slot, ItemStack item)
-    {
+    public static void sendFakeSlotUpdate(Player player, int slot, ItemStack item) {
         net.minecraft.server.v1_16_R3.ItemStack nmsItem;
-        if (item != null)
-        {
+        if (item != null) {
             nmsItem = CraftItemStack.asNMSCopy(item);
         }
-        else
-        {
+        else {
             nmsItem = null;
         }
-        PacketPlayOutSetSlot packet = new PacketPlayOutSetSlot(0, (short) slot + 36, nmsItem);
+        var packet = new PacketPlayOutSetSlot(0, (short) slot + 36, nmsItem);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
@@ -93,105 +81,88 @@ public class CraftUtil
      * @param player    the player
      * @param itemStack the item stack
      */
-    public static void dropItem(Player player, ItemStack itemStack)
-    {
-        Random random = new Random();
-        World world = player.getWorld();
+    public static void dropItem(Player player, ItemStack itemStack) {
+        var random = new Random();
+        var world = player.getWorld();
 
-        Location spawnLoc = player.getLocation().clone();
+        var spawnLoc = player.getLocation().clone();
         spawnLoc.setY(player.getEyeLocation().getY() - 0.30000001192092896D);
 
-        org.bukkit.entity.Item item = (org.bukkit.entity.Item) world.spawnEntity(spawnLoc, EntityType.DROPPED_ITEM);
+        var item = (org.bukkit.entity.Item) world.spawnEntity(spawnLoc, EntityType.DROPPED_ITEM);
         item.setItemStack(itemStack);
         item.setPickupDelay(40);
 
-        float pitch = player.getEyeLocation().getPitch();
-        float yaw = player.getEyeLocation().getYaw();
+        var pitch = player.getEyeLocation().getPitch();
+        var yaw = player.getEyeLocation().getYaw();
 
-        float f1 = MathHelper.sin(pitch * 0.017453292F);
-        float f2 = MathHelper.cos(pitch * 0.017453292F);
-        float f3 = MathHelper.sin(yaw * 0.017453292F);
-        float f4 = MathHelper.cos(yaw * 0.017453292F);
-        float f5 = random.nextFloat() * 6.2831855F;
-        float f6 = 0.02F * random.nextFloat();
+        var f1 = MathHelper.sin(pitch * 0.017453292F);
+        var f2 = MathHelper.cos(pitch * 0.017453292F);
+        var f3 = MathHelper.sin(yaw * 0.017453292F);
+        var f4 = MathHelper.cos(yaw * 0.017453292F);
+        var f5 = random.nextFloat() * 6.2831855F;
+        var f6 = 0.02F * random.nextFloat();
 
         item.setVelocity(new Vector((double) (-f3 * f2 * 0.3F) + Math.cos(f5) * (double) f6,
                 (-f1 * 0.3F + 0.1F + (random.nextFloat() - random.nextFloat()) * 0.1F),
                 (double) (f4 * f2 * 0.3F) + Math.sin(f5) * (double) f6));
     }
 
-    public static void setMaxStack(Material material, int max)
-    {
-        try
-        {
-            NamespacedKey key = material.getKey();
-            Item item = IRegistry.ITEM.get(new MinecraftKey(key.getNamespace(), key.getKey()));
-            Field field = Item.class.getDeclaredField("maxStackSize");
+    public static void setMaxStack(Material material, int max) {
+        try {
+            var key = material.getKey();
+            var item = IRegistry.ITEM.get(new MinecraftKey(key.getNamespace(), key.getKey()));
+            var field = Item.class.getDeclaredField("maxStackSize");
             field.setAccessible(true);
             field.setInt(item, max);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void killEntity(LivingEntity entity)
-    {
+    public static void killEntity(LivingEntity entity) {
         CraftEntity entity1 = (CraftLivingEntity) entity;
-        EntityLiving living = (EntityLiving) entity1.getHandle();
+        var living = (EntityLiving) entity1.getHandle();
         living.die(DamageSource.GENERIC);
     }
 
-    public static void damageEntity(LivingEntity entity, double damage)
-    {
+    public static void damageEntity(LivingEntity entity, double damage) {
         damageEntity(entity, damage, EntityDamageEvent.DamageCause.CUSTOM);
     }
 
-    public static void damageEntity(LivingEntity entity, double damage, LivingEntity damager)
-    {
+    public static void damageEntity(LivingEntity entity, double damage, LivingEntity damager) {
         damageEntity(entity, damage, damager, EntityDamageEvent.DamageCause.CUSTOM);
     }
 
-    public static void damageEntity(LivingEntity entity, double damage, EntityDamageEvent.DamageCause cause)
-    {
+    public static void damageEntity(LivingEntity entity, double damage, EntityDamageEvent.DamageCause cause) {
         damageEntity(entity, damage, null, cause);
     }
 
-    public static void damageEntity(LivingEntity entity, double damage, LivingEntity damager, EntityDamageEvent.DamageCause cause)
-    {
-        net.minecraft.server.v1_16_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-        net.minecraft.server.v1_16_R3.Entity nmsDamager = ((CraftEntity) damager).getHandle();
-        DamageSource source = DamageSource.GENERIC;
+    public static void damageEntity(LivingEntity entity, double damage, LivingEntity damager, EntityDamageEvent.DamageCause cause) {
+        var nmsEntity = ((CraftEntity) entity).getHandle();
+        var nmsDamager = ((CraftEntity) damager).getHandle();
+        var source = DamageSource.GENERIC;
 
-        switch (cause)
-        {
-            case CONTACT:
-            {
+        switch (cause) {
+            case CONTACT: {
                 source = DamageSource.CACTUS;
                 break;
             }
-            case ENTITY_ATTACK:
-            {
-                if (damager instanceof Player)
-                {
+            case ENTITY_ATTACK: {
+                if (damager instanceof Player) {
                     source = DamageSource.playerAttack((EntityHuman) nmsDamager);
                 }
-                else
-                {
+                else {
                     source = DamageSource.mobAttack((EntityLiving) nmsDamager);
                 }
 
                 break;
             }
-            case ENTITY_SWEEP_ATTACK:
-            {
-                if (damager instanceof Player)
-                {
+            case ENTITY_SWEEP_ATTACK: {
+                if (damager instanceof Player) {
                     source = DamageSource.playerAttack((EntityHuman) nmsDamager).sweep();
                 }
-                else
-                {
+                else {
                     source = DamageSource.mobAttack((EntityLiving) nmsDamager).sweep();
                 }
                 break;
@@ -201,54 +172,44 @@ public class CraftUtil
 //                source = DamageSource.PROJECTILE;
 //                break;
 //            }
-            case SUFFOCATION:
-            {
+            case SUFFOCATION: {
                 source = DamageSource.STUCK;
                 break;
             }
-            case FALL:
-            {
+            case FALL: {
                 source = DamageSource.FALL;
                 break;
             }
-            case FIRE:
-            {
+            case FIRE: {
                 source = DamageSource.FIRE;
                 break;
             }
-            case FIRE_TICK:
-            {
+            case FIRE_TICK: {
                 source = DamageSource.BURN;
                 break;
             }
-            case MELTING:
-            {
+            case MELTING: {
                 source = CraftEventFactory.MELTING;
                 break;
             }
-            case LAVA:
-            {
+            case LAVA: {
                 source = DamageSource.LAVA;
                 break;
             }
-            case DROWNING:
-            {
+            case DROWNING: {
                 source = DamageSource.DROWN;
                 break;
             }
             case BLOCK_EXPLOSION:
-            case ENTITY_EXPLOSION:
-            {
+            case ENTITY_EXPLOSION: {
                 source = DamageSource.d((EntityLiving) nmsDamager);
                 break;
             }
-            case VOID:
-            {
+            case VOID: {
                 source = DamageSource.OUT_OF_WORLD;
                 break;
             }
-            case LIGHTNING:
-            {
+            case LIGHTNING: {
                 source = DamageSource.LIGHTNING;
                 break;
             }
@@ -257,69 +218,61 @@ public class CraftUtil
 //                source = DamageSource.SUICIDE;
 //                break;
 //            }
-            case STARVATION:
-            {
+            case STARVATION: {
                 source = DamageSource.STARVE;
                 break;
             }
-            case POISON:
-            {
+            case POISON: {
                 source = CraftEventFactory.POISON;
                 break;
             }
-            case MAGIC:
-            {
+            case MAGIC: {
                 source = DamageSource.MAGIC;
                 break;
             }
-            case WITHER:
-            {
+            case WITHER: {
                 source = DamageSource.WITHER;
                 break;
             }
-            case FALLING_BLOCK:
-            {
+            case FALLING_BLOCK: {
                 source = DamageSource.FALLING_BLOCK;
                 break;
             }
-            case THORNS:
-            {
+            case THORNS: {
                 source = DamageSource.a(nmsDamager);
                 break;
 
             }
-            case DRAGON_BREATH:
-            {
+            case DRAGON_BREATH: {
                 source = DamageSource.DRAGON_BREATH;
                 break;
             }
-            case FLY_INTO_WALL:
-            {
+            case FLY_INTO_WALL: {
                 source = DamageSource.FLY_INTO_WALL;
                 break;
             }
-            case HOT_FLOOR:
-            {
+            case HOT_FLOOR: {
                 source = DamageSource.HOT_FLOOR;
                 break;
             }
-            case CRAMMING:
-            {
+            case CRAMMING: {
                 source = DamageSource.CRAMMING;
                 break;
             }
-            case DRYOUT:
-            {
+            case DRYOUT: {
                 source = DamageSource.DRYOUT;
                 break;
             }
-            default:
-            {
+            default: {
                 source = DamageSource.GENERIC;
                 break;
             }
         }
 
         nmsEntity.damageEntity(source, (float) damage);
+    }
+
+    public static void hideEntity(Player player, Entity entity) {
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(((CraftEntity) entity).getHandle().getId()));
     }
 }

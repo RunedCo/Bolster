@@ -1,11 +1,9 @@
 package co.runed.bolster.game;
 
-import co.runed.bolster.util.properties.Properties;
-import co.runed.bolster.util.properties.Property;
+import co.runed.dayroom.properties.Properties;
+import co.runed.dayroom.properties.Property;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -26,13 +24,11 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.EnumSet;
 import java.util.Set;
 
-public class GameProperties extends Properties implements Listener
-{
+public class GameProperties extends Properties implements Listener {
     public static final Property<Boolean> ENABLE_FALL_DAMAGE = new Property<>("enable_fall_damage", true);
     public static final Property<Boolean> ENABLE_EXPLOSION_DAMAGE = new Property<>("enable_explosion_damage", true);
     public static final Property<Boolean> ENABLE_POISON_DAMAGE = new Property<>("enable_poison_damage", true);
@@ -58,12 +54,10 @@ public class GameProperties extends Properties implements Listener
     private static final Set<Material> AXES = EnumSet.of(Material.STONE_AXE, Material.DIAMOND_AXE, Material.GOLDEN_AXE, Material.IRON_AXE, Material.NETHERITE_AXE, Material.WOODEN_AXE);
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onEntityTakeDamage(EntityDamageEvent event)
-    {
-        DamageCause cause = event.getCause();
+    private void onEntityTakeDamage(EntityDamageEvent event) {
+        var cause = event.getCause();
 
-        switch (cause)
-        {
+        switch (cause) {
             case FALL:
                 if (!this.get(GameProperties.ENABLE_FALL_DAMAGE)) event.setCancelled(true);
                 break;
@@ -89,38 +83,30 @@ public class GameProperties extends Properties implements Listener
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onEntityDamageEntity(EntityDamageByEntityEvent event)
-    {
-        Entity damager = event.getDamager();
+    private void onEntityDamageEntity(EntityDamageByEntityEvent event) {
+        var damager = event.getDamager();
 
-        if (event.getEntityType() == EntityType.PLAYER)
-        {
-            if (damager.getType() == EntityType.PLAYER || (damager instanceof Projectile && ((Projectile) damager).getShooter() instanceof Player))
-            {
+        if (event.getEntityType() == EntityType.PLAYER) {
+            if (damager.getType() == EntityType.PLAYER || (damager instanceof Projectile && ((Projectile) damager).getShooter() instanceof Player)) {
                 if (!this.get(GameProperties.ENABLE_PVP)) event.setCancelled(true);
             }
-            else
-            {
+            else {
                 if (!this.get(GameProperties.ENABLE_PVE)) event.setCancelled(true);
             }
         }
     }
 
     @EventHandler
-    private void onPlayerOffhand(PlayerSwapHandItemsEvent event)
-    {
+    private void onPlayerOffhand(PlayerSwapHandItemsEvent event) {
         if (!this.get(GameProperties.ENABLE_OFFHAND)) event.setCancelled(true);
     }
 
     @EventHandler
-    private void onInventoryClick(InventoryClickEvent event)
-    {
-        if (!this.get(GameProperties.ENABLE_OFFHAND))
-        {
+    private void onInventoryClick(InventoryClickEvent event) {
+        if (!this.get(GameProperties.ENABLE_OFFHAND)) {
             if (event.getClickedInventory() == null) return;
 
-            if ((event.getClickedInventory().getType() == InventoryType.PLAYER && event.getSlot() == 40) || event.getClick() == ClickType.SWAP_OFFHAND)
-            {
+            if ((event.getClickedInventory().getType() == InventoryType.PLAYER && event.getSlot() == 40) || event.getClick() == ClickType.SWAP_OFFHAND) {
                 event.setResult(Event.Result.DENY);
                 event.setCancelled(true);
             }
@@ -128,50 +114,40 @@ public class GameProperties extends Properties implements Listener
     }
 
     @EventHandler
-    private void onPlayerHunger(FoodLevelChangeEvent event)
-    {
-        if (!this.get(GameProperties.ENABLE_HUNGER))
-        {
+    private void onPlayerHunger(FoodLevelChangeEvent event) {
+        if (!this.get(GameProperties.ENABLE_HUNGER)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
-    private void onPlayerDeath(PlayerDeathEvent e)
-    {
+    private void onPlayerDeath(PlayerDeathEvent e) {
         if (!this.get(GameProperties.ENABLE_XP)) e.setDroppedExp(0);
 
         if (!this.get(GameProperties.ENABLE_ITEM_DROPS)) e.getDrops().clear();
     }
 
     @EventHandler
-    private void onBreakBlock(BlockBreakEvent e)
-    {
+    private void onBreakBlock(BlockBreakEvent e) {
         if (!this.get(GameProperties.ENABLE_XP)) e.setExpToDrop(0);
     }
 
     @EventHandler
-    private void onExpChange(PlayerExpChangeEvent event)
-    {
+    private void onExpChange(PlayerExpChangeEvent event) {
         if (!this.get(GameProperties.ENABLE_XP)) event.setAmount(0);
     }
 
     @EventHandler
-    private void onInteractStrip(PlayerInteractEvent e)
-    {
-        if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
-        {
-            Block block = e.getClickedBlock();
-            ItemStack item = e.getItem();
+    private void onInteractStrip(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            var block = e.getClickedBlock();
+            var item = e.getItem();
 
             if (item == null || item.getType().isBlock()) return;
 
-            if (!this.get(GameProperties.ENABLE_LOG_STRIP))
-            {
-                if (!AXES.contains(item.getType()))
-                {
-                    if (Tag.LOGS.isTagged(block.getType()))
-                    {
+            if (!this.get(GameProperties.ENABLE_LOG_STRIP)) {
+                if (!AXES.contains(item.getType())) {
+                    if (Tag.LOGS.isTagged(block.getType())) {
                         e.setUseInteractedBlock(Event.Result.ALLOW);
                         e.setUseItemInHand(Event.Result.DENY);
                         e.setCancelled(true);
@@ -179,12 +155,9 @@ public class GameProperties extends Properties implements Listener
                 }
             }
 
-            if (!this.get(GameProperties.ENABLE_GRASS_PATH))
-            {
-                if (!SHOVELS.contains(item.getType()))
-                {
-                    if (block.getType() == Material.GRASS_BLOCK)
-                    {
+            if (!this.get(GameProperties.ENABLE_GRASS_PATH)) {
+                if (!SHOVELS.contains(item.getType())) {
+                    if (block.getType() == Material.GRASS_BLOCK) {
                         e.setUseInteractedBlock(Event.Result.ALLOW);
                         e.setUseItemInHand(Event.Result.DENY);
                         e.setCancelled(true);

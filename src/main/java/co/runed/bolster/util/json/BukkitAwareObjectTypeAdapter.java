@@ -43,21 +43,17 @@ import java.util.Map;
  * Yaml when the Json format is not strictly required.
  */
 // Extends YamlLikeObjectTypeAdapter for better compatibility with Bukkit's serialization API.
-public class BukkitAwareObjectTypeAdapter extends YamlLikeObjectTypeAdapter
-{
-    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory()
-    {
+public class BukkitAwareObjectTypeAdapter extends YamlLikeObjectTypeAdapter {
+    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() {
         @SuppressWarnings("unchecked")
         @Override
-        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type)
-        {
+        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
             Class<?> rawType = type.getRawType();
             // The rawType == Object.class case is not expected to actually occur currently, because Gson does not yet
             // allow its default Object TypeAdapter to be overridden. As a consequence, this TypeAdapter has to always
             // be explicitly invoked currently. However, in case this behavior of Gson changes at some point, this
             // TypeAdapter is meant to override the default Object TypeAdapter.
-            if (rawType == Object.class || ConfigurationSerializable.class.isAssignableFrom(rawType))
-            {
+            if (rawType == Object.class || ConfigurationSerializable.class.isAssignableFrom(rawType)) {
                 return (TypeAdapter<T>) BukkitAwareObjectTypeAdapter.create(gson);
             }
             return null;
@@ -70,8 +66,7 @@ public class BukkitAwareObjectTypeAdapter extends YamlLikeObjectTypeAdapter
      * @param gson the Gson instance, not <code>null</code>
      * @return the created TypeAdapter
      */
-    public static TypeAdapter<Object> create(Gson gson)
-    {
+    public static TypeAdapter<Object> create(Gson gson) {
         return new BukkitAwareObjectTypeAdapter(gson);
     }
 
@@ -91,73 +86,60 @@ public class BukkitAwareObjectTypeAdapter extends YamlLikeObjectTypeAdapter
      * @throws IllegalArgumentException if the Json could not be parsed or the object could not be deserialized correctly
      */
     @SuppressWarnings("unchecked")
-    public static <T> T fromJson(Gson gson, String json) throws IllegalArgumentException
-    {
+    public static <T> T fromJson(Gson gson, String json) throws IllegalArgumentException {
         if (json == null || json.isEmpty()) return null; // Gson also returns null for empty documents
 
         // Retrieve the BukkitAwareObjectTypeAdapter:
         TypeAdapter<Object> bukkitAwareObjectTypeAdapter = getBukkitAwareObjectTypeAdapter(gson);
 
         // Get a JsonReader that is configured according to the given Gson instance:
-        JsonReader jsonReader = gson.newJsonReader(new StringReader(json));
+        var jsonReader = gson.newJsonReader(new StringReader(json));
 
-        try
-        {
+        try {
             // Note: Unlike Gson#fromJson, this actually takes the lenient flag of the Gson instance into account.
-            T value = (T) bukkitAwareObjectTypeAdapter.read(jsonReader);
+            var value = (T) bukkitAwareObjectTypeAdapter.read(jsonReader);
             // Ensure that we actually consumed all of the input:
             assertEmptyReader(jsonReader);
             return value;
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             throw new IllegalArgumentException("Could not deserialize object from Json!", e);
         }
     }
 
-    private static BukkitAwareObjectTypeAdapter getBukkitAwareObjectTypeAdapter(Gson gson)
-    {
+    private static BukkitAwareObjectTypeAdapter getBukkitAwareObjectTypeAdapter(Gson gson) {
         TypeAdapter<?> typeAdapter = gson.getAdapter(ConfigurationSerializable.class);
-        if (!(typeAdapter instanceof BukkitAwareObjectTypeAdapter))
-        {
+        if (!(typeAdapter instanceof BukkitAwareObjectTypeAdapter)) {
             throw new IllegalArgumentException("Could not retrieve the BukkitAwareObjectTypeAdapter from the given Gson instance!");
         }
         return (BukkitAwareObjectTypeAdapter) typeAdapter;
     }
 
     // This mimics the check done by Gson when using Gson#fromJson.
-    private static void assertEmptyReader(JsonReader reader) throws IllegalArgumentException
-    {
-        try
-        {
-            if (reader.peek() != JsonToken.END_DOCUMENT)
-            {
+    private static void assertEmptyReader(JsonReader reader) throws IllegalArgumentException {
+        try {
+            if (reader.peek() != JsonToken.END_DOCUMENT) {
                 throw new IllegalArgumentException("Json document was not fully consumed!");
             }
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
     }
 
     // -----
 
-    protected BukkitAwareObjectTypeAdapter(Gson gson)
-    {
+    protected BukkitAwareObjectTypeAdapter(Gson gson) {
         super(gson);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object read(JsonReader in) throws IOException
-    {
-        Object value = super.read(in);
-        if (value instanceof Map)
-        {
-            Map<String, Object> map = (Map<String, Object>) value;
-            if (map.containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY))
-            {
+    public Object read(JsonReader in) throws IOException {
+        var value = super.read(in);
+        if (value instanceof Map) {
+            var map = (Map<String, Object>) value;
+            if (map.containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY)) {
                 return ConfigUtil.deserialize(map);
             } // Else: This is a regular Map.
         }
@@ -165,10 +147,8 @@ public class BukkitAwareObjectTypeAdapter extends YamlLikeObjectTypeAdapter
     }
 
     @Override
-    public void write(JsonWriter out, Object value) throws IOException
-    {
-        if (value instanceof ConfigurationSerializable)
-        {
+    public void write(JsonWriter out, Object value) throws IOException {
+        if (value instanceof ConfigurationSerializable) {
             value = ConfigUtil.serialize((ConfigurationSerializable) value);
         }
         super.write(out, value);

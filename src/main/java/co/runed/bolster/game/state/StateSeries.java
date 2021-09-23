@@ -5,48 +5,39 @@ import co.runed.bolster.Bolster;
 import java.time.Duration;
 import java.util.List;
 
-public class StateSeries extends StateHolder
-{
+public class StateSeries extends StateHolder {
     protected int current = 0;
     protected boolean skipping = false;
     protected Class<? extends State> skippingTo = null;
 
-    public void addNext(State state)
-    {
+    public void addNext(State state) {
         this.states.add(current + 1, state);
     }
 
-    public void addNext(List<State> newStates)
-    {
-        int i = 1;
-        for (State state : newStates)
-        {
+    public void addNext(List<State> newStates) {
+        var i = 1;
+        for (var state : newStates) {
             this.states.add(current + i, state);
             ++i;
         }
     }
 
-    public void skip()
-    {
+    public void skip() {
         skipping = true;
     }
 
-    public void skipTo(Class<? extends State> stateClass)
-    {
+    public void skipTo(Class<? extends State> stateClass) {
         this.skipping = true;
         this.skippingTo = stateClass;
     }
 
-    public State getCurrent()
-    {
+    public State getCurrent() {
         return this.states.get(current);
     }
 
     @Override
-    public void onStart()
-    {
-        if (states.isEmpty())
-        {
+    public void onStart() {
+        if (states.isEmpty()) {
             end();
             return;
         }
@@ -56,21 +47,18 @@ public class StateSeries extends StateHolder
     }
 
     @Override
-    public void onUpdate()
-    {
-        State currentState = this.states.get(current);
+    public void onUpdate() {
+        var currentState = this.states.get(current);
 
         currentState.update();
 
-        if ((currentState.isReadyToEnd() && !currentState.getFrozen()) || skipping)
-        {
+        if ((currentState.isReadyToEnd() && !currentState.getFrozen()) || skipping) {
             currentState.end();
             Bolster.getInstance().getLogger().info("ENDING STATE " + currentState.getClass().toString());
 
             ++current;
 
-            if (current >= this.states.size())
-            {
+            if (current >= this.states.size()) {
                 end();
                 this.skipping = false;
                 return;
@@ -78,8 +66,7 @@ public class StateSeries extends StateHolder
 
             currentState = this.states.get(current);
 
-            if (this.skipping && (this.skippingTo == null || currentState.getClass() == this.skippingTo))
-            {
+            if (this.skipping && (this.skippingTo == null || currentState.getClass() == this.skippingTo)) {
                 this.skipping = false;
                 this.skippingTo = null;
             }
@@ -90,27 +77,22 @@ public class StateSeries extends StateHolder
     }
 
     @Override
-    public boolean isReadyToEnd()
-    {
+    public boolean isReadyToEnd() {
         return (current == this.states.size() - 1 && this.states.get(current).isReadyToEnd());
     }
 
     @Override
-    public void onEnd()
-    {
-        if (current < this.states.size())
-        {
+    public void onEnd() {
+        if (current < this.states.size()) {
             this.states.get(current).end();
         }
     }
 
     @Override
-    public Duration getDuration()
-    {
-        Duration duration = Duration.ZERO;
+    public Duration getDuration() {
+        var duration = Duration.ZERO;
 
-        for (State state : this.states)
-        {
+        for (var state : this.states) {
             duration = duration.plus(state.getDuration());
         }
 

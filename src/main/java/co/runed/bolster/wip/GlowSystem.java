@@ -1,6 +1,6 @@
 package co.runed.bolster.wip;
 
-import co.runed.bolster.util.Manager;
+import co.runed.bolster.managers.Manager;
 import co.runed.bolster.util.network.WrapperPlayServerEntityMetadata;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.Bukkit;
@@ -12,14 +12,12 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class GlowSystem extends Manager
-{
+public class GlowSystem extends Manager {
     private static GlowSystem _instance;
 
     private final Map<Player, Entity> glowing = new HashMap<>(); // Receiver, Entity.
 
-    public GlowSystem(Plugin plugin)
-    {
+    public GlowSystem(Plugin plugin) {
         super(plugin);
     }
 
@@ -30,9 +28,8 @@ public class GlowSystem extends Manager
      * @param receiver The player to see if they have the entity glowing.
      * @return boolean if the check was successful.
      */
-    public boolean isGlowingFor(Entity entity, Player receiver)
-    {
-        Optional<Entity> optional = Optional.ofNullable(glowing.get(receiver));
+    public boolean isGlowingFor(Entity entity, Player receiver) {
+        var optional = Optional.ofNullable(glowing.get(receiver));
         if (!optional.isPresent())
             return false;
         return optional.get().equals(entity);
@@ -41,8 +38,7 @@ public class GlowSystem extends Manager
     /**
      * @return Map of which entities and glowing to which players.
      */
-    public Map<Player, Entity> getGlowingMap()
-    {
+    public Map<Player, Entity> getGlowingMap() {
         return Collections.unmodifiableMap(glowing);
     }
 
@@ -52,8 +48,7 @@ public class GlowSystem extends Manager
      * @param entity The entity to search for recipients on.
      * @return Set<Player> of all players that see a glowing effect on target entity.
      */
-    public Set<Player> getGlowingFor(Entity entity)
-    {
+    public Set<Player> getGlowingFor(Entity entity) {
         return glowing.entrySet().stream()
                 .filter(entry -> entry.getValue().getUniqueId().equals(entity.getUniqueId()))
                 .map(Map.Entry::getKey)
@@ -66,8 +61,7 @@ public class GlowSystem extends Manager
      * @param player The Player to grab all glowing entities of.
      * @return Set<Entity> of all entities glowing for the player.
      */
-    public Set<Entity> getGlowingEntities(Player player)
-    {
+    public Set<Entity> getGlowingEntities(Player player) {
         return glowing.entrySet().stream()
                 .filter(entry -> entry.getKey().getUniqueId().equals(player.getUniqueId()))
                 .map(Map.Entry::getValue)
@@ -80,8 +74,7 @@ public class GlowSystem extends Manager
      * @param entities  The Collection<Entity> to have the glowing effect on.
      * @param receivers The player(s) that is seeing the entity glowing.
      */
-    public <T extends Entity> void setGlowing(Collection<T> entities, Player... receivers)
-    {
+    public <T extends Entity> void setGlowing(Collection<T> entities, Player... receivers) {
         entities.forEach(entity -> setGlowing(entity, receivers));
     }
 
@@ -91,12 +84,10 @@ public class GlowSystem extends Manager
      * @param entity    The entity to have the glowing effect on.
      * @param receivers The player(s) that will be seeing the entity glowing.
      */
-    public void setGlowing(Entity entity, Player... receivers)
-    {
-        for (Player receiver : receivers)
-        {
-            WrapperPlayServerEntityMetadata packet = new WrapperPlayServerEntityMetadata();
-            WrappedDataWatcher watcher = new WrappedDataWatcher();
+    public void setGlowing(Entity entity, Player... receivers) {
+        for (var receiver : receivers) {
+            var packet = new WrapperPlayServerEntityMetadata();
+            var watcher = new WrappedDataWatcher();
             watcher.setObject(0, WrappedDataWatcher.Registry.get(Byte.class), (byte) 0x40);
 
             packet.setMetadata(watcher.getWatchableObjects());
@@ -115,8 +106,7 @@ public class GlowSystem extends Manager
      * @param entity    The entity to have the glowing effect.
      * @param receivers The receivers of the glowing effect on the entities.
      */
-    public void setTimedGlowing(long delay, TimeUnit unit, Entity entity, Player... receivers)
-    {
+    public void setTimedGlowing(long delay, TimeUnit unit, Entity entity, Player... receivers) {
         setTimedGlowing(delay, unit, entity, receivers);
     }
 
@@ -128,8 +118,7 @@ public class GlowSystem extends Manager
      * @param entities  Collection<Entity> to have the glowing effect.
      * @param receivers The receivers of the glowing effect on the entities.
      */
-    public <T extends Entity> void setTimedGlowing(long delay, TimeUnit unit, Collection<T> entities, Player... receivers)
-    {
+    public <T extends Entity> void setTimedGlowing(long delay, TimeUnit unit, Collection<T> entities, Player... receivers) {
         setGlowing(entities, receivers);
         Bukkit.getScheduler().runTaskLater(plugin, () -> stopGlowing(entities, receivers), unit.toSeconds(delay) * 20);
     }
@@ -140,8 +129,7 @@ public class GlowSystem extends Manager
      * @param entities  Collection<Entity> to have the glowing effect removed from.
      * @param receivers The player(s) that was seeing the entities glowing.
      */
-    public <T extends Entity> void stopGlowing(Collection<T> entities, Player... receivers)
-    {
+    public <T extends Entity> void stopGlowing(Collection<T> entities, Player... receivers) {
         entities.forEach(entity -> stopGlowing(entity, receivers));
     }
 
@@ -151,14 +139,12 @@ public class GlowSystem extends Manager
      * @param entity    The entity to have the glowing effect removed from.
      * @param receivers The player(s) that were seeing the entity glowing.
      */
-    public void stopGlowing(Entity entity, Player... receivers)
-    {
-        for (Player receiver : receivers)
-        {
+    public void stopGlowing(Entity entity, Player... receivers) {
+        for (var receiver : receivers) {
             if (!glowing.containsKey(receiver))
                 return;
-            WrapperPlayServerEntityMetadata packet = new WrapperPlayServerEntityMetadata();
-            WrappedDataWatcher watcher = new WrappedDataWatcher();
+            var packet = new WrapperPlayServerEntityMetadata();
+            var watcher = new WrappedDataWatcher();
             watcher.setObject(0, WrappedDataWatcher.Registry.get(Byte.class), (byte) 0);
 
             packet.setMetadata(watcher.getWatchableObjects());
@@ -169,8 +155,7 @@ public class GlowSystem extends Manager
         }
     }
 
-    public static GlowSystem getInstance()
-    {
+    public static GlowSystem getInstance() {
         return _instance;
     }
 }

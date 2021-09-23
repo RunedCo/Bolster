@@ -10,36 +10,29 @@ import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ConfigurationSerializableAdapter implements JsonSerializer<ConfigurationSerializable>, JsonDeserializer<ConfigurationSerializable>
-{
-    final Type objectStringMapType = new TypeToken<Map<String, Object>>()
-    {
+public class ConfigurationSerializableAdapter implements JsonSerializer<ConfigurationSerializable>, JsonDeserializer<ConfigurationSerializable> {
+    final Type objectStringMapType = new TypeToken<Map<String, Object>>() {
     }.getType();
 
     Yaml yaml = new Yaml();
 
     @Override
-    public ConfigurationSerializable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
-    {
+    public ConfigurationSerializable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         Map<String, Object> map = new LinkedHashMap<>();
 
-        if (json.isJsonObject())
-        {
-            String jsonString = json.toString();
+        if (json.isJsonObject()) {
+            var jsonString = json.toString();
 
             map = yaml.load(jsonString);
 
-            for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
-            {
-                final JsonElement value = entry.getValue();
-                final String name = entry.getKey();
+            for (var entry : json.getAsJsonObject().entrySet()) {
+                final var value = entry.getValue();
+                final var name = entry.getKey();
 
-                if (value.isJsonObject() && value.getAsJsonObject().has(ConfigurationSerialization.SERIALIZED_TYPE_KEY))
-                {
+                if (value.isJsonObject() && value.getAsJsonObject().has(ConfigurationSerialization.SERIALIZED_TYPE_KEY)) {
                     map.put(name, this.deserialize(value, value.getClass(), context));
                 }
-                else
-                {
+                else {
                     map.put(name, context.deserialize(value, Object.class));
                 }
             }
@@ -49,8 +42,7 @@ public class ConfigurationSerializableAdapter implements JsonSerializer<Configur
     }
 
     @Override
-    public JsonElement serialize(ConfigurationSerializable src, Type typeOfSrc, JsonSerializationContext context)
-    {
+    public JsonElement serialize(ConfigurationSerializable src, Type typeOfSrc, JsonSerializationContext context) {
         final Map<String, Object> map = new LinkedHashMap<>();
         map.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, ConfigurationSerialization.getAlias(src.getClass()));
         map.putAll(src.serialize());

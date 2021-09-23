@@ -1,0 +1,28 @@
+chat:
+  format: "<color:%name_color%>%rank%%name%: <color:%chat_color%>%message% <pre>test! %message%</pre> %test%"
+
+status:
+  default.name: "Status Effect"
+  blind.name: "Blinded"
+  grounded.name: "Grounded"
+  invulnerable.name: "Invulnerable"
+  root.name: "Rooted"
+  stun.name: "Stunned"
+  untargetable.name: "Untargetable"
+  knockback_resistance.name: "Knockback Resistance"
+  vulnerable.name: "Vulnerable"
+
+game:
+  name: Bolster
+  short-name: Bolster
+  long-name: Bolster
+  ip-address: runed.co
+  website-url: runed.co
+  store-url: runed.co
+
+premium:
+  name: Super Jimmy
+
+test:
+  - test 1
+  - test 2

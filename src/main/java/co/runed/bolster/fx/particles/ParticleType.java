@@ -1,18 +1,15 @@
 package co.runed.bolster.fx.particles;
 
-import co.runed.bolster.util.properties.Property;
+import co.runed.dayroom.properties.Property;
 
-public class ParticleType extends Property<ParticleInfo>
-{
-    public ParticleType(String id, ParticleInfo particle)
-    {
+public class ParticleType extends Property<ParticleGroup> {
+    public ParticleType(String id, ParticleGroup defaultParticle) {
         this(id);
 
-        this.setDefault(particle);
+        this.setDefault(defaultParticle);
     }
 
-    public ParticleType(String id)
-    {
+    public ParticleType(String id) {
         super(id);
     }
 }

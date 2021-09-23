@@ -5,9 +5,9 @@ import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
 import org.bukkit.Location;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.MushroomCow;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class NPC
-{
+public class NPC {
     LivingEntity entity;
     String name;
     String subtitle;
@@ -36,56 +35,47 @@ public class NPC
 
     private boolean removed = false;
 
-    public NPC(String name, WrappedGameProfile gameProfile)
-    {
+    public NPC(String name, WrappedGameProfile gameProfile) {
         this.name = name;
         this.gameProfile = gameProfile;
     }
 
-    public NPC setOnRightClick(BiConsumer<Player, Vector> onRightClick)
-    {
+    public NPC setOnRightClick(BiConsumer<Player, Vector> onRightClick) {
         this.onRightClick = onRightClick;
 
         return this;
     }
 
-    public NPC setOnLeftClick(BiConsumer<Player, Vector> onLeftClick)
-    {
+    public NPC setOnLeftClick(BiConsumer<Player, Vector> onLeftClick) {
         this.onLeftClick = onLeftClick;
 
         return this;
     }
 
-    public NPC setOnAnyClick(BiConsumer<Player, Vector> onAnyClick)
-    {
+    public NPC setOnAnyClick(BiConsumer<Player, Vector> onAnyClick) {
         this.onAnyClick = onAnyClick;
 
         return this;
     }
 
-    public LivingEntity getEntity()
-    {
+    public LivingEntity getEntity() {
         return entity;
     }
 
-    public void setEntity(LivingEntity entity)
-    {
+    public void setEntity(LivingEntity entity) {
         this.entity = entity;
     }
 
-    public void setSubtitle(String subtitle)
-    {
+    public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
     }
 
-    public String getSubtitle()
-    {
+    public String getSubtitle() {
         return subtitle;
     }
 
-    public PlayerDisguise createDisguise()
-    {
-        PlayerDisguise disguise = new PlayerDisguise(gameProfile);
+    public PlayerDisguise createDisguise() {
+        var disguise = new PlayerDisguise(gameProfile);
         disguise.setName(name);
         disguise.setDisplayedInTab(false);
 
@@ -101,8 +91,7 @@ public class NPC
         return disguise;
     }
 
-    public void remove()
-    {
+    public void remove() {
         if (removed) return;
 
         removed = true;
@@ -113,14 +102,12 @@ public class NPC
         NPCManager.getInstance().remove(this);
     }
 
-    public NPC spawn(Location location)
-    {
+    public NPC spawn(Location location) {
         return spawn(this, location);
     }
 
-    public static NPC spawn(NPC npc, Location location)
-    {
-        ArmorStand entity = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
+    public static NPC spawn(NPC npc, Location location) {
+        var entity = (MushroomCow) location.getWorld().spawnEntity(location, EntityType.MUSHROOM_COW);
         entity.setAI(false);
         entity.setSilent(true);
         entity.setCanPickupItems(false);
@@ -128,7 +115,7 @@ public class NPC
 
         npc.setEntity(entity);
 
-        PlayerDisguise disguise = npc.createDisguise();
+        var disguise = npc.createDisguise();
 
         if (disguise != null) DisguiseAPI.disguiseEntity(entity, disguise);
 

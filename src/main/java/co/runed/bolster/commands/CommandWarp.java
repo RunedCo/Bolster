@@ -6,34 +6,29 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.StringArgument;
 import org.bukkit.command.CommandSender;
 
-public class CommandWarp extends CommandBase
-{
-    public CommandWarp()
-    {
+public class CommandWarp extends CommandBase {
+    public CommandWarp() {
         super("warp");
     }
 
-    private String[] getSuggestions(CommandSender sender)
-    {
+    private String[] getSuggestions(CommandSender sender) {
         return Warps.getInstance().getWarps().values().stream().map(w -> w.id).toArray(String[]::new);
     }
 
     @Override
-    public CommandAPICommand build()
-    {
+    public CommandAPICommand build() {
         return new CommandAPICommand(this.command)
                 .withPermission(Permissions.COMMAND_WARP)
                 .withArguments(new StringArgument("warp").overrideSuggestions(this::getSuggestions))
                 .executesPlayer(((sender, args) -> {
-                    String warpId = (String) args[0];
+                    var warpId = (String) args[0];
 
-                    if (!Warps.getInstance().hasWarp(warpId))
-                    {
+                    if (!Warps.getInstance().hasWarp(warpId)) {
                         sender.sendMessage("Invalid warp!");
                         return;
                     }
 
-                    Warps.Warp warp = Warps.getInstance().getWarp(warpId);
+                    var warp = Warps.getInstance().getWarp(warpId);
 
                     warp.teleport(sender);
                     sender.sendMessage("Warping to " + (warp.name == null ? warp.id : warp.name));
@@ -43,7 +38,7 @@ public class CommandWarp extends CommandBase
                                 new StringArgument("name")
                         )
                         .executesPlayer((sender, args) -> {
-                            String id = (String) args[0];
+                            var id = (String) args[0];
 
                             Warps.getInstance().addWarp(id, sender.getLocation());
 
@@ -55,10 +50,9 @@ public class CommandWarp extends CommandBase
                                 new StringArgument("warp").overrideSuggestions(this::getSuggestions)
                         )
                         .executesPlayer((sender, args) -> {
-                            String warpId = (String) args[0];
+                            var warpId = (String) args[0];
 
-                            if (!Warps.getInstance().hasWarp(warpId))
-                            {
+                            if (!Warps.getInstance().hasWarp(warpId)) {
                                 sender.sendMessage("Invalid warp!");
                                 return;
                             }

@@ -5,30 +5,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 
-public class UntargetableStatusEffect extends InvulnerableStatusEffect
-{
-    public UntargetableStatusEffect(double duration)
-    {
+public class UntargetableStatusEffect extends InvulnerableStatusEffect {
+    public UntargetableStatusEffect(double duration) {
         super(duration);
     }
 
-    @Override
-    public String getName()
-    {
-        return "Untargetable";
-    }
-
     @EventHandler
-    private void onTargeted(EntityTargetedEvent event)
-    {
+    private void onTargeted(EntityTargetedEvent event) {
         if (!event.getEntity().getUniqueId().equals(this.getEntity().getUniqueId())) return;
 
         event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    private void onEntityTarget(EntityTargetLivingEntityEvent event)
-    {
+    private void onEntityTarget(EntityTargetLivingEntityEvent event) {
         if (event.getTarget() == null) return;
         if (!event.getTarget().getUniqueId().equals(this.getEntity().getUniqueId())) return;
 

@@ -1,9 +1,9 @@
 package co.runed.bolster;
 
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.config.BolsterConfiguration;
-import net.kyori.adventure.text.Component;
+import org.bukkit.Location;
 import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -11,8 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class Config
-{
+public class Config {
     private final BolsterConfiguration config;
 
     public String redisHost = "localhost";
@@ -21,16 +20,9 @@ public class Config
     public String gameMode;
     public String serverId = null;
 
+    public Location mapSpawn;
+
     public boolean debugMode = false;
-
-    public String gameName;
-    public String shortGameName;
-    public Component longGameName;
-    public String ipAddress;
-    public String websiteUrl;
-    public String storeUrl;
-
-    public String premiumMembershipName;
 
     public int premiumSlots = 10;
 
@@ -41,56 +33,47 @@ public class Config
     public boolean autoSave = true;
     public int autoSaveFrequency = 1200;
 
-    public Config() throws IOException, InvalidConfigurationException
-    {
-        Bolster bolster = Bolster.getInstance();
+    public Config() throws IOException, InvalidConfigurationException {
+        var bolster = Bolster.getInstance();
 
-        File configFile = new File(bolster.getDataFolder(), "config.yml");
-        if (!configFile.exists())
-        {
+        var configFile = new File(bolster.getDataFolder(), "config.yml");
+        if (!configFile.exists()) {
             bolster.saveDefaultConfig();
         }
 
         this.config = new BolsterConfiguration();
         this.config.load(configFile);
 
-        File overridesDir = bolster.getDataFolder();
-        File[] overrideFiles = overridesDir.listFiles((d, name) -> name.startsWith("overrides") && name.endsWith(".yml"));
+        var overridesDir = bolster.getDataFolder();
+        var overrideFiles = overridesDir.listFiles((d, name) -> name.startsWith("overrides") && name.endsWith(".yml"));
 
-        if (overrideFiles != null)
-        {
+        if (overrideFiles != null) {
             Arrays.sort(overrideFiles);
 
-            for (File override : overrideFiles)
-            {
-                if (override.exists())
-                {
-                    YamlConfiguration overrideConfig = YamlConfiguration.loadConfiguration(override);
-                    for (String key : overrideConfig.getKeys(false))
-                    {
+            for (var override : overrideFiles) {
+                if (override.exists()) {
+                    var overrideConfig = YamlConfiguration.loadConfiguration(override);
+                    for (var key : overrideConfig.getKeys(false)) {
                         config.set(key, overrideConfig.get(key));
                     }
                 }
             }
         }
 
-        ConfigurationSection redis = this.config.getConfigurationSection("redis");
+        var redis = this.config.getConfigurationSection("redis");
         this.redisHost = redis.getString("host", this.redisHost);
         this.redisPort = redis.getInt("port", this.redisPort);
 
         this.gameMode = this.config.getString("gamemode", "bolster");
         this.serverId = this.config.getString("server-id", this.serverId);
 
+        this.mapSpawn = BukkitUtil.stringToLocation(config.getString("map-spawn", "0,0,0"));
+        Warps.getInstance().addWarp("spawn", this.mapSpawn);
+        Warps.getInstance().setName("spawn", "Map Spawn");
+        Warps.getInstance().setSave("spawn", false);
+
         this.debugMode = this.config.getBoolean("debug", this.debugMode);
 
-        this.gameName = this.config.getColorString("game-name", this.gameName);
-        this.shortGameName = this.config.getColorString("short-game-name", this.shortGameName);
-        this.longGameName = this.config.getComponent("long-game-name", this.longGameName);
-        this.ipAddress = this.config.getColorString("ip-address", this.ipAddress);
-        this.websiteUrl = this.config.getColorString("website-url", this.websiteUrl);
-        this.storeUrl = this.config.getColorString("store-url", this.storeUrl);
-
-        this.premiumMembershipName = this.config.getColorString("premium-member-name", this.premiumMembershipName);
         this.premiumSlots = this.config.getInt("premium-slots", this.premiumSlots);
 
         this.cleanupPlayers = this.config.getBoolean("cleanup-players", this.cleanupPlayers);
@@ -101,8 +84,7 @@ public class Config
         this.autoSaveFrequency = this.config.getInt("auto-save-frequency", this.autoSaveFrequency);
     }
 
-    public Configuration getRawConfig()
-    {
+    public Configuration getRawConfig() {
         return config;
     }
 }

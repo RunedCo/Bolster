@@ -7,8 +7,7 @@ import java.io.StringWriter;
 import java.time.Duration;
 import java.time.Instant;
 
-public abstract class State
-{
+public abstract class State {
     private boolean started = false;
     private boolean updating = false;
     private boolean ended = false;
@@ -18,8 +17,7 @@ public abstract class State
     private Instant startInstant;
     private Duration duration;
 
-    public void start()
-    {
+    public void start() {
         if (started || ended)
             return;
 
@@ -27,40 +25,34 @@ public abstract class State
 
         this.startInstant = Instant.now();
 
-        try
-        {
+        try {
             this.onStart();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             // LOG
         }
     }
 
     protected abstract void onStart();
 
-    public void update()
-    {
+    public void update() {
         if (!started || ended || updating)
             return;
 
         updating = true;
 
-        if (isReadyToEnd() && !frozen)
-        {
+        if (isReadyToEnd() && !frozen) {
             end();
             return;
         }
 
-        try
-        {
+        try {
             this.onUpdate();
         }
-        catch (Exception e)
-        {
-            StringWriter sw = new StringWriter();
+        catch (Exception e) {
+            var sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
-            String stacktrace = sw.toString();
+            var stacktrace = sw.toString();
 
             Bolster.getInstance().getLogger().severe(stacktrace);
         }
@@ -69,49 +61,41 @@ public abstract class State
 
     protected abstract void onUpdate();
 
-    public void end()
-    {
+    public void end() {
         if (!started || ended)
             return;
 
         ended = true;
 
-        try
-        {
+        try {
             this.onEnd();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             // LOG ERROR
         }
     }
 
-    public boolean isReadyToEnd()
-    {
+    public boolean isReadyToEnd() {
         return ended || getRemainingDuration() == Duration.ZERO;
     }
 
     protected abstract void onEnd();
 
-    public Duration getDuration()
-    {
+    public Duration getDuration() {
         return Duration.ZERO;
     }
 
-    public Duration getRemainingDuration()
-    {
-        Duration sinceStart = Duration.between(startInstant, Instant.now());
-        Duration remaining = this.getDuration().minus(sinceStart);
+    public Duration getRemainingDuration() {
+        var sinceStart = Duration.between(startInstant, Instant.now());
+        var remaining = this.getDuration().minus(sinceStart);
         return remaining.isNegative() ? Duration.ZERO : remaining;
     }
 
-    public boolean getFrozen()
-    {
+    public boolean getFrozen() {
         return this.frozen;
     }
 
-    public void setFrozen(boolean freeze)
-    {
+    public void setFrozen(boolean freeze) {
         this.frozen = freeze;
     }
 }

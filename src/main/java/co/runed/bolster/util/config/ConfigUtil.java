@@ -13,48 +13,41 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-public class ConfigUtil
-{
-    public static ConfigurationSection cloneSection(ConfigurationSection config)
-    {
+public class ConfigUtil {
+    public static ConfigurationSection cloneSection(ConfigurationSection config) {
         if (config == null) return new BolsterConfiguration().createSection("clone");
 
         return new BolsterConfiguration().createSection("clone", config.getValues(false));
     }
 
-    public static ConfigurationSection fromMap(Map<String, Object> map)
-    {
+    public static ConfigurationSection fromMap(Map<String, Object> map) {
         return new BolsterConfiguration().createSection("map", map);
     }
 
-    public static ConfigurationSection merge(ConfigurationSection config1, ConfigurationSection config2)
-    {
+    public static ConfigurationSection merge(ConfigurationSection config1, ConfigurationSection config2) {
         if (config1 == null || config2 == null) return config1;
 
-        for (Map.Entry<String, Object> entry : config2.getValues(false).entrySet())
-        {
+        for (var entry : config2.getValues(false).entrySet()) {
             config1.set(entry.getKey(), entry.getValue());
         }
 
         return config1;
     }
 
-    public static ConfigurationSection create()
-    {
+    public static ConfigurationSection create() {
         return new BolsterConfiguration().createSection("config");
     }
 
-    public static ItemStack parseItemStack(ConfigurationSection config)
-    {
+    public static ItemStack parseItemStack(ConfigurationSection config) {
         if (config == null || !config.isString("type")) return new ItemStack(Material.AIR);
 
-        Material material = Material.matchMaterial(config.getString("type", "air"));
+        var material = Material.matchMaterial(config.getString("type", "air"));
 
-        ItemBuilder builder = new ItemBuilder(material);
+        var builder = new ItemBuilder(material);
 
         if (config.isString("name")) builder = builder.setDisplayName(Component.text(config.getString("name")));
         if (config.isInt("custom-model-data")) builder = builder.setCustomModelData(config.getInt("custom-model-data"));
@@ -63,25 +56,24 @@ public class ConfigUtil
         return builder.build();
     }
 
-    public static ConfigurationSection parseVariables(ConfigurationSection outConfig, ConfigurationSection... otherSources)
-    {
+    public static ConfigurationSection parseVariables(ConfigurationSection outConfig, ConfigurationSection... otherSources) {
         if (outConfig == null) outConfig = new BolsterConfiguration();
-        ConfigurationSection sourceConfig = ConfigUtil.cloneSection(outConfig);
+        var sourceConfig = ConfigUtil.cloneSection(outConfig);
 
-        for (ConfigurationSection source : otherSources)
-        {
+        // TODO: fix badly named variable sources e.g (.runeblade.milestone vs just milestone)
+
+        for (var source : otherSources) {
             ConfigUtil.merge(sourceConfig, source);
         }
 
-        for (String key : outConfig.getKeys(true))
-        {
+        for (var key : outConfig.getKeys(true)) {
             if (!outConfig.isString(key)) continue;
 
-            String value = outConfig.getString(key);
+            var value = outConfig.getString(key);
 
             if (value == null) continue;
 
-            value = iterateVariables(value, sourceConfig);
+            value = iterateVariables("%", value, toStringMap(sourceConfig, true), false);
 
             value = LegacyComponentSerializer.legacyAmpersand().serialize(MiniMessage.get().parse(value));
             value = ChatColor.translateAlternateColorCodes('&', value);
@@ -92,60 +84,105 @@ public class ConfigUtil
         return outConfig;
     }
 
-    public static YamlConfiguration toYaml(ConfigurationSection config)
-    {
-        YamlConfiguration out = new YamlConfiguration();
+    public static YamlConfiguration toYaml(ConfigurationSection config) {
+        var out = new YamlConfiguration();
 
         merge(out, config);
 
         return out;
     }
 
-    private static String iterateVariables(String value, ConfigurationSection config)
-    {
-        String[] matches = StringUtils.substringsBetween(value, "%", "%");
+    public static Map<String, String> toStringMap(ConfigurationSection config, boolean deep) {
+        Map<String, String> strMap = new HashMap<>();
 
-        if (matches != null && matches.length > 0)
-        {
-            for (String match : matches)
-            {
-                if (config.isSet(match))
-                {
-                    String foundValue = String.valueOf(config.get(match));
+        for (var entry : config.getValues(deep).entrySet()) {
+            var value = entry.getValue();
 
-                    value = iterateVariables(value.replaceAll("%" + match + "%", foundValue), config);
-                }
+            if (value instanceof ConfigurationSection) continue;
+
+            if (entry.getValue() instanceof ArrayList list) {
+                var out = (List<String>) list.stream().map(e -> e.toString()).collect(Collectors.toList());
+
+                value = String.join("\n", out);
             }
+
+            strMap.put(entry.getKey(), value.toString());
         }
 
-        return value;
+        return strMap;
+    }
+
+    // Iterates through string to replace variables from map. Doesn't include text inside of pre tags.
+    public static String iterateVariables(String token, String value, Map<String, String> variables, boolean parseInsidePre) {
+        var preRegex = Pattern.compile("<pre\\b[^>]*>(.*?)</pre>");
+        var matcher = preRegex.matcher(value);
+
+        var sections = new LinkedHashMap<String, Boolean>();
+        var lastIndex = 0;
+
+        // TODO: parse before and after pre sections
+        while (matcher.find()) {
+            var start = matcher.start();
+            var end = matcher.end();
+
+            sections.put(value.substring(lastIndex, start), true);
+
+            var group = matcher.group();
+            sections.put(group, parseInsidePre);
+
+            lastIndex = end;
+        }
+
+        if (lastIndex < value.length()) sections.put(value.substring(lastIndex), true);
+
+        var parsedSections = new ArrayList<String>();
+
+        for (var entry : sections.entrySet()) {
+            var section = entry.getKey();
+            var parse = entry.getValue();
+
+            if (parse) {
+                var matchArray = StringUtils.substringsBetween(section, token, token);
+                var matches = Arrays.asList(matchArray == null ? new String[0] : matchArray);
+                var skip = Collections.disjoint(matches, variables.keySet()) || matches.size() <= 0;
+
+                for (var match : matches) {
+                    if (variables.containsKey(match)) {
+                        var foundValue = String.valueOf(variables.get(match));
+
+                        section = section.replaceAll(token + match + token, foundValue);
+                    }
+                }
+
+                if (!skip) {
+                    section = iterateVariables(token, section, variables, parseInsidePre);
+                }
+            }
+
+            parsedSections.add(section);
+        }
+
+        return String.join("", parsedSections);
     }
 
     // This is fancier than Map.putAll(Map)
-    public static Map deepMerge(Map original, Map newMap)
-    {
-        for (Object key : newMap.keySet())
-        {
-            if (newMap.get(key) instanceof Map && original.get(key) instanceof Map)
-            {
-                Map originalChild = (Map) original.get(key);
-                Map newChild = (Map) newMap.get(key);
+    public static Map deepMerge(Map original, Map newMap) {
+        for (var key : newMap.keySet()) {
+            if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
+                var originalChild = (Map) original.get(key);
+                var newChild = (Map) newMap.get(key);
                 original.put(key, deepMerge(originalChild, newChild));
             }
-            else if (newMap.get(key) instanceof List && original.get(key) instanceof List)
-            {
-                List originalChild = (List) original.get(key);
-                List newChild = (List) newMap.get(key);
-                for (Object each : newChild)
-                {
-                    if (!originalChild.contains(each))
-                    {
+            else if (newMap.get(key) instanceof List && original.get(key) instanceof List) {
+                var originalChild = (List) original.get(key);
+                var newChild = (List) newMap.get(key);
+                for (var each : newChild) {
+                    if (!originalChild.contains(each)) {
                         originalChild.add(each);
                     }
                 }
             }
-            else
-            {
+            else {
                 original.put(key, newMap.get(key));
             }
         }
@@ -153,8 +190,7 @@ public class ConfigUtil
     }
 
     // Mimics Bukkit's serialization. Includes the type key of the given ConfigurationSerializable.
-    public static Map<String, Object> serialize(ConfigurationSerializable serializable)
-    {
+    public static Map<String, Object> serialize(ConfigurationSerializable serializable) {
         if (serializable == null) return null;
         Map<String, Object> dataMap = new LinkedHashMap<>();
         dataMap.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, ConfigurationSerialization.getAlias(serializable.getClass()));
@@ -163,15 +199,12 @@ public class ConfigUtil
     }
 
     // Expects the Map to contain a type key.
-    public static <T extends ConfigurationSerializable> T deserialize(Map<String, Object> dataMap)
-    {
+    public static <T extends ConfigurationSerializable> T deserialize(Map<String, Object> dataMap) {
         if (dataMap == null) return null;
-        try
-        {
+        try {
             return (T) ConfigurationSerialization.deserializeObject(dataMap);
         }
-        catch (IllegalArgumentException ex)
-        {
+        catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Could not deserialize object", ex);
         }
     }

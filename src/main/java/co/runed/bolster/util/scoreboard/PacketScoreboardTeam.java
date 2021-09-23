@@ -34,36 +34,31 @@ import com.google.common.collect.ImmutableSet;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
  * Implements {@link ScoreboardTeam} using ProtocolUtilLib.
  */
-public class PacketScoreboardTeam implements ScoreboardTeam
-{
+public class PacketScoreboardTeam implements ScoreboardTeam {
 
     // the display name value in teams if limited to 32 chars
     private static final int MAX_NAME_LENGTH = 32;
 
-    private static String trimName(String name)
-    {
+    private static String trimName(String name) {
         return name.length() > MAX_NAME_LENGTH ? name.substring(0, MAX_NAME_LENGTH) : name;
     }
 
     // the prefix/suffix value in the Teams packet is limited to 16 chars
     private static final int MAX_PREFIX_SUFFIX_LENGTH = 16;
 
-    private static String trimPrefixSuffix(String name)
-    {
+    private static String trimPrefixSuffix(String name) {
         return name.length() > MAX_PREFIX_SUFFIX_LENGTH ? name.substring(0, MAX_PREFIX_SUFFIX_LENGTH) : name;
     }
 
     // the display name value in teams if limited to 40 chars
     private static final int MAX_TEAM_MEMBER_LENGTH = 40;
 
-    private static String trimMember(String name)
-    {
+    private static String trimMember(String name) {
         return name.length() > MAX_TEAM_MEMBER_LENGTH ? name.substring(0, MAX_TEAM_MEMBER_LENGTH) : name;
     }
 
@@ -101,8 +96,7 @@ public class PacketScoreboardTeam implements ScoreboardTeam
      * @param displayName   the initial display name
      * @param autoSubscribe if players should be automatically subscribed
      */
-    public PacketScoreboardTeam(String id, String displayName, boolean autoSubscribe)
-    {
+    public PacketScoreboardTeam(String id, String displayName, boolean autoSubscribe) {
         Objects.requireNonNull(id, "id");
         Preconditions.checkArgument(id.length() <= 16, "id cannot be longer than 16 characters");
 
@@ -117,42 +111,35 @@ public class PacketScoreboardTeam implements ScoreboardTeam
      * @param id          the id of this team
      * @param displayName the initial display name
      */
-    public PacketScoreboardTeam(String id, String displayName)
-    {
+    public PacketScoreboardTeam(String id, String displayName) {
         this(id, displayName, true);
     }
 
     @Override
-    public String getId()
-    {
+    public String getId() {
         return this.id;
     }
 
     @Override
-    public boolean shouldAutoSubscribe()
-    {
+    public boolean shouldAutoSubscribe() {
         return this.autoSubscribe;
     }
 
     @Override
-    public void setAutoSubscribe(boolean autoSubscribe)
-    {
+    public void setAutoSubscribe(boolean autoSubscribe) {
         this.autoSubscribe = autoSubscribe;
     }
 
     @Override
-    public String getDisplayName()
-    {
+    public String getDisplayName() {
         return this.displayName;
     }
 
     @Override
-    public void setDisplayName(String displayName)
-    {
+    public void setDisplayName(String displayName) {
         Objects.requireNonNull(displayName, "displayName");
         displayName = trimName(displayName);
-        if (this.displayName.equals(displayName))
-        {
+        if (this.displayName.equals(displayName)) {
             return;
         }
 
@@ -161,18 +148,15 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     }
 
     @Override
-    public String getPrefix()
-    {
+    public String getPrefix() {
         return this.prefix;
     }
 
     @Override
-    public void setPrefix(String prefix)
-    {
+    public void setPrefix(String prefix) {
         Objects.requireNonNull(prefix, "prefix");
         prefix = trimPrefixSuffix(prefix);
-        if (this.prefix.equals(prefix))
-        {
+        if (this.prefix.equals(prefix)) {
             return;
         }
 
@@ -181,18 +165,15 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     }
 
     @Override
-    public String getSuffix()
-    {
+    public String getSuffix() {
         return this.suffix;
     }
 
     @Override
-    public void setSuffix(String suffix)
-    {
+    public void setSuffix(String suffix) {
         Objects.requireNonNull(suffix, "suffix");
         suffix = trimPrefixSuffix(suffix);
-        if (this.suffix.equals(suffix))
-        {
+        if (this.suffix.equals(suffix)) {
             return;
         }
 
@@ -201,16 +182,13 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     }
 
     @Override
-    public boolean isAllowFriendlyFire()
-    {
+    public boolean isAllowFriendlyFire() {
         return this.allowFriendlyFire;
     }
 
     @Override
-    public void setAllowFriendlyFire(boolean allowFriendlyFire)
-    {
-        if (this.allowFriendlyFire == allowFriendlyFire)
-        {
+    public void setAllowFriendlyFire(boolean allowFriendlyFire) {
+        if (this.allowFriendlyFire == allowFriendlyFire) {
             return;
         }
 
@@ -219,16 +197,13 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     }
 
     @Override
-    public boolean isCanSeeFriendlyInvisibles()
-    {
+    public boolean isCanSeeFriendlyInvisibles() {
         return this.canSeeFriendlyInvisibles;
     }
 
     @Override
-    public void setCanSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles)
-    {
-        if (this.canSeeFriendlyInvisibles == canSeeFriendlyInvisibles)
-        {
+    public void setCanSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles) {
+        if (this.canSeeFriendlyInvisibles == canSeeFriendlyInvisibles) {
             return;
         }
 
@@ -237,17 +212,14 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     }
 
     @Override
-    public NameTagVisibility getNameTagVisibility()
-    {
+    public NameTagVisibility getNameTagVisibility() {
         return this.nameTagVisibility;
     }
 
     @Override
-    public void setNameTagVisibility(NameTagVisibility nameTagVisibility)
-    {
+    public void setNameTagVisibility(NameTagVisibility nameTagVisibility) {
         Objects.requireNonNull(nameTagVisibility, "nameTagVisibility");
-        if (this.nameTagVisibility == nameTagVisibility)
-        {
+        if (this.nameTagVisibility == nameTagVisibility) {
             return;
         }
 
@@ -256,17 +228,14 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     }
 
     @Override
-    public CollisionRule getCollisionRule()
-    {
+    public CollisionRule getCollisionRule() {
         return this.collisionRule;
     }
 
     @Override
-    public void setCollisionRule(CollisionRule collisionRule)
-    {
+    public void setCollisionRule(CollisionRule collisionRule) {
         Objects.requireNonNull(collisionRule, "collisionRule");
-        if (this.collisionRule == collisionRule)
-        {
+        if (this.collisionRule == collisionRule) {
             return;
         }
 
@@ -275,17 +244,14 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     }
 
     @Override
-    public ChatColor getColor()
-    {
+    public ChatColor getColor() {
         return this.color;
     }
 
     @Override
-    public void setColor(ChatColor color)
-    {
+    public void setColor(ChatColor color) {
         Objects.requireNonNull(color, "color");
-        if (this.color == color)
-        {
+        if (this.color == color) {
             return;
         }
 
@@ -294,12 +260,10 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     }
 
     @Override
-    public boolean addPlayer(String player)
-    {
+    public boolean addPlayer(String player) {
         Objects.requireNonNull(player, "player");
         player = trimMember(player);
-        if (!this.players.add(player))
-        {
+        if (!this.players.add(player)) {
             return false;
         }
 
@@ -308,12 +272,10 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     }
 
     @Override
-    public boolean removePlayer(String player)
-    {
+    public boolean removePlayer(String player) {
         Objects.requireNonNull(player, "player");
         player = trimMember(player);
-        if (!this.players.remove(player))
-        {
+        if (!this.players.remove(player)) {
             return false;
         }
 
@@ -322,36 +284,30 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     }
 
     @Override
-    public boolean hasPlayer(String player)
-    {
+    public boolean hasPlayer(String player) {
         Objects.requireNonNull(player, "player");
         return this.players.contains(trimMember(player));
     }
 
     @Override
-    public Set<String> getPlayers()
-    {
+    public Set<String> getPlayers() {
         return ImmutableSet.copyOf(this.players);
     }
 
     @Override
-    public void subscribe(Player player)
-    {
+    public void subscribe(Player player) {
         NetworkUtil.sendPacket(player, newCreatePacket());
         this.subscribed.add(player);
     }
 
     @Override
-    public void unsubscribe(Player player)
-    {
+    public void unsubscribe(Player player) {
         unsubscribe(player, false);
     }
 
     @Override
-    public void unsubscribe(Player player, boolean fast)
-    {
-        if (!this.subscribed.remove(player) || fast)
-        {
+    public void unsubscribe(Player player, boolean fast) {
+        if (!this.subscribed.remove(player) || fast) {
             return;
         }
 
@@ -359,16 +315,14 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     }
 
     @Override
-    public void unsubscribeAll()
-    {
+    public void unsubscribeAll() {
         NetworkUtil.broadcastPacket(this.subscribed, newRemovePacket());
         this.subscribed.clear();
     }
 
-    private PacketContainer newCreatePacket()
-    {
+    private PacketContainer newCreatePacket() {
         // create an update packet (as that contains a number of values required by the create packet)
-        PacketContainer packet = newUpdatePacket();
+        var packet = newUpdatePacket();
 
         // set mode - byte
         packet.getIntegers().write(0, UpdateType.CREATE.getCode());
@@ -382,10 +336,9 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         return packet;
     }
 
-    private PacketContainer newRemovePacket()
-    {
+    private PacketContainer newRemovePacket() {
         // http://wiki.vg/ProtocolUtil#Teams
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
+        var packet = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
 
         // remove packet only has the default fields
 
@@ -398,10 +351,9 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         return packet;
     }
 
-    private PacketContainer newUpdatePacket()
-    {
+    private PacketContainer newUpdatePacket() {
         // http://wiki.vg/ProtocolUtil#Teams
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
+        var packet = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
 
         // set team name - 	String (16)
         packet.getStrings().write(0, getId());
@@ -419,13 +371,11 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         packet.getChatComponents().write(2, PacketScoreboard.toComponent(getSuffix()));
 
         // set friendly flags - byte - Bit mask. 0x01: Allow friendly fire, 0x02: can see invisible entities on same team
-        int data = 0;
-        if (isAllowFriendlyFire())
-        {
+        var data = 0;
+        if (isAllowFriendlyFire()) {
             data |= 1;
         }
-        if (isCanSeeFriendlyInvisibles())
-        {
+        if (isCanSeeFriendlyInvisibles()) {
             data |= 2;
         }
 
@@ -443,17 +393,15 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         return packet;
     }
 
-    private PacketContainer newTeamMemberUpdatePacket(String player, MemberAction action)
-    {
+    private PacketContainer newTeamMemberUpdatePacket(String player, MemberAction action) {
         // http://wiki.vg/ProtocolUtil#Teams
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
+        var packet = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
 
         // set team name - 	String (16)
         packet.getStrings().write(0, getId());
 
         // set mode
-        switch (action)
-        {
+        switch (action) {
             case ADD:
                 packet.getIntegers().write(1, UpdateType.ADD_PLAYERS.getCode());
                 break;
@@ -470,13 +418,11 @@ public class PacketScoreboardTeam implements ScoreboardTeam
         return packet;
     }
 
-    private enum MemberAction
-    {
+    private enum MemberAction {
         ADD, REMOVE
     }
 
-    private enum UpdateType
-    {
+    private enum UpdateType {
         CREATE(0),
         REMOVE(1),
         UPDATE(2),
@@ -485,13 +431,11 @@ public class PacketScoreboardTeam implements ScoreboardTeam
 
         private final int code;
 
-        UpdateType(int code)
-        {
+        UpdateType(int code) {
             this.code = code;
         }
 
-        public int getCode()
-        {
+        public int getCode() {
             return this.code;
         }
     }
@@ -499,23 +443,18 @@ public class PacketScoreboardTeam implements ScoreboardTeam
     // a map of colors --> their mojang code int
     private static final Map<ChatColor, Integer> COLOR_CODES;
 
-    static
-    {
+    static {
         Map<ChatColor, Integer> codes = new EnumMap<>(ChatColor.class);
-        try
-        {
-            Field codeField = ChatColor.class.getDeclaredField("intCode");
+        try {
+            var codeField = ChatColor.class.getDeclaredField("intCode");
             codeField.setAccessible(true);
-            for (ChatColor color : ChatColor.values())
-            {
-                if (color.isColor())
-                {
+            for (var color : ChatColor.values()) {
+                if (color.isColor()) {
                     codes.put(color, codeField.getInt(color));
                 }
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
         COLOR_CODES = codes;

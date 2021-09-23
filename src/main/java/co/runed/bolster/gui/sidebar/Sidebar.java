@@ -18,8 +18,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Sidebar implements Listener
-{
+public abstract class Sidebar implements Listener {
     Scoreboard scoreboard;
 
     private final List<Player> players = new ArrayList<>();
@@ -34,8 +33,7 @@ public abstract class Sidebar implements Listener
     private final List<String> lines = new ArrayList<>();
     private final List<String> bottomLines = new ArrayList<>();
 
-    public Sidebar()
-    {
+    public Sidebar() {
         this.scoreboard = new PacketScoreboard(Bolster.getInstance());
     }
 
@@ -51,8 +49,7 @@ public abstract class Sidebar implements Listener
      *
      * @return The sidebar instance
      */
-    public Sidebar addLine()
-    {
+    public Sidebar addLine() {
         this.lines.add(StringUtil.repeat(" ", this.blankLineCount++));
 
         return this;
@@ -64,8 +61,7 @@ public abstract class Sidebar implements Listener
      * @param line The line to add
      * @return The sidebar instance
      */
-    public Sidebar addLine(String line)
-    {
+    public Sidebar addLine(String line) {
         this.addLines(StringUtil.formatLore(line, 24));
 
         return this;
@@ -76,8 +72,7 @@ public abstract class Sidebar implements Listener
      *
      * @return The sidebar instance
      */
-    public Sidebar addSuffixLine()
-    {
+    public Sidebar addSuffixLine() {
         return this.addSuffixLine(StringUtil.repeat(" ", this.blankLineCount++));
     }
 
@@ -87,8 +82,7 @@ public abstract class Sidebar implements Listener
      * @param line The line to add
      * @return The sidebar instance
      */
-    public Sidebar addSuffixLine(String line)
-    {
+    public Sidebar addSuffixLine(String line) {
         this.bottomLines.add(line);
 
         return this;
@@ -100,8 +94,7 @@ public abstract class Sidebar implements Listener
      * @param lines A list of lines to add
      * @return The sidebar instance
      */
-    public Sidebar addLines(List<String> lines)
-    {
+    public Sidebar addLines(List<String> lines) {
         this.lines.addAll(lines);
 
         return this;
@@ -112,14 +105,12 @@ public abstract class Sidebar implements Listener
      *
      * @param interval The interval in ticks
      */
-    public void setUpdateInterval(long interval)
-    {
-        long previousInterval = this.getUpdateInterval();
+    public void setUpdateInterval(long interval) {
+        var previousInterval = this.getUpdateInterval();
 
         this.updateInterval = interval;
 
-        if (previousInterval != interval)
-        {
+        if (previousInterval != interval) {
             if (this.updateTask != null && !this.updateTask.isCancelled()) this.updateTask.cancel();
 
             this.updateTask = this.createUpdateTask();
@@ -131,10 +122,8 @@ public abstract class Sidebar implements Listener
      *
      * @param shouldAdd Whether players should be added to the sidebar automatically or not
      */
-    public void setAutoAddPlayers(boolean shouldAdd)
-    {
-        if (shouldAdd && !this.autoAddPlayers)
-        {
+    public void setAutoAddPlayers(boolean shouldAdd) {
+        if (shouldAdd && !this.autoAddPlayers) {
             Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
         }
 
@@ -147,10 +136,8 @@ public abstract class Sidebar implements Listener
      * @param event The event
      */
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event)
-    {
-        if (this.autoAddPlayers)
-        {
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (this.autoAddPlayers) {
             SidebarManager.getInstance().setSidebar(event.getPlayer(), this);
         }
     }
@@ -160,8 +147,7 @@ public abstract class Sidebar implements Listener
      *
      * @return The update interval in ticks
      */
-    public long getUpdateInterval()
-    {
+    public long getUpdateInterval() {
         return this.updateInterval;
     }
 
@@ -170,18 +156,15 @@ public abstract class Sidebar implements Listener
      *
      * @param player The player
      */
-    public void addPlayer(Player player)
-    {
+    public void addPlayer(Player player) {
         if (this.players.contains(player)) return;
 
         SidebarManager.getInstance().clearSidebar(player);
 
         this.players.add(player);
 
-        if (this.getUpdateInterval() > 0)
-        {
-            if (this.updateTask == null || this.updateTask.isCancelled())
-            {
+        if (this.getUpdateInterval() > 0) {
+            if (this.updateTask == null || this.updateTask.isCancelled()) {
                 this.updateTask = this.createUpdateTask();
             }
         }
@@ -192,19 +175,16 @@ public abstract class Sidebar implements Listener
      *
      * @param player The player
      */
-    public void removePlayer(Player player)
-    {
+    public void removePlayer(Player player) {
         if (!this.players.contains(player)) return;
 
-        ScoreboardObjective objective = this.getOrCreateObjective(player, this.getTitle());
+        var objective = this.getOrCreateObjective(player, this.getTitle());
         objective.unsubscribe(player);
 
         this.players.remove(player);
 
-        if (this.players.size() <= 0)
-        {
-            if (this.updateTask != null)
-            {
+        if (this.players.size() <= 0) {
+            if (this.updateTask != null) {
                 this.updateTask.cancel();
             }
         }
@@ -213,10 +193,8 @@ public abstract class Sidebar implements Listener
     /**
      * Adds all players to the sidebar causing it to display on their screen
      */
-    public void addAllPlayers()
-    {
-        for (Player player : Bukkit.getOnlinePlayers())
-        {
+    public void addAllPlayers() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             SidebarManager.getInstance().setSidebar(player, this);
         }
     }
@@ -224,15 +202,12 @@ public abstract class Sidebar implements Listener
     /**
      * Removes the update task and all the players from the Sidebar
      */
-    public void remove()
-    {
-        if (this.updateTask != null)
-        {
+    public void remove() {
+        if (this.updateTask != null) {
             this.updateTask.cancel();
         }
 
-        for (Player player : this.players)
-        {
+        for (var player : this.players) {
             this.removePlayer(player);
         }
 
@@ -244,8 +219,7 @@ public abstract class Sidebar implements Listener
      *
      * @return The task
      */
-    private BukkitTask createUpdateTask()
-    {
+    private BukkitTask createUpdateTask() {
         return Bolster.getInstance().getServer().getScheduler()
                 .runTaskTimer(Bolster.getInstance(), this::update, 0L, this.getUpdateInterval());
     }
@@ -255,8 +229,7 @@ public abstract class Sidebar implements Listener
      *
      * @return All the scoreboard rows
      */
-    private List<String> getLines()
-    {
+    private List<String> getLines() {
         List<String> scores = new ArrayList<>();
 
         scores.addAll(this.lines);
@@ -271,12 +244,10 @@ public abstract class Sidebar implements Listener
      * @param title The sidebar title
      * @return The objective
      */
-    private ScoreboardObjective getOrCreateObjective(Player player, String title)
-    {
-        ScoreboardObjective existing = scoreboard.getPlayerObjective(player, title);
+    private ScoreboardObjective getOrCreateObjective(Player player, String title) {
+        var existing = scoreboard.getPlayerObjective(player, title);
 
-        if (existing != null)
-        {
+        if (existing != null) {
             existing.setDisplayName(title);
 
             return existing;
@@ -290,8 +261,7 @@ public abstract class Sidebar implements Listener
      * A little hacky but it should work well enough...
      * Runs at the end of each update call.
      */
-    private void resetLines()
-    {
+    private void resetLines() {
         this.lines.clear();
         this.bottomLines.clear();
         this.blankLineCount = 0;
@@ -301,15 +271,13 @@ public abstract class Sidebar implements Listener
      * Handles updating the scoreboard display with the layout defined in {@link #draw(Player)}.
      * Updates at the tick speed returned from {@link #getUpdateInterval()}
      */
-    public void update()
-    {
-        for (Player player : this.players)
-        {
+    public void update() {
+        for (var player : this.players) {
             this.resetLines();
 
-            Sidebar sidebar = this.draw(player);
+            var sidebar = this.draw(player);
 
-            ScoreboardObjective objective = this.getOrCreateObjective(player, this.getTitle());
+            var objective = this.getOrCreateObjective(player, this.getTitle());
 
             objective.applyLines(sidebar.getLines());
         }

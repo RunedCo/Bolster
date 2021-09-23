@@ -1,7 +1,6 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.gui.sidebar.Sidebar;
-import co.runed.bolster.util.Manager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -9,14 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class SidebarManager extends Manager
-{
+public class SidebarManager extends Manager {
     Map<UUID, Sidebar> playerSidebars = new HashMap<>();
 
     private static SidebarManager _instance;
 
-    public SidebarManager(Plugin plugin)
-    {
+    public SidebarManager(Plugin plugin) {
         super(plugin);
 
         _instance = this;
@@ -28,8 +25,7 @@ public class SidebarManager extends Manager
      * @param player the player
      * @return the sidebar
      */
-    public Sidebar getSidebar(Player player)
-    {
+    public Sidebar getSidebar(Player player) {
         if (!this.playerSidebars.containsKey(player.getUniqueId())) return null;
 
         return this.playerSidebars.get(player.getUniqueId());
@@ -41,10 +37,8 @@ public class SidebarManager extends Manager
      * @param player  the player
      * @param sidebar the sidebar
      */
-    public void setSidebar(Player player, Sidebar sidebar)
-    {
-        if (this.playerSidebars.containsKey(player.getUniqueId()))
-        {
+    public void setSidebar(Player player, Sidebar sidebar) {
+        if (this.playerSidebars.containsKey(player.getUniqueId())) {
             this.playerSidebars.get(player.getUniqueId()).removePlayer(player);
         }
 
@@ -58,18 +52,15 @@ public class SidebarManager extends Manager
      *
      * @param player the player
      */
-    public void clearSidebar(Player player)
-    {
-        if (this.playerSidebars.containsKey(player.getUniqueId()))
-        {
+    public void clearSidebar(Player player) {
+        if (this.playerSidebars.containsKey(player.getUniqueId())) {
             this.playerSidebars.get(player.getUniqueId()).removePlayer(player);
         }
 
         this.playerSidebars.remove(player.getUniqueId());
     }
 
-    public static SidebarManager getInstance()
-    {
+    public static SidebarManager getInstance() {
         return _instance;
     }
 }

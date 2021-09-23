@@ -2,11 +2,11 @@ package co.runed.bolster.game.currency;
 
 import co.runed.bolster.Bolster;
 import co.runed.bolster.events.player.SavePlayerDataEvent;
-import co.runed.bolster.game.PlayerData;
-import co.runed.bolster.util.ICategorised;
-import co.runed.bolster.util.IIdentifiable;
+import co.runed.bolster.util.Categorised;
+import co.runed.bolster.util.IconPreview;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.registries.Registries;
+import co.runed.dayroom.util.Identifiable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -18,8 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Currency implements IIdentifiable, ICategorised, Listener
-{
+public class Currency implements Identifiable, Categorised, IconPreview, Listener {
     String id;
     String name;
     String shortName;
@@ -27,8 +26,7 @@ public class Currency implements IIdentifiable, ICategorised, Listener
     boolean isItem;
     boolean pluralize;
 
-    public Currency(String id, String name, String shortName, ItemStack itemStack, boolean pluralize, boolean isItem)
-    {
+    public Currency(String id, String name, String shortName, ItemStack itemStack, boolean pluralize, boolean isItem) {
         this.id = id;
         this.name = name;
         this.shortName = shortName;
@@ -39,69 +37,58 @@ public class Currency implements IIdentifiable, ICategorised, Listener
         Bukkit.getPluginManager().registerEvents(this, Bolster.getInstance());
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public String getPluralisedName()
-    {
+    public String getPluralisedName() {
         return this.getName() + (this.shouldPluralize() ? "s" : "");
     }
 
-    public String getShortName()
-    {
+    public String getShortName() {
         return shortName;
     }
 
-    public void setShortName(String shortName)
-    {
+    public void setShortName(String shortName) {
         this.shortName = shortName;
     }
 
-    public boolean shouldPluralize()
-    {
+    public boolean shouldPluralize() {
         return pluralize;
     }
 
     @Override
-    public String getId()
-    {
+    public String getId() {
         return this.id != null ? this.id : Registries.CURRENCIES.getId(this);
     }
 
-    public void setIcon(ItemStack icon)
-    {
+    public void setIcon(ItemStack icon) {
         this.icon = icon;
     }
 
     @Override
-    public ItemStack getIcon()
-    {
-        ItemBuilder builder = new ItemBuilder(icon)
+    public ItemStack getIcon() {
+        var builder = new ItemBuilder(icon)
                 .addAllItemFlags()
                 .setDisplayName(Component.text(this.getName(), NamedTextColor.WHITE));
 
         return builder.build();
     }
 
-    public static Map<Currency, Integer> fromList(List<String> costs)
-    {
+    public static Map<Currency, Integer> fromList(List<String> costs) {
         Map<Currency, Integer> output = new HashMap<>();
 
         if (costs == null) return output;
 
-        for (String cost : costs)
-        {
-            String[] splitCost = cost.split(" ");
-            int amount = Integer.parseInt(splitCost[0]);
-            String costId = splitCost[1];
-            Currency currency = Registries.CURRENCIES.get(costId);
+        for (var cost : costs) {
+            var splitCost = cost.split(" ");
+            var amount = Integer.parseInt(splitCost[0]);
+            var costId = splitCost[1];
+            var currency = Registries.CURRENCIES.get(costId);
 
             output.put(currency, amount);
         }
@@ -110,9 +97,8 @@ public class Currency implements IIdentifiable, ICategorised, Listener
     }
 
     @EventHandler
-    private void onSavePlayer(SavePlayerDataEvent event)
-    {
-        PlayerData playerData = event.getPlayerData();
+    private void onSavePlayer(SavePlayerDataEvent event) {
+        var playerData = event.getPlayerData();
 
         playerData.setCurrency(this, playerData.getCurrency(this));
     }
