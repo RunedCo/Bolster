@@ -11,10 +11,9 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
@@ -410,5 +409,32 @@ public class BukkitUtil {
 
     public static void triggerEventSync(Event event) {
         Bukkit.getScheduler().runTask(Bolster.getInstance(), () -> Bukkit.getServer().getPluginManager().callEvent(event));
+    }
+
+    public static LivingEntity getDamagerFromEvent(Event event) {
+        if (event instanceof EntityDamageByEntityEvent byEntityEvent) {
+            var damager = byEntityEvent.getDamager();
+            LivingEntity entity = null;
+
+            if (damager instanceof LivingEntity livingEntity) {
+                return livingEntity;
+            }
+            else if (damager instanceof Projectile projectile) {
+                var shooter = projectile.getShooter();
+
+                if (!(shooter instanceof LivingEntity livingEntity)) return null;
+
+                return livingEntity;
+            }
+            else if (damager instanceof TNTPrimed tnt) {
+                var source = tnt.getSource();
+
+                if (!(source instanceof LivingEntity livingEntity)) return null;
+
+                return livingEntity;
+            }
+        }
+
+        return null;
     }
 }

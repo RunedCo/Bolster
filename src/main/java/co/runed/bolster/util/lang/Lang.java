@@ -55,6 +55,22 @@ public class Lang {
         return withReplacement(key, MiniMessage.get().serialize(value));
     }
 
+    public Lang clone() {
+        var cloned = new Lang(keys.toArray(new String[0]))
+                .withReplacements(replacements)
+                .withDefault(defaultValue);
+
+        for (var provider : providers) {
+            cloned = cloned.with(provider);
+        }
+
+        for (var source : languageSources) {
+            cloned = cloned.withSource(source);
+        }
+
+        return cloned;
+    }
+
     private String toFormattedString() {
         var key = defaultValue;
         var lang = new HashMap<>(Bolster.getInstance().getLang());

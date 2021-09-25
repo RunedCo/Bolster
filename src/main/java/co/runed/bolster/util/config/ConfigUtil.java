@@ -208,4 +208,10 @@ public class ConfigUtil {
             throw new IllegalArgumentException("Could not deserialize object", ex);
         }
     }
+
+    public static boolean areEqual(ConfigurationSection config, ConfigurationSection config1) {
+        if (config == null || config1 == null) return false;
+
+        return config.getValues(true).equals(config1.getValues(true));
+    }
 }
