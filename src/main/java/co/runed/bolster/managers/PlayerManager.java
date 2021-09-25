@@ -1,13 +1,6 @@
 package co.runed.bolster.managers;
 
 import co.runed.bolster.Bolster;
-import co.runed.dayroom.gson.GsonUtil;
-import co.runed.dayroom.redis.RedisChannels;
-import co.runed.dayroom.redis.RedisManager;
-import co.runed.dayroom.redis.payload.Payload;
-import co.runed.dayroom.redis.request.RequestPlayerDataPayload;
-import co.runed.dayroom.redis.request.UpdatePlayerDataPayload;
-import co.runed.dayroom.redis.response.RequestPlayerDataResponsePayload;
 import co.runed.bolster.events.entity.EntityCleanupEvent;
 import co.runed.bolster.events.entity.EntitySetCooldownEvent;
 import co.runed.bolster.events.player.LoadPlayerDataEvent;
@@ -20,6 +13,13 @@ import co.runed.bolster.match.PlayerConnectMatchHistoryEvent;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.registries.Registries;
+import co.runed.dayroom.gson.GsonUtil;
+import co.runed.dayroom.redis.RedisChannels;
+import co.runed.dayroom.redis.RedisManager;
+import co.runed.dayroom.redis.payload.Payload;
+import co.runed.dayroom.redis.request.RequestPlayerDataPayload;
+import co.runed.dayroom.redis.request.UpdatePlayerDataPayload;
+import co.runed.dayroom.redis.response.RequestPlayerDataResponsePayload;
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -34,9 +34,13 @@ import java.util.*;
 
 public class PlayerManager extends Manager {
     private static PlayerManager _instance;
-    private Map<UUID, PlayerData> playerData = new HashMap<>();
     private final Gson gson;
+
+    private Map<UUID, PlayerData> playerData = new HashMap<>();
+    private Map<UUID, String> lastPlayerDataJson = new HashMap<>();
+
     private Map<String, Class<? extends GameModeData>> gameModeDataTypes = new HashMap<>();
+
     private Map<UUID, Integer> timeSinceDisconnect = new HashMap<>();
     private Map<UUID, Integer> playTime = new HashMap<>();
 
@@ -120,11 +124,14 @@ public class PlayerManager extends Manager {
 
     private void save(PlayerData data) {
         var playerData = this.runSave(data);
+        var json = this.serialize(playerData);
 
         var payload = new UpdatePlayerDataPayload();
-        payload.playerData.put(playerData.getUuid(), this.serialize(playerData));
+        payload.playerData.put(playerData.getUuid(), json);
 
-        RedisManager.getInstance().publish(RedisChannels.UPDATE_PLAYER_DATA, payload);
+        lastPlayerDataJson.put(playerData.getUuid(), json);
+
+        if (hasChanged(playerData.getUuid(), playerData)) RedisManager.getInstance().publish(RedisChannels.UPDATE_PLAYER_DATA, payload);
     }
 
     private PlayerData runSave(PlayerData data) {
@@ -137,6 +144,10 @@ public class PlayerManager extends Manager {
         return data;
     }
 
+    public boolean hasChanged(UUID uuid, PlayerData newData) {
+        return !lastPlayerDataJson.containsKey(uuid) || !lastPlayerDataJson.get(uuid).equals(serialize(newData));
+    }
+
     public void saveAllPlayers() {
         if (this.playerData.size() <= 0) return;
 
@@ -144,10 +155,16 @@ public class PlayerManager extends Manager {
 
         for (var data : this.playerData.values()) {
             var updated = this.runSave(data);
-            payload.playerData.put(updated.getUuid(), this.serialize(updated));
+            var json = this.serialize(updated);
+
+            if (hasChanged(updated.getUuid(), updated)) {
+                lastPlayerDataJson.put(updated.getUuid(), json);
+
+                payload.playerData.put(updated.getUuid(), json);
+            }
         }
 
-        RedisManager.getInstance().publish(RedisChannels.UPDATE_PLAYER_DATA, payload);
+        if (payload.playerData.size() > 0) RedisManager.getInstance().publish(RedisChannels.UPDATE_PLAYER_DATA, payload);
     }
 
     public Collection<PlayerData> getAllPlayerData() {
