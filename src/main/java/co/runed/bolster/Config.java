@@ -9,7 +9,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class Config {
     private final BolsterConfiguration config;
@@ -46,6 +48,7 @@ public class Config {
 
         var overridesDir = bolster.getDataFolder();
         var overrideFiles = overridesDir.listFiles((d, name) -> name.startsWith("overrides") && name.endsWith(".yml"));
+        var overrideConfigs = new ArrayList<Configuration>();
 
         if (overrideFiles != null) {
             Arrays.sort(overrideFiles);
@@ -53,10 +56,17 @@ public class Config {
             for (var override : overrideFiles) {
                 if (override.exists()) {
                     var overrideConfig = YamlConfiguration.loadConfiguration(override);
-                    for (var key : overrideConfig.getKeys(false)) {
-                        config.set(key, overrideConfig.get(key));
-                    }
+
+                    overrideConfigs.add(overrideConfig);
                 }
+            }
+        }
+
+        overrideConfigs.sort(Comparator.comparingInt(c -> c.getInt("override-priority", 0)));
+
+        for (var overrideConfig : overrideConfigs) {
+            for (var key : overrideConfig.getKeys(false)) {
+                config.set(key, overrideConfig.get(key));
             }
         }
 
