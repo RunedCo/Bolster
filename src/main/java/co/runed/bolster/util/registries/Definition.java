@@ -45,7 +45,7 @@ public abstract class Definition<T extends Identifiable> implements Identifiable
 
     public Definition<T> from(Definition<T> parent) {
         for (var category : parent.categories) {
-            category(category);
+            addCategories(category);
         }
 
         return this;
@@ -57,13 +57,18 @@ public abstract class Definition<T extends Identifiable> implements Identifiable
         return this;
     }
 
+    @Override
+    public ItemStack getIcon() {
+        return icon;
+    }
+
     public Definition<T> setIcon(ItemStack icon) {
         this.icon = icon;
 
         return this;
     }
 
-    public Definition<T> category(Category... categories) {
+    public Definition<T> addCategories(Category... categories) {
         for (var category : categories) {
             this.addCategory(category);
         }

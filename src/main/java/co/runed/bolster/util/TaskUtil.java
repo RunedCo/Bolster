@@ -126,7 +126,7 @@ public class TaskUtil {
     }
 
     public static class TaskSeries {
-        Runnable cancelRunnable = null;
+        List<Runnable> cancelRunnables = new ArrayList<>();
         List<BukkitTask> tasks = new ArrayList<>();
         long duration = 0;
         boolean cancelled = false;
@@ -168,7 +168,7 @@ public class TaskUtil {
         }
 
         public TaskSeries onCancel(Runnable task) {
-            this.cancelRunnable = task;
+            this.cancelRunnables.add(task);
 
             return this;
         }
@@ -178,8 +178,8 @@ public class TaskUtil {
                 task.cancel();
             }
 
-            if (this.cancelRunnable != null) {
-                this.cancelRunnable.run();
+            for (var task : this.cancelRunnables) {
+                task.run();
             }
         }
 
