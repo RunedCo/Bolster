@@ -4,10 +4,12 @@ import co.runed.bolster.Bolster;
 import co.runed.bolster.util.Categorised;
 import co.runed.bolster.util.Category;
 import co.runed.bolster.util.IconPreview;
+import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.config.Configurable;
 import co.runed.dayroom.util.Identifiable;
 import co.runed.dayroom.util.Nameable;
+import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -59,7 +61,11 @@ public abstract class Definition<T extends Identifiable> implements Identifiable
 
     @Override
     public ItemStack getIcon() {
-        return icon;
+        var builder = new ItemBuilder(icon)
+                .setDisplayName(Component.text(getId()))
+                .setDisplayName(Component.text(getName()));
+
+        return builder.build();
     }
 
     public Definition<T> setIcon(ItemStack icon) {

@@ -1,5 +1,5 @@
 chat:
-  format: "<color:%name_color%>%rank%%name%: <color:%chat_color%>%message% <pre>test! %message%</pre> %test%"
+  format: "<color:%name_color%>%rank%%name%: <color:%chat_color%>%message%</color>"
 
 status:
   default.name: "Status Effect"
@@ -20,9 +20,10 @@ game:
   website-url: runed.co
   store-url: runed.co
 
-premium:
-  name: Super Jimmy
-
-test:
-  - test 1
-  - test 2
+rank:
+  admin:
+    name: "Admin"
+    chat: "<bold><red>Admin</red></bold>"
+  premium:
+    name: "Super Jimmy"
+    chat: "<bold>SJ</bold>"

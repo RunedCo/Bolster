@@ -343,6 +343,12 @@ public class Bolster extends JavaPlugin implements Listener {
         return Bolster.getInstance().effectManager;
     }
 
+    public static void debug(String out) {
+        if (getBolsterConfig().debugMode) {
+            getInstance().getLogger().info(out);
+        }
+    }
+
     public static boolean isActiveGameMode(Class<? extends GameMode> gameMode) {
         return isActiveGameMode(Registries.GAME_MODES.getId(gameMode));
     }

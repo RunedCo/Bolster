@@ -112,6 +112,7 @@ public class NPC {
         entity.setSilent(true);
         entity.setCanPickupItems(false);
         entity.setPersistent(false);
+        entity.setInvulnerable(true);
 
         npc.setEntity(entity);
 

@@ -212,7 +212,7 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
 
             if (expiryTime.isAfter(ZonedDateTime.now(Clock.systemUTC()))) {
                 footerComponent = footerComponent
-                        .append(Component.text("Your ").append(Lang.simple("premium.name")).append(Component.text(" expires in")))
+                        .append(Component.text("Your ").append(Lang.simple("rank.premium.name")).append(Component.text(" expires in")))
                         .append(Component.newline())
                         .append(Component.text(TimeUtil.formatDatePrettyRounded(expiryTime)));
             }
