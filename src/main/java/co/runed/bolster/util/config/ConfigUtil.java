@@ -1,6 +1,9 @@
 package co.runed.bolster.util.config;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.util.ItemBuilder;
+import co.runed.dayroom.math.NumberUtil;
+import co.runed.dayroom.util.ReflectionUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -206,6 +209,29 @@ public class ConfigUtil {
         }
         catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Could not deserialize object", ex);
+        }
+    }
+
+    public static void loadAnnotatedConfig(ConfigurationSection config, Object obj) {
+        for (var entry : ReflectionUtil.getFieldsAnnotatedWith(obj.getClass(), ConfigEntry.class).entrySet()) {
+            var field = entry.getKey();
+            var annotation = entry.getValue();
+            var key = annotation.value();
+
+            if (key.isEmpty()) key = field.getName().toLowerCase();
+
+            try {
+                field.setAccessible(true);
+                var existing = field.get(obj);
+                var value = config.get(key, existing);
+
+                Bolster.debug("Loaded config value " + key + " for " + obj + " " + value + " from config? " + config.contains(key));
+
+                NumberUtil.SETTERS.getOrDefault(field.getType(), NumberUtil.Setter.FALLBACK).set(field, obj, value);
+            }
+            catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
 
