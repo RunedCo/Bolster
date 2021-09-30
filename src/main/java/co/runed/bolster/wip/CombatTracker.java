@@ -1,12 +1,12 @@
 package co.runed.bolster.wip;
 
 import co.runed.bolster.events.entity.EntityCleanupEvent;
+import co.runed.bolster.events.entity.EntityDamageInfoEvent;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 
@@ -27,7 +27,7 @@ public class CombatTracker implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    private void onDamageEntity(EntityDamageByEntityEvent event) {
+    private void onDamageEntity(EntityDamageInfoEvent event) {
         var damager = event.getDamager();
 
         if (damager instanceof LivingEntity && event.getEntity() instanceof LivingEntity) {
@@ -71,7 +71,8 @@ public class CombatTracker implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onEntityTarget(EntityTargetLivingEntityEvent event) {
-        var entity = (Mob) event.getEntity();
+        if (!(event.getEntity() instanceof Mob entity)) return;
+
         var target = event.getTarget();
 
         if (target == null) {

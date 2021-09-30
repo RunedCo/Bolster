@@ -1,6 +1,7 @@
 package co.runed.bolster.util;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.events.entity.EntityDamageInfoEvent;
 import co.runed.bolster.events.entity.EntityTargetedEvent;
 import co.runed.bolster.events.world.CustomCanDestroyBlockEvent;
 import co.runed.bolster.events.world.CustomCanPlaceBlockEvent;
@@ -412,6 +413,10 @@ public class BukkitUtil {
     }
 
     public static LivingEntity getDamagerFromEvent(Event event) {
+        if (event instanceof EntityDamageInfoEvent infoEvent) {
+            event = infoEvent.getWrappedEvent();
+        }
+
         if (event instanceof EntityDamageByEntityEvent byEntityEvent) {
             var damager = byEntityEvent.getDamager();
             LivingEntity entity = null;

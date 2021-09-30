@@ -11,16 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PlayerKillEntityMatchHistoryEvent extends PlayerMatchHistoryEvent
-{
+public class PlayerKillEntityMatchHistoryEvent extends PlayerMatchHistoryEvent {
     EntityType targetType;
     UUID targetUUID;
     List<String> targetTeams = new ArrayList<>();
     DamageType damageType;
     String damageSource;
 
-    public PlayerKillEntityMatchHistoryEvent(Player player, LivingEntity target, String damageSource, DamageType damageType)
-    {
+    public PlayerKillEntityMatchHistoryEvent(Player player, LivingEntity target, String damageSource, DamageType damageType) {
         super("player_kill", player);
 
         this.targetType = target.getType();

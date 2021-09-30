@@ -5,7 +5,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 public enum DamageType {
     PRIMARY(EntityDamageEvent.DamageCause.ENTITY_ATTACK),
     SECONDARY(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK),
-    MAGIC(EntityDamageEvent.DamageCause.MAGIC);
+    MAGIC(EntityDamageEvent.DamageCause.MAGIC),
+    MISC(EntityDamageEvent.DamageCause.CUSTOM);
 
     private final EntityDamageEvent.DamageCause damageCause;
 
@@ -18,6 +19,12 @@ public enum DamageType {
     }
 
     public static DamageType fromCause(EntityDamageEvent.DamageCause damageCause) {
-        return DamageType.PRIMARY;
+        for (var type : DamageType.values()) {
+            if (type.getDamageCause() == damageCause) {
+                return type;
+            }
+        }
+
+        return DamageType.MISC;
     }
 }

@@ -138,7 +138,7 @@ public class CraftUtil {
         damageEntity(entity, damage, null, cause);
     }
 
-    public static void damageEntity(LivingEntity entity, double damage, LivingEntity damager, EntityDamageEvent.DamageCause cause) {
+    public static void damageEntity(Entity entity, double damage, LivingEntity damager, EntityDamageEvent.DamageCause cause) {
         var nmsEntity = ((CraftEntity) entity).getHandle();
         var nmsDamager = ((CraftEntity) damager).getHandle();
         var source = DamageSource.GENERIC;
