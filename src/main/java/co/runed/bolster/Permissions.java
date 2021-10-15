@@ -1,7 +1,6 @@
 package co.runed.bolster;
 
-public class Permissions
-{
+public class Permissions {
     private static final String BASE = "bolster";
 
     /* Commands */
@@ -20,5 +19,5 @@ public class Permissions
     public static final String PREMIUM = BASE + ".premium";
 
     /* Servers */
-    public static final String RESTRICTED_SERVERS = BASE + ".servers.restricted";
+    public static final String HIDDEN_SERVERS = BASE + ".servers.hidden";
 }

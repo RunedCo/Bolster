@@ -21,6 +21,7 @@ public class Config {
 
     public String gameMode;
     public String serverId = null;
+    public boolean hidden = false;
 
     public Location mapSpawn;
 
@@ -76,6 +77,7 @@ public class Config {
 
         this.gameMode = this.config.getString("gamemode", "bolster");
         this.serverId = this.config.getString("server-id", this.serverId);
+        hidden = config.getBoolean("hidden", hidden);
 
         this.mapSpawn = BukkitUtil.stringToLocation(config.getString("map-spawn", "0,0,0"));
         Warps.getInstance().addWarp("spawn", this.mapSpawn);

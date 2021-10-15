@@ -82,6 +82,7 @@ public class Bolster extends JavaPlugin implements Listener {
 
     private GameMode activeGameMode;
     private String serverId = null;
+    private boolean hideServer;
     private Map<String, ServerData> servers = new HashMap<>();
 
     @Override
@@ -96,6 +97,8 @@ public class Bolster extends JavaPlugin implements Listener {
         this.warps = new Warps(this);
 
         this.loadConfig();
+
+        hideServer = config.hidden;
 
         loadLang(this);
 
@@ -179,6 +182,7 @@ public class Bolster extends JavaPlugin implements Listener {
 
         var serverData = new ServerData();
         serverData.id = this.serverId;
+        serverData.hidden = hideServer;
         serverData.status = gameMode.getStatus();
         serverData.gameMode = gameMode.getId();
         serverData.name = this.serverId;
@@ -400,6 +404,15 @@ public class Bolster extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(bolster.activeGameMode, bolster);
 
         bolster.activeGameMode.start();
+    }
+
+    public static void setHidden(boolean hidden) {
+        getInstance().hideServer = hidden;
+        updateServer();
+    }
+
+    public static boolean isHidden() {
+        return getInstance().hideServer;
     }
 
     public static void updateServer() {

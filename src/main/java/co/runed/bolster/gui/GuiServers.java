@@ -70,7 +70,7 @@ public class GuiServers extends Gui {
 
             if (server.id.equals(Bolster.getInstance().getServerId())) continue;
             if (gameModes.size() > 0 && !gameModes.contains(server.gameMode)) continue;
-            if (server.restricted && !player.hasPermission(Permissions.RESTRICTED_SERVERS)) continue;
+            if (server.hidden && !player.hasPermission(Permissions.HIDDEN_SERVERS)) continue;
 
             var itemBuilder = new ItemBuilder(Material.valueOf(server.iconMaterial))
                     .setDisplayName(Component.text(server.name, NamedTextColor.WHITE))
