@@ -1,12 +1,15 @@
 package co.runed.bolster.wip;
 
 import co.runed.bolster.damage.DamageInfo;
+import co.runed.bolster.damage.DamageSource;
+import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.entity.EntityDamageInfoEvent;
 import co.runed.bolster.managers.Manager;
 import co.runed.bolster.util.BukkitUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -74,7 +77,7 @@ public class DamageListener extends Manager {
 
         if (damageInfo == null) damageInfo = DamageInfo.fromEvent(event);
 
-        var infoEvent = BukkitUtil.triggerEvent(new EntityDamageInfoEvent(target, damageInfo.clone(), event));
+        var infoEvent = BukkitUtil.triggerEvent(new EntityDamageInfoEvent(target, damageInfo, event));
         if (infoEvent.isCancelled()) event.setCancelled(true);
 
         if (!event.isCancelled()) {
@@ -90,13 +93,26 @@ public class DamageListener extends Manager {
 
         if (damageInfo == null) return;
 
-        String message = null;
+        Component message = null;
+        DamageSource prevNext = null;
         var next = damageInfo.getDamageSource();
-        while (message == null && next != null) {
+        while (message == null && next != null && next != prevNext) {
             message = next.getDeathMessage(damageInfo.getAttacker(), event.getEntity(), damageInfo);
+
+            prevNext = next;
+            next = next.next();
         }
 
-        if (message != null) event.deathMessage(Component.text(message));
+        if (message != null) event.deathMessage(message);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    private void onDamage(EntityDamageInfoEvent event) {
+        if (!(event.getDamager() instanceof Player player)) return;
+
+        var info = event.getDamageInfo();
+
+        BolsterEntity.from(player).sendDebugMessage("You dealt " + event.getFinalDamage() + " damage of type " + info.getDamageType() + " from source " + info.getDamageSource().getDamageSourceName() + " to target " + event.getEntity().getName());
     }
 
     public static DamageListener getInstance() {

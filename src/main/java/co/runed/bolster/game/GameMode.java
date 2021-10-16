@@ -195,7 +195,8 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
     public void buildTabMenu(Player player) {
         var bolsterConfig = Bolster.getBolsterConfig();
 
-        Component headerComponent = Component.text("  Welcome to ", NamedTextColor.YELLOW)
+        Component headerComponent = Component.newline()
+                .append(Component.text("  Welcome to ", NamedTextColor.YELLOW))
                 .append(Lang.simple("game.long-name"))
                 .append(Component.text("  "))
                 .append(Component.newline());
@@ -212,6 +213,7 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
 
             if (expiryTime.isAfter(ZonedDateTime.now(Clock.systemUTC()))) {
                 footerComponent = footerComponent
+                        .append(Component.newline())
                         .append(Component.text("Your ").append(Lang.simple("rank.premium.name")).append(Component.text(" expires in")))
                         .append(Component.newline())
                         .append(Component.text(TimeUtil.formatDatePrettyRounded(expiryTime)));
@@ -222,6 +224,9 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
                     .append(Component.text("Support the server at ", NamedTextColor.AQUA))
                     .append(Lang.simple("game.store-url").append(Component.text("!", NamedTextColor.GOLD)));
         }
+
+
+        footerComponent = footerComponent.append(Component.newline());
 
         player.sendPlayerListFooter(footerComponent);
     }

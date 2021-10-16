@@ -5,6 +5,8 @@ import co.runed.bolster.events.server.RedisMessageEvent;
 import co.runed.bolster.events.server.ReloadConfigEvent;
 import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.GameMode;
+import co.runed.bolster.game.GameProperties;
+import co.runed.bolster.game.Settings;
 import co.runed.bolster.game.currency.Currencies;
 import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.managers.*;
@@ -27,6 +29,7 @@ import co.runed.dayroom.redis.request.UnregisterServerPayload;
 import co.runed.dayroom.redis.response.ListServersResponsePayload;
 import co.runed.dayroom.redis.response.RegisterServerResponsePayload;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
+import com.google.gson.GsonBuilder;
 import com.mojang.authlib.properties.PropertyMap;
 import de.slikey.effectlib.EffectManager;
 import me.libraryaddict.disguise.utilities.json.SerializerGameProfile;
@@ -45,7 +48,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
-import redis.clients.jedis.JedisPool;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,8 +59,6 @@ import java.util.Map;
 public class Bolster extends JavaPlugin implements Listener {
     // SINGLETON INSTANCE
     private static Bolster instance;
-
-    private JedisPool jedisPool;
 
     private Warps warps;
 
@@ -78,7 +78,7 @@ public class Bolster extends JavaPlugin implements Listener {
     private MenuFunctionListener menuListener;
 
     private Config config;
-    private Map<String, String> lang = new HashMap<>();
+    private Map<String, String> langDictionary = new HashMap<>();
 
     private GameMode activeGameMode;
     private String serverId = null;
@@ -92,8 +92,6 @@ public class Bolster extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        super.onEnable();
-
         this.warps = new Warps(this);
 
         this.loadConfig();
@@ -102,9 +100,9 @@ public class Bolster extends JavaPlugin implements Listener {
 
         loadLang(this);
 
-        this.setupGson();
+        GsonUtil.addBuilderFunction(this::setupGson);
 
-        // CREATE MANAGERS
+        // Create managers
         this.commandManager = new CommandManager();
         this.cooldownManager = new CooldownManager(this);
         this.sidebarManager = new SidebarManager(this);
@@ -117,45 +115,40 @@ public class Bolster extends JavaPlugin implements Listener {
         this.glowSystem = new GlowSystem(this);
         this.damageListener = new DamageListener(this);
 
-        // REGISTER COMMANDS
+        // Register Commands
         this.commandManager.add(new CommandBolster());
-
         this.commandManager.add(new CommandCurrency());
         this.commandManager.add(new CommandGame());
         this.commandManager.add(new CommandShop());
         this.commandManager.add(new CommandUnlock());
         this.commandManager.add(new CommandPremium());
-
         this.commandManager.add(new CommandWarp());
         this.commandManager.add(new CommandWarpGUI());
-
         this.commandManager.add(new CommandServerGUI());
 
         // Register Plugin Channels
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:disguise");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:undisguise");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:add_status_effect");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "bolster:remove_status_effect");
+        var messenger = getServer().getMessenger();
+        messenger.registerOutgoingPluginChannel(this, "BungeeCord");
+        messenger.registerOutgoingPluginChannel(this, "bolster:disguise");
+        messenger.registerOutgoingPluginChannel(this, "bolster:undisguise");
+        messenger.registerOutgoingPluginChannel(this, "bolster:add_status_effect");
+        messenger.registerOutgoingPluginChannel(this, "bolster:remove_status_effect");
 
         Registries.PARTICLE_SETS.register("bruce_test", ParticleSet::new);
 
         // Gui listener
         this.menuListener = new MenuFunctionListener();
 
-        // REGISTER EVENTS
-        Bukkit.getPluginManager().registerEvents(this, this);
-        Bukkit.getPluginManager().registerEvents(menuListener, this);
-        Bukkit.getPluginManager().registerEvents(new DisguiseListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PotionSystem(), this);
-        Bukkit.getPluginManager().registerEvents(new BowTracker(), this);
-        Bukkit.getPluginManager().registerEvents(new CombatTracker(), this);
-        Bukkit.getPluginManager().registerEvents(new InventoryTracker(), this);
-        Bukkit.getPluginManager().registerEvents(new WorldGuardListener(), this);
+        // Register events
+        BukkitUtil.registerEvents(this, this, menuListener, new PotionSystem(), new BowTracker(), new CombatSystem(), new InventoryTracker(), new WorldGuardListener());
+
+        // Initialize and register static objects
+        Settings.initialize();
+        GameProperties.initialize();
+        Currencies.initialize();
+        Traits.initialize();
 
         this.registerStatusEffects();
-        this.registerCurrencies();
-        this.registerTraits();
 
         // Redis
         var redisChannels = Arrays.asList(RedisChannels.LIST_SERVERS_RESPONSE, RedisChannels.REQUEST_PLAYER_DATA_RESPONSE, RedisChannels.REGISTER_SERVER_RESPONSE);
@@ -164,17 +157,40 @@ public class Bolster extends JavaPlugin implements Listener {
         this.redisManager.setMessageHandler((channel, message) -> BukkitUtil.triggerEventSync(new RedisMessageEvent(channel, message)));
 
         Bukkit.getScheduler().runTaskAsynchronously(this, redisManager::setup);
-
-        getServer().getScheduler().scheduleSyncDelayedTask(this, this::onPostEnable);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::onPostEnable);
     }
 
-    private void setupGson() {
-        GsonUtil.addBuilderFunction((gsonBuilder ->
-                gsonBuilder.registerTypeAdapterFactory(BukkitAwareObjectTypeAdapter.FACTORY)
-                        .registerTypeHierarchyAdapter(Inventory.class, new InventorySerializableAdapter())
-                        .registerTypeAdapter(WrappedGameProfile.class, new SerializerGameProfile())
-                        .registerTypeAdapter(PropertyMap.class, new PropertyMap.Serializer()))
-        );
+    private GsonBuilder setupGson(GsonBuilder existing) {
+        return existing.registerTypeAdapterFactory(BukkitAwareObjectTypeAdapter.FACTORY)
+                .registerTypeHierarchyAdapter(Inventory.class, new InventorySerializableAdapter())
+                .registerTypeAdapter(WrappedGameProfile.class, new SerializerGameProfile())
+                .registerTypeAdapter(PropertyMap.class, new PropertyMap.Serializer());
+    }
+
+    public void onPostEnable() {
+        var firstWorld = Bukkit.getWorlds().get(0);
+        firstWorld.setGameRule(GameRule.SPAWN_RADIUS, 1);
+        firstWorld.setSpawnLocation(config.mapSpawn);
+
+        setActiveGameMode(config.gameMode);
+
+        var registerPayload = new ServerDataPayload();
+        registerPayload.serverData = this.getServerData();
+
+        RedisManager.getInstance().publish(RedisChannels.REGISTER_SERVER, registerPayload);
+    }
+
+    public void loadConfig() {
+        try {
+            this.config = new Config();
+
+            serverId = Bolster.getInstance().config.serverId;
+        }
+        catch (Exception e) {
+            this.getLogger().severe("FAILED TO LOAD CONFIG FILE");
+            e.printStackTrace();
+            this.setEnabled(false);
+        }
     }
 
     public ServerData getServerData() {
@@ -199,32 +215,6 @@ public class Bolster extends JavaPlugin implements Listener {
         return serverData;
     }
 
-    public void onPostEnable() {
-        var firstWorld = Bukkit.getWorlds().get(0);
-        firstWorld.setGameRule(GameRule.SPAWN_RADIUS, 1);
-        firstWorld.setSpawnLocation(config.mapSpawn);
-
-        setActiveGameMode(this.config.gameMode);
-
-        var registerPayload = new ServerDataPayload();
-        registerPayload.serverData = this.getServerData();
-
-        RedisManager.getInstance().publish(RedisChannels.REGISTER_SERVER, registerPayload);
-    }
-
-    public void loadConfig() {
-        try {
-            this.config = new Config();
-
-            serverId = Bolster.getInstance().config.serverId;
-        }
-        catch (Exception e) {
-            this.getLogger().severe("FAILED TO LOAD CONFIG FILE");
-            e.printStackTrace();
-            this.setEnabled(false);
-        }
-    }
-
     // NOTE: SHIT WORKAROUND FOR CANVAS NOT TRIGERRING EVENT WHEN IN SPECTATOR
     @EventHandler(priority = EventPriority.HIGH)
     private void onInventoryClick(InventoryClickEvent event) {
@@ -244,22 +234,6 @@ public class Bolster extends JavaPlugin implements Listener {
         statusEffectRegistry.register("untargetable", UntargetableStatusEffect.class);
         statusEffectRegistry.register("knockback_resistance", KnockbackResistanceStatusEffect.class);
         statusEffectRegistry.register("vulnerable", VulnerableStatusEffect.class);
-    }
-
-    private void registerCurrencies() {
-        var currencyRegistry = Registries.CURRENCIES;
-
-        currencyRegistry.register(Currencies.DIAMOND);
-        currencyRegistry.register(Currencies.EMERALD);
-        currencyRegistry.register(Currencies.GOLD);
-    }
-
-    private void registerTraits() {
-        var registry = Registries.TRAITS;
-
-        registry.register(Traits.DEBUG_MODE);
-        registry.register(Traits.COOLDOWN_REDUCTION_PERCENT);
-        registry.register(Traits.MAX_HEALTH);
     }
 
     @Override
@@ -325,7 +299,7 @@ public class Bolster extends JavaPlugin implements Listener {
             var langConfig = new YamlConfiguration();
             langConfig.load(langFile);
 
-            lang.putAll(ConfigUtil.toStringMap(langConfig, true));
+            langDictionary.putAll(ConfigUtil.toStringMap(langConfig, true));
         }
         catch (IOException | InvalidConfigurationException e) {
             getLogger().severe("Error loading lang file for plugin " + plugin.getName());
@@ -333,20 +307,7 @@ public class Bolster extends JavaPlugin implements Listener {
     }
 
     public Map<String, String> getLang() {
-        return Collections.unmodifiableMap(lang);
-    }
-
-    // SINGLETON GETTERS
-    public static Bolster getInstance() {
-        return instance;
-    }
-
-    public static Config getBolsterConfig() {
-        return Bolster.getInstance().config;
-    }
-
-    public static EffectManager getEffectManager() {
-        return Bolster.getInstance().effectManager;
+        return Collections.unmodifiableMap(langDictionary);
     }
 
     public static void debug(String out) {
@@ -355,6 +316,7 @@ public class Bolster extends JavaPlugin implements Listener {
         }
     }
 
+    /* Gamemode */
     public static boolean isActiveGameMode(Class<? extends GameMode> gameMode) {
         return isActiveGameMode(Registries.GAME_MODES.getId(gameMode));
     }
@@ -426,5 +388,18 @@ public class Bolster extends JavaPlugin implements Listener {
 
     public static void reload() {
         BukkitUtil.triggerEvent(new ReloadConfigEvent());
+    }
+
+    // SINGLETON GETTERS
+    public static Bolster getInstance() {
+        return instance;
+    }
+
+    public static Config getBolsterConfig() {
+        return Bolster.getInstance().config;
+    }
+
+    public static EffectManager getEffectManager() {
+        return Bolster.getInstance().effectManager;
     }
 }

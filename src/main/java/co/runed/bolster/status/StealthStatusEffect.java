@@ -1,7 +1,7 @@
 package co.runed.bolster.status;
 
 import co.runed.bolster.events.entity.EntityTargetedEvent;
-import co.runed.bolster.wip.CombatTracker;
+import co.runed.bolster.wip.CombatSystem;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -16,7 +16,7 @@ public class StealthStatusEffect extends StatusEffect {
 
     @Override
     public void onStart() {
-        CombatTracker.clearAggro(this.getEntity());
+        CombatSystem.clearAggro(this.getEntity());
 
         this.addPotionEffect(PotionEffectType.INVISIBILITY, 0, false, true, false);
     }

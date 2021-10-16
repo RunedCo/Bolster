@@ -14,9 +14,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -410,6 +412,12 @@ public class BukkitUtil {
 
     public static void triggerEventSync(Event event) {
         Bukkit.getScheduler().runTask(Bolster.getInstance(), () -> Bukkit.getServer().getPluginManager().callEvent(event));
+    }
+
+    public static void registerEvents(Plugin plugin, Listener... listeners) {
+        for (var listener : listeners) {
+            Bukkit.getPluginManager().registerEvents(listener, plugin);
+        }
     }
 
     public static LivingEntity getDamagerFromEvent(Event event) {

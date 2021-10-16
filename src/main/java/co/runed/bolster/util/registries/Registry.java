@@ -18,6 +18,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 
 public class Registry<T extends Identifiable> implements Listener {
     public Plugin plugin;
@@ -28,6 +29,7 @@ public class Registry<T extends Identifiable> implements Listener {
     private final Map<Class<? extends T>, String> classKeys = new HashMap<>();
     private final Map<T, String> objKeys = new HashMap<>();
     private final Map<String, Collection<Category>> categories = new HashMap<>();
+    private final Set<Consumer<Entry<T>>> onRegisterFunctions = new HashSet<>();
 
     public Registry(Plugin plugin) {
         this(plugin, null);
@@ -115,8 +117,16 @@ public class Registry<T extends Identifiable> implements Listener {
         this.doRegister(id, func);
     }
 
-    protected void doRegister(String id, Callable<? extends T> func) {
-        this.entries.putIfAbsent(id, new Entry<>(this, id, func, this.categories.getOrDefault(id, new ArrayList<>())));
+    protected void doRegister(String id, Callable<? extends T> callable) {
+        var entry = new Entry<>(this, id, callable, this.categories.getOrDefault(id, new ArrayList<>()));
+
+        this.entries.putIfAbsent(id, entry);
+
+        this.onRegisterFunctions.forEach(func -> func.accept(entry));
+    }
+
+    public void onRegister(Consumer<Entry<T>> func) {
+        onRegisterFunctions.add(func);
     }
 
     public void addCategories(String id, Collection<Category> categories) {

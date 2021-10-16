@@ -1,6 +1,7 @@
 package co.runed.bolster.damage;
 
 import co.runed.bolster.entity.BolsterEntity;
+import co.runed.bolster.util.Owned;
 import co.runed.bolster.v1_16_R3.CraftUtil;
 import co.runed.bolster.wip.DamageListener;
 import org.bukkit.entity.Entity;
@@ -11,12 +12,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import java.util.UUID;
 
 public class DamageInfo {
-    private UUID damageId = UUID.randomUUID();
-    private double damage;
-    private DamageType damageType = DamageType.PRIMARY;
-    private LivingEntity attacker;
-    private DamageSource damageSource;
-    private int noDamageTicks = -1;
+    protected UUID damageId = UUID.randomUUID();
+    protected double damage;
+    protected DamageType damageType = DamageType.PRIMARY;
+    protected LivingEntity attacker;
+    protected DamageSource damageSource;
+    protected int noDamageTicks = -1;
 
     public DamageInfo(double damage) {
         this.damage = damage;
@@ -52,6 +53,16 @@ public class DamageInfo {
 
     public DamageInfo withSource(DamageSource damageSource) {
         this.damageSource = damageSource;
+
+        if (attacker == null) {
+            if (damageSource instanceof BolsterEntity bolsterEntity) {
+                return withAttacker(bolsterEntity.getEntity());
+            }
+
+            if (damageSource instanceof Owned owned) {
+                return withAttacker(owned.getOwner());
+            }
+        }
 
         return this;
     }
@@ -94,7 +105,7 @@ public class DamageInfo {
     }
 
     public static DamageInfo fromEvent(EntityDamageEvent event) {
-        var info = new DamageInfo(event.getFinalDamage());
+        var info = new EventDamageInfo(event.getFinalDamage());
 
         if (event instanceof EntityDamageByEntityEvent entityEvent) {
             if (entityEvent.getDamager() instanceof LivingEntity damager) {
@@ -106,5 +117,20 @@ public class DamageInfo {
         info.withType(DamageType.fromCause(event.getCause()));
 
         return info;
+    }
+
+    public static class EventDamageInfo extends DamageInfo {
+        public EventDamageInfo(double damage) {
+            super(damage);
+        }
+
+        @Override
+        public DamageInfo clone() {
+            return new EventDamageInfo(damage)
+                    .withAttacker(attacker)
+                    .withSource(damageSource)
+                    .withType(damageType)
+                    .setNoDamageTicks(noDamageTicks);
+        }
     }
 }

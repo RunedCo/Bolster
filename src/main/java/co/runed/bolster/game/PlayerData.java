@@ -1,15 +1,15 @@
 package co.runed.bolster.game;
 
 import co.runed.bolster.Permissions;
-import co.runed.dayroom.gson.GsonUtil;
-import co.runed.dayroom.gson.JsonExclude;
-import co.runed.dayroom.properties.Property;
 import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.registries.Registries;
+import co.runed.dayroom.gson.GsonUtil;
+import co.runed.dayroom.gson.JsonExclude;
+import co.runed.dayroom.properties.Property;
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -117,6 +117,10 @@ public class PlayerData {
 
     public <T> void setSetting(Property<T> setting, T value) {
         this.settings.put(setting.getId(), value);
+    }
+
+    public HashMap<String, Object> getSettings() {
+        return settings;
     }
 
     public List<String> getUnlockedShopItems(String shopId) {

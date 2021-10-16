@@ -14,6 +14,9 @@ public class Permissions {
     public static final String COMMAND_UNLOCK = COMMANDS + ".unlock";
     public static final String COMMAND_WARP = COMMANDS + ".warp";
     public static final String COMMAND_WARP_GUI = COMMANDS + ".warp.gui";
+    public static final String COMMAND_TRAIT = COMMANDS + ".trait";
+    public static final String COMMAND_SETTINGS = COMMANDS + ".settings";
+    public static final String COMMAND_GAME_PROPERTIES = COMMANDS + ".gameproperties";
 
     /* Premium Override */
     public static final String PREMIUM = BASE + ".premium";

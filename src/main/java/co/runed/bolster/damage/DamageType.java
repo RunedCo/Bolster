@@ -4,7 +4,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public enum DamageType {
     PRIMARY(EntityDamageEvent.DamageCause.ENTITY_ATTACK),
-    SECONDARY(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK),
+    SWEEP_AOE(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK),
     MAGIC(EntityDamageEvent.DamageCause.MAGIC),
     MISC(EntityDamageEvent.DamageCause.CUSTOM);
 

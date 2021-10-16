@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class CombatTracker implements Listener {
+public class CombatSystem implements Listener {
     private static Map<UUID, LivingEntity> damageMap = new HashMap<>();
     //    private static Map<UUID, List<Mob>> targetedByMap = new HashMap<>();
     private static Map<Mob, LivingEntity> targetMap = new HashMap<>();
@@ -39,25 +39,6 @@ public class CombatTracker implements Listener {
     private void onEntityDie(EntityDeathEvent event) {
         damageMap.remove(event.getEntity().getUniqueId());
     }
-
-//    public static void clearAggro(LivingEntity entity)
-//    {
-//        UUID uuid = entity.getUniqueId();
-//
-//        if (!targetedByMap.containsKey(uuid)) return;
-//
-//        List<Mob> targeters = targetedByMap.get(uuid);
-//
-//        for (Mob target : targeters)
-//        {
-//            if (target.getTarget().getUniqueId().equals(uuid))
-//            {
-//                target.setTarget(null);
-//            }
-//        }
-//
-//        targeters.remove(uuid);
-//    }
 
     public static void clearAggro(LivingEntity entity) {
         var uuid = entity.getUniqueId();
@@ -93,20 +74,4 @@ public class CombatTracker implements Listener {
             damageMap.remove(event.getUniqueId());
         }
     }
-
-//    @EventHandler(priority = EventPriority.HIGH)
-//    private void onEntityTarget(EntityTargetLivingEntityEvent event)
-//    {
-//        EntityTargetEvent.TargetReason reason = event.getReason();
-//        LivingEntity target = event.getTarget();
-//        Mob entity = (Mob) event.getEntity();
-//
-//        if (target == null)
-//        {
-//
-//        }
-//
-//        UUID uuid = target.getUniqueId();
-//        if (!targetedByMap.containsKey(uuid)) targetedByMap.put(uuid, new ArrayList<>());
-//    }
 }

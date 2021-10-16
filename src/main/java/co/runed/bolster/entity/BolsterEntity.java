@@ -1,22 +1,25 @@
 package co.runed.bolster.entity;
 
-import co.runed.dayroom.math.NumberUtil;
-import co.runed.dayroom.math.Operation;
-import co.runed.dayroom.math.easing.Ease;
-import co.runed.dayroom.properties.Properties;
-import co.runed.dayroom.util.Enableable;
 import co.runed.bolster.damage.DamageSource;
 import co.runed.bolster.events.entity.EntityDestroyEvent;
+import co.runed.bolster.game.PlayerData;
+import co.runed.bolster.game.Settings;
 import co.runed.bolster.game.traits.Trait;
 import co.runed.bolster.game.traits.TraitProvider;
 import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.managers.EntityManager;
+import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.managers.StatusEffectManager;
 import co.runed.bolster.status.StatusEffect;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.TaskUtil;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.wip.BowTracker;
+import co.runed.dayroom.math.NumberUtil;
+import co.runed.dayroom.math.Operation;
+import co.runed.dayroom.math.easing.Ease;
+import co.runed.dayroom.properties.Properties;
+import co.runed.dayroom.util.Enableable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
@@ -66,6 +69,7 @@ public class BolsterEntity extends TraitProvider implements Enableable, DamageSo
         this._entity = entity;
     }
 
+    @Override
     public Properties getTraits() {
         var traits = new Properties();
 
@@ -120,17 +124,21 @@ public class BolsterEntity extends TraitProvider implements Enableable, DamageSo
         return traits;
     }
 
+    public Properties getBackingTraits() {
+        return super.getTraits();
+    }
+
     @Override
     public <T> void setTrait(Trait<T> key, T value) {
         super.setTrait(key, value);
 
-        if (!this.traitProviders.contains(this)) this.traitProviders.add(this);
+        addTraitProvider(this);
     }
 
     public <T> void setTrait(TraitProvider provider, Trait<T> key, T value) {
         provider.setTrait(key, value);
 
-        if (!this.traitProviders.contains(provider)) this.traitProviders.add(provider);
+        addTraitProvider(provider);
     }
 
     @Override
@@ -268,6 +276,17 @@ public class BolsterEntity extends TraitProvider implements Enableable, DamageSo
     }
 
     /* PLAYER EXCLUSIVE METHODS */
+    public PlayerData getPlayerData() {
+        if (!(_entity instanceof Player player)) return new PlayerData();
+
+        return PlayerManager.getInstance().getPlayerData(player);
+    }
+
+    public void sendDebugMessage(String message) {
+        if (!getPlayerData().getSetting(Settings.DEBUG_MODE)) return;
+
+        getEntity().sendMessage(message);
+    }
 
     public boolean isDrawingBow() {
         if (this._entity.getType() != EntityType.PLAYER) return false;

@@ -79,6 +79,12 @@ public class Currency implements Identifiable, Categorised, IconPreview, Listene
         return builder.build();
     }
 
+    public Currency register() {
+        Registries.CURRENCIES.register(this);
+
+        return this;
+    }
+
     public static Map<Currency, Integer> fromList(List<String> costs) {
         Map<Currency, Integer> output = new HashMap<>();
 

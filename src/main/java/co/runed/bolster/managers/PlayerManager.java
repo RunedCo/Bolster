@@ -228,15 +228,6 @@ public class PlayerManager extends Manager {
 
         Bolster.getActiveGameMode().getMatchHistory().addEvent(new PlayerConnectMatchHistoryEvent(player));
 
-//        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-//        Bukkit.getServer().dispatchCommand(console, "/luckperms ");
-//
-//        PermissionAttachment attachment = player.addAttachment(this.plugin);
-//        permissions.put(player.getUniqueId(), attachment);
-//
-//        PermissionUtil.setPermissionWithCase(attachment, "suffix.0.the Paladin ", true);
-//        attachment.setPermission("group.premium", true);
-
         this.timeSinceDisconnect.remove(player.getUniqueId());
     }
 

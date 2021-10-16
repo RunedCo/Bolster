@@ -1,5 +1,6 @@
 package co.runed.bolster.game.traits;
 
+import co.runed.bolster.util.registries.Registries;
 import co.runed.dayroom.math.Operation;
 import co.runed.dayroom.properties.Property;
 
@@ -18,5 +19,11 @@ public class Trait<T> extends Property<T> {
 
     public Operation getOperation() {
         return operation;
+    }
+
+    public Trait<T> register() {
+        Registries.TRAITS.register(this);
+
+        return this;
     }
 }

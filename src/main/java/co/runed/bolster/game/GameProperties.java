@@ -1,5 +1,8 @@
 package co.runed.bolster.game;
 
+import co.runed.bolster.commands.CommandGameProperty;
+import co.runed.bolster.managers.CommandManager;
+import co.runed.bolster.util.registries.Registries;
 import co.runed.dayroom.properties.Properties;
 import co.runed.dayroom.properties.Property;
 import org.bukkit.Material;
@@ -49,9 +52,33 @@ public class GameProperties extends Properties implements Listener {
 
     public static final Property<Boolean> ENABLE_LOG_STRIP = new Property<>("enable_log_strip", true);
     public static final Property<Boolean> ENABLE_GRASS_PATH = new Property<>("enable_grass_path", true);
+    public static final Property<Boolean> ENABLE_HOE_GROUND = new Property<>("enable_hoe_ground", true);
 
     private static final Set<Material> SHOVELS = EnumSet.of(Material.STONE_SHOVEL, Material.DIAMOND_SHOVEL, Material.GOLDEN_SHOVEL, Material.IRON_SHOVEL, Material.NETHERITE_SHOVEL, Material.WOODEN_SHOVEL);
     private static final Set<Material> AXES = EnumSet.of(Material.STONE_AXE, Material.DIAMOND_AXE, Material.GOLDEN_AXE, Material.IRON_AXE, Material.NETHERITE_AXE, Material.WOODEN_AXE);
+    private static final Set<Material> HOES = EnumSet.of(Material.STONE_HOE, Material.DIAMOND_HOE, Material.GOLDEN_HOE, Material.IRON_HOE, Material.NETHERITE_HOE, Material.WOODEN_HOE);
+
+    public static void initialize() {
+        var registry = Registries.GAME_PROPERTIES;
+
+        registry.onRegister(entry -> CommandManager.getInstance().add(new CommandGameProperty(entry.create())));
+
+        registry.register(ENABLE_FALL_DAMAGE);
+        registry.register(ENABLE_EXPLOSION_DAMAGE);
+        registry.register(ENABLE_POISON_DAMAGE);
+        registry.register(ENABLE_WITHER_DAMAGE);
+        registry.register(ENABLE_FIRE_DAMAGE);
+        registry.register(ENABLE_PVP);
+        registry.register(ENABLE_PVE);
+        registry.register(DISABLE_ALL_DAMAGE);
+        registry.register(ENABLE_HUNGER);
+        registry.register(ENABLE_OFFHAND);
+        registry.register(ENABLE_ITEM_DROPS);
+        registry.register(ENABLE_XP);
+        registry.register(ENABLE_LOG_STRIP);
+        registry.register(ENABLE_GRASS_PATH);
+        registry.register(ENABLE_HOE_GROUND);
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onEntityTakeDamage(EntityDamageEvent event) {
@@ -146,7 +173,7 @@ public class GameProperties extends Properties implements Listener {
             if (item == null || item.getType().isBlock()) return;
 
             if (!this.get(GameProperties.ENABLE_LOG_STRIP)) {
-                if (!AXES.contains(item.getType())) {
+                if (AXES.contains(item.getType())) {
                     if (Tag.LOGS.isTagged(block.getType())) {
                         e.setUseInteractedBlock(Event.Result.ALLOW);
                         e.setUseItemInHand(Event.Result.DENY);
@@ -156,7 +183,17 @@ public class GameProperties extends Properties implements Listener {
             }
 
             if (!this.get(GameProperties.ENABLE_GRASS_PATH)) {
-                if (!SHOVELS.contains(item.getType())) {
+                if (SHOVELS.contains(item.getType())) {
+                    if (block.getType() == Material.GRASS_BLOCK) {
+                        e.setUseInteractedBlock(Event.Result.ALLOW);
+                        e.setUseItemInHand(Event.Result.DENY);
+                        e.setCancelled(true);
+                    }
+                }
+            }
+
+            if (!this.get(GameProperties.ENABLE_HOE_GROUND)) {
+                if (HOES.contains(item.getType())) {
                     if (block.getType() == Material.GRASS_BLOCK) {
                         e.setUseInteractedBlock(Event.Result.ALLOW);
                         e.setUseItemInHand(Event.Result.DENY);
