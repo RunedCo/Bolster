@@ -12,7 +12,6 @@ import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.status.*;
 import co.runed.bolster.util.BukkitUtil;
-import co.runed.bolster.util.chat.ChatManager;
 import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.json.BukkitAwareObjectTypeAdapter;
 import co.runed.bolster.util.json.InventorySerializableAdapter;
