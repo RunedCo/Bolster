@@ -53,10 +53,12 @@ public class GameProperties extends Properties implements Listener {
     public static final Property<Boolean> ENABLE_LOG_STRIP = new Property<>("enable_log_strip", true);
     public static final Property<Boolean> ENABLE_GRASS_PATH = new Property<>("enable_grass_path", true);
     public static final Property<Boolean> ENABLE_HOE_GROUND = new Property<>("enable_hoe_ground", true);
+    public static final Property<Boolean> ENABLE_SHEAR_STRIP = new Property<>("enable_shear_strip", true);
 
     private static final Set<Material> SHOVELS = EnumSet.of(Material.STONE_SHOVEL, Material.DIAMOND_SHOVEL, Material.GOLDEN_SHOVEL, Material.IRON_SHOVEL, Material.NETHERITE_SHOVEL, Material.WOODEN_SHOVEL);
     private static final Set<Material> AXES = EnumSet.of(Material.STONE_AXE, Material.DIAMOND_AXE, Material.GOLDEN_AXE, Material.IRON_AXE, Material.NETHERITE_AXE, Material.WOODEN_AXE);
     private static final Set<Material> HOES = EnumSet.of(Material.STONE_HOE, Material.DIAMOND_HOE, Material.GOLDEN_HOE, Material.IRON_HOE, Material.NETHERITE_HOE, Material.WOODEN_HOE);
+    private static final Set<Material> SHEARABLE = EnumSet.of(Material.PUMPKIN, Material.BEEHIVE, Material.BEE_NEST);
 
     public static void initialize() {
         var registry = Registries.GAME_PROPERTIES;
@@ -78,6 +80,7 @@ public class GameProperties extends Properties implements Listener {
         registry.register(ENABLE_LOG_STRIP);
         registry.register(ENABLE_GRASS_PATH);
         registry.register(ENABLE_HOE_GROUND);
+        registry.register(ENABLE_SHEAR_STRIP);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -195,6 +198,16 @@ public class GameProperties extends Properties implements Listener {
             if (!this.get(GameProperties.ENABLE_HOE_GROUND)) {
                 if (HOES.contains(item.getType())) {
                     if (block.getType() == Material.GRASS_BLOCK) {
+                        e.setUseInteractedBlock(Event.Result.ALLOW);
+                        e.setUseItemInHand(Event.Result.DENY);
+                        e.setCancelled(true);
+                    }
+                }
+            }
+
+            if (!this.get(GameProperties.ENABLE_SHEAR_STRIP)) {
+                if (item.getType() == Material.SHEARS) {
+                    if (SHEARABLE.contains(block.getType())) {
                         e.setUseInteractedBlock(Event.Result.ALLOW);
                         e.setUseItemInHand(Event.Result.DENY);
                         e.setCancelled(true);
