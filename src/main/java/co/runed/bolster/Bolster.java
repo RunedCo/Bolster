@@ -63,7 +63,6 @@ public class Bolster extends JavaPlugin implements Listener {
 
     private CommandManager commandManager;
     private CooldownManager cooldownManager;
-    private SidebarManager sidebarManager;
     private StatusEffectManager statusEffectManager;
     private EntityManager entityManager;
     private PlayerManager playerManager;
@@ -104,7 +103,6 @@ public class Bolster extends JavaPlugin implements Listener {
         // Create managers
         this.commandManager = new CommandManager();
         this.cooldownManager = new CooldownManager(this);
-        this.sidebarManager = new SidebarManager(this);
         this.statusEffectManager = new StatusEffectManager(this);
         this.playerManager = new PlayerManager(this);
         this.entityManager = new EntityManager(this);

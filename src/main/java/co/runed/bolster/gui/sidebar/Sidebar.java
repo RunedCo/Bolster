@@ -1,7 +1,7 @@
 package co.runed.bolster.gui.sidebar;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.managers.SidebarManager;
+import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.StringUtil;
 import co.runed.bolster.util.scoreboard.PacketScoreboard;
 import co.runed.bolster.util.scoreboard.Scoreboard;
@@ -138,7 +138,7 @@ public abstract class Sidebar implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (this.autoAddPlayers) {
-            SidebarManager.getInstance().setSidebar(event.getPlayer(), this);
+            PlayerManager.getInstance().setSidebar(event.getPlayer(), this);
         }
     }
 
@@ -159,7 +159,7 @@ public abstract class Sidebar implements Listener {
     public void addPlayer(Player player) {
         if (this.players.contains(player)) return;
 
-        SidebarManager.getInstance().clearSidebar(player);
+        PlayerManager.getInstance().clearSidebar(player);
 
         this.players.add(player);
 
@@ -195,7 +195,7 @@ public abstract class Sidebar implements Listener {
      */
     public void addAllPlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            SidebarManager.getInstance().setSidebar(player, this);
+            PlayerManager.getInstance().setSidebar(player, this);
         }
     }
 

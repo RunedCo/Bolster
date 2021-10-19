@@ -9,6 +9,7 @@ import co.runed.bolster.events.server.RedisMessageEvent;
 import co.runed.bolster.game.GameMode;
 import co.runed.bolster.game.GameModeData;
 import co.runed.bolster.game.PlayerData;
+import co.runed.bolster.gui.sidebar.Sidebar;
 import co.runed.bolster.match.PlayerConnectMatchHistoryEvent;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.TimeUtil;
@@ -63,6 +64,49 @@ public class PlayerManager extends Manager {
         Bukkit.getScheduler().runTaskTimer(plugin, this::updatePlayTime, 0L, playTimeFrequency);
 
         _instance = this;
+    }
+
+    private Map<UUID, Sidebar> playerSidebars = new HashMap<>();
+
+    /**
+     * Gets the player's active sidebar instance
+     *
+     * @param player the player
+     * @return the sidebar
+     */
+    public Sidebar getSidebar(Player player) {
+        if (!this.playerSidebars.containsKey(player.getUniqueId())) return null;
+
+        return this.playerSidebars.get(player.getUniqueId());
+    }
+
+    /**
+     * Set a player's active sidebar instance
+     *
+     * @param player  the player
+     * @param sidebar the sidebar
+     */
+    public void setSidebar(Player player, Sidebar sidebar) {
+        if (this.playerSidebars.containsKey(player.getUniqueId())) {
+            this.playerSidebars.get(player.getUniqueId()).removePlayer(player);
+        }
+
+        sidebar.addPlayer(player);
+
+        this.playerSidebars.put(player.getUniqueId(), sidebar);
+    }
+
+    /**
+     * Clears a players active sidebar instance
+     *
+     * @param player the player
+     */
+    public void clearSidebar(Player player) {
+        if (this.playerSidebars.containsKey(player.getUniqueId())) {
+            this.playerSidebars.get(player.getUniqueId()).removePlayer(player);
+        }
+
+        this.playerSidebars.remove(player.getUniqueId());
     }
 
     public void addGameModeDataClass(Class<? extends GameMode> gameMode, Class<? extends GameModeData> dataClass) {
