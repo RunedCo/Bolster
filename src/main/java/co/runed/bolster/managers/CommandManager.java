@@ -47,7 +47,7 @@ public class CommandManager {
         return _instance;
     }
 
-    public static final Map<Class<?>, Supplier<? extends Argument>> ARGUMENT_MAP = Map.copyOf(Map.<Class<?>, Supplier<? extends Argument>>ofEntries(
+    public static final Map<Class<?>, Supplier<? extends Argument>> ARGUMENT_MAP = Map.copyOf(Map.ofEntries(
             Map.entry(int.class, () -> new IntegerArgument("value")),
             Map.entry(long.class, () -> new LongArgument("value")),
             Map.entry(float.class, () -> new FloatArgument("value")),

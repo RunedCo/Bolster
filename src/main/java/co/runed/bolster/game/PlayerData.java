@@ -9,7 +9,6 @@ import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.dayroom.gson.GsonUtil;
 import co.runed.dayroom.gson.JsonExclude;
-import co.runed.dayroom.properties.Property;
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -100,7 +99,7 @@ public class PlayerData {
         this.activeParticleSet = id;
     }
 
-    public <T> T getSetting(Property<T> setting) {
+    public <T> T getSetting(Setting<T> setting) {
         T value;
 
         try {
@@ -115,7 +114,7 @@ public class PlayerData {
         return value;
     }
 
-    public <T> void setSetting(Property<T> setting, T value) {
+    public <T> void setSetting(Setting<T> setting, T value) {
         this.settings.put(setting.getId(), value);
     }
 
