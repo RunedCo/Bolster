@@ -31,8 +31,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import java.util.Collection;
 import java.util.Map;
 
-public interface ScoreboardObjective
-{
+public interface ScoreboardObjective {
     /**
      * Gets the id of this objective
      *

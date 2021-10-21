@@ -6,28 +6,24 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ScheduledStateSeries extends StateSeries
-{
+public class ScheduledStateSeries extends StateSeries {
     private final Plugin plugin;
     private final long interval;
     protected BukkitTask scheduledTask;
 
     protected List<Runnable> onUpdate = new LinkedList<>();
 
-    public ScheduledStateSeries(Plugin plugin)
-    {
+    public ScheduledStateSeries(Plugin plugin) {
         this(plugin, 1);
     }
 
-    public ScheduledStateSeries(Plugin plugin, long interval)
-    {
+    public ScheduledStateSeries(Plugin plugin, long interval) {
         this.plugin = plugin;
         this.interval = interval;
     }
 
     @Override
-    public final void onStart()
-    {
+    public final void onStart() {
         super.onStart();
 
         this.scheduledTask = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
@@ -37,14 +33,12 @@ public class ScheduledStateSeries extends StateSeries
     }
 
     @Override
-    public final void onEnd()
-    {
+    public final void onEnd() {
         super.onEnd();
         this.scheduledTask.cancel();
     }
 
-    public final void addOnUpdate(Runnable runnable)
-    {
+    public final void addOnUpdate(Runnable runnable) {
         this.onUpdate.add(runnable);
     }
 }

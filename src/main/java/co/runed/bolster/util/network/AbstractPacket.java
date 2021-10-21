@@ -26,8 +26,7 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 
-public abstract class AbstractPacket
-{
+public abstract class AbstractPacket {
     // The packet we will be modifying
     protected PacketContainer handle;
 
@@ -35,10 +34,9 @@ public abstract class AbstractPacket
      * Constructs a new strongly typed wrapper for the given packet.
      *
      * @param handle - handle to the raw packet data.
-     * @param type - the packet type.
+     * @param type   - the packet type.
      */
-    protected AbstractPacket(PacketContainer handle, PacketType type)
-    {
+    protected AbstractPacket(PacketContainer handle, PacketType type) {
         // Make sure we're given a valid packet
         if (handle == null)
             throw new IllegalArgumentException("Packet handle cannot be NULL.");
@@ -54,8 +52,7 @@ public abstract class AbstractPacket
      *
      * @return Raw packet data.
      */
-    public PacketContainer getHandle()
-    {
+    public PacketContainer getHandle() {
         return handle;
     }
 
@@ -65,15 +62,12 @@ public abstract class AbstractPacket
      * @param receiver - the receiver.
      * @throws RuntimeException If the packet cannot be sent.
      */
-    public void sendPacket(Player receiver)
-    {
-        try
-        {
+    public void sendPacket(Player receiver) {
+        try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(receiver,
                     getHandle());
         }
-        catch (InvocationTargetException e)
-        {
+        catch (InvocationTargetException e) {
             throw new RuntimeException("Cannot send packet.", e);
         }
     }
@@ -81,8 +75,7 @@ public abstract class AbstractPacket
     /**
      * Send the current packet to all online players.
      */
-    public void broadcastPacket()
-    {
+    public void broadcastPacket() {
         ProtocolLibrary.getProtocolManager().broadcastServerPacket(getHandle());
     }
 
@@ -91,19 +84,16 @@ public abstract class AbstractPacket
      *
      * @param sender - the sender.
      * @throws RuntimeException If the packet cannot be received.
-     * @deprecated Misspelled. recieve to receive
      * @see #receivePacket(Player)
+     * @deprecated Misspelled. recieve to receive
      */
     @Deprecated
-    public void recievePacket(Player sender)
-    {
-        try
-        {
+    public void recievePacket(Player sender) {
+        try {
             ProtocolLibrary.getProtocolManager().recieveClientPacket(sender,
                     getHandle());
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             throw new RuntimeException("Cannot recieve packet.", e);
         }
     }
@@ -114,15 +104,12 @@ public abstract class AbstractPacket
      * @param sender - the sender.
      * @throws RuntimeException if the packet cannot be received.
      */
-    public void receivePacket(Player sender)
-    {
-        try
-        {
+    public void receivePacket(Player sender) {
+        try {
             ProtocolLibrary.getProtocolManager().recieveClientPacket(sender,
                     getHandle());
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             throw new RuntimeException("Cannot receive packet.", e);
         }
     }

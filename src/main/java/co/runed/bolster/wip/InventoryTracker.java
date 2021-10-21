@@ -14,44 +14,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class InventoryTracker implements Listener
-{
+public class InventoryTracker implements Listener {
     private static List<UUID> openInventories = new ArrayList<>();
 
-    public static boolean isInventoryOpen(Player player)
-    {
+    public static boolean isInventoryOpen(Player player) {
         return openInventories.contains(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    private void onPlayerDie(PlayerDeathEvent event)
-    {
+    private void onPlayerDie(PlayerDeathEvent event) {
         openInventories.remove(event.getEntity().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    private void onPlayerDisconnect(PlayerQuitEvent event)
-    {
+    private void onPlayerDisconnect(PlayerQuitEvent event) {
         openInventories.remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onCloseInventory(InventoryCloseEvent event)
-    {
+    private void onCloseInventory(InventoryCloseEvent event) {
         openInventories.remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onOpenInventory(InventoryOpenEvent event)
-    {
+    private void onOpenInventory(InventoryOpenEvent event) {
         openInventories.add(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
-    private void onCleanupEntity(EntityCleanupEvent event)
-    {
-        if (event.isForced())
-        {
+    private void onCleanupEntity(EntityCleanupEvent event) {
+        if (event.isForced()) {
             openInventories.remove(event.getUniqueId());
         }
     }

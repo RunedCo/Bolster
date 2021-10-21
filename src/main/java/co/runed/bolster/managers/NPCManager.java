@@ -1,8 +1,8 @@
 package co.runed.bolster.managers;
 
-import co.runed.dayroom.gson.GsonUtil;
 import co.runed.bolster.events.server.ReloadConfigEvent;
 import co.runed.bolster.util.NPC;
+import co.runed.dayroom.gson.GsonUtil;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import me.libraryaddict.disguise.utilities.DisguiseUtilities;
 import org.apache.commons.io.FileUtils;

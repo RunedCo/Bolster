@@ -9,7 +9,7 @@ import java.util.Collections;
 public class CommandServerGUI extends CommandBase {
     public CommandServerGUI() {
         super("servers");
-        
+
     }
 
     @Override

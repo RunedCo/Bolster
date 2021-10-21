@@ -31,8 +31,7 @@ import org.bukkit.entity.Player;
 import java.util.Objects;
 import java.util.Set;
 
-public interface ScoreboardTeam
-{
+public interface ScoreboardTeam {
     /**
      * Gets the id of this team
      *
@@ -196,8 +195,7 @@ public interface ScoreboardTeam
      * @param player the player to add
      * @return true if the player was added successfully
      */
-    default boolean addPlayer(Player player)
-    {
+    default boolean addPlayer(Player player) {
         return addPlayer(Objects.requireNonNull(player, "player").getName());
     }
 
@@ -207,8 +205,7 @@ public interface ScoreboardTeam
      * @param player the player to remove
      * @return true if the player was removed successfully
      */
-    default boolean removePlayer(Player player)
-    {
+    default boolean removePlayer(Player player) {
         return removePlayer(Objects.requireNonNull(player, "player").getName());
     }
 
@@ -218,8 +215,7 @@ public interface ScoreboardTeam
      * @param player the player to check for
      * @return true if the player is a member
      */
-    default boolean hasPlayer(Player player)
-    {
+    default boolean hasPlayer(Player player) {
         return hasPlayer(Objects.requireNonNull(player, "player").getName());
     }
 
@@ -257,8 +253,7 @@ public interface ScoreboardTeam
      */
     void unsubscribeAll();
 
-    enum CollisionRule
-    {
+    enum CollisionRule {
         ALWAYS("always"),
         NEVER("never"),
         PUSH_OTHER_TEAMS("pushOtherTeams"),
@@ -266,19 +261,16 @@ public interface ScoreboardTeam
 
         private final String protocolName;
 
-        CollisionRule(String protocolName)
-        {
+        CollisionRule(String protocolName) {
             this.protocolName = protocolName;
         }
 
-        public String getProtocolName()
-        {
+        public String getProtocolName() {
             return this.protocolName;
         }
     }
 
-    enum NameTagVisibility
-    {
+    enum NameTagVisibility {
         ALWAYS("always"),
         NEVER("never"),
         HIDE_FOR_OTHER_TEAMS("hideForOtherTeams"),
@@ -286,13 +278,11 @@ public interface ScoreboardTeam
 
         private final String protocolName;
 
-        NameTagVisibility(String protocolName)
-        {
+        NameTagVisibility(String protocolName) {
             this.protocolName = protocolName;
         }
 
-        public String getProtocolName()
-        {
+        public String getProtocolName() {
             return this.protocolName;
         }
     }

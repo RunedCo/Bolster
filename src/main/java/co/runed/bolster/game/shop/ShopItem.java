@@ -1,8 +1,5 @@
 package co.runed.bolster.game.shop;
 
-import co.runed.dayroom.util.Describable;
-import co.runed.dayroom.util.Identifiable;
-import co.runed.dayroom.util.Nameable;
 import co.runed.bolster.game.currency.Currency;
 import co.runed.bolster.gui.Gui;
 import co.runed.bolster.gui.GuiConfirm;
@@ -11,6 +8,9 @@ import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.IconPreview;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.bolster.util.StringUtil;
+import co.runed.dayroom.util.Describable;
+import co.runed.dayroom.util.Identifiable;
+import co.runed.dayroom.util.Nameable;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;

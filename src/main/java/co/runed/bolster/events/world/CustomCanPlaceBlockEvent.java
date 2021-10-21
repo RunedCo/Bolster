@@ -8,8 +8,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.inventory.ItemStack;
 
-public final class CustomCanPlaceBlockEvent extends BlockEvent implements Cancellable
-{
+public final class CustomCanPlaceBlockEvent extends BlockEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     protected boolean cancel;
     protected boolean canBuild;
@@ -18,8 +17,7 @@ public final class CustomCanPlaceBlockEvent extends BlockEvent implements Cancel
     protected ItemStack itemInHand;
     protected LivingEntity entity;
 
-    public CustomCanPlaceBlockEvent(Block placedBlock, ItemStack itemInHand, LivingEntity entity, boolean canBuild)
-    {
+    public CustomCanPlaceBlockEvent(Block placedBlock, ItemStack itemInHand, LivingEntity entity, boolean canBuild) {
         super(placedBlock);
 
         this.itemInHand = itemInHand;
@@ -28,48 +26,39 @@ public final class CustomCanPlaceBlockEvent extends BlockEvent implements Cancel
         this.cancel = false;
     }
 
-    public boolean isCancelled()
-    {
+    public boolean isCancelled() {
         return this.cancel;
     }
 
-    public void setCancelled(boolean cancel)
-    {
+    public void setCancelled(boolean cancel) {
         this.cancel = cancel;
     }
 
-    public LivingEntity getEntity()
-    {
+    public LivingEntity getEntity() {
         return this.entity;
     }
 
-    public Block getBlockPlaced()
-    {
+    public Block getBlockPlaced() {
         return this.getBlock();
     }
 
-    public ItemStack getItemInHand()
-    {
+    public ItemStack getItemInHand() {
         return this.itemInHand;
     }
 
-    public boolean canBuild()
-    {
+    public boolean canBuild() {
         return this.canBuild;
     }
 
-    public void setBuild(boolean canBuild)
-    {
+    public void setBuild(boolean canBuild) {
         this.canBuild = canBuild;
     }
 
-    public HandlerList getHandlers()
-    {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList()
-    {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

@@ -7,23 +7,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public final class EntityCleanupEvent extends Event
-{
+public final class EntityCleanupEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     UUID uuid;
     LivingEntity entity;
     boolean forced;
 
-    public EntityCleanupEvent(LivingEntity entity, boolean forced)
-    {
+    public EntityCleanupEvent(LivingEntity entity, boolean forced) {
         this(entity.getUniqueId(), forced);
 
         this.entity = entity;
     }
 
-    public EntityCleanupEvent(UUID uuid, boolean forced)
-    {
+    public EntityCleanupEvent(UUID uuid, boolean forced) {
         super();
 
         this.uuid = uuid;
@@ -31,29 +28,24 @@ public final class EntityCleanupEvent extends Event
     }
 
     @Nullable
-    public LivingEntity getEntity()
-    {
+    public LivingEntity getEntity() {
         return entity;
     }
 
-    public UUID getUniqueId()
-    {
+    public UUID getUniqueId() {
         return uuid;
     }
 
-    public boolean isForced()
-    {
+    public boolean isForced() {
         return forced;
     }
 
     @Override
-    public HandlerList getHandlers()
-    {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList()
-    {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

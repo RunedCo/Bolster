@@ -9,8 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class GuiConstants
-{
+public class GuiConstants {
     public static final String CLICK_TO = ChatColor.GREEN + "" + Glyphs.ARROW + " Click to ";
     public static final String CLICK_TO_SELECT = CLICK_TO + "select";
 

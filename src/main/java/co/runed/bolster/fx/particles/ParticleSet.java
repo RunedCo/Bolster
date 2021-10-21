@@ -1,11 +1,11 @@
 package co.runed.bolster.fx.particles;
 
-import co.runed.dayroom.properties.Properties;
-import co.runed.dayroom.util.Identifiable;
-import co.runed.dayroom.util.Nameable;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.config.Configurable;
 import co.runed.bolster.util.registries.Registries;
+import co.runed.dayroom.properties.Properties;
+import co.runed.dayroom.util.Identifiable;
+import co.runed.dayroom.util.Nameable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
