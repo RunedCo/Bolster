@@ -5,33 +5,28 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public final class EntityDestroyEvent extends Event
-{
+public final class EntityDestroyEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     BolsterEntity entity;
 
-    public EntityDestroyEvent(BolsterEntity entity)
-    {
+    public EntityDestroyEvent(BolsterEntity entity) {
         super();
 
         this.entity = entity;
     }
 
     @NotNull
-    public BolsterEntity getEntity()
-    {
+    public BolsterEntity getEntity() {
         return entity;
     }
 
     @Override
-    public HandlerList getHandlers()
-    {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList()
-    {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }
