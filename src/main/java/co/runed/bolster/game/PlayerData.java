@@ -3,10 +3,10 @@ package co.runed.bolster.game;
 import co.runed.bolster.Permissions;
 import co.runed.bolster.fx.particles.ParticleSet;
 import co.runed.bolster.game.currency.Currency;
-import co.runed.bolster.managers.CooldownManager;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.registries.Registries;
+import co.runed.bolster.wip.Cooldown;
 import co.runed.dayroom.gson.GsonUtil;
 import co.runed.dayroom.gson.JsonExclude;
 import com.google.gson.Gson;
@@ -32,7 +32,7 @@ public class PlayerData {
     HashMap<String, Integer> providerLevels = new HashMap<>();
     HashMap<String, Object> settings = new HashMap<>();
     HashMap<String, Map<String, Boolean>> shopUnlocks = new HashMap<>();
-    List<CooldownManager.CooldownData> globalCooldowns = new ArrayList<>();
+    List<Cooldown> globalCooldowns = new ArrayList<>();
 
     HashMap<String, Map> gameModeData = new HashMap<>();
     @JsonExclude
@@ -170,11 +170,11 @@ public class PlayerData {
         this.premiumExpiryTime = date;
     }
 
-    public List<CooldownManager.CooldownData> getGlobalCooldowns() {
+    public List<Cooldown> getGlobalCooldowns() {
         return globalCooldowns;
     }
 
-    public void setGlobalCooldowns(List<CooldownManager.CooldownData> globalCooldowns) {
+    public void setGlobalCooldowns(List<Cooldown> globalCooldowns) {
         this.globalCooldowns = globalCooldowns;
     }
 

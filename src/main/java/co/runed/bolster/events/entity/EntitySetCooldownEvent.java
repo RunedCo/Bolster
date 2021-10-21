@@ -1,6 +1,7 @@
 package co.runed.bolster.events.entity;
 
-import co.runed.bolster.managers.CooldownManager;
+import co.runed.bolster.util.TimeUtil;
+import co.runed.bolster.wip.Cooldown;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -12,15 +13,14 @@ public class EntitySetCooldownEvent extends Event// implements Cancellable
     private static final HandlerList handlers = new HandlerList();
     protected boolean cancelled;
 
-    LivingEntity entity;
-    Instant castTime;
-    String cooldownId;
-    int slot;
-    double cooldown;
-    boolean isGlobal;
+    private LivingEntity entity;
+    private Instant castTime;
+    private String cooldownId;
+    private int slot;
+    private double cooldown;
+    private boolean isGlobal;
 
-    public EntitySetCooldownEvent(LivingEntity entity, Instant castTime, String cooldownId, int slot, double cooldown, boolean isGlobal)
-    {
+    public EntitySetCooldownEvent(LivingEntity entity, Instant castTime, String cooldownId, int slot, double cooldown, boolean isGlobal) {
         this.cancelled = false;
 
         this.entity = entity;
@@ -31,39 +31,37 @@ public class EntitySetCooldownEvent extends Event// implements Cancellable
         this.isGlobal = isGlobal;
     }
 
-    public LivingEntity getEntity()
-    {
+    public LivingEntity getEntity() {
         return entity;
     }
 
-    public Instant getCastTime()
-    {
+    public Instant getCastTime() {
         return castTime;
     }
 
-    public String getCooldownId()
-    {
+    public String getCooldownId() {
         return cooldownId;
     }
 
-    public double getCooldown()
-    {
+    public double getCooldown() {
         return cooldown;
     }
 
-    public int getSlot()
-    {
+    public int getSlot() {
         return slot;
     }
 
-    public boolean isGlobal()
-    {
+    public boolean isGlobal() {
         return isGlobal;
     }
 
-    public CooldownManager.CooldownData getCooldownData()
-    {
-        return new CooldownManager.CooldownData(entity, cooldownId, slot, castTime, (long) (cooldown * 1000), isGlobal);
+    public Cooldown getCooldownData() {
+        return new Cooldown()
+                .withOwner(entity)
+                .withId(cooldownId)
+                .withSlot(slot)
+                .setGlobal(isGlobal)
+                .ofDuration(TimeUtil.fromSeconds(cooldown));
     }
 
 //    public boolean isCancelled()
@@ -76,13 +74,11 @@ public class EntitySetCooldownEvent extends Event// implements Cancellable
 //        this.cancelled = cancel;
 //    }
 
-    public HandlerList getHandlers()
-    {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList()
-    {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

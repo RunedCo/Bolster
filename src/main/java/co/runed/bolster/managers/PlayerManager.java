@@ -14,6 +14,7 @@ import co.runed.bolster.match.PlayerConnectMatchHistoryEvent;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.TimeUtil;
 import co.runed.bolster.util.registries.Registries;
+import co.runed.bolster.wip.Cooldown;
 import co.runed.dayroom.gson.GsonUtil;
 import co.runed.dayroom.redis.RedisChannels;
 import co.runed.dayroom.redis.RedisManager;
@@ -298,8 +299,8 @@ public class PlayerManager extends Manager {
         if (!(entity instanceof Player)) return;
 
         var playerData = this.getPlayerData(entity.getUniqueId());
-        List<CooldownManager.CooldownData> cooldowns = new ArrayList<>(playerData.getGlobalCooldowns());
-        cooldowns.removeIf(cd -> cd.isDone() || (cd.cooldownId.equals(event.getCooldownId()) && cd.slot == event.getSlot()));
+        List<Cooldown> cooldowns = new ArrayList<>(playerData.getGlobalCooldowns());
+        cooldowns.removeIf(cd -> cd.isDone() || (cd.getId().equals(event.getCooldownId()) && cd.getSlot() == event.getSlot()));
 
         cooldowns.add(event.getCooldownData());
 
