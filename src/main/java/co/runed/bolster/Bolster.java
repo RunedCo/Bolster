@@ -12,9 +12,9 @@ import co.runed.bolster.game.traits.Traits;
 import co.runed.bolster.managers.*;
 import co.runed.bolster.status.*;
 import co.runed.bolster.util.BukkitUtil;
-import co.runed.bolster.util.config.ConfigUtil;
 import co.runed.bolster.util.json.BukkitAwareObjectTypeAdapter;
 import co.runed.bolster.util.json.InventorySerializableAdapter;
+import co.runed.bolster.util.lang.Lang;
 import co.runed.bolster.util.registries.Registries;
 import co.runed.bolster.wip.*;
 import co.runed.dayroom.ServerData;
@@ -34,8 +34,6 @@ import de.slikey.effectlib.EffectManager;
 import me.libraryaddict.disguise.utilities.json.SerializerGameProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -44,12 +42,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,7 +71,6 @@ public class Bolster extends JavaPlugin implements Listener {
     private MenuFunctionListener menuListener;
 
     private Config config;
-    private Map<String, String> langDictionary = new HashMap<>();
 
     private GameMode activeGameMode;
     private String serverId = null;
@@ -96,7 +90,7 @@ public class Bolster extends JavaPlugin implements Listener {
 
         hideServer = config.hidden;
 
-        loadLang(this);
+        Lang.load(this);
 
         GsonUtil.addBuilderFunction(this::setupGson);
 
@@ -285,26 +279,6 @@ public class Bolster extends JavaPlugin implements Listener {
 
     public Map<String, ServerData> getServers() {
         return Collections.unmodifiableMap(servers);
-    }
-
-    public void loadLang(Plugin plugin) {
-        try {
-            var langFile = new File(plugin.getDataFolder(), "lang.yml");
-
-            if (!langFile.exists()) plugin.saveResource("lang.yml", false);
-
-            var langConfig = new YamlConfiguration();
-            langConfig.load(langFile);
-
-            langDictionary.putAll(ConfigUtil.toStringMap(langConfig, true));
-        }
-        catch (IOException | InvalidConfigurationException e) {
-            getLogger().severe("Error loading lang file for plugin " + plugin.getName());
-        }
-    }
-
-    public Map<String, String> getLang() {
-        return Collections.unmodifiableMap(langDictionary);
     }
 
     public static void debug(String out) {

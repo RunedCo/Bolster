@@ -6,10 +6,17 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class Lang {
+    private static final Map<String, String> langDictionary = new HashMap<>();
+
     private String defaultValue = "null";
     private Set<String> keys = new HashSet<>();
     private Map<String, String> replacements = new HashMap<>();
@@ -73,7 +80,7 @@ public class Lang {
 
     private String toFormattedString() {
         var key = defaultValue;
-        var lang = new HashMap<>(Bolster.getInstance().getLang());
+        var lang = new HashMap<>(langDictionary);
         var replacements = new HashMap<>(this.replacements);
 
         for (var source : this.languageSources) {
@@ -121,5 +128,21 @@ public class Lang {
 
     public static String legacy(String... key) {
         return new Lang(key).toLegacyString();
+    }
+
+    public static void load(Plugin plugin) {
+        try {
+            var langFile = new File(plugin.getDataFolder(), "lang.yml");
+
+            if (!langFile.exists()) plugin.saveResource("lang.yml", false);
+
+            var langConfig = new YamlConfiguration();
+            langConfig.load(langFile);
+
+            langDictionary.putAll(ConfigUtil.toStringMap(langConfig, true));
+        }
+        catch (IOException | InvalidConfigurationException e) {
+            Bolster.getInstance().getLogger().severe("Error loading lang file for plugin " + plugin.getName());
+        }
     }
 }
