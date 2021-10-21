@@ -6,16 +6,14 @@ import dev.jorel.commandapi.CommandAPICommand;
 
 import java.util.Collections;
 
-public class CommandServerGUI extends CommandBase
-{
-    public CommandServerGUI()
-    {
+public class CommandServerGUI extends CommandBase {
+    public CommandServerGUI() {
         super("servers");
+        
     }
 
     @Override
-    public CommandAPICommand build()
-    {
+    public CommandAPICommand build() {
         return new CommandAPICommand(this.command)
                 .withPermission(Permissions.COMMAND_SERVERS)
                 .executesPlayer(((sender, args) -> {

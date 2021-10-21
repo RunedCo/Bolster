@@ -3,9 +3,7 @@ package co.runed.bolster.commands;
 import co.runed.bolster.managers.CommandManager;
 import co.runed.dayroom.properties.Property;
 import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.LiteralArgument;
-import dev.jorel.commandapi.arguments.StringArgument;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
@@ -21,12 +19,6 @@ public abstract class CommandProperty extends CommandBase {
         this.typeName = typeName;
         this.property = property;
         this.permission = permission;
-    }
-
-    private Argument getArgumentFromProperty() {
-        var defValue = property.getDefault();
-
-        return CommandManager.ARGUMENT_MAP.getOrDefault(defValue.getClass(), () -> new StringArgument("value")).get();
     }
 
     public abstract Object get();
@@ -59,7 +51,7 @@ public abstract class CommandProperty extends CommandBase {
                         })
                 )
                 .withSubcommand(new CommandAPICommand("set")
-                        .withArguments(new LiteralArgument(property.getId()), getArgumentFromProperty())
+                        .withArguments(new LiteralArgument(property.getId()), CommandManager.getArgumentFromProperty(property))
                         .executes((sender, args) -> {
                             var value = args[0];
 
