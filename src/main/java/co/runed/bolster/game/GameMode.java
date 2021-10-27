@@ -17,6 +17,7 @@ import co.runed.bolster.util.lang.Lang;
 import co.runed.dayroom.properties.Properties;
 import co.runed.dayroom.properties.Property;
 import co.runed.dayroom.util.Identifiable;
+import co.runed.dayroom.util.Nameable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -33,26 +34,28 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.UUID;
 
-public abstract class GameMode extends Manager implements Identifiable, Configurable {
+public abstract class GameMode extends Manager implements Identifiable, Configurable, Nameable {
     public static final Property<Double> XP_MULTIPLER = new Property<>("xp_multiplier", 1.0);
     public static final Property<Double> GOLD_MULTIPLER = new Property<>("gold_multiplier", 1.0);
     public static final Property<Double> DAMAGE_MULTIPLIER = new Property<>("damage_multiplier", 1.0);
     public static final Property<Double> HEALTH_MULTIPLIER = new Property<>("health_multiplier", 1.0);
 
-    StateSeries mainState;
-    String id;
-    GameProperties properties;
-    HashMap<UUID, Properties> statistics = new HashMap<>();
-    Properties globalStatistics = new Properties();
-    MatchHistory matchHistory;
+    private String id;
+    private String status;
 
-    String status;
-    boolean hasStarted = false;
-    boolean paused = false;
-    boolean requiresResourcePack = false;
-    boolean serializeInventories = false;
+    private StateSeries mainState;
+    private GameProperties properties;
 
-    BukkitTask tabMenuTask = null;
+    private HashMap<UUID, Properties> statistics = new HashMap<>();
+    private Properties globalStatistics = new Properties();
+    private MatchHistory matchHistory;
+
+    private boolean hasStarted = false;
+    private boolean paused = false;
+    private boolean requiresResourcePack = false;
+    private boolean serializeInventories = false;
+
+    private BukkitTask tabMenuTask = null;
 
     public GameMode(String id, Class<? extends GameModeData> gameModeData, Plugin plugin) {
         super(plugin);
@@ -65,6 +68,7 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
         if (gameModeData != null) PlayerManager.getInstance().addGameModeDataClass(this.getId(), gameModeData);
     }
 
+    @Override
     public String getName() {
         return Lang.str("game.name");
     }

@@ -21,6 +21,7 @@ public class Config {
 
     public String gameMode;
     public String serverId = null;
+    public String serverName = null;
     public boolean hidden = false;
 
     public Location mapSpawn;
@@ -72,28 +73,30 @@ public class Config {
         }
 
         var redis = this.config.getConfigurationSection("redis");
-        this.redisHost = redis.getString("host", this.redisHost);
-        this.redisPort = redis.getInt("port", this.redisPort);
+        redisHost = redis.getString("host", redisHost);
+        redisPort = redis.getInt("port", redisPort);
 
-        this.gameMode = this.config.getString("gamemode", "bolster");
-        this.serverId = this.config.getString("server-id", this.serverId);
+        gameMode = this.config.getString("gamemode", "bolster");
+        serverId = this.config.getString("server-id", serverId);
+        serverName = this.config.getString("server-name", serverName);
+
         hidden = config.getBoolean("hidden", hidden);
 
-        this.mapSpawn = BukkitUtil.stringToLocation(config.getString("map-spawn", "0,0,0"));
-        Warps.getInstance().addWarp("spawn", this.mapSpawn);
+        mapSpawn = BukkitUtil.stringToLocation(config.getString("map-spawn", "0,0,0"));
+        Warps.getInstance().addWarp("spawn", mapSpawn);
         Warps.getInstance().setName("spawn", "Map Spawn");
         Warps.getInstance().setSave("spawn", false);
 
-        this.debugMode = this.config.getBoolean("debug", this.debugMode);
+        debugMode = this.config.getBoolean("debug", debugMode);
 
-        this.premiumSlots = this.config.getInt("premium-slots", this.premiumSlots);
+        premiumSlots = this.config.getInt("premium-slots", premiumSlots);
 
-        this.cleanupPlayers = this.config.getBoolean("cleanup-players", this.cleanupPlayers);
-        this.cleanupFrequency = this.config.getInt("cleanup-frequency", this.cleanupFrequency);
-        this.forceCleanupTime = this.config.getInt("force-cleanup-time", this.forceCleanupTime);
+        cleanupPlayers = this.config.getBoolean("cleanup-players", cleanupPlayers);
+        cleanupFrequency = this.config.getInt("cleanup-frequency", cleanupFrequency);
+        forceCleanupTime = this.config.getInt("force-cleanup-time", forceCleanupTime);
 
-        this.autoSave = this.config.getBoolean("auto-save", this.autoSave);
-        this.autoSaveFrequency = this.config.getInt("auto-save-frequency", this.autoSaveFrequency);
+        autoSave = this.config.getBoolean("auto-save", autoSave);
+        autoSaveFrequency = this.config.getInt("auto-save-frequency", autoSaveFrequency);
     }
 
     public Configuration getRawConfig() {

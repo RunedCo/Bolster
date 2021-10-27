@@ -192,7 +192,8 @@ public class Bolster extends JavaPlugin implements Listener {
         serverData.hidden = hideServer;
         serverData.status = gameMode.getStatus();
         serverData.gameMode = gameMode.getId();
-        serverData.name = this.serverId;
+        serverData.name = config.serverName;
+        serverData.gameModeName = gameMode.getName();
         serverData.ipAddress = getServer().getIp();
         serverData.port = getServer().getPort();
 
@@ -283,7 +284,7 @@ public class Bolster extends JavaPlugin implements Listener {
 
     public static void debug(String out) {
         if (getBolsterConfig().debugMode) {
-            getInstance().getLogger().info(out);
+            getInstance().getLogger().info("[DEBUG] " + out);
         }
     }
 

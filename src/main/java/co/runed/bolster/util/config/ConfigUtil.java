@@ -1,6 +1,5 @@
 package co.runed.bolster.util.config;
 
-import co.runed.bolster.Bolster;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.dayroom.math.NumberUtil;
 import co.runed.dayroom.util.ReflectionUtil;
@@ -225,7 +224,8 @@ public class ConfigUtil {
                 var existing = field.get(obj);
                 var value = config.get(key, existing);
 
-                Bolster.debug("Loaded config value " + key + " for " + obj + " " + value + " from config? " + config.contains(key));
+                // TODO disabled config debugging
+//                Bolster.debug("Loaded config entry " + key + " for " + obj + " with value " + value + ". was from config? " + config.contains(key));
 
                 NumberUtil.SETTERS.getOrDefault(field.getType(), NumberUtil.Setter.FALLBACK).set(field, obj, value);
             }

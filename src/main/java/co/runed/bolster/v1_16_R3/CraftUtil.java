@@ -275,4 +275,10 @@ public class CraftUtil {
     public static void hideEntity(Player player, Entity entity) {
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(((CraftEntity) entity).getHandle().getId()));
     }
+
+    public static void playRiptideAnimation(Player player, int ticks) {
+        var entity = ((CraftPlayer) player).getHandle();
+
+        entity.r(ticks);
+    }
 }

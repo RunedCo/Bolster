@@ -23,8 +23,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class NPCManager extends Manager {
-    Map<UUID, NPC> npcMap = new HashMap<>();
-    Map<String, WrappedGameProfile> gameProfiles = new HashMap<>();
+    private Map<UUID, NPC> npcMap = new HashMap<>();
+    private Map<String, WrappedGameProfile> gameProfiles = new HashMap<>();
 
     private static NPCManager _instance;
 

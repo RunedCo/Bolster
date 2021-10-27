@@ -406,12 +406,6 @@ public class BolsterEntity extends TraitProvider implements Enableable, DamageSo
         this._entity.setHealth(0);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        //TODO OVERRIDE EQUALS FUNCTION
-        return super.equals(obj);
-    }
-
     public static BolsterEntity from(LivingEntity entity) {
         if (entity == null) return null;
 

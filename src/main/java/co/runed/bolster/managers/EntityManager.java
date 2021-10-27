@@ -43,6 +43,18 @@ public class EntityManager extends Manager {
         return bolsterEntity;
     }
 
+    public List<LivingEntity> getAliveEntities() {
+        var entities = new ArrayList<LivingEntity>();
+
+        for (var entity : this.entities.values()) {
+            if (entity.getEntity().isDead()) continue;
+
+            entities.add(entity.getEntity());
+        }
+
+        return entities;
+    }
+
     public void remove(LivingEntity entity) {
         this.remove(entity.getUniqueId());
     }

@@ -95,7 +95,7 @@ public abstract class Definition<T extends Identifiable> implements Identifiable
 
     public ConfigurationSection getConfig() {
         if (getRegistry() == null) {
-            Bolster.getInstance().getLogger().warning("Error fetching config for " + getId() + "! Registry is null!");
+            Bolster.debug("Error fetching config for " + getId() + "! Registry is null!");
             return ConfigUtil.create();
         }
 
