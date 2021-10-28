@@ -1,5 +1,6 @@
 package co.runed.bolster.util.config;
 
+import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.ItemBuilder;
 import co.runed.dayroom.math.NumberUtil;
 import co.runed.dayroom.util.ReflectionUtil;
@@ -8,13 +9,17 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -227,12 +232,38 @@ public class ConfigUtil {
                 // TODO disabled config debugging
 //                Bolster.debug("Loaded config entry " + key + " for " + obj + " with value " + value + ". was from config? " + config.contains(key));
 
-                NumberUtil.SETTERS.getOrDefault(field.getType(), NumberUtil.Setter.FALLBACK).set(field, obj, value);
+                if (loadBukkitTypes(obj, field, value)) continue;
+
+                NumberUtil.NUMERIC_SETTERS.getOrDefault(field.getType(), NumberUtil.Setter.FALLBACK).set(field, obj, value);
             }
             catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static boolean loadBukkitTypes(Object obj, Field field, Object value) {
+        var type = field.getType();
+
+        try {
+            if (value instanceof String str) {
+                if (type == Location.class) {
+                    field.set(obj, BukkitUtil.stringToLocation(str));
+
+                    return true;
+                }
+                else if (type == World.class) {
+                    field.set(obj, Bukkit.getWorld(str));
+
+                    return true;
+                }
+            }
+        }
+        catch (Exception exception) {
+
+        }
+
+        return false;
     }
 
     public static boolean areEqual(ConfigurationSection config, ConfigurationSection config1) {

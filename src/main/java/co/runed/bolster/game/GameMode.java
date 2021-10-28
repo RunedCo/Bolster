@@ -68,11 +68,6 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
         if (gameModeData != null) PlayerManager.getInstance().addGameModeDataClass(this.getId(), gameModeData);
     }
 
-    @Override
-    public String getName() {
-        return Lang.str("game.name");
-    }
-
     public StateSeries getMainState() {
         return this.mainState;
     }
