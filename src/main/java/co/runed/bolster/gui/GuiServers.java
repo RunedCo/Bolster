@@ -15,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.mask.BinaryMask;
-import org.ipvp.canvas.mask.Mask;
 import org.ipvp.canvas.paginate.PaginatedMenuBuilder;
 import org.ipvp.canvas.slot.SlotSettings;
 import org.ipvp.canvas.template.StaticItemTemplate;
@@ -48,18 +47,26 @@ public class GuiServers extends Gui {
 
     @Override
     public Menu draw(Player player) {
-        var pageTemplate = ChestMenu.builder(6)
+        var servers = Bolster.getInstance().getServers();
+
+        var menuSize = Math.max(1, (int) Math.ceil(servers.size() / 9d));
+
+        var pageTemplate = ChestMenu.builder(menuSize)
                 .title(this.getTitle(player))
                 .redraw(true);
 
-        Mask itemSlots = BinaryMask.builder(pageTemplate.getDimensions())
-                .pattern("111111111")
-                .pattern("111111111")
-                .pattern("111111111")
-                .pattern("111111111")
-                .pattern("111111111")
-                .pattern("000000000")
-                .build();
+        var maskBuilder = BinaryMask.builder(pageTemplate.getDimensions())
+                .pattern("111111111");
+
+        for (var i = 0; i < menuSize - 1; i++) {
+            maskBuilder = maskBuilder.pattern("111111111");
+        }
+        
+        if (menuSize >= 6) {
+            maskBuilder = maskBuilder.pattern("000000000");
+        }
+
+        var itemSlots = maskBuilder.build();
 
         var builder = PaginatedMenuBuilder.builder(pageTemplate)
                 .slots(itemSlots)
@@ -67,8 +74,6 @@ public class GuiServers extends Gui {
                 .nextButtonSlot(51)
                 .previousButton(GuiConstants.GUI_ARROW_LEFT)
                 .previousButtonSlot(47);
-
-        var servers = Bolster.getInstance().getServers();
 
         for (var entry : servers.entrySet()) {
             var server = entry.getValue();

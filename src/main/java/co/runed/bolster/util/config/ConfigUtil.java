@@ -2,7 +2,10 @@ package co.runed.bolster.util.config;
 
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.ItemBuilder;
+import co.runed.bolster.util.registries.Registry;
 import co.runed.dayroom.math.NumberUtil;
+import co.runed.dayroom.properties.Properties;
+import co.runed.dayroom.properties.Property;
 import co.runed.dayroom.util.ReflectionUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -21,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -80,7 +84,9 @@ public class ConfigUtil {
 
             if (value == null) continue;
 
-            value = iterateVariables("%", value, toStringMap(sourceConfig, true), false);
+            var map = toStringMap(sourceConfig, true);
+
+            value = iterateVariables("%", value, map, false);
 
             value = LegacyComponentSerializer.legacyAmpersand().serialize(MiniMessage.get().parse(value));
             value = ChatColor.translateAlternateColorCodes('&', value);
@@ -265,6 +271,43 @@ public class ConfigUtil {
 
         return false;
     }
+
+    public static void loadProperties(Registry<? extends Property<?>> registry, ConfigurationSection config, Properties properties) {
+        for (var key : registry.getEntries().keySet()) {
+            var dashKey = key.replace('_', '-');
+            if (!config.contains(key) && !config.contains(dashKey)) continue;
+            key = config.contains(key) ? key : dashKey;
+
+            var property = registry.get(key);
+            if (property == null) continue;
+
+            var def = property.getDefault();
+            if (def == null) continue;
+
+            var value = loadAsClass(config, key, def.getClass());
+            properties.setUnsafe(property, value);
+        }
+    }
+
+
+    public static Object loadAsClass(ConfigurationSection config, String key, Class<?> clazz) {
+        return CONFIG_MAP.getOrDefault(clazz, ConfigurationSection::get).apply(config, key);
+    }
+
+    public static final Map<Class<?>, BiFunction<ConfigurationSection, String, ?>> CONFIG_MAP = Map.copyOf(Map.ofEntries(
+            Map.entry(int.class, ConfigurationSection::getInt),
+            Map.entry(long.class, ConfigurationSection::getLong),
+            Map.entry(float.class, ConfigurationSection::getDouble),
+            Map.entry(double.class, ConfigurationSection::getDouble),
+            Map.entry(Integer.class, ConfigurationSection::getInt),
+            Map.entry(Long.class, ConfigurationSection::getLong),
+            Map.entry(Float.class, ConfigurationSection::getDouble),
+            Map.entry(Double.class, ConfigurationSection::getDouble),
+            Map.entry(boolean.class, ConfigurationSection::getBoolean),
+            Map.entry(Boolean.class, ConfigurationSection::getBoolean),
+
+            Map.entry(Location.class, (config, key) -> BukkitUtil.stringToLocation(config.getString(key))))
+    );
 
     public static boolean areEqual(ConfigurationSection config, ConfigurationSection config1) {
         if (config == null || config1 == null) return false;
