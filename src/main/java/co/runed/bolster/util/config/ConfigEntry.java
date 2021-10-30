@@ -8,5 +8,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ConfigEntry {
-    String value() default "";
+    String key();// default "";
+
+    String name() default "";
 }

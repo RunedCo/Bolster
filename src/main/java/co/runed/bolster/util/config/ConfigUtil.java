@@ -226,7 +226,7 @@ public class ConfigUtil {
         for (var entry : ReflectionUtil.getFieldsAnnotatedWith(obj.getClass(), ConfigEntry.class).entrySet()) {
             var field = entry.getKey();
             var annotation = entry.getValue();
-            var key = annotation.value();
+            var key = annotation.key();
 
             if (key.isEmpty()) key = field.getName().toLowerCase();
 
