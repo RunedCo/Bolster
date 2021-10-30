@@ -81,7 +81,7 @@ public class CommandManager {
             return new StringArgument("value").overrideSuggestions((sender -> getSuggestions(sender, enumSet)));
         }
 
-        return CommandManager.ARGUMENT_MAP.getOrDefault(defValue.getClass(), () -> new StringArgument("value")).get();
+        return CommandManager.ARGUMENT_MAP.getOrDefault(defValue == null ? Object.class : defValue.getClass(), () -> new StringArgument("value")).get();
     }
 
     public static final Map<Class<?>, Supplier<? extends Argument>> ARGUMENT_MAP = Map.copyOf(Map.ofEntries(
