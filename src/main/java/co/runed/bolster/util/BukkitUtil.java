@@ -411,7 +411,14 @@ public class BukkitUtil {
     }
 
     public static void triggerEventSync(Event event) {
-        Bukkit.getScheduler().runTask(Bolster.getInstance(), () -> Bukkit.getServer().getPluginManager().callEvent(event));
+        Bukkit.getScheduler().runTask(Bolster.getInstance(), () -> {
+            try {
+                Bukkit.getServer().getPluginManager().callEvent(event);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public static void registerEvents(Plugin plugin, Listener... listeners) {
@@ -427,7 +434,6 @@ public class BukkitUtil {
 
         if (event instanceof EntityDamageByEntityEvent byEntityEvent) {
             var damager = byEntityEvent.getDamager();
-            LivingEntity entity = null;
 
             if (damager instanceof LivingEntity livingEntity) {
                 return livingEntity;

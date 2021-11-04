@@ -1,12 +1,16 @@
 package co.runed.bolster.wip;
 
+import co.runed.bolster.Bolster;
 import co.runed.bolster.damage.DamageInfo;
 import co.runed.bolster.damage.DamageSource;
 import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.entity.EntityDamageInfoEvent;
 import co.runed.bolster.managers.Manager;
+import co.runed.bolster.match.PlayerDamageMatchHistoryEvent;
+import co.runed.bolster.match.PlayerKillMatchHistoryEvent;
 import co.runed.bolster.util.BukkitUtil;
 import net.kyori.adventure.text.Component;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -93,6 +97,10 @@ public class DamageListener extends Manager {
 
         if (damageInfo == null) return;
 
+        if (damageInfo.getAttacker() != null && damageInfo.getAttacker() instanceof Player player) {
+            Bolster.getActiveGameMode().getMatchHistory().addEvent(new PlayerKillMatchHistoryEvent(player, event.getEntity(), damageInfo));
+        }
+
         Component message = null;
         DamageSource prevNext = null;
         var next = damageInfo.getDamageSource();
@@ -112,7 +120,8 @@ public class DamageListener extends Manager {
 
         var info = event.getDamageInfo();
 
-        BolsterEntity.from(player).sendDebugMessage("You dealt " + event.getFinalDamage() + " damage of type " + info.getDamageType() + " from source " + info.getDamageSource().getDamageSourceName() + " to target " + event.getEntity().getName());
+        Bolster.getActiveGameMode().getMatchHistory().addEvent(new PlayerDamageMatchHistoryEvent(player, event.getEntity(), info));
+        BolsterEntity.from(player).sendDebugMessage("You dealt " + event.getFinalDamage() + " damage of type " + info.getDamageType() + " from source " + info.getDamageSource().getDamageSourceName() + ChatColor.RESET + " to target " + event.getEntity().getName());
     }
 
     public static DamageListener getInstance() {

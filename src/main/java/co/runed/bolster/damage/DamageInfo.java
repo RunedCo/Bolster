@@ -4,6 +4,7 @@ import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.util.Owned;
 import co.runed.bolster.v1_16_R3.CraftUtil;
 import co.runed.bolster.wip.DamageListener;
+import co.runed.dayroom.gson.JsonExclude;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -15,7 +16,9 @@ public class DamageInfo {
     protected UUID damageId = UUID.randomUUID();
     protected double damage;
     protected DamageType damageType = DamageType.PRIMARY;
+    @JsonExclude
     protected LivingEntity attacker;
+    @JsonExclude
     protected DamageSource damageSource;
     protected int noDamageTicks = -1;
 

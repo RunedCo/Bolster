@@ -23,6 +23,7 @@ public class Config {
     public String serverId = null;
     public String serverName = null;
     public boolean hidden = false;
+    public String matchHistoryUrl = "http://localhost:3000/admin/match";
 
     public Location mapSpawn;
 

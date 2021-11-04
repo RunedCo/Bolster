@@ -16,11 +16,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -37,6 +34,7 @@ public class GameProperties extends Properties implements Listener {
     public static final Property<Boolean> ENABLE_POISON_DAMAGE = new Property<>("enable_poison_damage", true);
     public static final Property<Boolean> ENABLE_WITHER_DAMAGE = new Property<>("enable_wither_damage", true);
     public static final Property<Boolean> ENABLE_FIRE_DAMAGE = new Property<>("enable_fire_damage", true);
+    public static final Property<Boolean> ENABLE_CRITICAL_HITS = new Property<>("enable_critical_hits", true);
 
     public static final Property<Boolean> ENABLE_PVP = new Property<>("enable_pvp", true);
     public static final Property<Boolean> ENABLE_PVE = new Property<>("enable_pve", true);
@@ -47,6 +45,7 @@ public class GameProperties extends Properties implements Listener {
     // TODO INVENTORY CLICK EVENT FOR OFFHAND SLOT
     public static final Property<Boolean> ENABLE_OFFHAND = new Property<>("enable_offhand", true);
     public static final Property<Boolean> ENABLE_ITEM_DROPS = new Property<>("enable_item_drops", true);
+    public static final Property<Boolean> ENABLE_MOB_DROPS = new Property<>("enable_mob_drops", true);
 
     public static final Property<Boolean> ENABLE_XP = new Property<>("enable_xp", true);
 
@@ -76,6 +75,7 @@ public class GameProperties extends Properties implements Listener {
         registry.register(ENABLE_HUNGER);
         registry.register(ENABLE_OFFHAND);
         registry.register(ENABLE_ITEM_DROPS);
+        registry.register(ENABLE_MOB_DROPS);
         registry.register(ENABLE_XP);
         registry.register(ENABLE_LOG_STRIP);
         registry.register(ENABLE_GRASS_PATH);
@@ -123,6 +123,14 @@ public class GameProperties extends Properties implements Listener {
             else {
                 if (!this.get(GameProperties.ENABLE_PVE)) event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    private void onEntityDeath(EntityDeathEvent event) {
+        if (!this.get(GameProperties.ENABLE_MOB_DROPS)) {
+            event.setDroppedExp(0);
+            event.getDrops().clear();
         }
     }
 

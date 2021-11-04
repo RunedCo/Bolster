@@ -8,13 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class MatchHistoryEvent implements Identifiable {
-    String id;
-    ZonedDateTime timestamp;
-    Map<String, Object> extraData = new HashMap<>();
+    private String id;
+    private ZonedDateTime timestamp = TimeUtil.now();
+    private Map<String, Object> extraData = new HashMap<>();
 
     public MatchHistoryEvent(String id) {
         this.id = id;
-        this.timestamp = TimeUtil.now();
     }
 
     @Override

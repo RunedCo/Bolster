@@ -116,6 +116,7 @@ public class Bolster extends JavaPlugin implements Listener {
         this.commandManager.add(new CommandWarp());
         this.commandManager.add(new CommandWarpGUI());
         this.commandManager.add(new CommandServerGUI());
+        this.commandManager.add(new CommandMatch());
 
         // Register Plugin Channels
         var messenger = getServer().getMessenger();
@@ -142,7 +143,7 @@ public class Bolster extends JavaPlugin implements Listener {
         this.registerStatusEffects();
 
         // Redis
-        var redisChannels = Arrays.asList(RedisChannels.LIST_SERVERS_RESPONSE, RedisChannels.REQUEST_PLAYER_DATA_RESPONSE, RedisChannels.REGISTER_SERVER_RESPONSE);
+        var redisChannels = Arrays.asList(RedisChannels.LIST_SERVERS_RESPONSE, RedisChannels.REQUEST_PLAYER_DATA_RESPONSE, RedisChannels.REGISTER_SERVER_RESPONSE, RedisChannels.REQUEST_MATCH_HISTORY_ID_RESPONSE);
         this.redisManager = new RedisManager(config.redisHost, config.redisPort, null, null, redisChannels);
         this.redisManager.setDefaultTarget("proxy");
         this.redisManager.setMessageHandler((channel, message) -> BukkitUtil.triggerEventSync(new RedisMessageEvent(channel, message)));

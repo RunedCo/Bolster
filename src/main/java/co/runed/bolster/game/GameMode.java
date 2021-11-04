@@ -5,6 +5,7 @@ import co.runed.bolster.entity.BolsterEntity;
 import co.runed.bolster.events.game.GameModePauseEvent;
 import co.runed.bolster.events.player.LoadPlayerDataEvent;
 import co.runed.bolster.events.player.SavePlayerDataEvent;
+import co.runed.bolster.events.server.RedisMessageEvent;
 import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
 import co.runed.bolster.managers.Manager;
@@ -12,20 +13,22 @@ import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.match.MatchHistory;
 import co.runed.bolster.util.BukkitUtil;
 import co.runed.bolster.util.TimeUtil;
-import co.runed.bolster.util.config.Configurable;
 import co.runed.bolster.util.lang.Lang;
 import co.runed.dayroom.properties.Properties;
 import co.runed.dayroom.properties.Property;
+import co.runed.dayroom.redis.RedisChannels;
+import co.runed.dayroom.redis.RedisManager;
+import co.runed.dayroom.redis.payload.Payload;
+import co.runed.dayroom.redis.request.RequestMatchHistoryIdPayload;
+import co.runed.dayroom.redis.response.RequestMatchHistoryIdResponsePayload;
 import co.runed.dayroom.util.Identifiable;
 import co.runed.dayroom.util.Nameable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -34,12 +37,7 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.UUID;
 
-public abstract class GameMode extends Manager implements Identifiable, Configurable, Nameable {
-    public static final Property<Double> XP_MULTIPLER = new Property<>("xp_multiplier", 1.0);
-    public static final Property<Double> GOLD_MULTIPLER = new Property<>("gold_multiplier", 1.0);
-    public static final Property<Double> DAMAGE_MULTIPLIER = new Property<>("damage_multiplier", 1.0);
-    public static final Property<Double> HEALTH_MULTIPLIER = new Property<>("health_multiplier", 1.0);
-
+public abstract class GameMode extends Manager implements Identifiable, Nameable {
     private String id;
     private String status;
 
@@ -56,6 +54,7 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
     private boolean serializeInventories = false;
 
     private BukkitTask tabMenuTask = null;
+    private BukkitTask matchHistoryTask = null;
 
     public GameMode(String id, Class<? extends GameModeData> gameModeData, Plugin plugin) {
         super(plugin);
@@ -87,16 +86,19 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
     public void start() {
         if (this.hasStarted) return;
 
+        RedisManager.getInstance().publish(RedisChannels.REQUEST_MATCH_HISTORY_ID, new RequestMatchHistoryIdPayload());
         this.matchHistory.start();
 
         this.hasStarted = true;
         if (this.mainState != null) this.mainState.start();
 
         this.tabMenuTask = Bukkit.getScheduler().runTaskTimer(plugin, this::buildAllTabMenu, 0L, 20L);
+        this.matchHistoryTask = Bukkit.getScheduler().runTaskTimer(plugin, matchHistory::save, 0L, 20L * 60L);
     }
 
     public void stop() {
         if (this.tabMenuTask != null) this.tabMenuTask.cancel();
+        if (this.matchHistoryTask != null) this.matchHistoryTask.cancel();
 
         this.matchHistory.end();
     }
@@ -192,8 +194,6 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
     }
 
     public void buildTabMenu(Player player) {
-        var bolsterConfig = Bolster.getBolsterConfig();
-
         Component headerComponent = Component.newline()
                 .append(Component.text("  Welcome to ", NamedTextColor.YELLOW))
                 .append(Lang.simple("game.long-name"))
@@ -233,18 +233,6 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
     @Override
     public String getId() {
         return this.id;
-    }
-
-    @Override
-    public void loadConfig(ConfigurationSection config) {
-
-    }
-
-    @EventHandler
-    public void onResourcePackFailed(PlayerResourcePackStatusEvent event) {
-        if (event.getStatus() == PlayerResourcePackStatusEvent.Status.DECLINED || event.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD) {
-            event.getPlayer().kickPlayer("You need to enable resource packs.");
-        }
     }
 
     @EventHandler
@@ -289,6 +277,16 @@ public abstract class GameMode extends Manager implements Identifiable, Configur
 
         for (var entry : BolsterEntity.from(event.getPlayer()).getInventoryMap().entrySet()) {
             gameModeData.setInventory(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @EventHandler
+    public void onRedisMessage(RedisMessageEvent event) {
+        if (event.getChannel().equals(RedisChannels.REQUEST_MATCH_HISTORY_ID_RESPONSE)) {
+            var payload = Payload.fromJson(event.getMessage(), RequestMatchHistoryIdResponsePayload.class);
+            Bolster.getInstance().getLogger().info("Set match id to " + payload.matchId);
+
+            this.matchHistory.setMatchId(payload.matchId);
         }
     }
 }
