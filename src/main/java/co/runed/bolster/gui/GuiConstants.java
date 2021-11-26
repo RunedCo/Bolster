@@ -27,13 +27,13 @@ public class GuiConstants {
     public static final String CONFIRM = "Confirm";
     public static final String CANCEL = "Cancel";
 
-    public static final ItemStack GUI_DIVIDER = new ItemBuilder(Material.ITEM_FRAME).addAllItemFlags().hideName().setCustomModelData(1).build();
-    public static final ItemStack GUI_ARROW_LEFT = new ItemBuilder(Material.ITEM_FRAME).addAllItemFlags().setDisplayName(Component.text(PREVIOUS, NamedTextColor.BLUE, TextDecoration.BOLD)).setCustomModelData(2).build();
-    public static final ItemStack GUI_ARROW_RIGHT = new ItemBuilder(Material.ITEM_FRAME).addAllItemFlags().setDisplayName(Component.text(NEXT, NamedTextColor.BLUE, TextDecoration.BOLD)).setCustomModelData(3).build();
-    public static final ItemStack GUI_SAVE = new ItemBuilder(Material.ITEM_FRAME).addAllItemFlags().hideName().setCustomModelData(4).build();
-    public static final ItemStack GUI_RELOAD = new ItemBuilder(Material.ITEM_FRAME).addAllItemFlags().hideName().setCustomModelData(5).build();
-    public static final ItemStack GUI_CHECK = new ItemBuilder(Material.ITEM_FRAME).addAllItemFlags().setDisplayName(Component.text(CONFIRM, NamedTextColor.BLUE, TextDecoration.BOLD)).setCustomModelData(6).build();
-    public static final ItemStack GUI_CROSS = new ItemBuilder(Material.ITEM_FRAME).addAllItemFlags().setDisplayName(Component.text(CANCEL, NamedTextColor.RED, TextDecoration.BOLD)).setCustomModelData(7).build();
-    public static final ItemStack GUI_LOCK = new ItemBuilder(Material.ITEM_FRAME).addAllItemFlags().hideName().setCustomModelData(8).build();
-    public static final ItemStack GUI_PLUS = new ItemBuilder(Material.ITEM_FRAME).addAllItemFlags().hideName().setCustomModelData(9).build();
+    public static final ItemStack GUI_DIVIDER = new ItemBuilder(Material.PAPER).addAllItemFlags().hideName().setCustomModelData(21).build();
+    public static final ItemStack GUI_ARROW_LEFT = new ItemBuilder(Material.PAPER).addAllItemFlags().setDisplayName(Component.text(PREVIOUS, NamedTextColor.BLUE, TextDecoration.BOLD)).setCustomModelData(22).build();
+    public static final ItemStack GUI_ARROW_RIGHT = new ItemBuilder(Material.PAPER).addAllItemFlags().setDisplayName(Component.text(NEXT, NamedTextColor.BLUE, TextDecoration.BOLD)).setCustomModelData(23).build();
+    public static final ItemStack GUI_SAVE = new ItemBuilder(Material.PAPER).addAllItemFlags().hideName().setCustomModelData(24).build();
+    public static final ItemStack GUI_RELOAD = new ItemBuilder(Material.PAPER).addAllItemFlags().hideName().setCustomModelData(25).build();
+    public static final ItemStack GUI_CHECK = new ItemBuilder(Material.PAPER).addAllItemFlags().setDisplayName(Component.text(CONFIRM, NamedTextColor.BLUE, TextDecoration.BOLD)).setCustomModelData(26).build();
+    public static final ItemStack GUI_CROSS = new ItemBuilder(Material.PAPER).addAllItemFlags().setDisplayName(Component.text(CANCEL, NamedTextColor.RED, TextDecoration.BOLD)).setCustomModelData(27).build();
+    public static final ItemStack GUI_LOCK = new ItemBuilder(Material.PAPER).addAllItemFlags().hideName().setCustomModelData(28).build();
+    public static final ItemStack GUI_PLUS = new ItemBuilder(Material.PAPER).addAllItemFlags().hideName().setCustomModelData(29).build();
 }
