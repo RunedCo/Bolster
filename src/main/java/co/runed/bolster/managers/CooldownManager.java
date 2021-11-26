@@ -66,6 +66,8 @@ public class CooldownManager extends Manager {
 //            this.cooldowns.add(new CooldownData(entity, cooldownId, slot, castTime, (long) (cooldown * 1000), isGlobal));
         }
 
+        BolsterEntity.from(entity).sendDebugMessage("Set cooldown: " + cooldownId + ", slot: " + slot + ", duration: " + cooldown + ", is global: " + isGlobal);
+
         if (trigger) {
             BukkitUtil.triggerEvent(new EntitySetCooldownEvent(entity, castTime, cooldownId, slot, cooldown, isGlobal));
         }
