@@ -208,7 +208,7 @@ public class BukkitUtil {
         return new BoundingBox(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius);
     }
 
-    public static List<Block> getBlocksRadiusCircle(Location position, int radiusUp, int radiusDown, int radiusHorizontal) {
+    public static List<Block> getBlocksRadiusCircle(Location position, double radiusUp, double radiusDown, double radiusHorizontal) {
         var blocks = getBlocksRadius(position, radiusUp, radiusDown, radiusHorizontal);
 
         // Remove the blocks that are within the box above but not actually in the sphere we defined with the radius and location
