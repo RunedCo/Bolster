@@ -6,6 +6,7 @@ import co.runed.bolster.events.game.GameModePauseEvent;
 import co.runed.bolster.events.player.LoadPlayerDataEvent;
 import co.runed.bolster.events.player.SavePlayerDataEvent;
 import co.runed.bolster.events.server.RedisMessageEvent;
+import co.runed.bolster.fx.Glyphs;
 import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
 import co.runed.bolster.managers.Manager;
@@ -194,10 +195,16 @@ public abstract class GameMode extends Manager implements Identifiable, Nameable
     }
 
     public void buildTabMenu(Player player) {
+//        Component headerComponent = Component.newline()
+//                .append(Component.text("  Welcome to ", NamedTextColor.YELLOW))
+//                .append(Lang.simple("game.long-name"))
+//                .append(Component.text("  "))
+//                .append(Component.newline());
+
         Component headerComponent = Component.newline()
-                .append(Component.text("  Welcome to ", NamedTextColor.YELLOW))
-                .append(Lang.simple("game.long-name"))
-                .append(Component.text("  "))
+                .append(Component.text(Glyphs.LOGO))
+                .append(Component.newline())
+                .append(Component.newline())
                 .append(Component.newline());
 
         player.sendPlayerListHeader(headerComponent);

@@ -13,6 +13,13 @@ public class Glyphs {
     public static final char ARROW = '\u25BA';
     public static final char CROSS = '\u274C';
 
+    public static final char PIXEL_FIX = '\uF801';
+
+    public static final char LOGO_BIG_LEFT = '\uE016';
+    public static final char LOGO_BIG_RIGHT = '\uE017';
+
+    public static final String LOGO = LOGO_BIG_LEFT + "" + PIXEL_FIX + "" + LOGO_BIG_RIGHT;
+
     public static String coloredGlyph(char glyph) {
         return coloredGlyph(ChatColor.WHITE, glyph);
     }
