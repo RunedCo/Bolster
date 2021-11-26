@@ -1,6 +1,7 @@
-package co.runed.bolster.util;
+package co.runed.bolster.util.task;
 
 import co.runed.bolster.Bolster;
+import co.runed.bolster.util.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;

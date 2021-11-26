@@ -1,7 +1,6 @@
 package co.runed.bolster.util.task;
 
 import co.runed.bolster.Bolster;
-import co.runed.bolster.util.TaskUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
