@@ -77,6 +77,8 @@ public class MatchHistory {
 
         if (payload.json.equals(previousJson)) return;
 
+        previousJson = payload.json;
+
         RedisManager.getInstance().publish(RedisChannels.UPDATE_MATCH_HISTORY, payload);
     }
 
