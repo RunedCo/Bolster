@@ -285,7 +285,7 @@ public class BolsterEntity extends TraitProvider implements Enableable, DamageSo
     public void sendDebugMessage(String message) {
         if (!getPlayerData().getSetting(Settings.DEBUG_MODE)) return;
 
-        getEntity().sendMessage(message);
+        getEntity().sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "[D] " + ChatColor.RESET + message);
     }
 
     public boolean isDrawingBow() {

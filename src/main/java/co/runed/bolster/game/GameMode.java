@@ -9,7 +9,6 @@ import co.runed.bolster.events.server.RedisMessageEvent;
 import co.runed.bolster.fx.Glyphs;
 import co.runed.bolster.game.state.State;
 import co.runed.bolster.game.state.StateSeries;
-import co.runed.bolster.managers.Manager;
 import co.runed.bolster.managers.PlayerManager;
 import co.runed.bolster.match.MatchHistory;
 import co.runed.bolster.util.BukkitUtil;
@@ -30,6 +29,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -38,9 +38,11 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.UUID;
 
-public abstract class GameMode extends Manager implements Identifiable, Nameable {
+public abstract class GameMode implements Identifiable, Nameable, Listener {
     private String id;
     private String status;
+
+    public Plugin plugin;
 
     private StateSeries mainState;
     private GameProperties properties;
@@ -58,7 +60,7 @@ public abstract class GameMode extends Manager implements Identifiable, Nameable
     private BukkitTask matchHistoryTask = null;
 
     public GameMode(String id, Class<? extends GameModeData> gameModeData, Plugin plugin) {
-        super(plugin);
+        this.plugin = plugin;
 
         this.id = id;
         this.properties = new GameProperties();

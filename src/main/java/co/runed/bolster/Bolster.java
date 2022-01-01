@@ -103,6 +103,7 @@ public class Bolster extends JavaPlugin implements Listener {
         this.effectManager = new EffectManager(this);
         this.npcManager = new NPCManager(this);
         this.chatManager = new ChatManager(this);
+        
         this.glowSystem = new GlowSystem(this);
         this.damageListener = new DamageListener(this);
 
